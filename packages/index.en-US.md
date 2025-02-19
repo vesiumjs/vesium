@@ -17,6 +17,11 @@ hero:
 
 features:
   - icon:
+      src: /icon-vue.svg
+    title: Reactive
+    details: Deeply integrates with Vue3 and VueUse, supporting ref, getter, and other reactive data passing
+
+  - icon:
       src: /icon-ts.svg
     title: Type Safe
     details: Built with TypeScript for complete type inference and IDE hints
@@ -25,11 +30,6 @@ features:
       src: /icon-rainbow.svg
     title: Full API Coverage
     details: Complete Cesium API wrapper with core feature support
-
-  - icon:
-      src: /icon-vue.svg
-    title: Reactive
-    details: Deeply integrates with Vue3 and VueUse, supporting ref, getter, and other reactive data passing
 
   - icon:
       src: /icon-smiling.svg

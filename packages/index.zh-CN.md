@@ -17,6 +17,11 @@ hero:
 
 features:
   - icon:
+      src: /icon-vue.svg
+    title: 响应式支持
+    details: 深度集成 Vue3 与VueUse，支持 ref、getter 等响应式数据传递
+
+  - icon:
       src: /icon-ts.svg
     title: 类型完备
     details: 基于 TypeScript 构建，提供完整类型推导和智能提示支持
@@ -25,11 +30,6 @@ features:
       src: /icon-rainbow.svg
     title: API 覆盖全面
     details: 全面封装 Cesium API，支持所有核心功能调用
-
-  - icon:
-      src: /icon-vue.svg
-    title: 响应式支持
-    details: 深度集成 Vue3 与VueUse，支持 ref、getter 等响应式数据传递
 
   - icon:
       src: /icon-smiling.svg
