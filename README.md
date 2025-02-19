@@ -4,7 +4,7 @@
 
 <h1 align="center">Vesium</h1>
 
-<p align="center">Cesium hooks like VueUse api.</p>
+<p align="center">Vue component and composition-api library for Cesium.</p>
 
 <p align="center">
 <a href="https://www.npmjs.com/package/@vesium/core" target="__blank"><img src="https://img.shields.io/npm/v/@vesium/core?color=a1b858&label=" alt="NPM version"></a>
@@ -22,15 +22,6 @@
 - 🌐 **Full Featured** - Comprehensive Cesium functionality support
 - 🎮 **Interactive** - Rich interactive capabilities with map elements
 - ⚡️ **Lightweight** - No bloated dependencies
-
-## Packages
-
-| Package                                    | Version                                                                                                       | Description                 |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| [@vesium/core](./packages/core/)           | [![npm](https://img.shields.io/npm/v/@vesium/core.svg)](https://www.npmjs.com/package/@vesium/core)           | Core functionalities        |
-| [@vesium/plot](./packages/plot/)           | [![npm](https://img.shields.io/npm/v/@vesium/plot.svg)](https://www.npmjs.com/package/@vesium/plot)           | Drawing & plotting tools    |
-| [@vesium/serialize](./packages/serialize/) | [![npm](https://img.shields.io/npm/v/@vesium/serialize.svg)](https://www.npmjs.com/package/@vesium/serialize) | State serialization         |
-| [@vesium/special](./packages/special/)     | [![npm](https://img.shields.io/npm/v/@vesium/special.svg)](https://www.npmjs.com/package/@vesium/special)     | Special effects & materials |
 
 ## Install
 
@@ -57,4 +48,4 @@ pnpm add cesium @vueuse/core vesium
 
 ## 📄 License
 
-[MIT](./LICENSE) License © 2024 [GeoVueJS](https://github.com/GeoVueJS)
+[MIT](./LICENSE) License © 2025 [GeoVueJS](https://github.com/GeoVueJS)
