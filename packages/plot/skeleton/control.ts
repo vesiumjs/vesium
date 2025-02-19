@@ -8,7 +8,7 @@ import { PlotAction } from '../usePlot/PlotSkeleton';
  */
 export function control(): PlotSkeleton {
   return {
-    diabled: ({ active }) => !active,
+    disabled: ({ active }) => !active,
     cursor: 'pointer',
     dragCursor: 'crosshair',
     onDrag({ viewer, sample, packable, context, index, lockCamera }) {

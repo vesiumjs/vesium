@@ -13,7 +13,7 @@ const svg = `data:image/svg+xml;utf8,${encodeURIComponent(
  */
 export function moved(): PlotSkeleton {
   return {
-    diabled: ({ active, defining }) => !active || defining,
+    disabled: ({ active, defining }) => !active || defining,
     cursor: 'pointer',
     dragCursor: 'crosshair',
     format(packable) {

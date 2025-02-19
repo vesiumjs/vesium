@@ -9,7 +9,7 @@ import { PlotAction } from '../usePlot/PlotSkeleton';
 export function interval(): PlotSkeleton {
   let dragIndex = -1;
   return {
-    diabled: ({ active, defining }) => !active || defining,
+    disabled: ({ active, defining }) => !active || defining,
     cursor: 'pointer',
     dragCursor: 'crosshair',
     format(packable) {

@@ -168,7 +168,7 @@ export interface PlotSkeleton {
   /**
    * 是否禁用控制点
    */
-  diabled?: boolean | ((options: SkeletonDisabledOptions) => boolean);
+  disabled?: boolean | ((options: SkeletonDisabledOptions) => boolean);
   /**
    * 实际情况中，并非所有采集都都要渲染对应框架点，通过`format`函数可以过滤掉不需要渲染的点位，另外还可以自定义点位的偏移、增加框架点
    * @param packable  标绘采集到的数据

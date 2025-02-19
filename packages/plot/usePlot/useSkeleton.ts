@@ -49,8 +49,8 @@ export function useSkeleton(
       const skeletons = plot.scheme.skeletons;
 
       skeletons.forEach((skeleton) => {
-        const diabled = isFunction(skeleton.diabled) ? skeleton.diabled({ active, defining }) : skeleton.diabled;
-        if (diabled) {
+        const disabled = isFunction(skeleton.disabled) ? skeleton.disabled({ active, defining }) : skeleton.disabled;
+        if (disabled) {
           return;
         }
         const positions = skeleton.format?.(packable!) ?? packable?.positions ?? [];
