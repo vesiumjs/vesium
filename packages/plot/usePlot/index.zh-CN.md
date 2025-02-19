@@ -1,8 +1,3 @@
----
-title: usePlot
-text: 标绘
----
-
 # usePlot
 
 ## Usage
