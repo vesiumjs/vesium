@@ -1,6 +1,5 @@
 ---
 
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
@@ -14,7 +13,7 @@ hero:
 
     - theme: alt
       text: Best Practices
-      link: /note
+      link: /best
 
 features:
   - icon:
@@ -28,9 +27,9 @@ features:
     details: Complete Cesium API wrapper with core feature support
 
   - icon:
-      src: /icon-vueuse.svg
+      src: /icon-vue.svg
     title: Reactive
-    details: Deep Vue 3 reactivity integration with ref and getter support
+    details: Deeply integrates with Vue3 and VueUse, supporting ref, getter, and other reactive data passing
 
   - icon:
       src: /icon-smiling.svg

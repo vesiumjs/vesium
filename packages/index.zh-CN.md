@@ -1,6 +1,5 @@
 ---
 
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
@@ -14,7 +13,7 @@ hero:
 
     - theme: alt
       text: 最佳实践
-      link: /zh/note
+      link: /zh/best
 
 features:
   - icon:
@@ -28,9 +27,9 @@ features:
     details: 全面封装 Cesium API，支持所有核心功能调用
 
   - icon:
-      src: /icon-vueuse.svg
+      src: /icon-vue.svg
     title: 响应式支持
-    details: 深度集成 Vue 3 响应式系统，支持 ref、getter 等响应式数据传递
+    details: 深度集成 Vue3 与VueUse，支持 ref、getter 等响应式数据传递
 
   - icon:
       src: /icon-smiling.svg
