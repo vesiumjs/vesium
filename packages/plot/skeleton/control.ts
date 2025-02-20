@@ -11,13 +11,13 @@ export function control(): PlotSkeleton {
     disabled: ({ active }) => !active,
     cursor: 'pointer',
     dragCursor: 'crosshair',
-    onDrag({ viewer, sample, packable, context, index, lockCamera }) {
+    onDrag({ viewer, sampled, packable, context, index, lockCamera }) {
       lockCamera();
       const position = canvasCoordToCartesian(context.endPosition, viewer.scene);
       if (position) {
         const positions = [...packable.positions ?? []];
         positions[index] = position;
-        sample.setSample({
+        sampled.setSample({
           time: packable.time,
           derivative: packable.derivative,
           positions,
@@ -25,7 +25,7 @@ export function control(): PlotSkeleton {
       }
     },
 
-    onKeyPressed({ viewer, keyEvent, sample, packable, index }) {
+    onKeyPressed({ viewer, keyEvent, sampled, packable, index }) {
       const height = toCartographic(viewer!.camera.position)?.height;
       if (!height || !['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(keyEvent.key))
         return;
@@ -56,7 +56,7 @@ export function control(): PlotSkeleton {
       cartographic.longitude += distance * Math.sin(newHeading);
 
       positions[index] = toCartesian3(cartographic)!;
-      sample.setSample({
+      sampled.setSample({
         time: packable.time,
         derivative: packable.derivative,
         positions,

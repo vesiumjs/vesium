@@ -50,9 +50,9 @@ export function usePlot(options?: UsePlotOptions) {
   const packable = shallowRef<SampledPlotPackable>();
 
   useCesiumEventListener([
-    () => current.value?.sample.definitionChanged,
+    () => current.value?.sampled.definitionChanged,
   ], () => {
-    packable.value = current.value?.sample.getValue(getCurrentTime());
+    packable.value = current.value?.sampled.getValue(getCurrentTime());
   });
 
   useSampled(current, getCurrentTime);
@@ -82,7 +82,7 @@ export function usePlot(options?: UsePlotOptions) {
   watch(current, (plot, previous) => {
     if (previous) {
       if (previous.defining) {
-        const packable = previous.sample.getValue(getCurrentTime());
+        const packable = previous.sampled.getValue(getCurrentTime());
         const completed = previous.scheme.forceComplete?.(packable);
         if (completed) {
           previous.defining = false;

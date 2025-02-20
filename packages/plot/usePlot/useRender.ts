@@ -76,7 +76,7 @@ export function useRender(
 
   const update = throttle(async (plot: Plot) => {
     const reslut = await plot.scheme.render?.({
-      packable: plot.sample.getValue(getCurrentTime()),
+      packable: plot.sampled.getValue(getCurrentTime()),
       mouse: plot.defining ? mouseCartesian.value : undefined,
       defining: plot.defining,
       previous: {
@@ -98,7 +98,7 @@ export function useRender(
   useCesiumEventListener(
     () => plots.value.map(item => item.definitionChanged),
     (plot, key) => {
-      if (['disabled', 'defining', 'scheme', 'sample', 'time'].includes(key)) {
+      if (['disabled', 'defining', 'scheme', 'sampled', 'time'].includes(key)) {
         update(plot);
       }
     },

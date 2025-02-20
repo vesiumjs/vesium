@@ -7,8 +7,7 @@ import { arrayDifference, isFunction, throttle } from '@vesium/shared';
 import { onKeyStroke, watchArray } from '@vueuse/core';
 import { CustomDataSource } from 'cesium';
 import { shallowRef, toValue, watch } from 'vue';
-import { PlotAction } from './PlotSkeleton';
-import { PlotSkeletonEntity } from './PlotSkeletonEntity';
+import { PlotAction, PlotSkeletonEntity } from './PlotSkeleton';
 
 export function useSkeleton(
   plots: ComputedRef<Plot[]>,
@@ -43,7 +42,7 @@ export function useSkeleton(
       plot.skeletonEntities = [];
     }
     else {
-      const packable = plot.sample.getValue(getCurrentTime());
+      const packable = plot.sampled.getValue(getCurrentTime());
       const defining = plot.defining;
       const active = current.value === plot;
       const skeletons = plot.scheme.skeletons;
@@ -115,10 +114,10 @@ export function useSkeleton(
         activeEntity.value = entity;
         const skeleton = entity.skeleton as PlotSkeleton;
         const index = entity.index as number;
-        const packable = plot.sample.getValue(getCurrentTime());
+        const packable = plot.sampled.getValue(getCurrentTime());
         skeleton.onDrag?.({
           viewer: viewer.value!,
-          sample: plot.sample,
+          sampled: plot.sampled,
           packable,
           active: current.value === plot,
           index,
@@ -140,11 +139,11 @@ export function useSkeleton(
       const plot = entity.plot as Plot;
       const skeleton = entity.skeleton as PlotSkeleton;
       const index = entity.index as number;
-      const packable = plot.sample.getValue(getCurrentTime());
+      const packable = plot.sampled.getValue(getCurrentTime());
 
       skeleton.onKeyPressed?.({
         viewer: viewer.value!,
-        sample: plot.sample,
+        sampled: plot.sampled,
         packable,
         index,
         keyEvent,
@@ -174,11 +173,11 @@ export function useSkeleton(
         const skeleton = entity.skeleton as PlotSkeleton;
         const index = entity.index as number;
 
-        const packable = plot.sample.getValue(getCurrentTime());
+        const packable = plot.sampled.getValue(getCurrentTime());
 
         skeleton.onLeftClick?.({
           viewer: viewer.value!,
-          sample: plot.sample,
+          sampled: plot.sampled,
           packable: packable!,
           active: current.value === plot,
           defining: plot.defining,
@@ -198,7 +197,7 @@ export function useSkeleton(
   });
 
   useCesiumEventListener(() => plots.value.map(plot => plot.definitionChanged), (plot, key, newValue, oldValue) => {
-    if (['disabled', 'defining', 'scheme', 'sample', 'time'].includes(key)) {
+    if (['disabled', 'defining', 'scheme', 'sampled', 'time'].includes(key)) {
       update(plot);
     }
     if (key === 'skeletonEntities') {

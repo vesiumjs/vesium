@@ -4,7 +4,7 @@ import type { Cartesian3, Entity } from 'cesium';
 import type { CSSProperties } from 'vue';
 import type { PlotSkeleton } from './PlotSkeleton';
 import type { SampledPlotPackable } from './SampledPlotProperty';
-import { assertError, isFunction } from '@vesium/shared';
+import { assertError } from '@vesium/shared';
 import { assert } from '@vueuse/core';
 
 export interface PlotRenderResult {
@@ -44,7 +44,7 @@ export interface PlotSchemeConstructorOptions {
   /**
    * 框架点渲染配置
    */
-  skeletons?: ((() => PlotSkeleton) | PlotSkeleton) [];
+  skeletons?: (() => PlotSkeleton) [];
 
   /**
    */
@@ -58,7 +58,7 @@ export class PlotScheme {
     this.complete = options.complete;
     this.forceComplete = options.forceComplete;
     this.definingCursor = options.definingCursor ?? 'crosshair';
-    this.skeletons = options.skeletons?.map(item => isFunction(item) ? item() : item) ?? [];
+    this.skeletons = options.skeletons?.map(item => item()) ?? [];
     this.render = options.render;
   }
 
@@ -96,15 +96,19 @@ export class PlotScheme {
    */
   private static _record = new Map<string, PlotScheme>();
 
-  static getRecordTypes(): string[] {
+  static getCacheTypes(): string[] {
     return [...this._record.keys()];
   }
 
-  static getRecord(type: string): PlotScheme | undefined {
+  static getCache(type: string): PlotScheme | undefined {
     return PlotScheme._record.get(type);
   }
 
-  static setRecord(scheme: PlotScheme): void {
+  /**
+   * 设置标绘方案
+   * @param scheme
+   */
+  static setCache(scheme: PlotScheme): void {
     assertError(!scheme.type, '`scheme.type` is required');
     PlotScheme._record.set(scheme.type, scheme);
   }
@@ -114,7 +118,7 @@ export class PlotScheme {
    */
   static resolve(maybeScheme: string | PlotScheme | PlotSchemeConstructorOptions): PlotScheme {
     if (typeof maybeScheme === 'string') {
-      const _scheme = PlotScheme.getRecord(maybeScheme);
+      const _scheme = PlotScheme.getCache(maybeScheme);
       assert(!!_scheme, `scheme ${maybeScheme} not found`);
       return _scheme!;
     }

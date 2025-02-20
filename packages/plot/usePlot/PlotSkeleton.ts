@@ -1,7 +1,9 @@
 import type { Nullable } from '@vesium/shared';
-import type { Cartesian3, Entity, ScreenSpaceEventHandler, Viewer } from 'cesium';
+import type { Cartesian3, ScreenSpaceEventHandler, Viewer } from 'cesium';
 import type { CSSProperties, MaybeRef, VNode } from 'vue';
+import type { Plot } from './Plot';
 import type { SampledPlotPackable, SampledPlotProperty } from './SampledPlotProperty';
+import { Entity } from 'cesium';
 
 export interface SkeletonDisabledOptions {
 
@@ -22,7 +24,7 @@ export interface OnSkeletonClickOptions {
   /**
    * 当前标绘属性数据
    */
-  sample: SampledPlotProperty;
+  sampled: SampledPlotProperty;
 
   /**
    * 标绘采集到的数据，通过该数据可以获取到当前标绘的所有点位信息
@@ -56,7 +58,7 @@ export interface OnSkeletonDragOptions {
   /***
    * 当前标绘属性数据
    */
-  sample: SampledPlotProperty;
+  sampled: SampledPlotProperty;
 
   /**
    * 标绘采集到的数据，通过该数据可以获取到当前标绘的所有点位信息
@@ -95,7 +97,7 @@ export interface OnKeyPressedOptions {
   /**
    * 当前标绘属性数据
    */
-  sample: SampledPlotProperty;
+  sampled: SampledPlotProperty;
 
   /**
    * 标绘采集到的数据，通过该数据可以获取到当前标绘的所有点位信息
@@ -209,4 +211,28 @@ export interface PlotSkeleton {
    * 键盘按键按下时的处理逻辑
    */
   onKeyPressed?: (options: OnKeyPressedOptions) => void;
+}
+
+/**
+ * 标绘框架点 Entity
+ */
+export class PlotSkeletonEntity extends Entity {
+  constructor(options: Entity.ConstructorOptions) {
+    super(options);
+  }
+
+  /**
+   * @internal
+   */
+  declare plot: Plot;
+
+  /**
+   * @internal
+   */
+  declare skeleton: PlotSkeleton;
+
+  /**
+   * @internal
+   */
+  declare index: number;
 }

@@ -16,7 +16,7 @@ export function useSampled(
   const doubleClicking = ref(false);
 
   const packable = computed(() => {
-    return current.value?.sample.getValue(getCurrentTime());
+    return current.value?.sampled.getValue(getCurrentTime());
   });
 
   // 左键点击添加点
@@ -31,7 +31,7 @@ export function useSampled(
       if (doubleClicking.value) {
         return;
       }
-      const { scheme, defining, sample } = current.value;
+      const { scheme, defining, sampled } = current.value;
       if (!defining) {
         return;
       }
@@ -41,7 +41,7 @@ export function useSampled(
       }
       packable.value.positions ??= [];
       packable.value.positions.push(position);
-      sample.setSample(packable.value);
+      sampled.setSample(packable.value);
       const completed = scheme.complete?.(packable.value);
       completed && (current.value.defining = false);
     },
@@ -79,7 +79,7 @@ export function useSampled(
       if (!current.value || !packable.value) {
         return;
       }
-      const { defining, sample } = current.value;
+      const { defining, sampled } = current.value;
 
       if (!defining) {
         return;
@@ -89,7 +89,7 @@ export function useSampled(
         return;
       }
       packable.value.positions.splice(packable.value.positions.length - 1, 1);
-      sample.setSample(packable.value);
+      sampled.setSample(packable.value);
     },
   );
 
@@ -113,7 +113,7 @@ export function useSampled(
   };
 
   useCesiumEventListener(() => current.value?.definitionChanged, (plot, key) => {
-    if (key === 'defining' || key === 'sample') {
+    if (key === 'defining' || key === 'sampled') {
       setDefiningCursorCss();
     }
   });

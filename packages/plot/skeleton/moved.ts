@@ -29,7 +29,7 @@ export function moved(): PlotSkeleton {
         return [toCartesian3(center)!];
       }
     },
-    onDrag({ viewer, sample, packable, context, lockCamera, dragging }) {
+    onDrag({ viewer, sampled, packable, context, lockCamera, dragging }) {
       dragging && lockCamera();
       const startPosition = canvasCoordToCartesian(context.startPosition, viewer.scene);
       const endPosition = canvasCoordToCartesian(context.endPosition, viewer.scene);
@@ -40,7 +40,7 @@ export function moved(): PlotSkeleton {
       const offset = Cartesian3.subtract(endPosition, startPosition, new Cartesian3());
       const positions = [...packable.positions ?? []];
 
-      sample.setSample({
+      sampled.setSample({
         time: packable.time,
         derivative: packable.derivative,
         positions: positions.map(position => Cartesian3.add(position, offset, new Cartesian3())),

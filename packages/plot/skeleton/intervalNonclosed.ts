@@ -9,7 +9,7 @@ import { PlotAction } from '../usePlot/PlotSkeleton';
 export function intervalNonclosed(): PlotSkeleton {
   let dragIndex = -1;
   return {
-    disabled: ({ active, defining }) => !active || defining, // 修正拼写错误
+    disabled: ({ active, defining }) => !active || defining,
     cursor: 'pointer',
     dragCursor: 'crosshair',
     format(packable) {
@@ -23,7 +23,7 @@ export function intervalNonclosed(): PlotSkeleton {
       }
       return midpoints;
     },
-    onDrag({ viewer, sample, packable, context, index, lockCamera, dragging }) {
+    onDrag({ viewer, sampled, packable, context, index, lockCamera, dragging }) {
       lockCamera();
       const position = canvasCoordToCartesian(context.endPosition, viewer.scene);
       if (!position) {
@@ -33,13 +33,14 @@ export function intervalNonclosed(): PlotSkeleton {
       if (dragIndex === -1) {
         dragIndex = index;
         positions.splice(index + 1, 0, position);
-      } else {
+      }
+      else {
         positions[dragIndex + 1] = position;
       }
       if (!dragging) {
         dragIndex = -1;
       }
-      sample.setSample({
+      sampled.setSample({
         time: packable.time,
         derivative: packable.derivative,
         positions,

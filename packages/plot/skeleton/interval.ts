@@ -22,7 +22,7 @@ export function interval(): PlotSkeleton {
         return Cartesian3.midpoint(position, next, new Cartesian3());
       });
     },
-    onDrag({ viewer, sample, packable, context, index, lockCamera, dragging }) {
+    onDrag({ viewer, sampled, packable, context, index, lockCamera, dragging }) {
       lockCamera();
 
       const position = canvasCoordToCartesian(context.endPosition, viewer.scene);
@@ -40,7 +40,7 @@ export function interval(): PlotSkeleton {
       if (!dragging) {
         dragIndex = -1;
       }
-      sample.setSample({
+      sampled.setSample({
         time: packable.time,
         derivative: packable.derivative,
         positions,
