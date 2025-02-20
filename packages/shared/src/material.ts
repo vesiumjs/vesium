@@ -3,19 +3,19 @@ import type { Event, JulianDate, MaterialProperty, TextureMagnificationFilter, T
 import { Material } from 'cesium';
 
 /**
- * Cesium.Material.fabric参数
+ * Cesium.Material.fabric parameters
  */
 export interface CesiumMaterialFabricOptions<U> {
   /**
-   * 用于声明 fabric 对象最终会生成什么材质，如果是官方内置的，直接用官方内置的，否则则创建自定义的材质并缓存。
+   * Used to declare what material the fabric object will ultimately generate. If it's an official built-in one, use the official built-in one directly; otherwise, create a custom material and cache it.
    */
   type: string;
   /**
-   * 可再塞进去一层子级的 fabric，构成复合材质
+   * Can nest another level of child fabric to form a composite material
    */
   materials?: Material;
   /**
-   * glsl代码
+   * glsl code
    */
   source?: string;
   components?: {
@@ -23,17 +23,17 @@ export interface CesiumMaterialFabricOptions<U> {
     alpha?: string;
   };
   /**
-   * 传glsl代码的变量
+   * Pass variables to glsl code
    */
   uniforms?: U & Record<string, any>;
 }
 
 /**
- * Cesium.Material参数
+ * Cesium.Material parameters
  */
 export interface CesiumMaterialConstructorOptions<U> {
   /**
-   * 严格模式
+   * Strict mode
    */
   strict?: boolean;
   /**
@@ -41,21 +41,21 @@ export interface CesiumMaterialConstructorOptions<U> {
    */
   translucent?: boolean | ((...params: any[]) => any);
   /**
-   * 缩小滤镜
+   * Minification filter
    */
   minificationFilter?: TextureMinificationFilter;
   /**
-   * 放大滤镜
+   * Magnification filter
    */
   magnificationFilter?: TextureMagnificationFilter;
   /**
-   * 矩阵配置
+   * Matrix configuration
    */
   fabric: CesiumMaterialFabricOptions<U>;
 }
 
 /**
- * 仅作为`Cesium.Material`的类型修复
+ * Only as a type fix for `Cesium.Material`
  */
 export class CesiumMaterial<U> extends Material {
   constructor(options: CesiumMaterialConstructorOptions<U>) {
@@ -63,13 +63,13 @@ export class CesiumMaterial<U> extends Material {
   }
 
   /**
-   * 矩阵配置
+   * Matrix configuration
    */
   declare fabric: CesiumMaterialFabricOptions<U>;
 }
 
 /**
- * 仅作为`Cesium.MaterialProperty`的类型修复
+ * Only as a type fix for `Cesium.MaterialProperty`
  */
 export interface CesiumMaterialProperty<V> extends MaterialProperty {
   get isConstant(): boolean;
