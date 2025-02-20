@@ -12,11 +12,14 @@ Object.values(Cesium.ScreenSpaceEventType).forEach((type: any) => {
 
 <template>
   <div
+    position="absolute right-0 top-0 bottom-0"
+    w="200px"
+    bg="[var(--vp-c-bg)]"
     p="10px"
-    grid="~ cols-2 gap-5px"
+    flex="~ col gap-5px"
   >
     <span v-for="(value, key) in Cesium.ScreenSpaceEventType" :key="key">
-      {{ key }}:{{ coord[value] || '--' }}
+      {{ key }} : {{ coord[value] || '--' }}
     </span>
   </div>
 </template>
