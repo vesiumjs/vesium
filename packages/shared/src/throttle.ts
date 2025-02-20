@@ -1,4 +1,4 @@
-import { promiseTimeout } from '@vueuse/shared';
+import { promiseTimeout } from './promiseTimeout';
 
 export type ThrottleCallback<T extends any[]> = (...rest: T) => void;
 
