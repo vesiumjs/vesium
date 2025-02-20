@@ -25,6 +25,8 @@
   "main": "index",
   "module": "index",
   "files": [
+    "LICENSE",
+    "README.md",
     "dist/*"
   ],
   "publishConfig": {
