@@ -32,7 +32,7 @@ jobs:
 
       - run: pnpm install
 
-      - run: pnpm run prepublish
+      - run: pnpm run build:ci
 
       - run: npx changelogithub --no-group
         continue-on-error: true

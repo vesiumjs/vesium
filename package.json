@@ -32,8 +32,8 @@
     "taze": "taze -w -r major minor patch",
     "release": "bumpp -r",
     "==========[CI/CD]===========": "",
-    "prepublish": "tsx ./internals/build",
-    "publish:ci": "pnpm publish -r --no-git-checks --access public"
+    "build:ci": "tsx ./internals/build",
+    "publish:ci": "tsx ./scripts/publish"
   },
   "dependencies": {
     "@turf/turf": "^7.2.0",

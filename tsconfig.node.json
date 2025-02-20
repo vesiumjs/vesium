@@ -13,6 +13,7 @@
   },
   "include": [
     "./internals/**/*",
+    "./scripts/**/*",
     "vite.config.*",
     "uno.config.*",
     "vitest.config.*",
