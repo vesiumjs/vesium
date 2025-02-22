@@ -17,7 +17,7 @@ export function intervalNonclosed(): PlotSkeleton {
       if (_positions.length < 2) {
         return [];
       }
-      const midpoints = [];
+      const midpoints: Cartesian3[] = [];
       for (let i = 0; i < _positions.length - 1; i++) {
         midpoints.push(Cartesian3.midpoint(_positions[i], _positions[i + 1], new Cartesian3()));
       }
