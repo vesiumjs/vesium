@@ -40,7 +40,7 @@ export interface UseCollectionScopeReturn<
 }
 
 /**
- * Scope the SideEffects of Cesium-related `Collection` and automatically remove them on unmounted
+ * Scope the SideEffects of Cesium-related `Collection` and automatically remove them when unmounted.
  * - note: This is a basic function that is intended to be called by other lower-level function
  * @param addFn - add SideEffect function.  eg.`entites.add`
  * @param removeFn - Clean SideEffect function.  eg.`entities.remove`

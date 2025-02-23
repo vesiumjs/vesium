@@ -50,8 +50,7 @@ export interface UseDataSourceScopeRetrun {
 }
 
 /**
- * Make `add` and `remove` operations of `DataSourceCollection` scoped,
- * automatically remove `DataSource` instance when component is unmounted.
+ * // Scope the SideEffects of `DataSourceCollection` operations and automatically remove them when unmounted
  */
 export function useDataSourceScope(options: UseDataSourceScopeOptions = {}): UseDataSourceScopeRetrun {
   const { collection: _collection, destroyOnRemove } = options;
