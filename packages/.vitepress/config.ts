@@ -31,7 +31,7 @@ export default defineConfig({
   ],
   rewrites: {
     '(.*).en-US.md': '(.*).md',
-    '(.*).zh-CN.md': 'zh/(.*).md',
+    '(.*).zh-CN.md': 'zh-CN/(.*).md',
   },
   markdown: {
     config(md) {
@@ -41,12 +41,12 @@ export default defineConfig({
     },
   },
   locales: {
-    root: {
+    'root': {
       link: '/',
       label: 'English',
       lang: 'en-US',
+      titleTemplate: 'Elegant Vue3 Integration for Cesium',
       themeConfig: {
-
         nav: [
           { text: 'Home', link: '/' },
           { text: 'Guide', link: '/guide' },
@@ -66,17 +66,18 @@ export default defineConfig({
         },
       },
     },
-    zh: {
-      link: '/zh',
+    'zh-CN': {
+      link: '/zh-CN',
       label: '简体中文',
       lang: 'zh-CN',
+      titleTemplate: 'Vue3与Cesium的优雅集成方案',
       themeConfig: {
         nav: [
-          { text: '首页', link: '/zh' },
-          { text: '引导', link: '/zh/guide' },
+          { text: '首页', link: '/zh-CN' },
+          { text: '引导', link: '/zh-CN/guide' },
         ],
         sidebar: generateSidebar({
-          base: '/zh',
+          base: '/zh-CN',
           filter: path => path.endsWith('.zh-CN.md'),
         }),
         lastUpdated: {
@@ -85,7 +86,7 @@ export default defineConfig({
         editLink: {
           text: '在github中编辑此页',
           pattern: (payload) => {
-            return `https://github.com/GeoVueJS/vesium/edit/main/packages/${payload.relativePath.replace('zh/', '')}`;
+            return `https://github.com/GeoVueJS/vesium/edit/main/packages/${payload.relativePath.replace('zh-CN/', '')}`;
           },
         },
       },

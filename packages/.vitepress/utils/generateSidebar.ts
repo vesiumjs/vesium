@@ -104,7 +104,7 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
   flatList = flatList.sort((a, b) => a.sort - b.sort);
 
   // 生成侧边栏
-  const sidebars: (DefaultTheme.SidebarItem & { isRoot?: boolean;sort: number })[] = flatList.map((item) => {
+  const sidebars: (DefaultTheme.SidebarItem & { isRoot?: boolean; sort: number })[] = flatList.map((item) => {
     const items = flatList.filter(e => e.parent === item.link);
     return {
       base: item.isRoot ? base : undefined,
