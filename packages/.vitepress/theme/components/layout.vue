@@ -38,7 +38,9 @@ if (inBrowser) {
     const currentLocaleIndex = site.value.localeIndex;
     const nextLocaleIndex = Object.keys(locales).find(key => locales[key].lang === langStorage)!;
     // 确保`/`结尾
+    // @ts-expect-error ignore
     const currentBase = `${locales[currentLocaleIndex!].link || '/'}/`.replaceAll('//', '/');
+    // @ts-expect-error ignore
     const nextBase = `${locales[nextLocaleIndex!].link!}/`.replaceAll('//', '/');
     router.go(router.route.path.replace(currentBase, nextBase) + hash.value);
   }, { immediate: true });
@@ -47,7 +49,7 @@ if (inBrowser) {
 
 <template>
   <DefaultTheme.Layout>
-    <template #HomeHeroBefore>
+    <template #home-hero-before>
       <ClientOnly>
         <HomeHeroBefore />
       </ClientOnly>
