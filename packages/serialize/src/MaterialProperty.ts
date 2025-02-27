@@ -11,7 +11,7 @@ import { ColorSerialize } from './Color';
 export interface MaterialPropertyProgram<T extends MaterialProperty = any> {
   programName: string;
   predicate: (materialProperty: T) => boolean;
-  toJSON: (instance?: T, time?: JulianDate) => Record<string, any> ;
+  toJSON: (instance?: T, time?: JulianDate) => Record<string, any>;
   fromJSON: (content?: Record<string, any>) => T | undefined;
 }
 

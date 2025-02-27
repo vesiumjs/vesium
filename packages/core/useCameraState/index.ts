@@ -16,7 +16,7 @@ export interface UseCameraStateOptions {
    * Camera event type to watch
    * @default `changed`
    */
-  event?: MaybeRefOrGetter<'changed' | 'moveStart' | 'moveEnd'> ;
+  event?: MaybeRefOrGetter<'changed' | 'moveStart' | 'moveEnd'>;
 
   /**
    * Throttled delay duration (ms)

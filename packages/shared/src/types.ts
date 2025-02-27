@@ -1,4 +1,4 @@
-import type { Cartesian3, Cartographic, Cesium3DTileset, CustomDataSource, CzmlDataSource, DataSource, GeoJsonDataSource, GpxDataSource, KmlDataSource, Primitive, PrimitiveCollection } from 'cesium';
+import type { Cartesian3, Cartographic, CustomDataSource, CzmlDataSource, DataSource, GeoJsonDataSource, GpxDataSource, KmlDataSource } from 'cesium';
 
 export type Nullable<T> = T | null | undefined;
 
@@ -40,6 +40,3 @@ export type CommonCoord = Cartesian3 | Cartographic | CoordArray | CoordArray_AL
  * Common DataSource
  */
 export type CesiumDataSource = DataSource | CustomDataSource | CzmlDataSource | GeoJsonDataSource | GpxDataSource | KmlDataSource;
-
-// TODO   all primitive type in cesium
-export type CesiumPrimitive = Primitive | PrimitiveCollection | Cesium3DTileset | any;

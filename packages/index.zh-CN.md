@@ -9,11 +9,11 @@ hero:
   actions:
     - theme: brand
       text: 快速开始
-      link: /zh/guide
+      link: /zh-CN/guide
 
     - theme: alt
       text: 最佳实践
-      link: /zh/best
+      link: /zh-CN/best
 
 features:
   - icon:

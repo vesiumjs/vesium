@@ -5,7 +5,7 @@ import { ConstantPositionPropertySerialize } from './ConstantPositionProperty';
 import { SampledPositionPropertySerialize } from './SampledPositionProperty';
 
 export interface PositionPropertyJSON {
-  type: 'ConstantPositionProperty' | 'SampledPositionProperty' ;
+  type: 'ConstantPositionProperty' | 'SampledPositionProperty';
   content: any;
 }
 
