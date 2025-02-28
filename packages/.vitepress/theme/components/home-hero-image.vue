@@ -46,15 +46,13 @@ useCesiumEventListener(() => viewer.value?.scene.postUpdate, () => {
 </script>
 
 <template>
-  <client-only>
-    <teleport to="#app">
-      <div
-        ref="elRef"
-        position="fixed inset-0"
-        b="1px #000"
-        of="hidden"
-        z--1
-      />
-    </teleport>
-  </client-only>
+  <teleport to="#app">
+    <div
+      ref="elRef"
+      position="fixed inset-0"
+      b="1px #000"
+      of="hidden"
+      z--1
+    />
+  </teleport>
 </template>

@@ -9,3 +9,11 @@
 .VPDoc.has-aside .content-container {
   max-width: none !important;
 }
+
+.VPHero.VPHomeHero {
+  color: #dfdfd6;
+}
+
+.VPHero.VPHomeHero .tagline {
+  color: #98989f;
+}

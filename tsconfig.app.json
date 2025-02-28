@@ -3,6 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
     "paths": {
       "vesium": ["./packages/alias"],

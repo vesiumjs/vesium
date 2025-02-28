@@ -25,7 +25,6 @@ export default defineConfig({
   srcDir: './',
   vite: { configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)) },
   title: 'Vesium',
-  description: 'A VitePress Site',
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }],
   ],
@@ -45,11 +44,14 @@ export default defineConfig({
       link: '/',
       label: 'English',
       lang: 'en-US',
-      titleTemplate: 'Elegant Vue3 Integration for Cesium',
+      titleTemplate: 'Vesium',
+      title: 'A CesiumJS toolkit based on Vue composition',
+      description: 'Aimed at making the use of CesiumJS in Vue simpler and smoother',
       themeConfig: {
+        siteTitle: 'Vesium',
         nav: [
           { text: 'Home', link: '/' },
-          { text: 'Guide', link: '/guide' },
+          { text: 'Start', link: '/start' },
         ],
         sidebar: generateSidebar({
           base: '/',
@@ -70,18 +72,37 @@ export default defineConfig({
       link: '/zh-CN',
       label: '简体中文',
       lang: 'zh-CN',
-      titleTemplate: 'Vue3与Cesium的优雅集成方案',
+      titleTemplate: 'Vesium',
+      title: 'Vue3 与 CesiumJS 的优雅集成方案',
+      description: 'Vue3 与 CesiumJS 的优雅集成方案',
       themeConfig: {
+        siteTitle: 'Vesium',
         nav: [
           { text: '首页', link: '/zh-CN' },
-          { text: '引导', link: '/zh-CN/guide' },
+          { text: '开始使用', link: '/zh-CN/start' },
         ],
         sidebar: generateSidebar({
           base: '/zh-CN',
           filter: path => path.endsWith('.zh-CN.md'),
         }),
+        sidebarMenuLabel: '列表',
+        langMenuLabel: '更换语言',
+        returnToTopLabel: '返回顶部',
+        skipToContentLabel: '跳至内容',
+        darkModeSwitchLabel: '切换主题',
+        darkModeSwitchTitle: '切换暗黑模式',
+        lightModeSwitchTitle: '切换明亮模式',
+        outline: {
+          label: '目录',
+        },
         lastUpdated: {
           text: '最后更新于',
+        },
+        notFound: {
+          title: '找不到页面',
+          linkLabel: '返回首页',
+          quote: '无法找到这个页面，请检查URL是否正确',
+          linkText: '返回首页',
         },
         editLink: {
           text: '在github中编辑此页',

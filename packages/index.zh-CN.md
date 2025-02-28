@@ -3,13 +3,13 @@
 layout: home
 
 hero:
-  name: "Vesium"
-  text: "Vue 3 与 Cesium 的优雅集成方案"
-  tagline: 基于 Composition API 的高性能地图可视化解决方案
+  name: Vesium
+  text: 基于Vue Composition的Cesium工具集
+  tagline:  旨在让CesiumJS在Vue中使用更加简单和流畅
   actions:
     - theme: brand
       text: 快速开始
-      link: /zh-CN/guide
+      link: /zh-CN/start
 
     - theme: alt
       text: 最佳实践

@@ -29,6 +29,6 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div ref="elRef" class="h-100% w-100%" />
+  <div ref="elRef" class="h-550px w-100%" />
   <slot />
 </template>

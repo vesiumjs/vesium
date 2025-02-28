@@ -1,15 +1,14 @@
 ---
 
 layout: home
-
 hero:
-  name: "Vesium"
-  text: "Elegant Vue 3 Integration for Cesium"
-  tagline: High-performance Map Visualization with Composition API
+  name: Vesium
+  text: Vue Composition Utilities of Cesium
+  tagline: Aimed at making the use of CesiumJS in Vue simpler and smoother
   actions:
     - theme: brand
       text: Get Started
-      link: /guide
+      link: /start
 
     - theme: alt
       text: Best Practices
