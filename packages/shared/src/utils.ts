@@ -1,4 +1,4 @@
-export interface ArrayDifferenceRetrun<T> {
+export interface ArrayDiffRetrun<T> {
   added: T[];
   removed: T[];
 }
@@ -6,10 +6,10 @@ export interface ArrayDifferenceRetrun<T> {
 /**
  * 计算两个数组的差异，返回新增和删除的元素
  */
-export function arrayDifference<T>(
+export function arrayDiff<T>(
   list: T[],
   oldList: T[] | undefined,
-): ArrayDifferenceRetrun<T> {
+): ArrayDiffRetrun<T> {
   const oldListSet = new Set(oldList);
   const added: T[] = list.filter(obj => !oldListSet.has(obj));
   const newListSet = new Set(list);
