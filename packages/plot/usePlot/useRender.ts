@@ -2,7 +2,7 @@ import type { Cartesian3, Entity, JulianDate } from 'cesium';
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { Plot } from './Plot';
 import { useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventHandler, useViewer } from '@vesium/core';
-import { arrayDifference, canvasCoordToCartesian, throttle } from '@vesium/shared';
+import { arrayDiff, canvasCoordToCartesian, throttle } from '@vesium/shared';
 import { watchArray } from '@vueuse/core';
 import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'cesium';
 import { computed, shallowRef, watch } from 'vue';
@@ -57,17 +57,17 @@ export function useRender(
     () => plots.value.map(item => item.definitionChanged),
     (_scope, key, newValue, oldValue) => {
       if (key === 'entities') {
-        const { added, removed } = arrayDifference(newValue as Entity[], oldValue as Entity[]);
+        const { added, removed } = arrayDiff(newValue as Entity[], oldValue as Entity[]);
         added.forEach(item => entityScope.add(item));
         removed.forEach(item => entityScope.remove(item));
       }
       else if (key === 'primitives') {
-        const { added, removed } = arrayDifference(newValue as Entity[], oldValue as Entity[]);
+        const { added, removed } = arrayDiff(newValue as Entity[], oldValue as Entity[]);
         added.forEach(item => primitiveScope.add(item));
         removed.forEach(item => primitiveScope.remove(item));
       }
       else if (key === 'groundPrimitives') {
-        const { added, removed } = arrayDifference(newValue as Entity[], oldValue as Entity[]);
+        const { added, removed } = arrayDiff(newValue as Entity[], oldValue as Entity[]);
         added.forEach(item => groundPrimitiveScope.add(item));
         removed.forEach(item => groundPrimitiveScope.remove(item));
       }

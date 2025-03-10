@@ -3,7 +3,7 @@ import type { ComputedRef, ShallowRef } from 'vue';
 import type { Plot } from './Plot';
 import type { PlotSkeleton } from './PlotSkeleton';
 import { useCesiumEventListener, useDataSource, useEntityScope, useGraphicDrag, useGraphicHover, useGraphicLeftClick, useViewer } from '@vesium/core';
-import { arrayDifference, isFunction, throttle } from '@vesium/shared';
+import { arrayDiff, isFunction, throttle } from '@vesium/shared';
 import { onKeyStroke, watchArray } from '@vueuse/core';
 import { CustomDataSource } from 'cesium';
 import { shallowRef, toValue, watch } from 'vue';
@@ -201,7 +201,7 @@ export function useSkeleton(
       update(plot);
     }
     if (key === 'skeletonEntities') {
-      const { added, removed } = arrayDifference(newValue as PlotSkeletonEntity[], oldValue as PlotSkeletonEntity[]);
+      const { added, removed } = arrayDiff(newValue as PlotSkeletonEntity[], oldValue as PlotSkeletonEntity[]);
       added.forEach(item => entityScope.add(item));
       removed.forEach(item => entityScope.remove(item));
     }

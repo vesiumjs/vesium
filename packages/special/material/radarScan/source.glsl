@@ -27,4 +27,3 @@ czm_material czm_getMaterial(czm_materialInput materialInput) {
   material.diffuse = color.rgb;
   return material;
 }
-circular
