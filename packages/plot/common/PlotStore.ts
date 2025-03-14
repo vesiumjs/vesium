@@ -1,5 +1,7 @@
 import type { Viewer } from 'cesium';
 import type { PlotFeatureCollection } from './PlotFeatureCollection';
+import { Event } from 'cesium';
+import { assertError } from 'vesium';
 
 export interface PlotStoreConstructorOptions {
   viewer: Viewer;
@@ -28,6 +30,7 @@ export class PlotStore {
     this._viewer = viewer;
     this._values = new Set<PlotFeatureCollection>();
     this._isDestroyed = false;
+    this._changed = new Event();
   }
 
   /**
@@ -44,9 +47,36 @@ export class PlotStore {
     return Array.from(this._values);
   }
 
-  add() {}
+  /**
+   * @internal
+   */
+  private _changed: Event<(scope: PlotStore, added?: PlotFeatureCollection, removed?: PlotFeatureCollection) => void>;
 
-  remove() {}
+  get changed(): Event<(scope: PlotStore, added?: PlotFeatureCollection, removed?: PlotFeatureCollection) => void> {
+    return this._changed;
+  }
+
+  add(value: PlotFeatureCollection): boolean {
+    assertError(!this.isDestroyed(), 'PlotStore has been destroyed');
+    if (value && !this._values.has(value)) {
+      this._values.add(value);
+      this._changed.raiseEvent(this, value);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  remove(value: PlotFeatureCollection): boolean {
+    if (this._values.delete(value)) {
+      this._changed.raiseEvent(this, undefined, value);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 
   /**
    * @internal
@@ -54,6 +84,9 @@ export class PlotStore {
   private _isDestroyed: boolean;
 
   isDestroyed(): boolean {
+    if (this._viewer.isDestroyed()) {
+      this.destroy();
+    }
     return !!this._isDestroyed;
   }
 
@@ -61,7 +94,9 @@ export class PlotStore {
     if (this._isDestroyed) {
       return;
     }
-    this._isDestroyed = true;
+    this._values.forEach(item => item.destroy());
+    this._values.clear();
     storeCollection.delete(this._viewer);
+    this._isDestroyed = true;
   }
 }

@@ -1,7 +1,7 @@
 import type { Nullable } from '@vesium/shared';
 import type { Cartesian3, ScreenSpaceEventHandler, Viewer } from 'cesium';
 import type { CSSProperties, MaybeRef, VNode } from 'vue';
-import type { Plot } from './Plot';
+import type { PlotFeature } from './PlotFeature';
 import type { SampledPlotPackable, SampledPlotProperty } from './SampledPlotProperty';
 import { Entity } from 'cesium';
 
@@ -224,7 +224,7 @@ export class PlotSkeletonEntity extends Entity {
   /**
    * @internal
    */
-  declare plot: Plot;
+  declare plot: PlotFeature;
 
   /**
    * @internal

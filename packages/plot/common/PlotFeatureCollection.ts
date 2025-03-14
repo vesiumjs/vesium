@@ -131,45 +131,4 @@ export class PlotFeatureCollection {
       this._isDestroyed = true;
     }
   }
-
-  /**
-   * @internal
-   */
-  private static _plotCollectionsMap = new WeakMap<Viewer, Set<PlotFeatureCollection>>();
-
-  /**
-   * @internal
-   */
-  private static _plotCollectionsChanged: Event<(scope: typeof PlotFeatureCollection, viewer: Viewer, added?: PlotFeatureCollection, removed?: PlotFeatureCollection) => void>;
-
-  static get plotCollectionsChanged(): Event<(scope: typeof PlotFeatureCollection, viewer: Viewer, added?: PlotFeatureCollection, removed?: PlotFeatureCollection) => void> {
-    return PlotFeatureCollection._plotCollectionsChanged;
-  }
-
-  static getViewerPlotCollections(viewer: Viewer): PlotFeatureCollection[] {
-    const set = PlotFeatureCollection._plotCollectionsMap.get(viewer);
-    return Array.from(set ?? []);
-  }
-
-  static addPlotCollection(viewer: Viewer, plotCollection: PlotFeatureCollection): boolean {
-    if (PlotFeatureCollection._plotCollectionsMap.get(viewer)) {
-      PlotFeatureCollection._plotCollectionsMap.set(viewer, new Set());
-    }
-    const set = PlotFeatureCollection._plotCollectionsMap.get(viewer);
-    const added = set!.has(plotCollection) ? !!set!.add(plotCollection) : false;
-    if (added) {
-      PlotFeatureCollection.plotCollectionsChanged.raiseEvent(PlotFeatureCollection, viewer, plotCollection, undefined);
-    }
-    return added;
-  }
-
-  static removePlotCollection(viewer: Viewer, plotCollection: PlotFeatureCollection): boolean {
-    const set = PlotFeatureCollection._plotCollectionsMap.get(viewer);
-    const removed = !!set?.delete(plotCollection);
-    if (removed) {
-      plotCollection.destroy();
-      PlotFeatureCollection.plotCollectionsChanged.raiseEvent(PlotFeatureCollection, viewer, undefined, plotCollection);
-    }
-    return removed;
-  }
 }

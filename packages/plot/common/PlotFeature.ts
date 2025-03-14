@@ -11,7 +11,7 @@ export type PlotDefinitionChangedCallback = (
   oldValue: PlotFeature[typeof key],
 ) => void;
 
-export interface PlotConstructorOptions {
+export interface PlotFeatureConstructorOptions {
   id?: string;
   disabled?: boolean;
   scheme: string | PlotScheme | PlotSchemeConstructorOptions;
@@ -19,7 +19,7 @@ export interface PlotConstructorOptions {
 }
 
 export class PlotFeature {
-  constructor(options: PlotConstructorOptions) {
+  constructor(options: PlotFeatureConstructorOptions) {
     const { id, disabled = false, sampled } = options;
 
     this._id = id || createGuid();
