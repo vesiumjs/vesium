@@ -17,3 +17,12 @@
 .VPHero.VPHomeHero .tagline {
   color: #98989f;
 }
+
+:not(html[class='dark']) .VPNav .home.top {
+  --vp-c-text-1: #dfdfd6;
+  --vp-c-divider: #2e2e32;
+}
+
+:not(html[class='dark']) .VPNav .home.top .VPMenu {
+  --vp-c-text-1: #3c3c43;
+}
