@@ -41,7 +41,6 @@
     "@vesium/core": "workspace:*",
     "@vesium/plot": "workspace:*",
     "@vesium/shared": "workspace:*",
-    "@vesium/special": "workspace:*",
     "@vueuse/core": "^13.0.0",
     "cesium": "^1.127.0",
     "pinia": "^3.0.1",

@@ -23,9 +23,6 @@ importers:
       '@vesium/shared':
         specifier: workspace:*
         version: link:packages/shared
-      '@vesium/special':
-        specifier: workspace:*
-        version: link:packages/special
       '@vueuse/core':
         specifier: ^13.0.0
         version: 13.0.0(vue@3.5.13(typescript@5.6.3))
@@ -272,18 +269,6 @@ importers:
         version: 3.5.13(typescript@5.8.2)
 
   packages/shared:
-    dependencies:
-      '@vueuse/shared':
-        specifier: ^13.0.0
-        version: 13.0.0(vue@3.5.13(typescript@5.8.2))
-      cesium:
-        specifier: ^1.127.0
-        version: 1.127.0
-      vue:
-        specifier: ^3.5.13
-        version: 3.5.13(typescript@5.8.2)
-
-  packages/special:
     dependencies:
       '@vueuse/shared':
         specifier: ^13.0.0

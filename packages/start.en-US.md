@@ -101,9 +101,4 @@ Vesium includes the following main modules:
   - Supports saving and restoring scene states
   - Provides data import/export functionality
 
-- **@vesium/special**: Effects module
-  - Provides material effects
-  - Post-processing effects
-  - Custom primitive rendering
-
 Each module is optimized for on-demand loading and can be used based on your specific needs. For detailed API documentation and usage examples, refer to the specific module's documentation.
