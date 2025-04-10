@@ -83,7 +83,17 @@ export function useImageryLayer<T extends ImageryLayer>(
       if (collection?.isDestroyed()) {
         return;
       }
-      list.forEach(item => (item && _collection?.add(item)));
+      list.forEach((item) => {
+        if (!item) {
+          console.warn('ImageryLayer is undefined');
+          return;
+        }
+        if (item?.isDestroyed()) {
+          console.warn('ImageryLayer is destroyed');
+          return;
+        }
+        _collection?.add(item);
+      });
       onCleanup(() => {
         const destroy = toValue(destroyOnRemove);
         list.forEach(item => item && _collection?.remove(item, destroy));
