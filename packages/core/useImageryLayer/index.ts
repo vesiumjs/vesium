@@ -80,6 +80,9 @@ export function useImageryLayer<T extends ImageryLayer>(
     if (_isActive) {
       const list = Array.isArray(result.value) ? [...result.value] : [result.value];
       const _collection = collection ?? viewer.value?.imageryLayers;
+      if (collection?.isDestroyed()) {
+        return;
+      }
       list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
         const destroy = toValue(destroyOnRemove);
