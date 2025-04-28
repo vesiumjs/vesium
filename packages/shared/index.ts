@@ -4,7 +4,6 @@ export * from './src/convertDMS';
 export * from './src/is';
 export * from './src/material';
 export * from './src/pick';
-export * from './src/promiseTimeout';
 export * from './src/property';
 export * from './src/throttle';
 export * from './src/toCartesian3';
