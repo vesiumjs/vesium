@@ -28,7 +28,7 @@ export interface CoordObject { longitude: number; latitude: number }
 /**
  * 3D Coordinate System
  */
-export interface CoordObject_ALT { longitude: number; latitude: number; height?: number }
+export interface CoordObject_ALT { longitude: number; latitude: number; height?: number | undefined }
 
 /**
  * Common Coordinate

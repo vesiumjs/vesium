@@ -25,7 +25,7 @@ export function isProperty(value: any): value is Property {
  * @param value - The value to convert
  */
 export function toPropertyValue<T = unknown>(value: MaybeProperty<T>, time?: JulianDate): T {
-  return isProperty(value) ? value.getValue(time as any) : value;
+  return isProperty(value) ? value.getValue(time as any) : value as any;
 }
 
 export type PropertyCallback<T = any> = (time: JulianDate, result?: T) => T;

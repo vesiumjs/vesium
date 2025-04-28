@@ -70,9 +70,9 @@ export function toCoord<T extends 'Array' | 'Object' = 'Array', Alt extends bool
   }
 
   if (type === 'Array') {
-    return alt ? [longitude, latitude, height] : [longitude, latitude] as any;
+    return alt ? [longitude, latitude, height] as any : [longitude, latitude] as any;
   }
   else {
-    return alt ? { longitude, latitude, height } : { longitude, latitude } as any;
+    return alt ? { longitude, latitude, height } as any : { longitude, latitude } as any;
   }
 }
