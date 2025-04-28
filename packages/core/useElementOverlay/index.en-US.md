@@ -17,7 +17,6 @@ const { x, y, elementOverlay } = useElementOverlay(
     vertical: 'bottom',
     offset: { x: 0, y: 0 },
     referenceWindow: false,
-    ms: 8,
   }
 );
 ```

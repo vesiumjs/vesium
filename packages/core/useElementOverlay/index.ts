@@ -1,12 +1,11 @@
 import type { CommonCoord } from '@vesium/shared';
 import type { MaybeComputedElementRef } from '@vueuse/core';
-import type { Cartesian2 } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { cartesianToCanvasCoord, throttle, toCartesian3 } from '@vesium/shared';
+import { cartesianToCanvasCoord, toCartesian3 } from '@vesium/shared';
 import { useElementBounding } from '@vueuse/core';
+import { Cartesian2 } from 'cesium';
+import { useCesiumEventListener, useViewer } from 'vesium';
 import { computed, shallowRef, toValue, watchEffect } from 'vue';
-import { useCesiumEventListener } from '../useCesiumEventListener';
-import { useViewer } from '../useViewer';
 
 export interface UseElementOverlayOptions {
   /**
@@ -39,12 +38,6 @@ export interface UseElementOverlayOptions {
    * @default true
    */
   applyStyle?: MaybeRefOrGetter<boolean>;
-
-  /**
-   * Throttling interval when refreshing position
-   * @default 8
-   */
-  ms?: number;
 }
 
 export interface UseElementOverlayRetrun {
@@ -73,33 +66,31 @@ export function useElementOverlay(
   options: UseElementOverlayOptions = {},
 ): UseElementOverlayRetrun {
   const {
-    ms = 8,
     referenceWindow,
     horizontal = 'center',
     vertical = 'bottom',
     offset = { x: 0, y: 0 },
   } = options;
 
-  const cartesian3 = computed(() => {
-    return toCartesian3(toValue(position));
-  });
+  const cartesian3 = computed(() => toCartesian3(toValue(position)));
 
   const viewer = useViewer();
   const coord = shallowRef<Cartesian2>();
 
   useCesiumEventListener(
     () => viewer.value?.scene.postRender,
-    throttle(() => {
-      if (viewer.value?.scene) {
-        if (!cartesian3.value) {
-          coord.value = undefined;
-        }
-        else {
-          const result = cartesianToCanvasCoord(cartesian3.value, viewer.value.scene);
-          coord.value = result;
-        }
+    () => {
+      if (!viewer.value?.scene) {
+        return;
       }
-    }, ms),
+      if (!cartesian3.value) {
+        coord.value = undefined;
+      }
+      else {
+        const reslut = cartesianToCanvasCoord(cartesian3.value, viewer.value.scene);
+        coord.value = !Cartesian2.equals(reslut, coord.value) ? reslut : coord.value;
+      }
+    },
   );
 
   const canvasBounding = useElementBounding(() => viewer.value?.canvas.parentElement);
@@ -145,6 +136,7 @@ export function useElementOverlay(
       y: finalOffset.value.y + data.y,
     };
   });
+
   const x = computed(() => location.value.x);
   const y = computed(() => location.value.y);
 
@@ -152,7 +144,6 @@ export function useElementOverlay(
 
   watchEffect(() => {
     const element = toValue(target) as HTMLElement;
-
     if (element && toValue(options.applyStyle ?? true)) {
       element.style?.setProperty?.('left', style.value.left);
       element.style?.setProperty?.('top', style.value.top);
