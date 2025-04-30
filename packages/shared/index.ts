@@ -9,5 +9,6 @@ export * from './src/throttle';
 export * from './src/toCartesian3';
 export * from './src/toCartographic';
 export * from './src/toCoord';
+export * from './src/tryRun';
 export * from './src/types';
 export * from './src/utils';
