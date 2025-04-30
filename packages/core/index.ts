@@ -9,6 +9,7 @@ export * from './useDataSourceScope';
 export * from './useElementOverlay';
 export * from './useEntity';
 export * from './useEntityScope';
+export * from './useGraphicEvent';
 export * from './useGraphicGesture';
 export * from './useImageryLayer';
 export * from './useImageryLayerScope';
