@@ -69,7 +69,9 @@ function openGithub() {
       <div ref="containerRef" class="demo-view relative min-h-550px text-12px">
         <Suspense v-if="reset">
           <component :is="defineAsyncComponent(() => import('./cesium-container.vue'))" v-if="cesium">
-            <component :is="demo" />
+            <div class="absolute bottom-0 right-0" bg="[var(--vp-c-bg)]">
+              <component :is="demo" />
+            </div>
           </component>
           <component :is="demo" v-else />
           <template #fallback>
