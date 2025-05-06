@@ -12,7 +12,6 @@ Object.values(Cesium.ScreenSpaceEventType).forEach((type: any) => {
 
 <template>
   <div
-    position="absolute right-0 top-0 bottom-0"
     w="200px"
     bg="[var(--vp-c-bg)]"
     p="10px"
