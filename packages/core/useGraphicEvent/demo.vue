@@ -86,7 +86,7 @@ useEntity(() => {
       params.dragging && params.lockCamera();
 
       // update position
-      const position = canvasCoordToCartesian(params.context.endPosition, viewer.value!.scene);
+      const position = canvasCoordToCartesian(params.event.endPosition, viewer.value!.scene);
       if (position) {
         entity!.position = new Cesium.CallbackPositionProperty(() => position, false);
       }

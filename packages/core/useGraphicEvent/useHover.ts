@@ -9,9 +9,9 @@ import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
  */
 export interface GraphicHoverEvent {
   /**
-   * Context of the motion event
+   * Event of the motion event
    */
-  context: ScreenSpaceEventHandler.MotionEvent;
+  event: ScreenSpaceEventHandler.MotionEvent;
 
   /**
    * The graphic object picked by `scene.pick`
@@ -36,7 +36,7 @@ export function useHover(
 
   const execute = (pick: unknown, startPosition: Cartesian2, endPosition: Cartesian2, hovering: boolean) => {
     listener({
-      context: {
+      event: {
         startPosition: startPosition.clone(),
         endPosition: endPosition.clone(),
       },

@@ -13,9 +13,9 @@ import { useViewer } from '../useViewer';
  */
 export interface GraphicDragEvent {
   /**
-   * Context of the motion event
+   * Event of the motion event
    */
-  context: ScreenSpaceEventHandler.MotionEvent;
+  event: ScreenSpaceEventHandler.MotionEvent;
 
   /**
    * The graphic object picked by `scene.pick`
@@ -58,7 +58,7 @@ export function useDrag(
 
   const execute = (pick: unknown, startPosition: Cartesian2, endPosition: Cartesian2) => {
     listener({
-      context: {
+      event: {
         startPosition: startPosition.clone(),
         endPosition: endPosition.clone(),
       },
@@ -76,9 +76,9 @@ export function useDrag(
 
   const stopLeftDownWatch = useScreenSpaceEventHandler(
     ScreenSpaceEventType.LEFT_DOWN,
-    (context) => {
+    (event) => {
       dragging.value = true;
-      position.value = context.position.clone();
+      position.value = event.position.clone();
     },
   );
 
@@ -103,11 +103,11 @@ export function useDrag(
   // drag end
   const stopLeftUpWatch = useScreenSpaceEventHandler(
     ScreenSpaceEventType.LEFT_UP,
-    (context) => {
+    (event) => {
       dragging.value = false;
 
       if (pick.value && motionEvent.value) {
-        execute(pick.value, motionEvent.value.endPosition, context.position);
+        execute(pick.value, motionEvent.value.endPosition, event.position);
       }
       position.value = undefined;
       motionEvent.value = undefined;
