@@ -1,5 +1,6 @@
 import type { Entity } from 'cesium';
 import type { PlotSchemeConstructorOptions } from './PlotScheme';
+import type { PlotSkeletonEntity } from './PlotSkeleton';
 import type { SampledPlotPropertyConstructorOptions } from './SampledPlotProperty';
 import { createGuid, Event } from 'cesium';
 import { PlotScheme } from './PlotScheme';
@@ -150,16 +151,16 @@ export class PlotFeature {
   /**
    * @internal
    */
-  private _skeletons: Entity[];
+  private _skeletons: PlotSkeletonEntity[];
 
-  get skeletons(): Entity[] {
+  get skeletons(): PlotSkeletonEntity[] {
     return this._skeletons;
   }
 
   /**
    * @internal
    */
-  set skeletons(value: Entity[]) {
+  set skeletons(value: PlotSkeletonEntity[]) {
     this._definitionChanged.raiseEvent(this, 'skeletons', this._skeletons, value);
     this._skeletons = value;
   }

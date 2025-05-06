@@ -49,7 +49,7 @@ export interface OnSkeletonClickOptions {
   /**
    * 鼠标点击事件上下文信息
    */
-  context: ScreenSpaceEventHandler.PositionedEvent;
+  event: ScreenSpaceEventHandler.PositionedEvent;
 }
 
 export interface OnSkeletonDragOptions {
@@ -78,7 +78,7 @@ export interface OnSkeletonDragOptions {
   /**
    * 鼠标拖拽事件上下文信息
    */
-  context: ScreenSpaceEventHandler.MotionEvent;
+  event: ScreenSpaceEventHandler.MotionEvent;
 
   /**
    * 当前的拖拽状态

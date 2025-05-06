@@ -2,11 +2,12 @@ import type { JulianDate } from 'cesium';
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { PlotFeature } from './PlotFeature';
 import type { PlotSkeleton } from './PlotSkeleton';
-import { useCesiumEventListener, useDataSource, useEntityScope, useGraphicDrag, useGraphicHover, useGraphicLeftClick, useViewer } from '@vesium/core';
+import { useCesiumEventListener, useDataSource, useEntityScope, useViewer } from '@vesium/core';
 import { arrayDiff, isFunction, throttle } from '@vesium/shared';
 import { onKeyStroke, watchArray } from '@vueuse/core';
 import { CustomDataSource } from 'cesium';
-import { shallowRef, toValue, watch } from 'vue';
+import { shallowRef, toValue, watch, watchEffect } from 'vue';
+import { useGraphicEvent } from '../useGraphicEvent';
 import { PlotAction, PlotSkeletonEntity } from './PlotSkeleton';
 
 export function useSkeleton(
@@ -88,23 +89,13 @@ export function useSkeleton(
     plot.skeletons = entities;
   }, 1);
 
-  // cursor 仅在不存在定义态的标绘时才生效
-  useGraphicDrag({
-    cursor: (pick) => {
-      if (!current.value?.defining && entityScope.scope.has(pick.id)) {
-        const skeleton = pick.id.skeleton as PlotSkeleton;
-        return isFunction(skeleton?.cursor) ? skeleton.cursor(pick) : toValue(skeleton?.cursor);
-      }
-    },
-    dragCursor: (pick) => {
-      if (!current.value?.defining && entityScope.scope.has(pick.id)) {
-        const skeleton = pick.id.skeleton as PlotSkeleton;
-        return isFunction(skeleton?.dragCursor) ? skeleton.dragCursor(pick) : toValue(skeleton?.dragCursor);
-      }
-    },
-    listener: (params) => {
-      if (params.pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(params.pick.id)) {
-        const entity = params.pick.id as PlotSkeletonEntity;
+  const { addGraphicEvent } = useGraphicEvent();
+
+  watchEffect((onCleanup) => {
+    // cursor 仅在不存在定义态的标绘时才生效
+    const remove = addGraphicEvent('global', 'DRAG', ({ event, pick, dragging, lockCamera }) => {
+      if (pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
+        const entity = pick.id as PlotSkeletonEntity;
 
         const plot = entity.plot as PlotFeature;
         // 仅在非定义态时才可拖拽
@@ -121,15 +112,29 @@ export function useSkeleton(
           packable,
           active: current.value === plot,
           index,
-          context: params.context,
-          dragging: params.dragging,
-          lockCamera: params.lockCamera,
+          event,
+          dragging,
+          lockCamera,
         });
       }
       else {
         activeEntity.value = undefined;
       }
-    },
+    }, {
+      cursor: ({ pick }) => {
+        if (!current.value?.defining && entityScope.scope.has(pick.id)) {
+          const skeleton = pick.id.skeleton as PlotSkeleton;
+          return isFunction(skeleton?.cursor) ? skeleton.cursor(pick) : toValue(skeleton?.cursor);
+        }
+      },
+      dragCursor: ({ pick }) => {
+        if (!current.value?.defining && entityScope.scope.has(pick.id)) {
+          const skeleton = pick.id.skeleton as PlotSkeleton;
+          return isFunction(skeleton?.dragCursor) ? skeleton.dragCursor(pick) : toValue(skeleton?.dragCursor);
+        }
+      },
+    });
+    onCleanup(remove);
   });
 
   // 键盘控制当前激活的点位
@@ -151,8 +156,8 @@ export function useSkeleton(
     }
   });
 
-  useGraphicHover({
-    listener: ({ hovering, pick }) => {
+  watchEffect((onCleanup) => {
+    const remove = addGraphicEvent('global', 'HOVER', ({ hovering, pick }) => {
       if (hovering && pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as PlotSkeletonEntity;
         hoverEntity.value = entity;
@@ -160,12 +165,12 @@ export function useSkeleton(
       else {
         hoverEntity.value = undefined;
       }
-    },
+    });
+    onCleanup(remove);
   });
 
-  // 左键点击，令点位处于激活
-  useGraphicLeftClick({
-    listener: ({ context, pick }) => {
+  watchEffect((onCleanup) => {
+    const remove = addGraphicEvent('global', 'LEFT_CLICK', ({ event, pick }) => {
       if (pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as PlotSkeletonEntity;
         activeEntity.value = entity;
@@ -182,13 +187,14 @@ export function useSkeleton(
           active: current.value === plot,
           defining: plot.defining,
           index,
-          context,
+          event,
         });
       }
       else {
         activeEntity.value = undefined;
       }
-    },
+    });
+    onCleanup(remove);
   });
 
   watchArray(plots, (value, oldValue, added, removed = []) => {
