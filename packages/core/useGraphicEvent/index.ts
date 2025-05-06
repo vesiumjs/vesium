@@ -78,7 +78,7 @@ export interface UseGraphicEventRetrun {
 }
 
 /**
- * Manages graphic event listeners and cursor styles for Cesium graphics.
+ * Handle graphic event listeners and cursor styles for Cesium graphics.
  * You don't need to overly worry about memory leaks from the function, as it automatically cleans up internally.
  */
 export function useGraphicEvent(): UseGraphicEventRetrun {
