@@ -12,6 +12,7 @@ export * from './useEntityScope';
 export * from './useGraphicEvent';
 export * from './useImageryLayer';
 export * from './useImageryLayerScope';
+export * from './usePlot';
 export * from './usePostProcessStage';
 export * from './usePostProcessStageScope';
 export * from './usePrimitive';

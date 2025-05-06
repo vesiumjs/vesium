@@ -1,6 +1,6 @@
-import type { EntityCollection, Viewer } from 'cesium';
+import type { CustomDataSource, EntityCollection, Event, PrimitiveCollection, Viewer } from 'cesium';
 import type { PlotFeature } from './PlotFeature';
-import { createGuid, CustomDataSource, Event, PrimitiveCollection } from 'cesium';
+import { createGuid } from 'cesium';
 
 export type PlotCollectionChanged = (scope: PlotFeatureCollection, added: PlotFeature[], removed: PlotFeature[]) => void;
 
@@ -14,24 +14,6 @@ export class PlotFeatureCollection {
     this._id = id || createGuid();
     this._isDestroyed = false;
   }
-
-  /**
-   * @internal
-   */
-  private _init(viewer: Viewer) {
-    this._viewer = viewer;
-    this._collectionChanged = new Event<PlotCollectionChanged>();
-    this._values = new Set<PlotFeature>();
-    this._dataSource = new CustomDataSource();
-    this._skeletonDataSource = new CustomDataSource();
-    this._primitives = new PrimitiveCollection();
-    this._groundPrimitives = new PrimitiveCollection();
-
-    viewer.dataSources.add(this._dataSource);
-    viewer.dataSources.add(this._skeletonDataSource);
-    viewer.scene.primitives.add(this._primitives);
-    viewer.scene.groundPrimitives.add(this._groundPrimitives);
-  };
 
   /**
    * @internal
