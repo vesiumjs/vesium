@@ -11,9 +11,9 @@ export function control(): PlotSkeleton {
     disabled: ({ active }) => !active,
     cursor: 'pointer',
     dragCursor: 'crosshair',
-    onDrag({ viewer, sampled, packable, context, index, lockCamera }) {
+    onDrag({ viewer, sampled, packable, event, index, lockCamera }) {
       lockCamera();
-      const position = canvasCoordToCartesian(context.endPosition, viewer.scene);
+      const position = canvasCoordToCartesian(event.endPosition, viewer.scene);
       if (position) {
         const positions = [...packable.positions ?? []];
         positions[index] = position;

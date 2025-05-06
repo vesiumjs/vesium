@@ -23,9 +23,9 @@ export function intervalNonclosed(): PlotSkeleton {
       }
       return midpoints;
     },
-    onDrag({ viewer, sampled, packable, context, index, lockCamera, dragging }) {
+    onDrag({ viewer, sampled, packable, event, index, lockCamera, dragging }) {
       lockCamera();
-      const position = canvasCoordToCartesian(context.endPosition, viewer.scene);
+      const position = canvasCoordToCartesian(event.endPosition, viewer.scene);
       if (!position) {
         return;
       }

@@ -29,10 +29,10 @@ export function moved(): PlotSkeleton {
         return [toCartesian3(center)!];
       }
     },
-    onDrag({ viewer, sampled, packable, context, lockCamera, dragging }) {
+    onDrag({ viewer, sampled, packable, event, lockCamera, dragging }) {
       dragging && lockCamera();
-      const startPosition = canvasCoordToCartesian(context.startPosition, viewer.scene);
-      const endPosition = canvasCoordToCartesian(context.endPosition, viewer.scene);
+      const startPosition = canvasCoordToCartesian(event.startPosition, viewer.scene);
+      const endPosition = canvasCoordToCartesian(event.endPosition, viewer.scene);
 
       if (!startPosition || !endPosition) {
         return;

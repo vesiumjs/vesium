@@ -32,8 +32,8 @@ export function useRender(
 
   useScreenSpaceEventHandler(
     ScreenSpaceEventType.MOUSE_MOVE,
-    throttle((context) => {
-      mouseCartesian.value = canvasCoordToCartesian(context?.endPosition, viewer.value!.scene);
+    throttle((event) => {
+      mouseCartesian.value = canvasCoordToCartesian(event?.endPosition, viewer.value!.scene);
     }, 10),
   );
 
