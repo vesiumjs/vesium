@@ -89,12 +89,15 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
   const removeGraphicEvent = (graphic: CesiumGraphic | 'global', type: GraphicEventType, listener: AnyFn) => {
     const _graphic: CesiumGraphic | GlobalGraphicSymbol = graphic === 'global' ? GLOBAL_GRAPHIC_SYMBOL : graphic;
 
+    // Remove the listener for the specified type
     collection?.get(_graphic)?.get(type)?.delete(listener);
     cursorCollection?.get(_graphic)?.get(type)?.delete(listener);
 
+    // If the listener set for the specified type is empty, delete that type
     if (collection?.get(_graphic)?.get(type)?.size === 0) {
       collection!.get(_graphic)!.delete(type);
     }
+    // If the event map for the graphic is empty, delete that graphic
     if (collection.get(_graphic)?.size === 0) {
       collection.delete(_graphic);
     }
@@ -107,9 +110,11 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
     }
     dragCursorCollection?.get(_graphic)?.get(type)?.delete(listener);
 
+    // If the listener set for the drag type is empty, delete that type
     if (dragCursorCollection?.get(_graphic)?.get(type)?.size === 0) {
       dragCursorCollection?.get(_graphic)?.delete(type);
     }
+    // If the drag event map for the graphic is empty, delete that graphic
     if (dragCursorCollection?.get(_graphic)?.size === 0) {
       dragCursorCollection?.delete(_graphic);
     }
@@ -117,9 +122,11 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
 
   const addGraphicEvent = (graphic: CesiumGraphic | 'global', type: GraphicEventType, listener: AnyFn, options: AddGraphicEventOptions = {}) => {
     const _graphic: CesiumGraphic | GlobalGraphicSymbol = graphic === 'global' ? GLOBAL_GRAPHIC_SYMBOL : graphic;
+    // Ensure the event map for the graphic exists
     collection.get(_graphic) ?? collection.set(_graphic, new Map());
     const eventTypeMap = collection.get(_graphic)!;
 
+    // Ensure the listener set for the specified type exists
     eventTypeMap.get(type) ?? eventTypeMap.set(type, new Set());
     const listeners = eventTypeMap.get(type)!;
 
@@ -127,19 +134,23 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
 
     let { cursor = 'pointer', dragCursor } = options;
 
+    // Handle cursor style for hover events
     if (isDef(cursor)) {
       const _cursor = isFunction(cursor) ? cursor : () => cursor;
+      // Ensure the cursor map for the graphic exists
       cursorCollection.get(_graphic) ?? cursorCollection.set(_graphic, new Map());
       cursorCollection.get(_graphic)!.get(type) ?? cursorCollection.get(_graphic)!.set(type, new Map());
       cursorCollection.get(_graphic)!.get(type)!.set(listener, _cursor);
     }
 
+    // Handle cursor style for drag events
     if (type === 'DRAG') {
       dragCursor ??= ((event: GraphicDragEvent) => event?.dragging ? 'crosshair' : undefined) as any;
     }
 
     if (isDef(dragCursor)) {
       const _dragCursor = isFunction(dragCursor) ? dragCursor : () => dragCursor;
+      // Ensure the drag cursor map for the graphic exists
       dragCursorCollection.get(_graphic) ?? dragCursorCollection.set(_graphic, new Map());
       dragCursorCollection.get(_graphic)!.get(type) ?? dragCursorCollection.get(_graphic)!.set(type, new Map());
       dragCursorCollection.get(_graphic)!.get(type)!.set(listener, _dragCursor);
@@ -150,6 +161,7 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
 
   const clearGraphicEvent = (graphic: CesiumGraphic | 'global', type: GraphicEventType | 'all') => {
     const _graphic: CesiumGraphic | GlobalGraphicSymbol = graphic === 'global' ? GLOBAL_GRAPHIC_SYMBOL : graphic;
+    // Clear all events
     if (type === 'all') {
       collection.delete(_graphic);
       cursorCollection.delete(_graphic);
@@ -157,6 +169,7 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
       return;
     }
 
+    // Delete the event for the specified type
     collection.get(_graphic)?.delete(type);
     if (collection.get(_graphic)?.size === 0) {
       collection.delete(_graphic);
@@ -164,10 +177,12 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
     cursorCollection?.get(_graphic)?.delete(type);
     dragCursorCollection?.get(_graphic)?.delete(type);
 
+    // If the cursor map for the graphic is empty, delete that graphic
     if (cursorCollection?.get(_graphic)?.size === 0) {
       cursorCollection?.delete(_graphic);
     }
 
+    // If the drag cursor map for the graphic is empty, delete that graphic
     if (dragCursorCollection?.get(_graphic)?.size === 0) {
       dragCursorCollection?.delete(_graphic);
     }
