@@ -59,7 +59,7 @@ export class PlotFeature {
   private _definitionChanged: Event<PlotDefinitionChangedCallback>;
 
   get definitionChanged(): Event<PlotDefinitionChangedCallback> {
-    return this.definitionChanged;
+    return this._definitionChanged;
   }
 
   /**
