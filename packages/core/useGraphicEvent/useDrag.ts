@@ -23,7 +23,7 @@ export interface GraphicDragEvent {
   pick: any;
 
   /**
-   * Whether the graphic is currently being dragged. Returns `true` continuously while dragging, and `false` once it ends.
+   * Whether the graphic is currently being dragged.
    */
   dragging: boolean;
 
@@ -89,7 +89,7 @@ export function useDrag(
         startPosition: motionEvent.value?.endPosition.clone() || startPosition.clone(),
         endPosition: endPosition.clone(),
       };
-    }, 16, false, true),
+    }, 8, false, true),
   );
 
   // dragging

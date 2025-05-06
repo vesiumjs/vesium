@@ -25,12 +25,16 @@ useEntity(() => {
       text: 'CLICK ME',
     },
   });
-  addGraphicEvent(entity, 'LEFT_CLICK', (_params) => {
-    const color = new Cesium.ConstantProperty(Cesium.Color.RED);
-    entity!.point!.color = color;
-    entity!.label!.fillColor = color;
-    entity!.label!.text = new Cesium.ConstantProperty('CLICKED');
-  });
+  addGraphicEvent(
+    entity,
+    'LEFT_CLICK',
+    (_params) => {
+      const color = new Cesium.ConstantProperty(Cesium.Color.RED);
+      entity!.point!.color = color;
+      entity!.label!.fillColor = color;
+      entity!.label!.text = new Cesium.ConstantProperty('CLICKED');
+    },
+  );
   return entity;
 });
 
@@ -45,12 +49,16 @@ useEntity(() => {
       text: 'HOVER ME',
     },
   });
-  addGraphicEvent(entity, 'HOVER', (params) => {
-    const color = params.hovering ? Cesium.Color.RED : undefined;
-    entity!.point!.color = toProperty(color);
-    entity!.label!.fillColor = toProperty(color);
-    entity!.label!.text = toProperty(params.hovering ? 'HOVERING' : 'HOVER ME');
-  });
+  addGraphicEvent(
+    entity,
+    'HOVER',
+    (params) => {
+      const color = params.hovering ? Cesium.Color.RED : undefined;
+      entity!.point!.color = toProperty(color);
+      entity!.label!.fillColor = toProperty(color);
+      entity!.label!.text = toProperty(params.hovering ? 'HOVERING' : 'HOVER ME');
+    },
+  );
   return entity;
 });
 
@@ -65,20 +73,25 @@ useEntity(() => {
       text: 'DRAG ME',
     },
   });
-  addGraphicEvent(entity, 'DRAG', (params) => {
-    const color = params.dragging ? Cesium.Color.RED : undefined;
-    entity!.point!.color = toProperty(color);
-    entity!.label!.fillColor = toProperty(color);
-    entity!.label!.text = toProperty(params.dragging ? 'DRAGGING' : 'DRAG ME');
-    // lock camera
-    params.dragging && params.lockCamera();
 
-    // update position
-    const position = canvasCoordToCartesian(params.context.endPosition, viewer.value!.scene);
-    if (position) {
-      entity!.position = new Cesium.CallbackPositionProperty(() => position, false);
-    }
-  });
+  addGraphicEvent(
+    entity,
+    'DRAG',
+    (params) => {
+      const color = params.dragging ? Cesium.Color.RED : undefined;
+      entity!.point!.color = toProperty(color);
+      entity!.label!.fillColor = toProperty(color);
+      entity!.label!.text = toProperty(params.dragging ? 'DRAGGING' : 'DRAG ME');
+      // lock camera
+      params.dragging && params.lockCamera();
+
+      // update position
+      const position = canvasCoordToCartesian(params.context.endPosition, viewer.value!.scene);
+      if (position) {
+        entity!.position = new Cesium.CallbackPositionProperty(() => position, false);
+      }
+    },
+  );
   return entity;
 });
 </script>
