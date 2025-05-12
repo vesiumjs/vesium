@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCesiumFps } from '@vesium/core';
 
-const { fps, interval } = useCesiumFps({ delay: 300 });
+const { fps, interval } = useCesiumFps({ delay: 100 });
 </script>
 
 <template>
@@ -10,7 +10,7 @@ const { fps, interval } = useCesiumFps({ delay: 300 });
     p="10px"
     flex="~ col"
   >
-    <span>FPS:{{ fps }}</span>
-    <span>Interval:{{ interval }}ms</span>
+    <span>FPS:{{ fps?.toFixed(2) }}</span>
+    <span>Interval:{{ interval?.toFixed(2) }}ms</span>
   </div>
 </template>

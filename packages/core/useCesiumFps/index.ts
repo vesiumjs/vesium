@@ -7,7 +7,7 @@ import { useViewer } from '../useViewer';
 export interface UseCesiumFpsOptions {
   /**
    * Throttled sampling (ms)
-   * @default 8
+   * @default 100
    */
   delay?: number;
 }
@@ -28,7 +28,7 @@ export interface UseCesiumFpsRetrun {
  * Reactive get the frame rate of Cesium
  */
 export function useCesiumFps(options: UseCesiumFpsOptions = {}): UseCesiumFpsRetrun {
-  const { delay = 8 } = options;
+  const { delay = 100 } = options;
 
   const viewer = useViewer();
   const p = shallowRef(performance.now());
