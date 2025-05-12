@@ -1,9 +1,10 @@
 :root {
-  --vp-layout-max-width: 1680px;
   --vp-c-brand-1: #52b783;
   --vp-c-indigo-1: var(--vp-c-green-1);
   --vp-c-indigo-2: var(--vp-c-green-2);
   --vp-c-indigo-3: var(--vp-c-green-3);
+
+  --vp-gap-x: 12px;
 }
 
 .VPDoc.has-aside .content-container {
@@ -25,4 +26,31 @@
 
 :not(html[class='dark']) .VPNav .home.top .VPMenu {
   --vp-c-text-1: #3c3c43;
+}
+
+@media (min-width: 1280px) {
+  .VPContent .VPDoc {
+    .aside {
+      padding-left: var(--vp-gap-x);
+    }
+  }
+}
+
+@media (min-width: 960px) {
+  .VPContent {
+    .VPDoc {
+      padding: var(--vp-gap-x) 0 0;
+    }
+    .content {
+      padding: 0 var(--vp-gap-x) calc(var(--vp-gap-x) * 8);
+    }
+  }
+}
+
+@media (min-width: 720px) {
+  .VPContent {
+    .VPDoc {
+      padding: var(--vp-gap-x) 0 0;
+    }
+  }
 }
