@@ -1,7 +1,7 @@
-import type { PlotSkeleton } from '../PlotSkeleton';
+import type { PlotSkeleton } from '../usePlot';
 import { canvasCoordToCartesian, toCartesian3, toCartographic } from '@vesium/shared';
 import { Color } from 'cesium';
-import { PlotAction } from '../PlotSkeleton';
+import { PlotAction } from '../usePlot';
 
 /**
  * 绘制控制的框架点，拖拽时，将更新该控制点的实时位置

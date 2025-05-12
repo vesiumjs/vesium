@@ -1,7 +1,7 @@
-import type { PlotSkeleton } from '../PlotSkeleton';
+import type { PlotSkeleton } from '../usePlot';
 import { canvasCoordToCartesian, toCartesian3 } from '@vesium/shared';
 import { Cartesian3, Color, HorizontalOrigin, Rectangle, VerticalOrigin } from 'cesium';
-import { PlotAction } from '../PlotSkeleton';
+import { PlotAction } from '../usePlot';
 
 // see https://icones.js.org/collection/tabler?s=move&icon=tabler:arrows-move
 const svg = `data:image/svg+xml;utf8,${encodeURIComponent(

@@ -14,6 +14,9 @@ importers:
       '@vesium/core':
         specifier: workspace:*
         version: link:packages/core
+      '@vesium/plot':
+        specifier: workspace:*
+        version: link:packages/plot
       '@vesium/shared':
         specifier: workspace:*
         version: link:packages/shared
@@ -215,6 +218,21 @@ importers:
         version: link:../shared
 
   packages/core:
+    dependencies:
+      '@vesium/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@vueuse/core':
+        specifier: ^13.1.0
+        version: 13.1.0(vue@3.5.13(typescript@5.8.3))
+      cesium:
+        specifier: ^1.129.0
+        version: 1.129.0
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.13(typescript@5.8.3)
+
+  packages/plot:
     dependencies:
       '@vesium/shared':
         specifier: workspace:*

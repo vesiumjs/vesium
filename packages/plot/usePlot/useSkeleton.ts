@@ -2,15 +2,11 @@ import type { JulianDate } from 'cesium';
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { PlotFeature } from './PlotFeature';
 import type { PlotSkeleton } from './PlotSkeleton';
+import { useCesiumEventListener, useDataSource, useEntityScope, useGraphicEvent, useViewer } from '@vesium/core';
 import { arrayDiff, isFunction, throttle } from '@vesium/shared';
 import { onKeyStroke, watchArray } from '@vueuse/core';
 import { CustomDataSource } from 'cesium';
 import { shallowRef, toValue, watch, watchEffect } from 'vue';
-import { useCesiumEventListener } from '../useCesiumEventListener';
-import { useDataSource } from '../useDataSource';
-import { useEntityScope } from '../useEntityScope';
-import { useGraphicEvent } from '../useGraphicEvent';
-import { useViewer } from '../useViewer';
 import { PlotAction, PlotSkeletonEntity } from './PlotSkeleton';
 
 export function useSkeleton(

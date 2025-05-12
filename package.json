@@ -38,6 +38,7 @@
   "dependencies": {
     "@unocss/reset": "^66.1.1",
     "@vesium/core": "workspace:*",
+    "@vesium/plot": "workspace:*",
     "@vesium/shared": "workspace:*",
     "@vueuse/core": "^13.1.0",
     "cesium": "^1.129.0",

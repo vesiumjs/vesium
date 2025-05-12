@@ -25,17 +25,16 @@ export class PlotFeature {
     const { id, disabled = false, sampled } = options;
     this._id = id || createGuid();
     this._scheme = PlotScheme.resolve(options.scheme);
+
     this._definitionChanged = new Event();
     this._defining = true;
     this._disabled = disabled;
     this._sampled = sampled instanceof SampledPlotProperty ? sampled : new SampledPlotProperty(sampled);
-    this._sampled.definitionChanged.addEventListener(
-      property => this._definitionChanged.raiseEvent(this, 'sampled', property, property),
-      this,
-    );
-    this._entities = [];
-    this._primitives = [];
-    this._groundPrimitives = [];
+    this._sampled.definitionChanged.addEventListener(property => this._definitionChanged.raiseEvent(this, 'sampled', property, property), this);
+
+    this._entities = [...this._scheme.initEntites];
+    this._primitives = [...this._scheme.initPrimitives];
+    this._groundPrimitives = [...this._scheme.initGroundPrimitives];
     this._skeletons = [];
   }
 

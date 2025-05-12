@@ -1,7 +1,7 @@
-import type { PlotSkeleton } from '../PlotSkeleton';
+import type { PlotSkeleton } from '../usePlot';
 import { canvasCoordToCartesian } from '@vesium/shared';
 import { Cartesian3, Color } from 'cesium';
-import { PlotAction } from '../PlotSkeleton';
+import { PlotAction } from '../usePlot';
 
 /**
  * 绘制非封闭的间隔框架点，如线段。拖拽时，会在两点之间插入一个控制点，并持续拖拽该点。

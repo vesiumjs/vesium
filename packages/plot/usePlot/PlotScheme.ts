@@ -46,8 +46,12 @@ export interface PlotSchemeConstructorOptions {
    */
   skeletons?: (() => PlotSkeleton) [];
 
-  /**
-   */
+  initEntites?: Entity[];
+
+  initPrimitives?: any[];
+
+  initGroundPrimitives?: any[];
+
   render?: (options: PlotRenderOptions) => PlotRenderResult | Promise<PlotRenderResult>;
 
 }
@@ -59,6 +63,9 @@ export class PlotScheme {
     this.forceComplete = options.forceComplete;
     this.definingCursor = options.definingCursor ?? 'crosshair';
     this.skeletons = options.skeletons?.map(item => item()) ?? [];
+    this.initEntites = [...options.initEntites ?? []];
+    this.initPrimitives = [...options.initPrimitives ?? []];
+    this.initGroundPrimitives = [...options.initGroundPrimitives ?? []];
     this.render = options.render;
   }
 
@@ -81,6 +88,12 @@ export class PlotScheme {
    * @default 'crosshair'
    */
   definingCursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((packable: SampledPlotPackable) => Nullable<CSSProperties['cursor']>);
+
+  initEntites: Entity[];
+
+  initPrimitives: any[];
+
+  initGroundPrimitives: any[];
 
   /**
    * 框架点渲染配置

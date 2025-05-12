@@ -1,4 +1,4 @@
-import type { PlotFeatureConstructorOptions } from '../PlotFeature';
+import type { PlotFeatureConstructorOptions } from '../usePlot';
 import { CallbackProperty, Color, Entity, PolygonHierarchy } from 'cesium';
 import { control, interval, moved } from '../skeleton';
 
@@ -13,6 +13,17 @@ export const PLOT_POLYGON_SCHEME: PlotFeatureConstructorOptions = {
       control,
       interval,
       moved,
+    ],
+
+    initEntites: [
+      new Entity({
+        polyline: {
+          material: Color.YELLOW.withAlpha(0.5),
+        },
+        polygon: {
+          material: Color.YELLOW.withAlpha(0.5),
+        },
+      }),
     ],
     render(options) {
       const { mouse, packable } = options;

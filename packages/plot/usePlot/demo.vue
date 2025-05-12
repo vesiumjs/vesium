@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PLOT_LABEL_SCHEME, PLOT_LINE_STRING_SCHEME, PLOT_POLYGON_SCHEME, usePlot } from 'vesium';
+import { PLOT_BILLBOARD_SCHEME, PLOT_LABEL_SCHEME, PLOT_LINE_STRING_SCHEME, PLOT_POLYGON_SCHEME, usePlot } from '@vesium/plot';
 
 const { operate } = usePlot();
 
@@ -7,6 +7,10 @@ const otpions = [
   {
     label: 'Lebel',
     scheme: PLOT_LABEL_SCHEME,
+  },
+  {
+    label: 'Billboard',
+    scheme: PLOT_BILLBOARD_SCHEME,
   },
   {
     label: 'LineString',

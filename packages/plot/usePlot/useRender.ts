@@ -1,17 +1,11 @@
 import type { Cartesian3, Entity, JulianDate } from 'cesium';
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { PlotFeature } from './PlotFeature';
+import { useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventHandler, useViewer } from '@vesium/core';
 import { arrayDiff, canvasCoordToCartesian } from '@vesium/shared';
 import { watchArray } from '@vueuse/core';
 import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'cesium';
 import { computed, shallowRef, watch } from 'vue';
-import { useCesiumEventListener } from '../useCesiumEventListener';
-import { useDataSource } from '../useDataSource';
-import { useEntityScope } from '../useEntityScope';
-import { usePrimitive } from '../usePrimitive';
-import { usePrimitiveScope } from '../usePrimitiveScope';
-import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
-import { useViewer } from '../useViewer';
 
 export interface UseProductRetrun {
   primitives: ComputedRef<any[]>;

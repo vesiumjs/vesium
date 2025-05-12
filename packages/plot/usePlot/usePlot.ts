@@ -1,12 +1,10 @@
 import type { ShallowRef } from 'vue';
 import type { PlotFeatureConstructorOptions } from './PlotFeature';
 import type { SampledPlotPackable } from './SampledPlotProperty';
+import { useCesiumEventListener, useScreenSpaceEventHandler, useViewer } from '@vesium/core';
 import { pickHitGraphic } from '@vesium/shared';
 import { JulianDate, ScreenSpaceEventType } from 'cesium';
 import { computed, shallowReactive, shallowRef, watch } from 'vue';
-import { useCesiumEventListener } from '../useCesiumEventListener';
-import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
-import { useViewer } from '../useViewer';
 import { PlotFeature } from './PlotFeature';
 import { useRender } from './useRender';
 import { useSampled } from './useSampled';
