@@ -92,10 +92,6 @@ Vesium 包含以下主要模块：
   - `useImageryLayer`: 影像图层控制
   - 更多功能请参考 API 文档
 
-- **@vesium/plot**: 绘图工具模块
-
-  - 支持点、线、面等几何图形的绘制
-  - 提供图形编辑和样式控制能力
 
 - **@vesium/serialize**: 序列化工具模块
 

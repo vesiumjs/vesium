@@ -91,11 +91,6 @@ Vesium includes the following main modules:
   - `useImageryLayer`: Imagery layer control
   - For more features, refer to the API documentation
 
-- **@vesium/plot**: Drawing tools module
-
-  - Supports drawing geometric shapes such as points, lines, and polygons
-  - Provides capabilities for editing and styling graphics
-
 - **@vesium/serialize**: Serialization tools module
 
   - Supports saving and restoring scene states
