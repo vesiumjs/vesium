@@ -39,7 +39,7 @@
 @media (min-width: 960px) {
   .VPContent {
     .VPDoc {
-      padding: var(--vp-gap-x) 0 0;
+      padding: calc(var(--vp-gap-x) * 3) 0 0;
     }
     .content {
       padding: 0 var(--vp-gap-x) calc(var(--vp-gap-x) * 8);
@@ -50,7 +50,7 @@
 @media (min-width: 720px) {
   .VPContent {
     .VPDoc {
-      padding: var(--vp-gap-x) 0 0;
+      padding: calc(var(--vp-gap-x) * 3) 0 0;
     }
   }
 }
