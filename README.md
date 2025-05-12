@@ -6,7 +6,7 @@
 <span style="color:#52B783">V</span><span style="color:#38485D">esium</span>
 </h1>
 
-<p align="center">Vue Composition Functions and Vue Components for CesiumJS</p>
+<p align="center">Vue Composition API and Vue Components for CesiumJS</p>
 
 <p align="center">
 <a href="https://github.com/GeoVueJS/vesium/releases" target="__blank"><img src="https://img.shields.io/github/v/tag/GeoVueJS/vesium" alt="Github tag"></a>

@@ -6,7 +6,7 @@
 <span style="color:#52B783">V</span><span style="color:#38485D">esium</span>
 </h1>
 
-<p align="center">CesiumJS 的 vue 组合式函数和 vue 组件</p>
+<p align="center">CesiumJS 的 vue 组合式 API 和 vue 组件</p>
 
 <p align="center">
 <a href="https://github.com/GeoVueJS/vesium/releases" target="__blank"><img src="https://img.shields.io/github/v/tag/GeoVueJS/vesium" alt="Github tag"></a>
@@ -55,7 +55,7 @@ pnpm add cesium @vueuse/core vesium
 
 - [VueUse](https://github.com/vueuse/vueuse) - Vue 组合式 API 的实用工具集合
 
-- [VitePress](https://github.com/vuejs/vitepress) - Vite & Vue 供电的静态站点生成器
+- [VitePress](https://github.com/vuejs/vitepress) - Vite & Vue 提供动力的静态站点生成器
 
 ## 📄 许可证
 
