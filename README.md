@@ -39,7 +39,6 @@ pnpm add cesium @vueuse/core vesium
 <template>
   <div ref="cesiumContainer" style="width: 100%; height: 100%" />
 </template>
-```
 
 ## 🌸 Credits
 
