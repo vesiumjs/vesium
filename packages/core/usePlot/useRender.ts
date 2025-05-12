@@ -1,7 +1,7 @@
 import type { Cartesian3, Entity, JulianDate } from 'cesium';
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { PlotFeature } from './PlotFeature';
-import { arrayDiff, canvasCoordToCartesian, throttle } from '@vesium/shared';
+import { arrayDiff, canvasCoordToCartesian } from '@vesium/shared';
 import { watchArray } from '@vueuse/core';
 import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'cesium';
 import { computed, shallowRef, watch } from 'vue';
@@ -26,11 +26,11 @@ export function useRender(
 ): UseProductRetrun {
   const viewer = useViewer();
 
-  const primitiveCollection = usePrimitive(new PrimitiveCollection())!;
-  const groundPrimitiveCollection = usePrimitive(new PrimitiveCollection(), { collection: 'ground' })!;
+  const primitiveCollection = usePrimitive(new PrimitiveCollection());
+  const groundPrimitiveCollection = usePrimitive(new PrimitiveCollection(), { collection: 'ground' });
   const dataSource = useDataSource(new CustomDataSource());
 
-  const entityScope = useEntityScope({ collection: () => dataSource.value!.entities });
+  const entityScope = useEntityScope({ collection: () => dataSource.value!.entities! });
   const primitiveScope = usePrimitiveScope({ collection: () => primitiveCollection.value! });
   const groundPrimitiveScope = usePrimitiveScope({ collection: () => groundPrimitiveCollection.value! });
 
@@ -38,9 +38,9 @@ export function useRender(
 
   useScreenSpaceEventHandler(
     ScreenSpaceEventType.MOUSE_MOVE,
-    throttle((event) => {
+    (event) => {
       mouseCartesian.value = canvasCoordToCartesian(event?.endPosition, viewer.value!.scene);
-    }, 10),
+    },
   );
 
   watchArray(plots, (_value, _oldValue, added, removed = []) => {
@@ -57,6 +57,7 @@ export function useRender(
     });
   }, {
     immediate: true,
+    flush: 'post',
   });
 
   useCesiumEventListener(
@@ -80,7 +81,7 @@ export function useRender(
     },
   );
 
-  const update = throttle(async (plot: PlotFeature) => {
+  const update = async (plot: PlotFeature) => {
     const reslut = await plot.scheme.render?.({
       packable: plot.sampled.getValue(getCurrentTime()),
       mouse: plot.defining ? mouseCartesian.value : undefined,
@@ -95,7 +96,7 @@ export function useRender(
     plot.entities = reslut?.entities ?? [];
     plot.primitives = reslut?.primitives ?? [];
     plot.groundPrimitives = reslut?.groundPrimitives ?? [];
-  }, 1);
+  };
 
   watch(current, (plot, previous) => {
     previous && update(previous);

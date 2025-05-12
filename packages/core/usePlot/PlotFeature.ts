@@ -29,6 +29,10 @@ export class PlotFeature {
     this._defining = true;
     this._disabled = disabled;
     this._sampled = sampled instanceof SampledPlotProperty ? sampled : new SampledPlotProperty(sampled);
+    this._sampled.definitionChanged.addEventListener(
+      property => this._definitionChanged.raiseEvent(this, 'sampled', property, property),
+      this,
+    );
     this._entities = [];
     this._primitives = [];
     this._groundPrimitives = [];
@@ -110,7 +114,7 @@ export class PlotFeature {
   }
 
   set entities(value: Entity[]) {
-    this._definitionChanged.raiseEvent(this, 'entities', this._entities, value);
+    this._definitionChanged.raiseEvent(this, 'entities', value, this._entities);
     this._entities = value;
   }
 
@@ -127,7 +131,7 @@ export class PlotFeature {
    * @internal
    */
   set primitives(value: any[]) {
-    this._definitionChanged.raiseEvent(this, 'primitives', this._primitives, value);
+    this._definitionChanged.raiseEvent(this, 'primitives', value, this._primitives);
     this._primitives = value;
   }
 
@@ -144,7 +148,7 @@ export class PlotFeature {
    * @internal
    */
   set groundPrimitives(value: any[]) {
-    this._definitionChanged.raiseEvent(this, 'groundPrimitives', this._groundPrimitives, value);
+    this._definitionChanged.raiseEvent(this, 'groundPrimitives', value, this._groundPrimitives);
     this._groundPrimitives = value;
   }
 
@@ -161,7 +165,7 @@ export class PlotFeature {
    * @internal
    */
   set skeletons(value: PlotSkeletonEntity[]) {
-    this._definitionChanged.raiseEvent(this, 'skeletons', this._skeletons, value);
+    this._definitionChanged.raiseEvent(this, 'skeletons', value, this._skeletons);
     this._skeletons = value;
   }
 }

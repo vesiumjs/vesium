@@ -219,9 +219,7 @@ export function useSkeleton(
   // 当前激活的标绘变化时，更新渲染
   watch(current, (plot, previous) => {
     plot && update(plot);
-    setTimeout(() => {
-      previous && update(previous);
-    }, 2);
+    previous && update(previous);
   });
 
   return {
