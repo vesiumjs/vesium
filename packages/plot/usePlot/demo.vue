@@ -1,31 +1,37 @@
 <script setup lang="ts">
-import { PLOT_BILLBOARD_SCHEME, PLOT_LABEL_SCHEME, PLOT_LINE_STRING_SCHEME, PLOT_POLYGON_SCHEME, usePlot } from '@vesium/plot';
+import { schemeBillboard, schemeLabel, schemePolyline, usePlot } from '@vesium/plot';
+import { schemeMeasureArea } from '../scheme/measureArea';
+import { schemePolygon } from '../scheme/polygon';
 
 const { operate } = usePlot();
 
 const otpions = [
   {
     label: 'Lebel',
-    scheme: PLOT_LABEL_SCHEME,
+    scheme: schemeLabel,
   },
   {
     label: 'Billboard',
-    scheme: PLOT_BILLBOARD_SCHEME,
+    scheme: schemeBillboard,
   },
   {
-    label: 'LineString',
-    scheme: PLOT_LINE_STRING_SCHEME,
+    label: 'Polyline',
+    scheme: schemePolyline,
   },
   {
     label: 'Polygon',
-    scheme: PLOT_POLYGON_SCHEME,
+    scheme: schemePolygon,
+  },
+  {
+    label: 'measureArea',
+    scheme: schemeMeasureArea,
   },
 ];
 </script>
 
 <template>
   <div p="10px">
-    <button v-for="item in otpions" :key="item.label" @click="operate(item.scheme)">
+    <button v-for="item in otpions" :key="item.label" @click="operate({ scheme: item.scheme })">
       {{ item.label }}
     </button>
   </div>

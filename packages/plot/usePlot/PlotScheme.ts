@@ -1,5 +1,4 @@
 import type { Nullable } from '@vesium/shared';
-import type { MaybeRef } from '@vueuse/core';
 import type { Cartesian3, Entity } from 'cesium';
 import type { CSSProperties } from 'vue';
 import type { PlotSkeleton } from './PlotSkeleton';
@@ -23,37 +22,24 @@ export interface PlotRenderOptions<D = any> {
 export interface PlotSchemeConstructorOptions {
   type: string;
 
-  /**
-   * 是否立即执行完成标绘操作
-   * 每次控制点发生变变化时，执行该回调函数，如果返回`true`则标绘完成
-   */
   complete?: (packable: SampledPlotPackable) => boolean;
 
-  /**
-   * 双击时，是否执行完成标绘操作
-   * 每次控制点发生变变化时，执行该回调函数，如果返回 true 则下一次双击事件执行完成
-   */
   forceComplete?: (packable: SampledPlotPackable) => boolean;
 
   /**
-   * 处于定义态时的鼠标样式
    * @default 'crosshair'
    */
-  definingCursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((packable: SampledPlotPackable) => Nullable<CSSProperties['cursor']>);
+  definingCursor?: Nullable<CSSProperties['cursor']> | ((packable: SampledPlotPackable) => Nullable<CSSProperties['cursor']>);
 
-  /**
-   * 框架点渲染配置
-   */
   skeletons?: (() => PlotSkeleton) [];
 
-  initEntites?: Entity[];
+  initEntites?: () =>(Entity[] | undefined);
 
-  initPrimitives?: any[];
+  initPrimitives?: () =>(any[] | undefined);
 
-  initGroundPrimitives?: any[];
+  initGroundPrimitives?: () =>(any[] | undefined);
 
   render?: (options: PlotRenderOptions) => PlotRenderResult | Promise<PlotRenderResult>;
-
 }
 
 export class PlotScheme {
@@ -63,9 +49,9 @@ export class PlotScheme {
     this.forceComplete = options.forceComplete;
     this.definingCursor = options.definingCursor ?? 'crosshair';
     this.skeletons = options.skeletons?.map(item => item()) ?? [];
-    this.initEntites = [...options.initEntites ?? []];
-    this.initPrimitives = [...options.initPrimitives ?? []];
-    this.initGroundPrimitives = [...options.initGroundPrimitives ?? []];
+    this.initEntites = options.initEntites;
+    this.initPrimitives = options.initPrimitives;
+    this.initGroundPrimitives = options.initGroundPrimitives;
     this.render = options.render;
   }
 
@@ -84,29 +70,20 @@ export class PlotScheme {
   forceComplete?: (packable: SampledPlotPackable) => boolean;
 
   /**
-   * 处于定义态时的鼠标样式
    * @default 'crosshair'
    */
-  definingCursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((packable: SampledPlotPackable) => Nullable<CSSProperties['cursor']>);
+  definingCursor?: Nullable<CSSProperties['cursor']> | ((packable: SampledPlotPackable) => Nullable<CSSProperties['cursor']>);
 
-  initEntites: Entity[];
-
-  initPrimitives: any[];
-
-  initGroundPrimitives: any[];
-
-  /**
-   * 框架点渲染配置
-   */
   skeletons: PlotSkeleton [];
 
-  /**
-   */
+  initEntites?: () =>(Entity[] | undefined);
+
+  initPrimitives?: () =>(any[] | undefined);
+
+  initGroundPrimitives?: () =>(any[] | undefined);
+
   render?: (options: PlotRenderOptions) => PlotRenderResult | Promise<PlotRenderResult>;
 
-  /**
-   * @internal
-   */
   private static _record = new Map<string, PlotScheme>();
 
   static getCacheTypes(): string[] {
@@ -117,18 +94,11 @@ export class PlotScheme {
     return PlotScheme._record.get(type);
   }
 
-  /**
-   * 设置标绘方案
-   * @param scheme
-   */
   static setCache(scheme: PlotScheme): void {
     assertError(!scheme.type, '`scheme.type` is required');
     PlotScheme._record.set(scheme.type, scheme);
   }
 
-  /**
-   * 解析传入的 scheme，并返回 PlotScheme 实例
-   */
   static resolve(maybeScheme: string | PlotScheme | PlotSchemeConstructorOptions): PlotScheme {
     if (typeof maybeScheme === 'string') {
       const _scheme = PlotScheme.getCache(maybeScheme);

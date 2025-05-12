@@ -5,7 +5,7 @@ import { useCesiumEventListener, useScreenSpaceEventHandler, useViewer } from '@
 import { canvasCoordToCartesian, isFunction } from '@vesium/shared';
 import { promiseTimeout } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
-import { computed, ref, toValue, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { PlotFeature } from './PlotFeature';
 
 export function useSampled(
@@ -105,7 +105,7 @@ export function useSampled(
     }
     else {
       const definingCursor = current.value!.scheme.definingCursor;
-      definingCursorCss.value = isFunction(definingCursor) ? definingCursor(packable.value!) : toValue(definingCursor);
+      definingCursorCss.value = isFunction(definingCursor) ? definingCursor(packable.value!) : definingCursor;
       if (definingCursorCss.value) {
         viewer.value?.container.parentElement!.style.setProperty('cursor', definingCursorCss.value);
       }
