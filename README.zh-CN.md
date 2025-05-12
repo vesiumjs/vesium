@@ -1,20 +1,62 @@
-<h1 align="center">vesium</h1>
-
-<p align="center">Cesium hooks like VueUse api.</p>
-
 <p align="center">
-<a href="https://www.npmjs.com/package/@vesium/core" target="__blank"><img src="https://img.shields.io/npm/v/@vesium/core?color=a1b858&label=" alt="NPM version"></a>
-<a href="https://www.npmjs.com/package/@vesium/core" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@vesium/core?color=50a36f&label="></a>
-<a href="https://github.com/GeoVueJS/vesium" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/GeoVueJS/vesium?style=social"></a>
-
+<img src="https://github.com/GeoVueJS/vesium/raw/main/assets/logo.svg" align="center" width="15%" />
 </p>
 
-> 🚧 This project is under development, and the API may change frequently.
+<h1 align="center">
+<span style="color:#52B783">V</span><span style="color:#38485D">esium</span>
+</h1>
 
-## Install
+<p align="center">CesiumJS 的 vue 组合式函数和 vue 组件</p>
 
-#### npm
+<p align="center">
+<a href="https://github.com/GeoVueJS/vesium/releases" target="__blank"><img src="https://img.shields.io/github/v/tag/GeoVueJS/vesium" alt="Github tag"></a>
+<a href="https://www.npmjs.com/package/vesium" target="__blank"><img src="https://img.shields.io/npm/v/vesium?color=a1b858&label=npm" alt="NPM Version"></a>
+<a href="https://github.com/GeoVueJS/vesium/blob/main/LICENSE" target="__blank"><img src="https://img.shields.io/github/license/GeoVueJS/vesium" alt="Github tag"></a>
+<a href="https://github.com/GeoVueJS/vesium" target="__blank"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/GeoVueJS/vesium?style=social"></a>
+</p>
+
+<p align="center">
+<a href="https://github.com/GeoVueJS/vesium/blob/main/README.zh-CN.md" target="__blank">中文</a>
+|
+<a href="https://github.com/GeoVueJS/vesium/blob/main/README.md" target="__blank">English</a>
+</p>
+
+> 🚧 本项目仍在积极开发中，API会频繁更改，任何版本都可能会产生破坏性变更
+
+## 文档
+
+要查看文档，请访问 <a href="https://cesium.geovue.org" target="__blank">cesium.geovue.org</a>
+
+## 特性
+
+- 🎯 **直观易用** - 采用VueUse风格的API设计，对Vue开发者友好
+- 💪 **类型安全** - 使用TypeScript编写，提供完整的TS支持
+- 🏪 **模块化** - 支持Tree-shake的ESM模块
+- 🌐 **功能全面** - 完整支持Cesium常用功能
+- 🎮 **交互丰富** - 提供丰富的地图元素交互能力
+- ⚡️ **轻量高效** - 无冗余依赖
+
+## 安装
 
 ```bash
-npm i cesium @vesium/core
+# npm
+npm i cesium @vueuse/core vesium
+
+# yarn
+yarn add cesium @vueuse/core vesium
+
+# pnpm
+pnpm add cesium @vueuse/core vesium
 ```
+
+## 相关项目
+
+- [Cesium](https://github.com/CesiumGS/cesium) - 一流的3D地球和地图的开源 JavaScript 库
+
+- [VueUse](https://github.com/vueuse/vueuse) - Vue 组合式 API 的实用工具集合
+
+- [VitePress](https://github.com/vuejs/vitepress) - Vite & Vue 供电的静态站点生成器
+
+## 📄 许可证
+
+Vesium 在 [MIT 许可证](./LICENSE) 下发布。
