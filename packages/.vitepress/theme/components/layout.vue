@@ -36,9 +36,13 @@ if (inBrowser) {
     const locales = site.value.locales;
     const currentLocaleIndex = site.value.localeIndex;
     const nextLocaleIndex = Object.keys(locales).find(key => locales[key].lang === langStorage)!;
+    if (nextLocaleIndex === undefined) {
+      return;
+    }
     // 确保`/`结尾
-    const currentBase = `${locales[currentLocaleIndex!].link || '/'}/`.replaceAll('//', '/');
-    const nextBase = `${locales[nextLocaleIndex!].link!}/`.replaceAll('//', '/');
+    const currentBase = `${locales[currentLocaleIndex!]?.link || '/'}/`.replaceAll('//', '/');
+
+    const nextBase = `${locales[nextLocaleIndex!]?.link}/`.replaceAll('//', '/');
     router.go(router.route.path.replace(currentBase, nextBase) + hash.value);
   }, { immediate: true });
 }
