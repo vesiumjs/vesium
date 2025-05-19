@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/GeoVueJS/vesium/blob/main/README.zh-CN.md" target="__blank">中文</a>
+<a href="https://github.com/GeoVueJS/vesium/blob/main/README.zh.md" target="__blank">中文</a>
 |
 <a href="https://github.com/GeoVueJS/vesium/blob/main/README.md" target="__blank">English</a>
 </p>
