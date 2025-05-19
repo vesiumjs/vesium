@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { schemeBillboard, schemeLabel, schemePolyline, usePlot } from '@vesium/plot';
-
-import { schemePolygon } from '../scheme/polygon';
+import { schemeBillboard, schemeLabel, schemePolygon, schemePolyline, usePlot } from '@vesium/plot';
 
 const { operate } = usePlot();
 

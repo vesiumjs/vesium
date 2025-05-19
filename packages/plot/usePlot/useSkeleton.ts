@@ -176,7 +176,6 @@ export function useSkeleton(
         const plot = entity.plot as PlotFeature;
         const skeleton = entity.skeleton as PlotSkeleton;
         const index = entity.index as number;
-
         const packable = plot.sampled.getValue(getCurrentTime());
 
         skeleton.onLeftClick?.({

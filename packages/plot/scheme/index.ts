@@ -1,4 +1,4 @@
 export * from './billboard';
 export * from './label';
-export * from './polyline';
+export * from './polygon';
 export * from './polyline';
