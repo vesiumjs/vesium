@@ -4,7 +4,7 @@ tip: beta
 sort: 2
 ---
 
-# Vesium Best Practices
+# Best Practices
 
 This document aims to help you better use Vesium, avoid common issues, and improve application performance.
 

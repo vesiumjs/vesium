@@ -21,10 +21,10 @@ if (inBrowser) {
   watchEffect(() => {
     if (!langStorage.value) {
       if (navigator.language.slice(0, 2) === 'zh') {
-        langStorage.value = 'zh-CN';
+        langStorage.value = 'zh';
       }
       else {
-        langStorage.value = 'en-US';
+        langStorage.value = 'en';
       }
     }
   });

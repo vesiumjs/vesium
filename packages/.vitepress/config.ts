@@ -29,8 +29,8 @@ export default defineConfig({
     ['link', { rel: 'icon', href: '/favicon.svg' }],
   ],
   rewrites: {
-    '(.*).en-US.md': '(.*).md',
-    '(.*).zh-CN.md': 'zh-CN/(.*).md',
+    '(.*).en.md': '(.*).md',
+    '(.*).zh.md': 'zh/(.*).md',
   },
   markdown: {
     config(md) {
@@ -43,7 +43,7 @@ export default defineConfig({
     'root': {
       link: '/',
       label: 'English',
-      lang: 'en-US',
+      lang: 'en',
       titleTemplate: 'Vesium',
       title: 'A CesiumJS toolkit based on Vue composition',
       description: 'Aimed at making the use of CesiumJS in Vue simpler and smoother',
@@ -55,35 +55,35 @@ export default defineConfig({
         ],
         sidebar: generateSidebar({
           base: '/',
-          filter: path => path.endsWith('.en-US.md'),
+          filter: path => path.endsWith('.en.md'),
         }),
         lastUpdated: {
           text: 'Last Updated',
         },
         editLink: {
-          text: 'Edit this page on GitHub',
+          text: 'Suggest changes to this page',
           pattern: (payload) => {
-            return `https://github.com/GeoVueJS/vesium/edit/main/packages/${payload.relativePath}`;
+            return `https://github.com/GeoVueJS/vesium/blob/main/packages/${payload.relativePath.replace(/\.md$/, '.en.md')}`;
           },
         },
       },
     },
-    'zh-CN': {
-      link: '/zh-CN',
+    'zh': {
+      link: '/zh',
       label: '简体中文',
-      lang: 'zh-CN',
+      lang: 'zh',
       titleTemplate: 'Vesium',
       title: 'Vue3 与 CesiumJS 的优雅集成方案',
       description: 'Vue3 与 CesiumJS 的优雅集成方案',
       themeConfig: {
         siteTitle: 'Vesium',
         nav: [
-          { text: '首页', link: '/zh-CN' },
-          { text: '开始使用', link: '/zh-CN/start' },
+          { text: '首页', link: '/zh' },
+          { text: '开始使用', link: '/zh/start' },
         ],
         sidebar: generateSidebar({
-          base: '/zh-CN',
-          filter: path => path.endsWith('.zh-CN.md'),
+          base: '/zh',
+          filter: path => path.endsWith('.zh.md'),
         }),
         sidebarMenuLabel: '列表',
         langMenuLabel: '更换语言',
@@ -105,11 +105,12 @@ export default defineConfig({
           linkText: '返回首页',
         },
         editLink: {
-          text: '在github中编辑此页',
+          text: '对此页面提出建议或改进',
           pattern: (payload) => {
-            return `https://github.com/GeoVueJS/vesium/edit/main/packages/${payload.relativePath.replace('zh-CN/', '')}`;
+            return `https://github.com/GeoVueJS/vesium/blob/main/packages/${payload.relativePath.replace('zh', '').replace(/\.md$/, '.zh.md')}`;
           },
         },
+
       },
     },
   },
