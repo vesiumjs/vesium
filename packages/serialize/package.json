@@ -1,7 +1,7 @@
 {
   "name": "@vesium/serialize",
   "type": "module",
-  "version": "1.0.1-beta.36",
+  "version": "1.0.1-beta.37",
   "buildInfo": {
     "name": "VesiumSerialize",
     "bundle": true
