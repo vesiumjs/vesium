@@ -1,7 +1,7 @@
 {
   "name": "@vesium/core",
   "type": "module",
-  "version": "1.0.1-beta.38",
+  "version": "1.0.1-beta.39",
   "buildInfo": {
     "name": "VesiumCore",
     "bundle": true
