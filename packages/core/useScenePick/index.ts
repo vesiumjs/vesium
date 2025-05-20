@@ -66,8 +66,6 @@ export function useScenePick(
         );
       }
     }
-  }, {
-    flush: 'post',
   });
   return pick;
 }

@@ -63,5 +63,7 @@ export function usePositioned(
 
   watch([position, pick], ([position, pick]) => {
     pick && position && listener({ event: { position }, pick });
+  }, {
+    flush: 'post',
   });
 }
