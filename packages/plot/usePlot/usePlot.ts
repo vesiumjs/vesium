@@ -63,21 +63,25 @@ export function usePlot(options?: UsePlotOptions) {
     if (current.value?.defining) {
       return;
     }
+
     const pick = viewer.value?.scene.pick(data.position.clone());
     // 点击到了骨架点则不处理
     if (pick?.id?.plot instanceof PlotFeature) {
       return;
     }
+
     if (!pick) {
       current.value = undefined;
       return;
     }
+
     current.value = plots.value.find(plot => pickHitGraphic(pick, [...plot.entities, ...plot.primitives, ...plot.groundPrimitives]));
   });
 
   let operateResolve: ((plot: PlotFeature) => void) | undefined;
   let operateReject: (() => void) | undefined;
 
+  // 当前激活的标绘发生变动时，上一个标绘取消激活。若上一标绘仍处于定义态时，应立即强制完成，若无法完成则删除。
   watch(current, (plot, previous) => {
     if (previous) {
       if (previous.defining) {

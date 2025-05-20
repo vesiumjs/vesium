@@ -3,10 +3,10 @@ import type { ComputedRef, ShallowRef } from 'vue';
 import type { PlotFeature } from './PlotFeature';
 import type { PlotSkeleton } from './PlotSkeleton';
 import { useCesiumEventListener, useDataSource, useEntityScope, useGraphicEvent, useViewer } from '@vesium/core';
-import { arrayDiff, isFunction, throttle } from '@vesium/shared';
+import { arrayDiff, isFunction } from '@vesium/shared';
 import { onKeyStroke, watchArray } from '@vueuse/core';
 import { CustomDataSource } from 'cesium';
-import { shallowRef, toValue, watch, watchEffect } from 'vue';
+import { nextTick, shallowRef, toValue, watch, watchEffect } from 'vue';
 import { PlotAction, PlotSkeletonEntity } from './PlotSkeleton';
 
 export function useSkeleton(
@@ -34,7 +34,7 @@ export function useSkeleton(
         : PlotAction.IDLE;
   };
 
-  const update = throttle((plot: PlotFeature, destroyed?: boolean) => {
+  const update = (plot: PlotFeature, destroyed?: boolean) => {
     const oldEntities = plot.skeletons;
     const entities: PlotSkeletonEntity[] = [];
 
@@ -86,7 +86,7 @@ export function useSkeleton(
       });
     }
     plot.skeletons = entities;
-  }, 1);
+  };
 
   const { addGraphicEvent } = useGraphicEvent();
 
@@ -200,16 +200,19 @@ export function useSkeleton(
     removed.forEach(plot => update(plot, true));
   });
 
-  useCesiumEventListener(() => plots.value.map(plot => plot.definitionChanged), (plot, key, newValue, oldValue) => {
-    if (['disabled', 'defining', 'scheme', 'sampled', 'time'].includes(key)) {
-      update(plot);
-    }
-    if (key === 'skeletons') {
-      const { added, removed } = arrayDiff(newValue as PlotSkeletonEntity[], oldValue as PlotSkeletonEntity[]);
-      added.forEach(item => entityScope.add(item));
-      removed.forEach(item => entityScope.remove(item));
-    }
-  });
+  useCesiumEventListener(
+    () => plots.value.map(plot => plot.definitionChanged),
+    (plot, key, newValue, oldValue) => {
+      if (['disabled', 'defining', 'scheme', 'sampled', 'time'].includes(key)) {
+        nextTick(() => update(plot));
+      }
+      else if (key === 'skeletons') {
+        const { added, removed } = arrayDiff(newValue as PlotSkeletonEntity[], oldValue as PlotSkeletonEntity[]);
+        added.forEach(item => entityScope.add(item));
+        removed.forEach(item => entityScope.remove(item));
+      }
+    },
+  );
 
   // 当前激活的标绘变化时，更新渲染
   watch(current, (plot, previous) => {
