@@ -1,7 +1,6 @@
-import type { Cartesian2, ScreenSpaceEventHandler } from 'cesium';
+import type { ScreenSpaceEventHandler } from 'cesium';
 import { ScreenSpaceEventType } from 'cesium';
-import { shallowRef, watch } from 'vue';
-import { useScenePick } from '../useScenePick';
+import { useViewer } from 'vesium';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 
 export type PositionedEventType = 'LEFT_DOWN' | 'LEFT_UP' | 'LEFT_CLICK' | 'LEFT_DOUBLE_CLICK' | 'RIGHT_DOWN' | 'RIGHT_UP' | 'RIGHT_CLICK' | 'MIDDLE_DOWN' | 'MIDDLE_UP' | 'MIDDLE_CLICK';
@@ -53,17 +52,10 @@ export function usePositioned(
   listener: (params: GraphicPositionedEvent) => void,
 ) {
   const screenEvent = EVENT_TYPE_RECORD[type];
-
-  const position = shallowRef<Cartesian2>();
-  const pick = useScenePick(position);
-
+  const viewer = useViewer();
   useScreenSpaceEventHandler(screenEvent, (event) => {
-    position.value = event.position.clone();
-  });
-
-  watch([position, pick], ([position, pick]) => {
+    const position = event.position;
+    const pick = viewer.value?.scene.pick(position);
     pick && position && listener({ event: { position }, pick });
-  }, {
-    flush: 'post',
   });
 }
