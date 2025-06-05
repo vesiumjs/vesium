@@ -85,7 +85,7 @@ export function usePlot(options?: UsePlotOptions) {
     if (previous) {
       if (previous.defining) {
         const packable = previous.sampled.getValue(getCurrentTime());
-        const completed = previous.scheme.forceComplete?.(packable);
+        const completed = previous.scheme.allowManualComplete?.(packable);
         if (completed) {
           PlotFeature.setDefining(previous, false);
           operateResolve?.(previous);

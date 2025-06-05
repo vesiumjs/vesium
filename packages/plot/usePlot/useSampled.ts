@@ -66,7 +66,7 @@ export function useSampled(
         return;
       }
 
-      const completed = scheme.forceComplete?.(packable.value);
+      const completed = scheme.allowManualComplete?.(packable.value);
       completed && PlotFeature.setDefining(current.value, false);
     },
   );

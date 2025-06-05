@@ -5,8 +5,20 @@ import { Cartesian3, Event, JulianDate, TimeInterval } from 'cesium';
  * 标绘采集到的数据
  */
 export interface SampledPlotPackable<D = any> {
+
+  /**
+   * 当前标绘所属于的时间节点
+   */
   time?: JulianDate;
+
+  /**
+   * 采样点位数据
+   */
   positions?: Cartesian3[];
+
+  /**
+   * 附带的额外自定义数据
+   */
   derivative?: D;
 }
 
@@ -65,7 +77,9 @@ export interface SampledPlotPropertyConstructorOptions<D = any> {
 }
 
 /**
- * 标绘属性数据
+ * 标绘采样点数据。
+ * 标绘采样点数据是一个时间序列数据，包含时间、位置和附带的额外数据。
+ * 具体用法可参考 [Cesium.SampledProperty](https://cesium.com/learn/cesiumjs/ref-doc/SampledProperty.html)
  */
 export class SampledPlotProperty<D = any> {
   constructor(options?: SampledPlotPropertyConstructorOptions<D>) {
@@ -220,8 +234,7 @@ export class SampledPlotProperty<D = any> {
   }
 
   /**
-   * 设置样本数据
-   *
+   * 设置样本数据，如果传入的数据不含时间，则会存入时间最早的集合中
    * @param value 样本数据对象，包含时间、位置和导数信息
    */
   setSample(value: SampledPlotPackable<D>): void {
@@ -295,6 +308,9 @@ export class SampledPlotProperty<D = any> {
     }
   }
 
+  /**
+   * 判断两个property是否相等
+   */
   equals(other?: Property): boolean {
     return other === this;
   }
