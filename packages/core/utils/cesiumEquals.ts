@@ -1,5 +1,3 @@
-import type { MaybeProperty } from './property';
-import { defined } from 'cesium';
 import { isFunction } from './is';
 
 /**
@@ -14,13 +12,4 @@ import { isFunction } from './is';
  */
 export function cesiumEquals(left: any, right: any): boolean {
   return left === right || (isFunction(left?.equals) && left.equals(right)) || (isFunction(right?.equals) && right.equals(left));
-}
-
-/**
- * Determines if the Cesium property is a constant.
- *
- * @param value Cesium property
- */
-export function isCesiumConstant(value: MaybeProperty): boolean {
-  return !defined(value) || !!value.isConstant;
 }

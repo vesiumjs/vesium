@@ -46,13 +46,3 @@ export function canvasCoordToCartesian(
     return height1 < height2 ? position1 : position2;
   }
 }
-
-/**
- * Convert Cartesian coordinates to canvas coordinates
- *
- * @param position Cartesian coordinates
- * @param scene Cesium.Scene instance
- */
-export function cartesianToCanvasCoord(position: Cartesian3, scene: Scene): Cartesian2 {
-  return scene.cartesianToCanvasCoordinates(position);
-}
