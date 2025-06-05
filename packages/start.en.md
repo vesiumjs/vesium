@@ -59,7 +59,7 @@ import { createViewer, useCameraState } from 'vesium';
 import { ref, watch } from 'vue';
 
 // Create container reference
-const cesiumContainer = ref(null);
+const cesiumContainer = shallowRef<HtmlElement>();
 
 // Create a Cesium Viewer instance
 const viewer = createViewer(cesiumContainer);

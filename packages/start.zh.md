@@ -60,7 +60,7 @@ import { createViewer, useCameraState } from 'vesium';
 import { ref, watch } from 'vue';
 
 // 创建容器引用
-const cesiumContainer = ref(null);
+const cesiumContainer = shallowRef<HtmlElement>();
 
 // 创建 Cesium Viewer 实例
 const viewer = createViewer(cesiumContainer);
