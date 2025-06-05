@@ -1,7 +1,7 @@
 {
   "name": "@vesium/shared",
   "type": "module",
-  "version": "1.0.1-beta.42",
+  "version": "1.0.1-beta.43",
   "buildInfo": {
     "name": "VesiumShared",
     "bundle": true
