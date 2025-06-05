@@ -8,9 +8,6 @@
 ## Type Definitions
 
 :::dts ./PlotFeature.ts
-
-<!-- :::dts ./PlotFeatureCollection.ts -->
-
 :::dts ./PlotScheme.ts
 :::dts ./PlotSkeleton.ts
 :::dts ./SampledPlotProperty.ts

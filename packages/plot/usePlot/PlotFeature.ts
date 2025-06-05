@@ -13,13 +13,42 @@ export type PlotDefinitionChangedCallback = (
   oldValue: PlotFeature[typeof key],
 ) => void;
 
+/**
+ * 标绘实例构造参数
+ */
 export interface PlotFeatureConstructorOptions {
+  /**
+   * 唯一标识符
+   *
+   * 未指定时将自动生成GUID
+   */
   id?: string;
+
+  /**
+   * 标绘方案配置
+   *
+   * 支持直接传入字符串方案名称、方案实例或构造参数
+   */
   scheme: string | PlotScheme | PlotSchemeConstructorOptions;
+
+  /**
+   * 采样属性配置
+   *
+   * 控制标绘对象的动态属性采样行为
+   */
   sampled?: SampledPlotProperty | SampledPlotPropertyConstructorOptions;
+
+  /**
+   * 禁用状态标志
+   *
+   * @default false
+   */
   disabled?: boolean;
 }
 
+/**
+ * 标绘实例
+ */
 export class PlotFeature {
   constructor(options: PlotFeatureConstructorOptions) {
     const { id, disabled = false, sampled } = options;
@@ -84,8 +113,17 @@ export class PlotFeature {
     }
   }
 
+  /**
+   * @internal
+   */
   private _disabled: boolean;
 
+  /**
+   * 获取禁用状态
+   *
+   * 当为 `true` 时，标绘实例将停止响应交互和更新；
+   * 为 `false` 时恢复正常功能。
+   */
   get disabled(): boolean {
     return this._disabled;
   }
