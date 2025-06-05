@@ -2,7 +2,7 @@ import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { EffectScope, InjectionKey, MaybeRefOrGetter, ShallowRef } from 'vue';
 import { tryOnScopeDispose, useMutationObserver } from '@vueuse/core';
 import { Viewer } from 'cesium';
-import { computed, getCurrentScope, markRaw, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
+import { computed, getCurrentScope, isRef, markRaw, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
 
 /**
  * @internal
@@ -64,7 +64,7 @@ export function createViewer(...args: any) {
   watchEffect((onCleanup) => {
     const [arg1, arg2] = args;
     const value = toRaw(toValue(arg1));
-    if (value instanceof Viewer) {
+    if (isRef(arg1) || value instanceof Viewer) {
       viewer.value = markRaw(value);
     }
     else if (value) {
