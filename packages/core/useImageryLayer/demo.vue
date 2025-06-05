@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useImageryLayer, useViewer } from '@vesium/core';
 import * as Cesium from 'cesium';
+import { useImageryLayer, useViewer } from 'vesium';
 import { ref, watchPostEffect } from 'vue';
 
 const isActive = ref(true);

@@ -1,6 +1,6 @@
 import type { PlotSkeleton } from '../usePlot';
-import { canvasCoordToCartesian, toCartesian3, toCartographic } from '@vesium/shared';
 import { Color } from 'cesium';
+import { canvasCoordToCartesian, toCartesian3, toCartographic } from 'vesium';
 import { PlotAction } from '../usePlot';
 
 /**

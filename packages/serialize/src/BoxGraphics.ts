@@ -6,9 +6,9 @@ import type { HeightReferenceJSON } from './HeightReference';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
 
-import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { BoxGraphics } from 'cesium';
+import { toPropertyValue } from 'vesium';
 import { Cartesian3Serialize } from './Cartesian3';
 import { ColorSerialize } from './Color';
 import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';

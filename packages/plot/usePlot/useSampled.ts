@@ -1,10 +1,9 @@
-import type { Nullable } from '@vesium/shared';
 import type { JulianDate } from 'cesium';
+import type { Nullable } from 'vesium';
 import type { CSSProperties, ShallowRef } from 'vue';
-import { useCesiumEventListener, useScreenSpaceEventHandler, useViewer } from '@vesium/core';
-import { canvasCoordToCartesian, isFunction } from '@vesium/shared';
 import { promiseTimeout } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
+import { canvasCoordToCartesian, isFunction, useCesiumEventListener, useScreenSpaceEventHandler, useViewer } from 'vesium';
 import { computed, ref, watch } from 'vue';
 import { PlotFeature } from './PlotFeature';
 

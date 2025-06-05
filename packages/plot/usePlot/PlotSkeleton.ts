@@ -1,5 +1,5 @@
-import type { Nullable } from '@vesium/shared';
 import type { Cartesian3, ScreenSpaceEventHandler, Viewer } from 'cesium';
+import type { Nullable } from 'vesium';
 import type { CSSProperties, MaybeRef, VNode } from 'vue';
 import type { PlotFeature } from './PlotFeature';
 import type { SampledPlotPackable, SampledPlotProperty } from './SampledPlotProperty';

@@ -1,10 +1,10 @@
 import type { MaybeRefOrGetter, Ref } from 'vue';
-import { throttle } from '@vesium/shared';
 import { useElementSize, watchImmediate } from '@vueuse/core';
 import { Cartesian2, EllipsoidGeodesic } from 'cesium';
 import { computed, nextTick, readonly, ref, toValue } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
+import { throttle } from '../utils';
 
 export interface UseScaleBarOptions {
   /**

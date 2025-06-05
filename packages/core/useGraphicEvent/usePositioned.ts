@@ -1,7 +1,7 @@
 import type { ScreenSpaceEventHandler } from 'cesium';
 import { ScreenSpaceEventType } from 'cesium';
-import { useViewer } from 'vesium';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
+import { useViewer } from '../useViewer';
 
 export type PositionedEventType = 'LEFT_DOWN' | 'LEFT_UP' | 'LEFT_CLICK' | 'LEFT_DOUBLE_CLICK' | 'RIGHT_DOWN' | 'RIGHT_UP' | 'RIGHT_CLICK' | 'MIDDLE_DOWN' | 'MIDDLE_UP' | 'MIDDLE_CLICK';
 

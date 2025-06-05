@@ -1,11 +1,11 @@
-import type { AnyFn, Nullable } from '@vesium/shared';
 import type { Entity } from 'cesium';
+import type { AnyFn, Nullable } from '../utils';
 import type { GraphicDragEvent } from './useDrag';
 import type { GraphicHoverEvent } from './useHover';
 import type { GraphicPositionedEvent, PositionedEventType } from './usePositioned';
-import { isDef, isFunction, resolvePick, tryRun } from '@vesium/shared';
-import { useViewer } from 'vesium';
 import { ref } from 'vue';
+import { useViewer } from '../useViewer';
+import { isDef, isFunction, resolvePick, tryRun } from '../utils';
 import { useDrag } from './useDrag';
 import { useHover } from './useHover';
 import { usePositioned } from './usePositioned';

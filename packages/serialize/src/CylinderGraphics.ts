@@ -4,10 +4,10 @@ import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { HeightReferenceJSON } from './HeightReference';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
-import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
-
 import { CylinderGraphics } from 'cesium';
+
+import { toPropertyValue } from 'vesium';
 import { ColorSerialize } from './Color';
 import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
 import { HeightReferenceSerialize } from './HeightReference';

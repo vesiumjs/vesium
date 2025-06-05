@@ -37,9 +37,7 @@
   },
   "dependencies": {
     "@unocss/reset": "^66.1.2",
-    "@vesium/core": "workspace:*",
     "@vesium/plot": "workspace:*",
-    "@vesium/shared": "workspace:*",
     "@vueuse/core": "^13.2.0",
     "cesium": "^1.129.0",
     "pinia": "^3.0.2",

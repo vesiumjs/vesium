@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { usePrimitive } from '@vesium/core';
 import * as Cesium from 'cesium';
+import { usePrimitive } from 'vesium';
 import { watchEffect } from 'vue';
 
 const billboardCollection = usePrimitive(() => {

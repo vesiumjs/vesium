@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCameraState } from '@vesium/core';
+import { useCameraState } from 'vesium';
 
 const {
   position,

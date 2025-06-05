@@ -15,9 +15,9 @@
 :::
 
 ```ts
-import { useCesiumEventListener } from '@vesium/core';
-import { throttle } from '@vesium/shared';
 import { refThrottled } from '@vueuse/core';
+import { useCesiumEventListener } from 'vesium';
+import { throttle } from '../utils';
 
 const listener = throttle(() => {
   // TODO

@@ -1,9 +1,9 @@
 {
-  "name": "@vesium/core",
+  "name": "vesium",
   "type": "module",
   "version": "1.0.1-beta.44",
   "buildInfo": {
-    "name": "VesiumCore",
+    "name": "Vesium",
     "bundle": true
   },
   "description": "Vue component and composition-api library for Cesium.",
@@ -37,8 +37,8 @@
     "jsdelivr": "./dist/index.iife.min.js"
   },
   "dependencies": {
-    "@vesium/shared": "workspace:*",
     "@vueuse/core": "^13.2.0",
+    "@vueuse/shared": "^13.2.0",
     "cesium": "^1.129.0",
     "vue": "^3.5.14"
   }

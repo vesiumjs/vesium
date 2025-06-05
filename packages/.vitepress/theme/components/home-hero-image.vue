@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { createViewer, useCesiumEventListener, useImageryLayer } from '@vesium/core';
 import { Cartesian3, ImageryLayer, Ion, IonImageryProvider, Matrix4, ScreenSpaceEventType, Transforms } from 'cesium';
+import { createViewer, useCesiumEventListener, useImageryLayer } from 'vesium';
 import { useTemplateRef, watchEffect } from 'vue';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 

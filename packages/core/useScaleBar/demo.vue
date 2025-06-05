@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useScaleBar, useViewer } from '@vesium/core';
 import * as Cesium from 'cesium';
+import { useScaleBar, useViewer } from 'vesium';
 import { watchEffect } from 'vue';
 
 const viewer = useViewer();

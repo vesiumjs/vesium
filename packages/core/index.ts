@@ -21,3 +21,4 @@ export * from './useSceneDrillPick';
 export * from './useScenePick';
 export * from './useScreenSpaceEventHandler';
 export * from './useViewer';
+export * from './utils';

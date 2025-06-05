@@ -11,15 +11,9 @@ importers:
       '@unocss/reset':
         specifier: ^66.1.2
         version: 66.1.2
-      '@vesium/core':
-        specifier: workspace:*
-        version: link:packages/core
       '@vesium/plot':
         specifier: workspace:*
         version: link:packages/plot
-      '@vesium/shared':
-        specifier: workspace:*
-        version: link:packages/shared
       '@vueuse/core':
         specifier: ^13.2.0
         version: 13.2.0(vue@3.5.14(typescript@5.8.3))
@@ -31,7 +25,7 @@ importers:
         version: 3.0.2(typescript@5.8.3)(vue@3.5.14(typescript@5.8.3))
       vesium:
         specifier: workspace:*
-        version: link:packages/alias
+        version: link:packages/core
       vue:
         specifier: ^3.5.14
         version: 3.5.14(typescript@5.8.3)
@@ -208,21 +202,12 @@ importers:
         specifier: ^2.2.10
         version: 2.2.10(typescript@5.8.3)
 
-  packages/alias:
-    dependencies:
-      '@vesium/core':
-        specifier: workspace:*
-        version: link:../core
-      '@vesium/shared':
-        specifier: workspace:*
-        version: link:../shared
-
   packages/core:
     dependencies:
-      '@vesium/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@vueuse/core':
+        specifier: ^13.2.0
+        version: 13.2.0(vue@3.5.14(typescript@5.8.3))
+      '@vueuse/shared':
         specifier: ^13.2.0
         version: 13.2.0(vue@3.5.14(typescript@5.8.3))
       cesium:
@@ -237,45 +222,30 @@ importers:
       '@turf/turf':
         specifier: ^7.2.0
         version: 7.2.0
-      '@vesium/core':
-        specifier: workspace:*
-        version: link:../core
-      '@vesium/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@vueuse/core':
         specifier: ^13.2.0
         version: 13.2.0(vue@3.5.14(typescript@5.8.3))
       cesium:
         specifier: ^1.129.0
         version: 1.129.0
+      vesium:
+        specifier: workspace:*
+        version: link:../core
       vue:
         specifier: ^3.5.14
         version: 3.5.14(typescript@5.8.3)
 
   packages/serialize:
     dependencies:
-      '@vesium/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@vueuse/core':
         specifier: ^13.2.0
         version: 13.2.0(vue@3.5.14(typescript@5.8.3))
       cesium:
         specifier: ^1.129.0
         version: 1.129.0
-      vue:
-        specifier: ^3.5.14
-        version: 3.5.14(typescript@5.8.3)
-
-  packages/shared:
-    dependencies:
-      '@vueuse/shared':
-        specifier: ^13.2.0
-        version: 13.2.0(vue@3.5.14(typescript@5.8.3))
-      cesium:
-        specifier: ^1.129.0
-        version: 1.129.0
+      vesium:
+        specifier: workspace:*
+        version: link:../core
       vue:
         specifier: ^3.5.14
         version: 3.5.14(typescript@5.8.3)

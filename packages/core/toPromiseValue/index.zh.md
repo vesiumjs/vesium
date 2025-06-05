@@ -5,8 +5,8 @@
 ## Usage
 
 ```ts
-import { toPromiseValue } from '@vesium/core';
 import { computedAsync, ref } from '@vueuse/core';
+import { toPromiseValue } from 'vesium';
 
 // 处理 Promise 实例
 const promiseRef = ref(Promise.resolve('Hello World'));

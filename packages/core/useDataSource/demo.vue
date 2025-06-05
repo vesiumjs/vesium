@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useDataSource, useViewer } from '@vesium/core';
 import * as Cesium from 'cesium';
+import { useDataSource, useViewer } from 'vesium';
 import { watchPostEffect } from 'vue';
 import geojson from '../../.vitepress/static/geojson.json?url';
 

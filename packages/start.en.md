@@ -22,13 +22,13 @@ Before you start, ensure you have the following:
 
 ```bash
 # NPM
-npm install cesium @vueuse/core @vesium/core
+npm install cesium @vueuse/core vesium
 
 # Yarn
-yarn add cesium @vueuse/core @vesium/core
+yarn add cesium @vueuse/core vesium
 
 # pnpm
-pnpm add cesium @vueuse/core @vesium/core
+pnpm add cesium @vueuse/core vesium
 ```
 
 ### Using CDN
@@ -44,8 +44,7 @@ You can also use Vesium via CDN:
 <script src="https://unpkg.com/@vueuse/core"></script>
 
 <!-- Load Vesium library -->
-<script src="https://unpkg.com/@vesium/shared"></script>
-<script src="https://unpkg.com/@vesium/core"></script>
+<script src="https://unpkg.com/vesium"></script>
 ```
 
 When using CDN, all functionalities are exposed through the global object `window.Vesium`.
@@ -56,7 +55,7 @@ Below is a simple example demonstrating how to use Vesium in a Vue project:
 
 ```vue
 <script setup>
-import { createViewer, useCameraState } from '@vesium/core';
+import { createViewer, useCameraState } from 'vesium';
 import { ref, watch } from 'vue';
 
 // Create container reference
@@ -83,7 +82,7 @@ watch(position, (newPosition) => {
 
 Vesium includes the following main modules:
 
-- **@vesium/core**: Main functionality module, providing basic Cesium operation hooks
+- **vesium**: Main functionality module, providing basic Cesium operation hooks
 
   - `createViewer`: Creates a Cesium viewer instance
   - `useCameraState`: Camera state control

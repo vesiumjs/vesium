@@ -1,8 +1,8 @@
 import type { JulianDate, Resource } from 'cesium';
-import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
-
 import { Cesium3DTilesetGraphics } from 'cesium';
+
+import { toPropertyValue } from 'vesium';
 
 export interface Cesium3DTilesetGraphicsJSON {
   show?: boolean;

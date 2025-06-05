@@ -1,10 +1,10 @@
-import type { Nullable } from '@vesium/shared';
 import type { Cartesian3, Entity } from 'cesium';
+import type { Nullable } from 'vesium';
 import type { CSSProperties } from 'vue';
 import type { PlotSkeleton } from './PlotSkeleton';
 import type { SampledPlotPackable } from './SampledPlotProperty';
-import { assertError } from '@vesium/shared';
 import { assert } from '@vueuse/core';
+import { assertError } from 'vesium';
 
 export interface PlotRenderResult {
   entities?: Entity[];

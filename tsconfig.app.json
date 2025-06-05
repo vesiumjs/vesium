@@ -6,9 +6,7 @@
     "lib": ["ES2021", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
     "paths": {
-      "vesium": ["./packages/alias"],
-      "@vesium/core": ["./packages/core"],
-      "@vesium/shared": ["./packages/shared"]
+      "vesium": ["./packages/core"]
     },
     "types": [
       "vite/client"

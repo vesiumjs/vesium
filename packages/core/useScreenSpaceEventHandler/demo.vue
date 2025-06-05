@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useScreenSpaceEventHandler } from '@vesium/core';
 import * as Cesium from 'cesium';
+import { useScreenSpaceEventHandler } from 'vesium';
 import { ref } from 'vue';
 
 const coord = ref<Record<any, any>>({});

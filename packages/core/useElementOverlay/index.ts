@@ -1,11 +1,12 @@
-import type { CommonCoord } from '@vesium/shared';
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { cartesianToCanvasCoord, toCartesian3 } from '@vesium/shared';
+import type { CommonCoord } from '../utils';
 import { useElementBounding } from '@vueuse/core';
 import { Cartesian2 } from 'cesium';
-import { useCesiumEventListener, useViewer } from 'vesium';
 import { computed, shallowRef, toValue, watchEffect } from 'vue';
+import { useCesiumEventListener } from '../useCesiumEventListener';
+import { useViewer } from '../useViewer';
+import { cartesianToCanvasCoord, toCartesian3 } from '../utils';
 
 export interface UseElementOverlayOptions {
   /**

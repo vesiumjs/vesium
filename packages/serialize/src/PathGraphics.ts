@@ -1,9 +1,9 @@
 import type { JulianDate } from 'cesium';
 import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
-import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { PathGraphics } from 'cesium';
+import { toPropertyValue } from 'vesium';
 import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
 
 import { MaterialPropertySerialize } from './MaterialProperty';

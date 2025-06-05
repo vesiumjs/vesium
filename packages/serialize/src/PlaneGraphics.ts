@@ -5,9 +5,9 @@ import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { PlaneJSON } from './Plane';
 import type { ShadowModeJSON } from './ShadowMode';
-import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { PlaneGraphics } from 'cesium';
+import { toPropertyValue } from 'vesium';
 
 import { Cartesian2Serialize } from './Cartesian2';
 import { ColorSerialize } from './Color';

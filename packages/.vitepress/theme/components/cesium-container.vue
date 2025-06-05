@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { createViewer } from '@vesium/core';
 import { Ion, ScreenSpaceEventType } from 'cesium';
+import { createViewer } from 'vesium';
 import { shallowRef, watchEffect } from 'vue';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 

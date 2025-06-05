@@ -23,13 +23,13 @@ Vesium 是一个为 [Cesium](https://github.com/CesiumGS/cesium) 打造的高性
 
 ```bash
 # NPM
-npm install cesium @vueuse/core @vesium/core
+npm install cesium @vueuse/core vesium
 
 # Yarn
-yarn add cesium @vueuse/core @vesium/core
+yarn add cesium @vueuse/core vesium
 
 # pnpm
-pnpm add cesium @vueuse/core @vesium/core
+pnpm add cesium @vueuse/core vesium
 ```
 
 ### 使用 CDN 引入
@@ -45,8 +45,7 @@ pnpm add cesium @vueuse/core @vesium/core
 <script src="https://unpkg.com/@vueuse/core"></script>
 
 <!-- 加载 Vesium 库 -->
-<script src="https://unpkg.com/@vesium/shared"></script>
-<script src="https://unpkg.com/@vesium/core"></script>
+<script src="https://unpkg.com/vesium"></script>
 ```
 
 通过 CDN 引入后，所有功能将通过 `window.Vesium` 全局对象进行暴露。
@@ -57,7 +56,7 @@ pnpm add cesium @vueuse/core @vesium/core
 
 ```vue
 <script setup>
-import { createViewer, useCameraState } from '@vesium/core';
+import { createViewer, useCameraState } from 'vesium';
 import { ref, watch } from 'vue';
 
 // 创建容器引用
@@ -84,7 +83,7 @@ watch(position, (newPosition) => {
 
 Vesium 包含以下主要模块：
 
-- **@vesium/core**: 主要功能模块，提供基础的 Cesium 操作钩子
+- **vesium**: 主要功能模块，提供基础的 Cesium 操作钩子
 
   - `createViewer`: 创建 Cesium 视图实例
   - `useCameraState`: 相机状态控制
