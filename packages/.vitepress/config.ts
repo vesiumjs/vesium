@@ -105,7 +105,7 @@ export default defineConfig({
           linkText: '返回首页',
         },
         editLink: {
-          text: '对此页面提出建议或改进',
+          text: '对此页面提出建议或帮助改进',
           pattern: (payload) => {
             return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace('zh', '').replace(/\.md$/, '.zh.md')}`;
           },
