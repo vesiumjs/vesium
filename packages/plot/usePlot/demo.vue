@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { schemeBillboard, schemeLabel, schemePolygon, schemePolyline, usePlot } from '@vesium/plot';
+import { schemeBillboard, schemeLabel, schemePolygon, schemePolyline, schemeRectangle, usePlot } from '@vesium/plot';
 
 const { operate } = usePlot();
 
@@ -19,6 +19,10 @@ const otpions = [
   {
     label: 'Polygon',
     scheme: schemePolygon,
+  },
+  {
+    label: 'Rectangle',
+    scheme: schemeRectangle,
   },
 ];
 </script>

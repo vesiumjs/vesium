@@ -5,7 +5,7 @@ import { Cartesian3, Event, JulianDate, TimeInterval } from 'cesium';
  * 标绘采集到的数据
  */
 export interface SampledPlotPackable<D = any> {
-  time: JulianDate;
+  time?: JulianDate;
   positions?: Cartesian3[];
   derivative?: D;
 }
@@ -183,10 +183,10 @@ export class SampledPlotProperty<D = any> {
    * @returns 插值后的样本点数据，存储在提供的或新创建的result容器中。
    * @template D 数据类型。
    */
-  getValue(time: JulianDate, result?: SampledPlotPackable): SampledPlotPackable<D> {
+  getValue(time?: JulianDate, result?: SampledPlotPackable): SampledPlotPackable<D> {
     result ??= { time };
     Object.assign(result, {
-      time: time.clone(),
+      time: time?.clone(),
       positions: undefined,
       derivative: undefined,
     });
@@ -225,7 +225,7 @@ export class SampledPlotProperty<D = any> {
    * @param value 样本数据对象，包含时间、位置和导数信息
    */
   setSample(value: SampledPlotPackable<D>): void {
-    const time = value.time.clone();
+    const time = value.time?.clone() ?? this._times[0]?.clone();
     const positions = value.positions?.map(item => item.clone()) ?? [];
     const derivative = value.derivative;
     const index = this._times.findIndex(t => JulianDate.equals(time, t));
