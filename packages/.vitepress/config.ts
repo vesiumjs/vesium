@@ -40,7 +40,7 @@ export default defineConfig({
     },
   },
   locales: {
-    'root': {
+    root: {
       link: '/',
       label: 'English',
       lang: 'en',
@@ -63,12 +63,12 @@ export default defineConfig({
         editLink: {
           text: 'Suggest changes to this page',
           pattern: (payload) => {
-            return `https://github.com/GeoVueJS/vesium/blob/main/packages/${payload.relativePath.replace(/\.md$/, '.en.md')}`;
+            return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace(/\.md$/, '.en.md')}`;
           },
         },
       },
     },
-    'zh': {
+    zh: {
       link: '/zh',
       label: '简体中文',
       lang: 'zh',
@@ -107,7 +107,7 @@ export default defineConfig({
         editLink: {
           text: '对此页面提出建议或改进',
           pattern: (payload) => {
-            return `https://github.com/GeoVueJS/vesium/blob/main/packages/${payload.relativePath.replace('zh', '').replace(/\.md$/, '.zh.md')}`;
+            return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace('zh', '').replace(/\.md$/, '.zh.md')}`;
           },
         },
 
@@ -116,7 +116,7 @@ export default defineConfig({
   },
   themeConfig: {
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/GeoVueJS/vesium' },
+      { icon: 'github', link: 'https://github.com/vesiumjs/vesium' },
     ],
     logo: {
       src: '/favicon.svg',
