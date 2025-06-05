@@ -1,5 +1,5 @@
 import type { MaybeComputedElementRef } from '@vueuse/core';
-import type { EffectScope, InjectionKey, MaybeRefOrGetter, ShallowRef } from 'vue';
+import type { EffectScope, InjectionKey, MaybeRef, ShallowRef } from 'vue';
 import { tryOnScopeDispose, useMutationObserver } from '@vueuse/core';
 import { Viewer } from 'cesium';
 import { computed, getCurrentScope, markRaw, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
@@ -21,7 +21,7 @@ export const CREATE_VIEWER_COLLECTION = new WeakMap<EffectScope, Readonly<Shallo
  * When the Viewer instance referenced by this overloaded function becomes invalid, it will not trigger destruction.
  */
 export function createViewer(
-  viewer: MaybeRefOrGetter<Viewer | undefined>,
+  viewer: MaybeRef<Viewer | undefined>,
 ): Readonly<ShallowRef<Viewer | undefined>>;
 
 /**
