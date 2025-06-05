@@ -1,3 +1,4 @@
+export * from './arrayDiff';
 export * from './canvasCoordToCartesian';
 export * from './cartesianToCanvasCoord';
 export * from './cesiumEquals';
@@ -13,4 +14,3 @@ export * from './toCartographic';
 export * from './toCoord';
 export * from './tryRun';
 export * from './types';
-export * from './utils';
