@@ -75,7 +75,7 @@ export class SampledPlotProperty<D = any> {
     // 默认将初始化一项数据
     if (!this._times.length) {
       this.setSample({
-        time: JulianDate.now(),
+        time: new JulianDate(0, 0),
         positions: [],
         derivative: undefined,
       });
@@ -192,7 +192,7 @@ export class SampledPlotProperty<D = any> {
     });
 
     if (!time) {
-      result.time = this._times[0]?.clone();
+      result.time = this._times[0]!.clone();
       result.positions = this._sampleds[0]?.map(c => c.clone(c));
       result.derivative = this._derivatives[0];
       return result;
@@ -225,7 +225,7 @@ export class SampledPlotProperty<D = any> {
    * @param value 样本数据对象，包含时间、位置和导数信息
    */
   setSample(value: SampledPlotPackable<D>): void {
-    const time = value.time?.clone() ?? this._times[0]?.clone();
+    const time = value.time?.clone() ?? this._times[0]!.clone();
     const positions = value.positions?.map(item => item.clone()) ?? [];
     const derivative = value.derivative;
     const index = this._times.findIndex(t => JulianDate.equals(time, t));

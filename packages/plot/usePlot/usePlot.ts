@@ -39,7 +39,7 @@ export function usePlot(options?: UsePlotOptions) {
   const viewer = useViewer();
 
   const getCurrentTime = () => {
-    return time.value?.clone() || viewer.value?.clock.currentTime?.clone() || JulianDate.now();
+    return time.value?.clone() || new JulianDate(0, 0);
   };
 
   const collection = shallowReactive(new Set<PlotFeature>());
