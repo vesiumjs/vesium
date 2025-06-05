@@ -1,6 +1,6 @@
 # useSceneDrillPick
 
-Uses the [Cesium.Scene.drillPick](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#drillPick) function to perform screen point picking, return a computed property containing the pick result, or undefined if no object is picked.
+Uses the [Cesium.Scene.drillPick](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#drillPick) function to perform screen point picking, return a computed property containing the pick result.
 
 ## Usage
 
