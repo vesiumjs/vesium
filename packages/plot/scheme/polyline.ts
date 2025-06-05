@@ -7,7 +7,7 @@ import { PlotScheme } from '../usePlot';
  */
 export const schemePolyline = new PlotScheme({
   type: 'polyline',
-  forceComplete: packable => packable.positions!.length >= 2,
+  allowManualComplete: packable => packable.positions!.length >= 2,
   skeletons: [
     control,
     intervalNonclosed,

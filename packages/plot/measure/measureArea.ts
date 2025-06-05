@@ -6,7 +6,7 @@ import { area } from './utils';
 
 export const schemeMeasureArea = new PlotScheme({
   type: 'measureArea',
-  forceComplete: packable => packable.positions!.length >= 3,
+  allowManualComplete: packable => packable.positions!.length >= 3,
   skeletons: [
     control,
     interval,

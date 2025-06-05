@@ -7,7 +7,7 @@ import { PlotScheme } from '../usePlot';
  */
 export const schemePolygon = new PlotScheme({
   type: 'polygon',
-  forceComplete: packable => packable.positions!.length >= 3,
+  allowManualComplete: packable => packable.positions!.length >= 3,
   skeletons: [
     control,
     interval,
