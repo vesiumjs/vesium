@@ -1,5 +1,4 @@
 export * from './PlotFeature';
-export * from './PlotFeatureCollection';
 export * from './PlotScheme';
 export * from './PlotSkeleton';
 export * from './SampledPlotProperty';
