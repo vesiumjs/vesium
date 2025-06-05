@@ -8,12 +8,12 @@
   },
   "description": "Vue component and composition-api library for Cesium.",
   "license": "MIT",
-  "homepage": "https://github.com/GeoVueJS/vesium",
+  "homepage": "https://github.com/vesiumjs/vesium",
   "repository": {
-    "url": "https://github.com/GeoVueJS/vesium"
+    "url": "https://github.com/vesiumjs/vesium"
   },
   "bugs": {
-    "url": "https://github.com/GeoVueJS/vesium/issues"
+    "url": "https://github.com/vesiumjs/vesium/issues"
   },
   "keywords": [
     "vue",

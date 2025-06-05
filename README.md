@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/GeoVueJS/vesium/raw/main/assets/logo.svg" align="center" width="15%" />
+<img src="https://github.com/vesiumjs/vesium/raw/main/assets/logo.svg" align="center" width="15%" />
 </p>
 
 <h1 align="center">
@@ -9,16 +9,16 @@
 <p align="center">Vue Composition API and Vue Components for CesiumJS</p>
 
 <p align="center">
-<a href="https://github.com/GeoVueJS/vesium/releases" target="__blank"><img src="https://img.shields.io/github/v/tag/GeoVueJS/vesium" alt="Github tag"></a>
+<a href="https://github.com/vesiumjs/vesium/releases" target="__blank"><img src="https://img.shields.io/github/v/tag/vesiumjs/vesium" alt="Github tag"></a>
 <a href="https://www.npmjs.com/package/vesium" target="__blank"><img src="https://img.shields.io/npm/v/vesium?color=a1b858&label=npm" alt="NPM Version"></a>
-<a href="https://github.com/GeoVueJS/vesium/blob/main/LICENSE" target="__blank"><img src="https://img.shields.io/github/license/GeoVueJS/vesium" alt="Github tag"></a>
-<a href="https://github.com/GeoVueJS/vesium" target="__blank"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/GeoVueJS/vesium?style=social"></a>
+<a href="https://github.com/vesiumjs/vesium/blob/main/LICENSE" target="__blank"><img src="https://img.shields.io/github/license/vesiumjs/vesium" alt="Github tag"></a>
+<a href="https://github.com/vesiumjs/vesium" target="__blank"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/vesiumjs/vesium?style=social"></a>
 </p>
 
 <p align="center">
-<a href="https://github.com/GeoVueJS/vesium/blob/main/README.zh.md" target="__blank">中文</a>
+<a href="https://github.com/vesiumjs/vesium/blob/main/README.zh.md" target="__blank">中文</a>
 |
-<a href="https://github.com/GeoVueJS/vesium/blob/main/README.md" target="__blank">English</a>
+<a href="https://github.com/vesiumjs/vesium/blob/main/README.md" target="__blank">English</a>
 </p>
 
 > 🚧 This project is under active development, and the API may change frequently. Any version may introduce breaking changes.
