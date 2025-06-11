@@ -5,6 +5,7 @@ import { CheckerboardMaterialProperty, ColorMaterialProperty, GridMaterialProper
 import { toPropertyValue } from 'vesium';
 import { Cartesian2Serialize } from './Cartesian2';
 import { ColorSerialize } from './Color';
+
 /**
  * `MaterialProperty`相关类型的序列化程序
  */

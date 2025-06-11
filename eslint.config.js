@@ -11,7 +11,6 @@ export default antfu({
   },
   vue: {
     overrides: {
-      'vue/valid-template-root': 'off',
       'vue/max-attributes-per-line': [
         'warn',
         {
@@ -19,10 +18,5 @@ export default antfu({
         },
       ],
     },
-  },
-  rules: {
-    'import/no-duplicates': 'warn',
-    'import/consistent-type-specifier-style': 'warn',
-    'import/no-default-export': 'off',
   },
 });

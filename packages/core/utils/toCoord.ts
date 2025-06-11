@@ -15,13 +15,13 @@ interface ToCoordOptions<T extends 'Array' | 'Object', Alt extends boolean> {
 
 }
 
-export type ToCoordReturn<T extends 'Array' | 'Object', Alt extends boolean> =
- T extends 'Array' ?
-   Alt extends true ?
-     CoordArray_ALT :
-     CoordArray
-   : Alt extends true ?
-     CoordObject_ALT
+export type ToCoordReturn<T extends 'Array' | 'Object', Alt extends boolean>
+ = T extends 'Array'
+   ? Alt extends true
+     ? CoordArray_ALT
+     : CoordArray
+   : Alt extends true
+     ? CoordObject_ALT
      : CoordObject;
 
 /**

@@ -31,8 +31,8 @@ const POSITIONED_EVENT_TYPES: PositionedEventType[] = [
   'MIDDLE_CLICK',
 ];
 
-export type GraphicEventListener<T extends GraphicEventType> =
-T extends 'DRAG' ? (event: GraphicDragEvent) => void
+export type GraphicEventListener<T extends GraphicEventType>
+= T extends 'DRAG' ? (event: GraphicDragEvent) => void
   : T extends 'HOVER' ? (event: GraphicHoverEvent) => void
     : (event: GraphicPositionedEvent) => void;
 

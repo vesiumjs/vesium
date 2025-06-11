@@ -1,6 +1,7 @@
 import { CallbackPositionProperty, Entity } from 'cesium';
 import { moved } from '../skeleton';
 import { PlotScheme } from '../usePlot';
+
 /**
  *  广告牌标绘方案
  */
