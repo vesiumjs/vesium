@@ -37,10 +37,10 @@
     "jsdelivr": "./dist/index.iife.min.js"
   },
   "dependencies": {
-    "@turf/turf": "^7.2.0",
-    "@vueuse/core": "^13.2.0",
-    "cesium": "^1.129.0",
+    "@turf/turf": "catalog:deps",
+    "@vueuse/core": "catalog:deps",
+    "cesium": "catalog:deps",
     "vesium": "workspace:*",
-    "vue": "^3.5.14"
+    "vue": "catalog:deps"
   }
 }
