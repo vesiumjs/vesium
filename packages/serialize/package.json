@@ -37,9 +37,9 @@
     "jsdelivr": "./dist/index.iife.min.js"
   },
   "dependencies": {
-    "@vueuse/core": "^13.3.0",
-    "cesium": "^1.130.0",
+    "@vueuse/core": "catalog:deps",
+    "cesium": "catalog:deps",
     "vesium": "workspace:*",
-    "vue": "^3.5.16"
+    "vue": "catalog:deps"
   }
 }
