@@ -2,10 +2,6 @@
   "name": "@vesium/serialize",
   "type": "module",
   "version": "1.0.1-beta.50",
-  "buildInfo": {
-    "name": "VesiumSerialize",
-    "bundle": true
-  },
   "description": "Vue component and composition-api library for Cesium.",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",
@@ -22,8 +18,10 @@
     "hooks",
     "composition-api"
   ],
-  "main": "index",
-  "module": "index",
+  "exports": {
+    ".": "./index.ts",
+    "./package.json": "./package.json"
+  },
   "files": [
     "LICENSE",
     "README.md",
@@ -32,9 +30,16 @@
   "publishConfig": {
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
-    "types": "./dist/index.d.ts",
+    "types": "./dist/index.d.mts",
     "unpkg": "./dist/index.iife.min.js",
-    "jsdelivr": "./dist/index.iife.min.js"
+    "jsdelivr": "./dist/index.iife.min.js",
+    "exports": {
+      ".": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.cjs"
+      },
+      "./package.json": "./package.json"
+    }
   },
   "dependencies": {
     "@vueuse/core": "catalog:deps",
