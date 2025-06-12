@@ -6,7 +6,7 @@ import {
   presetUno,
   transformerAttributifyJsx,
 } from 'unocss';
-import { generateIconCollection } from './internals/svg-icon';
+import { generateIconCollection } from './internals/icon';
 
 const customIconPath = fileURLToPath(new URL('./icons', import.meta.url));
 

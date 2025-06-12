@@ -1,3 +1,4 @@
+import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders';
 import svgo from 'svgo';
 
 export interface SvgTransformOptions {
@@ -50,4 +51,13 @@ export function svgTransform(svg: string, options?: SvgTransformOptions): string
     });
   }
   return svg;
+}
+
+/**
+ * unocss/unplugin-icons自定义icon工具类
+ * @param dir
+ * @param options
+ */
+export function generateIconCollection(dir: string, options?: SvgTransformOptions) {
+  return FileSystemIconLoader(dir, svg => svgTransform(svg, options));
 }
