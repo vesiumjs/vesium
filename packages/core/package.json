@@ -22,6 +22,8 @@
     ".": "./index.ts",
     "./package.json": "./package.json"
   },
+  "unpkg": "./dist/index.iife.min.js",
+  "jsdelivr": "./dist/index.iife.min.js",
   "files": [
     "LICENSE",
     "README.md",
@@ -31,8 +33,6 @@
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.mts",
-    "unpkg": "./dist/index.iife.min.js",
-    "jsdelivr": "./dist/index.iife.min.js",
     "exports": {
       ".": {
         "import": "./dist/index.mjs",
