@@ -45,6 +45,8 @@ export interface UseCollectionScopeReturn<
  * @param addFn - add SideEffect function.  eg.`entites.add`
  * @param removeFn - Clean SideEffect function.  eg.`entities.remove`
  * @param removeScopeArgs - The parameters to pass for `removeScope` triggered when the component is unmounted
+ *
+ * @returns Contains side effect addition and removal functions
  */
 export function useCollectionScope<
   isPromise extends boolean,

@@ -22,6 +22,7 @@ export interface ToPromiseValueOptions {
  *
  * @param source The source value, which can be a reactive reference or an asynchronous getter.
  * @param options Conversion options
+ * @returns The converted value.
  *
  * @example
  * ```ts

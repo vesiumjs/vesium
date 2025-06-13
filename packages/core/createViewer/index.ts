@@ -19,6 +19,8 @@ export const CREATE_VIEWER_COLLECTION = new WeakMap<EffectScope, Readonly<Shallo
  * which can be accessed by the current component and its descendant components using {@link useViewer}
  *
  * When the Viewer instance referenced by this overloaded function becomes invalid, it will not trigger destruction.
+ * @param viewer - Existing viewer instance
+ * @returns The Viewer instance
  */
 export function createViewer(
   viewer: MaybeRef<Viewer | undefined>,
@@ -31,7 +33,8 @@ export function createViewer(
  * The Viewer instance created by this overloaded function will automatically be destroyed when it becomes invalid.
  *
  * @param element - The DOM element or ID that will contain the widget
- * @param options - @see {Viewer.ConstructorOptions}
+ * @param options - see `Viewer.ConstructorOptions`
+ * @returns The Viewer instance
  */
 export function createViewer(
   element?: MaybeComputedElementRef,

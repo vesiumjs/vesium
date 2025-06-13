@@ -26,6 +26,8 @@ export interface UseCesiumFpsRetrun {
 
 /**
  * Reactive get the frame rate of Cesium
+ * @param options options
+ * @returns Reactive fps states
  */
 export function useCesiumFps(options: UseCesiumFpsOptions = {}): UseCesiumFpsRetrun {
   const { delay = 100 } = options;

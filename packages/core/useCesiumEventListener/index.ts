@@ -16,6 +16,11 @@ export interface UseCesiumEventListenerOptions {
  * Easily use the `addEventListener` in `Cesium.Event` instances,
  * when the dependent data changes or the component is unmounted,
  * the listener function will automatically reload or destroy.
+ *
+ * @param event The Cesium.Event instance
+ * @param listener The listener function
+ * @param options additional options
+ * @returns  A function that can be called to remove the event listener
  */
 export function useCesiumEventListener<FN extends FunctionArgs<any[]>>(
   event: Arrayable<Event<FN> | undefined> | Arrayable<MaybeRefOrGetter<Event<FN> | undefined>> | MaybeRefOrGetter<Arrayable<Event<FN> | undefined>>,

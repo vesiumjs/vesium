@@ -26,25 +26,28 @@ export interface UseCameraStateOptions {
 }
 
 export interface UseCameraStateRetrun {
+  /**
+   * The camera
+   */
   camera: ComputedRef<Camera | undefined>;
 
   /**
-   * The position of the camera.
+   * The position of the camera
    */
   position: ComputedRef<Cartesian3 | undefined>;
 
   /**
-   * The view direction of the camera.
+   * The view direction of the camer
    */
   direction: ComputedRef<Cartesian3 | undefined>;
 
   /**
-   * The up direction of the camera.
+   * The up direction of the camera
    */
   up: ComputedRef<Cartesian3 | undefined>;
 
   /**
-   * The right direction of the camera.
+   * The right direction of the camera
    */
   right: ComputedRef<Cartesian3 | undefined>;
 
@@ -57,42 +60,42 @@ export interface UseCameraStateRetrun {
   positionCartographic: ComputedRef<Cartographic | undefined>;
 
   /**
-   * Gets the position of the camera in world coordinates.
+   * Gets the position of the camera in world coordinates
    */
   positionWC: ComputedRef<Cartesian3 | undefined>;
 
   /**
-   * Gets the view direction of the camera in world coordinates.
+   * Gets the view direction of the camera in world coordinates
    */
   directionWC: ComputedRef<Cartesian3 | undefined>;
 
   /**
-   * Gets the up direction of the camera in world coordinates.
+   * Gets the up direction of the camera in world coordinates
    */
   upWC: ComputedRef<Cartesian3 | undefined>;
 
   /**
-   * Gets the right direction of the camera in world coordinates.
+   * Gets the right direction of the camera in world coordinates
    */
   rightWC: ComputedRef<Cartesian3 | undefined>;
 
   /**
-   * Computes the approximate visible rectangle on the ellipsoid.
+   * Computes the approximate visible rectangle on the ellipsoid
    */
   viewRectangle: ComputedRef<Rectangle | undefined>;
 
   /**
-   * Gets the camera heading in radians.
+   * Gets the camera heading in radians
    */
   heading: ComputedRef<number | undefined>;
 
   /**
-   * Gets the camera pitch in radians.
+   * Gets the camera pitch in radians
    */
   pitch: ComputedRef<number | undefined>;
 
   /**
-   * Gets the camera roll in radians.
+   * Gets the camera roll in radians
    */
   roll: ComputedRef<number | undefined>;
 
@@ -105,6 +108,8 @@ export interface UseCameraStateRetrun {
 
 /**
  *  Reactive Cesium Camera state
+ * @param options options
+ * @returns Reactive camera states
  */
 export function useCameraState(options: UseCameraStateOptions = {}): UseCameraStateRetrun {
   let getCamera = options.camera;
