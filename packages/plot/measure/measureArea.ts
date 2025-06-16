@@ -26,18 +26,7 @@ export const schemeMeasureArea = new PlotScheme({
   ],
   render(options) {
     const { mouse, packable } = options;
-    const entity = options.previous.entities?.[0]
-      ?? new Entity({
-        label: {
-          font: '14pt',
-        },
-        polyline: {
-          material: Color.YELLOW.withAlpha(0.5),
-        },
-        polygon: {
-          material: Color.YELLOW.withAlpha(0.5),
-        },
-      });
+    const entity = options.previous.entities?.[0] ?? this.initEntites!()![0]!;
 
     const positions = [...packable.positions ?? []];
     mouse && positions.push(mouse);
@@ -51,9 +40,7 @@ export const schemeMeasureArea = new PlotScheme({
     else if (positions.length >= 3) {
       positions.push(positions[0]);
       entity.position = new ConstantPositionProperty(
-        toCartesian3(
-          Rectangle.center(Rectangle.fromCartesianArray(positions)),
-        ),
+        toCartesian3(Rectangle.center(Rectangle.fromCartesianArray(positions))),
       );
       entity.label!.text = new ConstantProperty('');
 

@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { schemeMeasureArea, usePlot } from '@vesium/plot';
+import { schemeMeasureArea, schemeMeasureDistance, usePlot } from '@vesium/plot';
 
 const { operate } = usePlot();
 
 const otpions = [
   {
-    label: 'measureArea',
+    label: 'area',
     scheme: schemeMeasureArea,
+  },
+  {
+    label: 'distance',
+    scheme: schemeMeasureDistance,
   },
 ];
 </script>
