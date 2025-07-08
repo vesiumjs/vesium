@@ -1,5 +1,5 @@
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders';
-import svgo from 'svgo';
+import * as svgo from 'svgo';
 
 export interface SvgTransformOptions {
   /**

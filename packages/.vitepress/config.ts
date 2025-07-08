@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url';
+import { withPwa } from '@vite-pwa/vitepress';
 import { getPackageInfoSync } from 'local-pkg';
 import { defineConfig } from 'vitepress';
 import { badgeTransform } from './plugins/badge';
@@ -21,7 +22,36 @@ const importmap = `
 }</script>`;
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withPwa(defineConfig({
+  pwa: {
+    registerType: 'autoUpdate',
+    injectRegister: 'script-defer',
+    includeAssets: ['favicon.svg'],
+    manifest: {
+      name: 'Vesium',
+      short_name: 'Vesium',
+      theme_color: '#ffffff',
+      icons: [
+        {
+          src: '/favicon.svg',
+          sizes: '64x64',
+          type: 'image/svg',
+        },
+      ],
+    },
+    workbox: {
+      globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,woff2}'],
+    },
+
+    experimental: {
+      includeAllowlist: true,
+    },
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallback: '/',
+    },
+  },
   srcDir: './',
   vite: { configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)) },
   title: 'Vesium',
@@ -125,4 +155,4 @@ export default defineConfig({
   transformHtml(html) {
     return html.replace('<head>', `<head>${importmap}`);
   },
-});
+}));
