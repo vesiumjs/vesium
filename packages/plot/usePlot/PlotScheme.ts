@@ -12,7 +12,7 @@ export interface PlotRenderResult {
   groundPrimitives?: any[];
 }
 
-export interface PlotRenderOptions<D = any> {
+export interface PlotRenderContext<D = any> {
   /**
    * 当前标绘点位数据
    */
@@ -64,24 +64,14 @@ export interface PlotSchemeConstructorOptions {
   skeletons?: (() => PlotSkeleton) [];
 
   /**
-   * 初始化时创建`Entity`的函数，创建后的`Entity`会作为配置项传入`render`中
+   * 初始化时创建的render，创建后会作为配置项传入`render`中
    */
-  initEntites?: () => (Entity[] | undefined);
-
-  /**
-   * 初始化时创建贴地`Primitive`的函数，创建后的`Primitive`会作为配置项传入`render`中
-   */
-  initPrimitives?: () => (any[] | undefined);
-
-  /**
-   * 初始化时创建贴地`Primitive`的函数，创建后的`Primitive`会作为配置项传入`render`中
-   */
-  initGroundPrimitives?: () => (any[] | undefined);
+  initRender: () => PlotRenderResult;
 
   /**
    * 当标绘数据变化时，会触发`render`回调，返回的数据会被添加到cesium中
    */
-  render?: (options: PlotRenderOptions) => PlotRenderResult | Promise<PlotRenderResult>;
+  render?: (context: PlotRenderContext) => PlotRenderResult | Promise<PlotRenderResult>;
 }
 
 export class PlotScheme {
@@ -91,9 +81,7 @@ export class PlotScheme {
     this.allowManualComplete = options.allowManualComplete;
     this.definingCursor = options.definingCursor ?? 'crosshair';
     this.skeletons = options.skeletons?.map(item => item()) ?? [];
-    this.initEntites = options.initEntites;
-    this.initPrimitives = options.initPrimitives;
-    this.initGroundPrimitives = options.initGroundPrimitives;
+    this.initRender = options.initRender;
     this.render = options.render;
   }
 
@@ -126,24 +114,14 @@ export class PlotScheme {
   skeletons: PlotSkeleton[];
 
   /**
-   * 初始化时创建`Entity`的函数，创建后的`Entity`会作为配置项传入`render`中
-   */
-  initEntites?: () => (Entity[] | undefined);
-
-  /**
-   * 初始化时创建`Primitive`的函数，创建后的`Primitive`会作为配置项传入`render`中
-   */
-  initPrimitives?: () => (any[] | undefined);
-
-  /**
    * 初始化时创建贴地`Primitive`的函数，创建后的`Primitive`会作为配置项传入`render`中
    */
-  initGroundPrimitives?: () => (any[] | undefined);
+  initRender?: () => PlotRenderResult;
 
   /**
    * 当标绘数据变化时，会触发`render`回调，返回的数据会被添加到cesium中
    */
-  render?: (options: PlotRenderOptions) => PlotRenderResult | Promise<PlotRenderResult>;
+  render?: (options: PlotRenderContext) => PlotRenderResult | Promise<PlotRenderResult>;
 
   private static _record = new Map<string, PlotScheme>();
 

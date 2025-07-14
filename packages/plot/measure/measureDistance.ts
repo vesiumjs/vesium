@@ -4,24 +4,28 @@ import { PlotScheme } from '../usePlot';
 import { distance } from './utils';
 
 export const schemeMeasureDistance = new PlotScheme({
-  type: 'measureDistance',
+  type: 'MeasureDistance',
   allowManualComplete: packable => packable.positions!.length >= 2,
   skeletons: [
     control,
   ],
-  initEntites: () => [
-    new Entity({
-      polyline: {
-        width: 2,
-        material: Color.YELLOW.withAlpha(0.5),
-      },
-    }),
-  ],
-  render(options) {
-    const { mouse, packable, previous } = options;
-    const previousEntities = previous.entities ?? this.initEntites!()!;
+  initRender() {
+    return {
+      entities: [
+        new Entity({
+          polyline: {
+            width: 2,
+            material: Color.YELLOW.withAlpha(0.5),
+          },
+        }),
+      ],
+    };
+  },
+  render(context) {
+    const entity = context.previous.entities![0]!;
+    const { mouse, packable, previous } = context;
 
-    const entities = [...previousEntities];
+    const entities = previous.entities!;
 
     const positions = [...packable.positions ?? []];
     mouse && positions.push(mouse);
@@ -69,6 +73,9 @@ export const schemeMeasureDistance = new PlotScheme({
 
     return {
       entities,
+    };
+    return {
+      entities: [entity],
     };
   },
 });

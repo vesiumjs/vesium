@@ -14,7 +14,7 @@ export interface SampledPlotPackable<D = any> {
   /**
    * 采样点位数据
    */
-  positions?: Cartesian3[];
+  positions: Cartesian3[];
 
   /**
    * 附带的额外自定义数据
@@ -198,10 +198,10 @@ export class SampledPlotProperty<D = any> {
    * @template D 数据类型。
    */
   getValue(time?: JulianDate, result?: SampledPlotPackable): SampledPlotPackable<D> {
-    result ??= { time };
+    result ??= { time, positions: [] };
     Object.assign(result, {
       time: time?.clone(),
-      positions: undefined,
+      positions: [],
       derivative: undefined,
     });
 

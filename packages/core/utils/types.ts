@@ -1,4 +1,5 @@
 import type { Cartesian3, Cartographic, CustomDataSource, CzmlDataSource, DataSource, GeoJsonDataSource, GpxDataSource, KmlDataSource } from 'cesium';
+import type { Position } from 'geojson';
 
 export type Nullable<T> = T | null | undefined;
 
@@ -13,7 +14,7 @@ export type MaybePromise<T = any> = T | (() => T) | Promise<T> | (() => Promise<
 /**
  * 2D Coordinate System
  */
-export type CoordArray = [longitude: number, latitude: number];
+export type CoordArray = Position;
 
 /**
  * 3D Coordinate System

@@ -46,5 +46,8 @@
     "@vueuse/shared": "catalog:deps",
     "cesium": "catalog:deps",
     "vue": "catalog:deps"
+  },
+  "devDependencies": {
+    "@types/geojson": "catalog:deps"
   }
 }

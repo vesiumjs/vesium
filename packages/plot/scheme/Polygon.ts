@@ -1,41 +1,27 @@
-import { CallbackProperty, Color, Entity, PolygonHierarchy } from 'cesium';
+import { CallbackProperty, Entity, PolygonHierarchy } from 'cesium';
+
 import { control, interval, moved } from '../skeleton';
+/**
+ * 基础Polygon标绘配置
+ */
 import { PlotScheme } from '../usePlot';
 
-/**
- * 内置的多边形标绘方案
- */
-export const schemePolygon = new PlotScheme({
-  type: 'polygon',
-  allowManualComplete: packable => packable.positions!.length >= 3,
+export const PlotSchemePolygon = new PlotScheme({
+  type: 'Polygon',
+  allowManualComplete: packable => packable.positions!.length >= 2,
   skeletons: [
+    moved,
     control,
     interval,
-    moved,
   ],
-
-  initEntites: () => [
-    new Entity({
-      polyline: {
-        material: Color.YELLOW.withAlpha(0.5),
-      },
-      polygon: {
-        material: Color.YELLOW.withAlpha(0.5),
-      },
-    }),
-  ],
+  initRender: () => {
+    return {
+      entities: [new Entity({ polyline: {}, polygon: {} })],
+    };
+  },
   render(options) {
     const { mouse, packable } = options;
-    const entity = options.previous.entities?.[0]
-      ?? new Entity({
-        polyline: {
-          material: Color.YELLOW.withAlpha(0.5),
-        },
-        polygon: {
-          material: Color.YELLOW.withAlpha(0.5),
-        },
-      });
-
+    const entity = options.previous.entities![0];
     const positions = [...packable.positions ?? []];
     mouse && positions.push(mouse);
 

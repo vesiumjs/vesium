@@ -5,28 +5,33 @@ import { PlotScheme } from '../usePlot';
 import { area } from './utils';
 
 export const schemeMeasureArea = new PlotScheme({
-  type: 'measureArea',
+  type: 'MeasureArea',
   allowManualComplete: packable => packable.positions!.length >= 3,
   skeletons: [
     control,
     interval,
   ],
-  initEntites: () => [
-    new Entity({
-      label: {
-        font: '14pt',
-      },
-      polyline: {
-        material: Color.YELLOW.withAlpha(0.5),
-      },
-      polygon: {
-        material: Color.YELLOW.withAlpha(0.5),
-      },
-    }),
-  ],
-  render(options) {
-    const { mouse, packable } = options;
-    const entity = options.previous.entities?.[0] ?? this.initEntites!()![0]!;
+
+  initRender() {
+    return {
+      entities: [
+        new Entity({
+          label: {
+            font: '14pt',
+          },
+          polyline: {
+            material: Color.YELLOW.withAlpha(0.5),
+          },
+          polygon: {
+            material: Color.YELLOW.withAlpha(0.5),
+          },
+        }),
+      ],
+    };
+  },
+  render(context) {
+    const entity = context.previous.entities![0]!;
+    const { mouse, packable } = context;
 
     const positions = [...packable.positions ?? []];
     mouse && positions.push(mouse);
@@ -64,7 +69,6 @@ export const schemeMeasureArea = new PlotScheme({
       entity.polygon!.hierarchy = undefined;
       entity.polyline!.positions = undefined;
     }
-
     return {
       entities: [entity],
     };

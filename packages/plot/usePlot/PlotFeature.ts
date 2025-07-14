@@ -61,9 +61,10 @@ export class PlotFeature {
     this._sampled = sampled instanceof SampledPlotProperty ? sampled : new SampledPlotProperty(sampled);
     this._sampled.definitionChanged.addEventListener(property => this._definitionChanged.raiseEvent(this, 'sampled', property, property), this);
 
-    this._entities = [...this._scheme.initEntites?.() ?? []];
-    this._primitives = [...this._scheme.initPrimitives?.() ?? []];
-    this._groundPrimitives = [...this._scheme.initGroundPrimitives?.() ?? []];
+    const init = this._scheme.initRender?.() ?? {};
+    this._entities = [...init.entities ?? []];
+    this._primitives = [...init.primitives ?? []];
+    this._groundPrimitives = [...init.groundPrimitives ?? []];
     this._skeletons = [];
   }
 
