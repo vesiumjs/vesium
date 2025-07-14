@@ -9,6 +9,9 @@ catalogs:
     '@turf/turf':
       specifier: ^7.2.0
       version: 7.2.0
+    '@types/geojson':
+      specifier: ^7946.0.16
+      version: 7946.0.16
     '@unocss/reset':
       specifier: ^66.3.3
       version: 66.3.3
@@ -234,6 +237,10 @@ importers:
       vue:
         specifier: catalog:deps
         version: 3.5.17(typescript@5.8.3)
+    devDependencies:
+      '@types/geojson':
+        specifier: catalog:deps
+        version: 7946.0.16
 
   packages/plot:
     dependencies:

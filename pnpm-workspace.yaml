@@ -4,6 +4,7 @@ packages:
 catalogs:
   deps:
     '@turf/turf': ^7.2.0
+    '@types/geojson': ^7946.0.16
     '@unocss/reset': ^66.3.3
     '@vueuse/core': ^13.5.0
     '@vueuse/shared': ^13.5.0
