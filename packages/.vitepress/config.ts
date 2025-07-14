@@ -24,6 +24,7 @@ const importmap = `
 // https://vitepress.dev/reference/site-config
 export default withPwa(defineConfig({
   pwa: {
+
     registerType: 'autoUpdate',
     injectRegister: 'script-defer',
     includeAssets: ['favicon.svg'],
@@ -50,6 +51,7 @@ export default withPwa(defineConfig({
       enabled: true,
       suppressWarnings: true,
       navigateFallback: '/',
+      resolveTempFolder: () => fileURLToPath(new URL('./dev-dist', import.meta.url)),
     },
   },
   srcDir: './',

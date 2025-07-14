@@ -66,17 +66,17 @@ export interface PlotSchemeConstructorOptions {
   /**
    * 初始化时创建`Entity`的函数，创建后的`Entity`会作为配置项传入`render`中
    */
-  initEntites?: () =>(Entity[] | undefined);
+  initEntites?: () => (Entity[] | undefined);
 
   /**
    * 初始化时创建贴地`Primitive`的函数，创建后的`Primitive`会作为配置项传入`render`中
    */
-  initPrimitives?: () =>(any[] | undefined);
+  initPrimitives?: () => (any[] | undefined);
 
   /**
    * 初始化时创建贴地`Primitive`的函数，创建后的`Primitive`会作为配置项传入`render`中
    */
-  initGroundPrimitives?: () =>(any[] | undefined);
+  initGroundPrimitives?: () => (any[] | undefined);
 
   /**
    * 当标绘数据变化时，会触发`render`回调，返回的数据会被添加到cesium中
@@ -128,17 +128,17 @@ export class PlotScheme {
   /**
    * 初始化时创建`Entity`的函数，创建后的`Entity`会作为配置项传入`render`中
    */
-  initEntites?: () =>(Entity[] | undefined);
+  initEntites?: () => (Entity[] | undefined);
 
   /**
    * 初始化时创建`Primitive`的函数，创建后的`Primitive`会作为配置项传入`render`中
    */
-  initPrimitives?: () =>(any[] | undefined);
+  initPrimitives?: () => (any[] | undefined);
 
   /**
    * 初始化时创建贴地`Primitive`的函数，创建后的`Primitive`会作为配置项传入`render`中
    */
-  initGroundPrimitives?: () =>(any[] | undefined);
+  initGroundPrimitives?: () => (any[] | undefined);
 
   /**
    * 当标绘数据变化时，会触发`render`回调，返回的数据会被添加到cesium中

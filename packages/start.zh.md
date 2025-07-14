@@ -84,7 +84,6 @@ watch(position, (newPosition) => {
 Vesium 包含以下主要模块：
 
 - **vesium**: 主要功能模块，提供基础的 Cesium 操作钩子
-
   - `createViewer`: 创建 Cesium 视图实例
   - `useCameraState`: 相机状态控制
   - `useEntity`: 实体管理
@@ -92,7 +91,6 @@ Vesium 包含以下主要模块：
   - 更多功能请参考 API 文档
 
 - **@vesium/serialize**: 序列化工具模块
-
   - 支持场景状态的保存与恢复
   - 提供数据导入导出功能
 

@@ -83,7 +83,6 @@ watch(position, (newPosition) => {
 Vesium includes the following main modules:
 
 - **vesium**: Main functionality module, providing basic Cesium operation hooks
-
   - `createViewer`: Creates a Cesium viewer instance
   - `useCameraState`: Camera state control
   - `useEntity`: Entity management
@@ -91,7 +90,6 @@ Vesium includes the following main modules:
   - For more features, refer to the API documentation
 
 - **@vesium/serialize**: Serialization tools module
-
   - Supports saving and restoring scene states
   - Provides data import/export functionality
 
