@@ -45,6 +45,7 @@
     "@vueuse/core": "catalog:deps",
     "cesium": "catalog:deps",
     "vesium": "workspace:*",
-    "vue": "catalog:deps"
+    "vue": "catalog:deps",
+    "zod": "catalog:deps"
   }
 }

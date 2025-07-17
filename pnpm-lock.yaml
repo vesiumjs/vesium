@@ -33,6 +33,9 @@ catalogs:
     vue-router:
       specifier: ^4.5.1
       version: 4.5.1
+    zod:
+      specifier: ^4.0.5
+      version: 4.0.5
 
 importers:
 
@@ -274,6 +277,9 @@ importers:
       vue:
         specifier: catalog:deps
         version: 3.5.17(typescript@5.8.3)
+      zod:
+        specifier: catalog:deps
+        version: 4.0.5
 
 packages:
 
@@ -7007,6 +7013,9 @@ packages:
   yoctocolors@2.1.1:
     resolution: {integrity: sha512-GQHQqAopRhwU8Kt1DDM8NjibDXHC8eoh1erhGAJPEyveY9qqVeXvVikNKrDz69sHowPMorbPUrH/mx8c50eiBQ==}
     engines: {node: '>=18'}
+
+  zod@4.0.5:
+    resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -15457,5 +15466,7 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yoctocolors@2.1.1: {}
+
+  zod@4.0.5: {}
 
   zwitch@2.0.4: {}
