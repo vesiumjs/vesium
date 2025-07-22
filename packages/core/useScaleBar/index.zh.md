@@ -1,3 +1,7 @@
+---
+subText: 比例尺
+---
+
 # useScaleBar
 
 响应式生成Cesium比例尺数据

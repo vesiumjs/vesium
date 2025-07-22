@@ -1,3 +1,7 @@
+---
+subText: 实时帧率
+---
+
 # useCesiumFps
 
 响应式获取Cesium的帧率

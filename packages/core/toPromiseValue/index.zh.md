@@ -1,3 +1,7 @@
+---
+subText: Promise转换
+---
+
 # toPromiseValue
 
 `toPromiseValue` 类似于 Vue 内置的 [toValue](https://vuejs.org/api/reactivity-utilities.html#tovalue)，后者将值、Refs 或 getters 规范化为普通值，而 `toPromiseValue` 则将其规范化为 Promise 实例。建议与 VueUse 的 [computedAsync](https://vueuse.org/core/computedAsync/) 搭配使用，以便更好地处理异步数据。

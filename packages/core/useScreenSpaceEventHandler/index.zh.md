@@ -1,3 +1,8 @@
+---
+text: useScreenSpaceEventHandler
+subText: 屏幕空间事件
+---
+
 # useScreenSpaceEventHandler
 
 轻松使用`ScreenSpaceEventHandler`，当依赖数据发生变化或组件被卸载时，监听函数会自动重新重载或销毁。

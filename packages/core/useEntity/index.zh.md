@@ -1,3 +1,7 @@
+---
+subText: 叠加实体
+---
+
 # useEntity
 
 用于响应式加载`Entity`，当数据变化时自动销毁或重载entity实例
