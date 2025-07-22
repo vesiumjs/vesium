@@ -27,7 +27,7 @@ export const PlotSchemePolygonArrowStraight = new PlotScheme({
       mouse && points.push(mouse.clone());
     }
 
-    const coords = points.map(e => toCoord(e)!); ;
+    const coords = points.map(e => toCoord(e)!);
 
     if (coords.length >= 2) {
       const positions = arrowStraight(coords);

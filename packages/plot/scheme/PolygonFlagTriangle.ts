@@ -23,7 +23,7 @@ export const PlotSchemePolygonFlagTriangle = new PlotScheme({
 
     const points = context.packable.positions;
     context.mouse && points.push(context.mouse.clone());
-    const coords = points.map(e => toCoord(e)!); ;
+    const coords = points.map(e => toCoord(e)!);
 
     if (coords.length < 2) {
       entity.polygon!.hierarchy = undefined;

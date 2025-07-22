@@ -28,7 +28,7 @@ export const PlotSchemePolygonArc = new PlotScheme({
     if (points.length < 3) {
       context.mouse && points.push(context.mouse.clone());
     }
-    const coords = points.map(e => toCoord(e)!); ;
+    const coords = points.map(e => toCoord(e)!);
     if (coords.length < 3) {
       entity.polygon!.hierarchy = undefined;
       return context.previous;

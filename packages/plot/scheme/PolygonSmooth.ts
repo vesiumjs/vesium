@@ -30,7 +30,7 @@ export const PlotSchemePolygonSmooth = new PlotScheme({
       entity.polygon!.hierarchy = undefined;
       return context.previous;
     }
-    const wgs84s = positions.map(e => toCoord(e)!); ;
+    const wgs84s = positions.map(e => toCoord(e)!);
     wgs84s.push(wgs84s[0]);
     const { features } = turf.polygonSmooth(turf.polygon([wgs84s]), {
       iterations: 3,
