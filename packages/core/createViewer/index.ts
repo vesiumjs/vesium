@@ -41,6 +41,8 @@ export function createViewer(
   options?: Viewer.ConstructorOptions,
 ): Readonly<ShallowRef<Viewer | undefined>>;
 
+/**
+ */
 export function createViewer(...args: any) {
   const viewer = shallowRef<Viewer>();
   const readonlyViewer = shallowReadonly(viewer);
