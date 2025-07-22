@@ -2,6 +2,16 @@ import type { UserConfig } from 'tsdown/config';
 import { defineConfig } from 'tsdown/config';
 import Vue from 'unplugin-vue/rolldown';
 
+const iifeGlobals = {
+  'vue': 'Vue',
+  '@vueuse/core': 'VueUse',
+  '@vueuse/shared': 'VueUse',
+  'cesium': 'Cesium',
+  'vesium': 'Vesium',
+  '@turf/turf': 'turf',
+  'zod': 'z',
+};
+
 const config: UserConfig = {
   entry: '*.ts',
   workspace: true,
@@ -15,13 +25,7 @@ const config: UserConfig = {
   outputOptions: {
     // When format is 'iife', allowing multiple libraries to use the same 'globalName'
     extend: true,
-    globals: {
-      'vue': 'Vue',
-      '@vueuse/core': 'VueUse',
-      '@vueuse/shared': 'VueUse',
-      'cesium': 'Cesium',
-      'vesium': 'Vesium',
-    },
+    globals: iifeGlobals,
   },
 };
 
