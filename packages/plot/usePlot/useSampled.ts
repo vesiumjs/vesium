@@ -42,7 +42,7 @@ export function useSampled(
       packable.value.positions.push(position);
       sampled.setSample(packable.value);
       const completed = scheme.complete?.(packable.value);
-      completed && PlotFeature.setDefining(current.value, false); ;
+      completed && PlotFeature.setDefining(current.value, false);
     },
   );
 
