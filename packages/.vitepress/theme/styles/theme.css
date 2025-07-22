@@ -4,7 +4,7 @@
   --vp-c-indigo-2: var(--vp-c-green-2);
   --vp-c-indigo-3: var(--vp-c-green-3);
 
-  --vp-gap-x: 12px;
+  --vp-layout-max-width: 100%;
 }
 
 .VPDoc.has-aside .content-container {
@@ -28,29 +28,20 @@
   --vp-c-text-1: #3c3c43;
 }
 
-@media (min-width: 1280px) {
-  .VPContent .VPDoc {
-    .aside {
-      padding-left: var(--vp-gap-x);
-    }
-  }
+.VPSidebarItem .sub-text {
+  font-size: 0.9em;
+  display: block;
 }
 
-@media (min-width: 960px) {
-  .VPContent {
-    .VPDoc {
-      padding: calc(var(--vp-gap-x) * 3) 0 0;
-    }
-    .content {
-      padding: 0 var(--vp-gap-x) calc(var(--vp-gap-x) * 8);
-    }
-  }
+.VPSidebarItem .text {
+  padding: 4px 0;
 }
 
-@media (min-width: 720px) {
-  .VPContent {
-    .VPDoc {
-      padding: calc(var(--vp-gap-x) * 3) 0 0;
-    }
-  }
+.vp-doc div[class*='language-'] {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.VPNav .container {
+  max-width: 100%;
 }

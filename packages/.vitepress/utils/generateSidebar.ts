@@ -61,10 +61,11 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
       .replace(/(\/?index)+$/, '');
     let text = m.data.text || link.split('/').pop();
     m.data?.tip && (text += `<Badge type="tip" text="${m.data.tip}" />`);
+    m.data?.subText && (text += `<span class="sub-text">${m.data.subText}</span>`);
     const item: TreeItem = {
       file,
       text,
-      link,
+      link: `${link}/`,
       parent: link.includes('/') ? link.replace(/\/.+$/, '') : undefined,
       isRoot: !link.includes('/'),
       sort: (m.data?.sort ?? Number.MAX_SAFE_INTEGER),

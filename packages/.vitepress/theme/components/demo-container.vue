@@ -136,7 +136,7 @@ function openGithub() {
     height: auto;
   }
 
-  :deep(div[class*='language-']) {
+  div[class*='language-'] {
     margin: 0px;
     border-radius: 0;
   }
