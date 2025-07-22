@@ -69,7 +69,7 @@ export default withPwa(defineConfig({
   vite: { configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)) },
   title: 'Vesium',
   head: [
-    ['link', { rel: 'icon', href: '/favicon.svg' }],,
+    ['link', { rel: 'icon', href: '/favicon.svg' }],
   ],
   rewrites: {
     '(.*).en.md': '(.*).md',
