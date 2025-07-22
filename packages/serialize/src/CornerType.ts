@@ -2,7 +2,7 @@ import { CornerType } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['ROUNDED', 'MITERED', 'BEVELED'] as const;
+const strings = ['ROUNDED', 'MITERED', 'BEVELED'] as const;
 
 export type CornerTypeJSON = z.infer<typeof CornerTypeParse.zodJsonchema>;
 

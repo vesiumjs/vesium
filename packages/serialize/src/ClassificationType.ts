@@ -2,7 +2,7 @@ import { ClassificationType } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['TERRAIN', 'CESIUM_3D_TILE', 'BOTH'] as const;
+const strings = ['TERRAIN', 'CESIUM_3D_TILE', 'BOTH'] as const;
 
 export type ClassificationTypeJSON = z.infer<typeof ClassificationTypeParse.zodJsonchema>;
 

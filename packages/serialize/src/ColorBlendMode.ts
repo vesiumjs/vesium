@@ -2,7 +2,7 @@ import { ColorBlendMode } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['HIGHLIGHT', 'REPLACE', 'MIX'] as const;
+const strings = ['HIGHLIGHT', 'REPLACE', 'MIX'] as const;
 
 export type ColorBlendModeJSON = z.infer<typeof ColorBlendModeParse.zodJsonchema>;
 

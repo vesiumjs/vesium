@@ -2,7 +2,7 @@ import { HeightReference } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['NONE', 'CLAMP_TO_GROUND', 'RELATIVE_TO_GROUND', 'CLAMP_TO_TERRAIN', 'RELATIVE_TO_TERRAIN', 'CLAMP_TO_3D_TILE', 'RELATIVE_TO_3D_TILE'] as const;
+const strings = ['NONE', 'CLAMP_TO_GROUND', 'RELATIVE_TO_GROUND', 'CLAMP_TO_TERRAIN', 'RELATIVE_TO_TERRAIN', 'CLAMP_TO_3D_TILE', 'RELATIVE_TO_3D_TILE'] as const;
 
 export type HeightReferenceJSON = z.infer<typeof HeightReferenceParse.zodJsonchema>;
 

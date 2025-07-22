@@ -2,7 +2,7 @@ import { ReferenceFrame } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['FIXED', 'INERTIAL'] as const;
+const strings = ['FIXED', 'INERTIAL'] as const;
 
 export type ReferenceFrameJSON = z.infer<typeof ReferenceFrameParse.zodJsonchema>;
 

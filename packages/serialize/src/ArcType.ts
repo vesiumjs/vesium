@@ -2,7 +2,7 @@ import { ArcType } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['NONE', 'GEODESIC', 'RHUMB'] as const;
+const strings = ['NONE', 'GEODESIC', 'RHUMB'] as const;
 
 export type ArcTypeJSON = z.infer<typeof ArcTypeParse.zodJsonchema>;
 

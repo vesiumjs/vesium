@@ -2,7 +2,7 @@ import { HorizontalOrigin } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['CENTER', 'LEFT', 'RIGHT'] as const;
+const strings = ['CENTER', 'LEFT', 'RIGHT'] as const;
 
 export type HorizontalOriginJSON = z.infer<typeof HorizontalOriginParse.zodJsonchema>;
 

@@ -2,7 +2,7 @@ import { VerticalOrigin } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['CENTER', 'BOTTOM', 'BASELINE', 'TOP'] as const;
+const strings = ['CENTER', 'BOTTOM', 'BASELINE', 'TOP'] as const;
 
 export type VerticalOriginJSON = z.infer<typeof VerticalOriginParse.zodJsonchema>;
 

@@ -2,7 +2,7 @@ import { LabelStyle } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['FILL', 'OUTLINE', 'FILL_AND_OUTLINE'] as const;
+const strings = ['FILL', 'OUTLINE', 'FILL_AND_OUTLINE'] as const;
 
 export type LabelStyleJSON = z.infer<typeof LabelStyleParse.zodJsonchema>;
 

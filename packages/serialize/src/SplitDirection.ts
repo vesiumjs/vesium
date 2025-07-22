@@ -2,7 +2,7 @@ import { SplitDirection } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['LEFT', 'NONE', 'RIGHT'] as const;
+const strings = ['LEFT', 'NONE', 'RIGHT'] as const;
 
 export type SplitDirectionJSON = z.infer<typeof SplitDirectionParse.zodJsonchema>;
 

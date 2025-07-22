@@ -2,7 +2,7 @@ import { ShadowMode } from 'cesium';
 
 import { z } from 'zod';
 
-export const strings = ['DISABLED', 'ENABLED', 'CAST_ONLY', 'RECEIVE_ONLY'] as const;
+const strings = ['DISABLED', 'ENABLED', 'CAST_ONLY', 'RECEIVE_ONLY'] as const;
 
 export type ShadowModeJSON = z.infer<typeof ShadowModeParse.zodJsonchema>;
 
