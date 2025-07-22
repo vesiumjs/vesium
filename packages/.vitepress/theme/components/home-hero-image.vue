@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDevicePixelRatio, watchImmediate } from '@vueuse/core';
 import { Cartesian3, ImageryLayer, Ion, IonImageryProvider, Matrix4, ScreenSpaceEventType, Transforms } from 'cesium';
 import { createViewer, useCesiumEventListener, useImageryLayer } from 'vesium';
 import { useTemplateRef, watchEffect } from 'vue';
@@ -20,6 +21,16 @@ const viewer = createViewer(elRef, {
   creditContainer: globalThis?.document?.createElement('div'),
   shouldAnimate: true,
   baseLayer: ImageryLayer.fromProviderAsync(IonImageryProvider.fromAssetId(3954), { nightAlpha: 0 }),
+});
+
+// Improve high-resolution screen rendering
+const { pixelRatio } = useDevicePixelRatio();
+watchImmediate([pixelRatio, viewer], ([pixelRatio, viewer]) => {
+  if (viewer) {
+    viewer.scene.postProcessStages.fxaa.enabled = true;
+    viewer.resolutionScale = pixelRatio;
+    viewer.resize();
+  }
 });
 
 useImageryLayer(() => ImageryLayer.fromProviderAsync(IonImageryProvider.fromAssetId(3812), { dayAlpha: 0, brightness: 2 }));
