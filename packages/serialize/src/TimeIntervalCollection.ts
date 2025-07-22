@@ -1,36 +1,39 @@
-import type { TimeIntervalJSON } from './TimeInterval';
-
-import { notNullish } from '@vueuse/core';
 import { TimeIntervalCollection } from 'cesium';
-import { TimeIntervalSerialize } from './TimeInterval';
+import { z } from 'zod';
+import { TimeIntervalParse } from './TimeInterval';
 
-export interface TimeIntervalCollectionJSON {
-  intervals: TimeIntervalJSON[];
-}
+export type TimeIntervalCollectionJSON = z.infer<typeof TimeIntervalCollectionParse.zodJsonchema>;
 
 /**
  * Serialize a `TimeIntervalCollection` instance to JSON and deserialize from JSON
  */
-export class TimeIntervalCollectionSerialize {
+export class TimeIntervalCollectionParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is TimeIntervalCollection {
-    return value instanceof TimeIntervalCollection;
-  };
+  static readonly zodJsonchema = z.object({
+    intervals: z.array(TimeIntervalParse.zodJsonchema),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(TimeIntervalCollection);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: TimeIntervalCollection): TimeIntervalCollectionJSON | undefined {
-    if (notNullish(instance)) {
-      const intervals = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
-      return {
-        intervals: intervals.map(item => TimeIntervalSerialize.toJSON(item)!),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    const intervals = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
+    return {
+      intervals: intervals.map(item => TimeIntervalParse.toJSON(item)!),
+    };
   }
 
   /**
@@ -42,7 +45,8 @@ export class TimeIntervalCollectionSerialize {
     if (!json) {
       return undefined;
     }
-    const intervals = json.intervals.map(item => TimeIntervalSerialize.fromJSON(item)!);
+    json = this.zodJsonchema.parse(result);
+    const intervals = json.intervals.map(item => TimeIntervalParse.fromJSON(item)!);
     if (result) {
       result.removeAll();
       intervals.forEach(item => result.addInterval(item));

@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { ReferenceFrame } from 'cesium';
 
-export type ReferenceFrameJSON = 'FIXED' | 'INERTIAL';
+import { z } from 'zod';
+
+export const strings = ['FIXED', 'INERTIAL'] as const;
+
+export type ReferenceFrameJSON = z.infer<typeof ReferenceFrameParse.zodJsonchema>;
 
 /**
  * Serialize a `ReferenceFrame` instance to JSON and deserialize from JSON
  */
-export class ReferenceFrameSerialize {
+export class ReferenceFrameParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is ReferenceFrame {
-    return Object.values(ReferenceFrame).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(ReferenceFrame);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ReferenceFrame): ReferenceFrameJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(ReferenceFrame) as ReferenceFrameJSON[];
-      return keys.find(key => ReferenceFrame[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(ReferenceFrame).find((key: any) => Reflect.get(ReferenceFrame, key) === instance) as any;
   }
 
   /**

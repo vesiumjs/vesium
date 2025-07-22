@@ -1,39 +1,44 @@
-import { notNullish } from '@vueuse/core';
-
 import { Rectangle } from 'cesium';
 
-export interface RectangleJSON {
-  west: number;
-  south: number;
-  east: number;
-  north: number;
-}
+import { z } from 'zod';
+
+export type RectangleJSON = z.infer<typeof RectangleParse.zodJsonchema>;
 
 /**
  * Serialize a `Rectangle` instance to JSON and deserialize from JSON
  */
-export class RectangleSerialize {
+export class RectangleParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is Rectangle {
-    return value instanceof Rectangle;
-  };
+  static readonly zodJsonchema = z.object({
+    west: z.number(),
+    south: z.number(),
+    east: z.number(),
+    north: z.number(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(Rectangle);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Rectangle): RectangleJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        west: instance.west,
-        south: instance.south,
-        east: instance.east,
-        north: instance.north,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      west: instance.west,
+      south: instance.south,
+      east: instance.east,
+      north: instance.north,
+    };
   }
 
   /**
@@ -45,11 +50,12 @@ export class RectangleSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new Rectangle(
-      json.west,
-      json.south,
-      json.east,
-      json.north,
+      json.west ?? undefined,
+      json.south ?? undefined,
+      json.east ?? undefined,
+      json.north ?? undefined,
     );
     return result ? instance.clone(result) : instance;
   }

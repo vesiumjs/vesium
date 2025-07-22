@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { ColorBlendMode } from 'cesium';
 
-export type ColorBlendModeJSON = 'HIGHLIGHT' | 'REPLACE' | 'MIX';
+import { z } from 'zod';
+
+export const strings = ['HIGHLIGHT', 'REPLACE', 'MIX'] as const;
+
+export type ColorBlendModeJSON = z.infer<typeof ColorBlendModeParse.zodJsonchema>;
 
 /**
  * Serialize a `ColorBlendMode` instance to JSON and deserialize from JSON
  */
-export class ColorBlendModeSerialize {
+export class ColorBlendModeParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is ColorBlendMode {
-    return Object.values(ColorBlendMode).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(ColorBlendMode);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ColorBlendMode): ColorBlendModeJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(ColorBlendMode) as ColorBlendModeJSON[];
-      return keys.find(key => ColorBlendMode[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(ColorBlendMode).find((key: any) => Reflect.get(ColorBlendMode, key) === instance) as any;
   }
 
   /**

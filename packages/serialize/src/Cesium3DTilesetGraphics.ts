@@ -1,39 +1,44 @@
-import type { JulianDate, Resource } from 'cesium';
-import { notNullish } from '@vueuse/core';
+import type { JulianDate } from 'cesium';
 import { Cesium3DTilesetGraphics } from 'cesium';
-
 import { toPropertyValue } from 'vesium';
 
-export interface Cesium3DTilesetGraphicsJSON {
-  show?: boolean;
-  uri?: string | Resource;
-  maximumScreenSpaceError?: number;
-}
+import { z } from 'zod';
+
+export type Cesium3DTilesetGraphicsJSON = z.infer<typeof Cesium3DTilesetGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `Cesium3DTilesetGraphics` instance to JSON and deserialize from JSON
  */
-export class Cesium3DTilesetGraphicsSerialize {
+export class Cesium3DTilesetGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is Cesium3DTilesetGraphics {
-    return value instanceof Cesium3DTilesetGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    uri: z.string().optional(),
+    maximumScreenSpaceError: z.number().optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(Cesium3DTilesetGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Cesium3DTilesetGraphics, time?: JulianDate): Cesium3DTilesetGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        uri: toPropertyValue(instance.uri, time),
-        maximumScreenSpaceError: toPropertyValue(instance.maximumScreenSpaceError, time),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      uri: toPropertyValue(instance.uri, time),
+      maximumScreenSpaceError: toPropertyValue(instance.maximumScreenSpaceError, time),
+    };
   }
 
   /**
@@ -45,10 +50,11 @@ export class Cesium3DTilesetGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new Cesium3DTilesetGraphics({
-      show: json.show,
-      uri: json.uri,
-      maximumScreenSpaceError: json.maximumScreenSpaceError,
+      show: json.show ?? undefined,
+      uri: json.uri ?? undefined,
+      maximumScreenSpaceError: json.maximumScreenSpaceError ?? undefined,
     });
     return result ? instance.clone(result) : instance;
   }

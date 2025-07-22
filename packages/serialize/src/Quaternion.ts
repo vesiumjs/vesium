@@ -1,39 +1,44 @@
-import { notNullish } from '@vueuse/core';
-
 import { Quaternion } from 'cesium';
 
-export interface QuaternionJSON {
-  x: number;
-  y: number;
-  z: number;
-  w: number;
-}
+import { z } from 'zod';
+
+export type QuaternionJSON = z.infer<typeof QuaternionParse.zodJsonchema>;
 
 /**
  * Serialize a `Quaternion` instance to JSON and deserialize from JSON
  */
-export class QuaternionSerialize {
+export class QuaternionParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is Quaternion {
-    return value instanceof Quaternion;
-  };
+  static readonly zodJsonchema = z.object({
+    x: z.number(),
+    y: z.number(),
+    z: z.number(),
+    w: z.number(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(Quaternion);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Quaternion): QuaternionJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        x: instance.x,
-        y: instance.y,
-        z: instance.z,
-        w: instance.w,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      x: instance.x,
+      y: instance.y,
+      z: instance.z,
+      w: instance.w,
+    };
   }
 
   /**
@@ -45,11 +50,12 @@ export class QuaternionSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new Quaternion(
-      json.x,
-      json.y,
-      json.z,
-      json.w,
+      json.x ?? undefined,
+      json.y ?? undefined,
+      json.z ?? undefined,
+      json.w ?? undefined,
     );
     return result ? instance.clone(result) : instance;
   }

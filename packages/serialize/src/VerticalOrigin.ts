@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { VerticalOrigin } from 'cesium';
 
-export type VerticalOriginJSON = 'CENTER' | 'BOTTOM' | 'BASELINE' | 'TOP';
+import { z } from 'zod';
+
+export const strings = ['CENTER', 'BOTTOM', 'BASELINE', 'TOP'] as const;
+
+export type VerticalOriginJSON = z.infer<typeof VerticalOriginParse.zodJsonchema>;
 
 /**
  * Serialize a `VerticalOrigin` instance to JSON and deserialize from JSON
  */
-export class VerticalOriginSerialize {
+export class VerticalOriginParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is VerticalOrigin {
-    return Object.values(VerticalOrigin).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(VerticalOrigin);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: VerticalOrigin): VerticalOriginJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(VerticalOrigin) as VerticalOriginJSON[];
-      return keys.find(key => VerticalOrigin[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(VerticalOrigin).find((key: any) => Reflect.get(VerticalOrigin, key) === instance) as any;
   }
 
   /**

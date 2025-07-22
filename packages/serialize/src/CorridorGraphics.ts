@@ -1,85 +1,82 @@
 import type { JulianDate } from 'cesium';
-import type { Cartesian3JSON } from './Cartesian3';
-import type { ClassificationTypeJSON } from './ClassificationType';
-import type { ColorJSON } from './Color';
-import type { CornerTypeJSON } from './CornerType';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { HeightReferenceJSON } from './HeightReference';
-import type { MaterialPropertyJSON } from './MaterialProperty';
-import type { ShadowModeJSON } from './ShadowMode';
-import { notNullish } from '@vueuse/core';
 import { CorridorGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { Cartesian3Serialize } from './Cartesian3';
-import { ClassificationTypeSerialize } from './ClassificationType';
-import { ColorSerialize } from './Color';
-import { CornerTypeSerialize } from './CornerType';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { HeightReferenceSerialize } from './HeightReference';
-import { MaterialPropertySerialize } from './MaterialProperty';
+import { z } from 'zod';
+import { Cartesian3Parse } from './Cartesian3';
+import { ClassificationTypeParse } from './ClassificationType';
+import { ColorParse } from './Color';
+import { CornerTypeParse } from './CornerType';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { HeightReferenceParse } from './HeightReference';
+import { MaterialPropertyParse } from './MaterialProperty';
 
-import { ShadowModeSerialize } from './ShadowMode';
+import { ShadowModeParse } from './ShadowMode';
 
-export interface CorridorGraphicsJSON {
-  show?: boolean;
-  positions?: Cartesian3JSON[];
-  width?: number;
-  height?: number;
-  heightReference?: HeightReferenceJSON;
-  extrudedHeight?: number;
-  extrudedHeightReference?: HeightReferenceJSON;
-  cornerType?: CornerTypeJSON;
-  granularity?: number;
-  fill?: boolean;
-  material?: MaterialPropertyJSON;
-  outline?: boolean;
-  outlineColor?: ColorJSON;
-  outlineWidth?: number;
-  shadows?: ShadowModeJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-  classificationType?: ClassificationTypeJSON;
-  zIndex?: number;
-}
+export type CorridorGraphicsJSON = z.infer<typeof CorridorGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `CorridorGraphics` instance to JSON and deserialize from JSON
  */
-export class CorridorGraphicsSerialize {
+export class CorridorGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is CorridorGraphics {
-    return value instanceof CorridorGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    positions: z.array(Cartesian3Parse.zodJsonchema).optional(),
+    width: z.number().optional(),
+    height: z.number().optional(),
+    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    extrudedHeight: z.number().optional(),
+    extrudedHeightReference: HeightReferenceParse.zodJsonchema.optional(),
+    cornerType: CornerTypeParse.zodJsonchema.optional(),
+    granularity: z.number().optional(),
+    fill: z.boolean().optional(),
+    material: MaterialPropertyParse.zodJsonchema.optional(),
+    outline: z.boolean().optional(),
+    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineWidth: z.number().optional(),
+    shadows: ShadowModeParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    classificationType: ClassificationTypeParse.zodJsonchema.optional(),
+    zIndex: z.number().optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(CorridorGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: CorridorGraphics, time?: JulianDate): CorridorGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Serialize.toJSON(item)),
-        width: toPropertyValue(instance.width, time),
-        height: toPropertyValue(instance.height, time),
-        heightReference: HeightReferenceSerialize.toJSON(toPropertyValue(instance.heightReference, time)),
-        extrudedHeight: toPropertyValue(instance.extrudedHeight, time),
-        extrudedHeightReference: HeightReferenceSerialize.toJSON(toPropertyValue(instance.extrudedHeightReference, time)),
-        cornerType: CornerTypeSerialize.toJSON(toPropertyValue(instance.cornerType, time)),
-        granularity: toPropertyValue(instance.granularity, time),
-        fill: toPropertyValue(instance.fill, time),
-        material: MaterialPropertySerialize.toJSON(toPropertyValue(instance.material, time)),
-        outline: toPropertyValue(instance.outline, time),
-        outlineColor: ColorSerialize.toJSON(toPropertyValue(instance.outlineColor, time)),
-        outlineWidth: toPropertyValue(instance.outlineWidth, time),
-        shadows: ShadowModeSerialize.toJSON(toPropertyValue(instance.shadows, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-        classificationType: ClassificationTypeSerialize.toJSON(toPropertyValue(instance.classificationType, time)),
-        zIndex: toPropertyValue(instance.zIndex, time),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Parse.toJSON(item)),
+      width: toPropertyValue(instance.width, time),
+      height: toPropertyValue(instance.height, time),
+      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
+      extrudedHeight: toPropertyValue(instance.extrudedHeight, time),
+      extrudedHeightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.extrudedHeightReference, time)),
+      cornerType: CornerTypeParse.toJSON(toPropertyValue(instance.cornerType, time)),
+      granularity: toPropertyValue(instance.granularity, time),
+      fill: toPropertyValue(instance.fill, time),
+      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      outline: toPropertyValue(instance.outline, time),
+      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: toPropertyValue(instance.outlineWidth, time),
+      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      classificationType: ClassificationTypeParse.toJSON(toPropertyValue(instance.classificationType, time)),
+      zIndex: toPropertyValue(instance.zIndex, time),
+    };
   }
 
   /**
@@ -91,25 +88,26 @@ export class CorridorGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new CorridorGraphics({
-      show: json.show,
-      positions: json.positions?.map(item => Cartesian3Serialize.fromJSON(item)!),
-      width: json.width,
-      height: json.height,
-      heightReference: HeightReferenceSerialize.fromJSON(json.heightReference),
-      extrudedHeight: json.extrudedHeight,
-      extrudedHeightReference: HeightReferenceSerialize.fromJSON(json.extrudedHeightReference),
-      cornerType: CornerTypeSerialize.fromJSON(json.cornerType),
-      granularity: json.granularity,
-      fill: json.fill,
-      material: MaterialPropertySerialize.fromJSON(json.material),
-      outline: json.outline,
-      outlineColor: ColorSerialize.fromJSON(json.outlineColor),
-      outlineWidth: json.outlineWidth,
-      shadows: ShadowModeSerialize.fromJSON(json.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
-      classificationType: ClassificationTypeSerialize.fromJSON(json.classificationType),
-      zIndex: json.zIndex,
+      show: json.show ?? undefined,
+      positions: json.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,
+      width: json.width ?? undefined,
+      height: json.height ?? undefined,
+      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
+      extrudedHeight: json.extrudedHeight ?? undefined,
+      extrudedHeightReference: HeightReferenceParse.fromJSON(json?.extrudedHeightReference),
+      cornerType: CornerTypeParse.fromJSON(json?.cornerType),
+      granularity: json.granularity ?? undefined,
+      fill: json.fill ?? undefined,
+      material: MaterialPropertyParse.fromJSON(json?.material),
+      outline: json.outline ?? undefined,
+      outlineColor: ColorParse.fromJSON(json?.outlineColor),
+      outlineWidth: json.outlineWidth ?? undefined,
+      shadows: ShadowModeParse.fromJSON(json?.shadows),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
+      classificationType: ClassificationTypeParse.fromJSON(json?.classificationType),
+      zIndex: json.zIndex ?? undefined,
     });
     return result ? instance.clone(result) : instance;
   }

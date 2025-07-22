@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { LabelStyle } from 'cesium';
 
-export type LabelStyleJSON = 'FILL' | 'OUTLINE' | 'FILL_AND_OUTLINE';
+import { z } from 'zod';
+
+export const strings = ['FILL', 'OUTLINE', 'FILL_AND_OUTLINE'] as const;
+
+export type LabelStyleJSON = z.infer<typeof LabelStyleParse.zodJsonchema>;
 
 /**
  * Serialize a `LabelStyle` instance to JSON and deserialize from JSON
  */
-export class LabelStyleSerialize {
+export class LabelStyleParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is LabelStyle {
-    return Object.values(LabelStyle).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(LabelStyle);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: LabelStyle): LabelStyleJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(LabelStyle) as LabelStyleJSON[];
-      return keys.find(key => LabelStyle[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(LabelStyle).find((key: any) => Reflect.get(LabelStyle, key) === instance) as any;
   }
 
   /**

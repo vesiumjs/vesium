@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { SplitDirection } from 'cesium';
 
-export type SplitDirectionJSON = 'LEFT' | 'NONE' | 'RIGHT';
+import { z } from 'zod';
+
+export const strings = ['LEFT', 'NONE', 'RIGHT'] as const;
+
+export type SplitDirectionJSON = z.infer<typeof SplitDirectionParse.zodJsonchema>;
 
 /**
  * Serialize a `SplitDirection` instance to JSON and deserialize from JSON
  */
-export class SplitDirectionSerialize {
+export class SplitDirectionParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is SplitDirection {
-    return Object.values(SplitDirection).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(SplitDirection);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: SplitDirection): SplitDirectionJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(SplitDirection) as SplitDirectionJSON[];
-      return keys.find(key => SplitDirection[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(SplitDirection).find((key: any) => Reflect.get(SplitDirection, key) === instance) as any;
   }
 
   /**

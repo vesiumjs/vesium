@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { HorizontalOrigin } from 'cesium';
 
-export type HorizontalOriginJSON = 'CENTER' | 'LEFT' | 'RIGHT';
+import { z } from 'zod';
+
+export const strings = ['CENTER', 'LEFT', 'RIGHT'] as const;
+
+export type HorizontalOriginJSON = z.infer<typeof HorizontalOriginParse.zodJsonchema>;
 
 /**
  * Serialize a `HorizontalOrigin` instance to JSON and deserialize from JSON
  */
-export class HorizontalOriginSerialize {
+export class HorizontalOriginParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is HorizontalOrigin {
-    return Object.values(HorizontalOrigin).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(HorizontalOrigin);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: HorizontalOrigin): HorizontalOriginJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(HorizontalOrigin) as HorizontalOriginJSON[];
-      return keys.find(key => HorizontalOrigin[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(HorizontalOrigin).find((key: any) => Reflect.get(HorizontalOrigin, key) === instance) as any;
   }
 
   /**

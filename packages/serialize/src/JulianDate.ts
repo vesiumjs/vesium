@@ -1,29 +1,34 @@
-import { notNullish } from '@vueuse/core';
-
 import { JulianDate } from 'cesium';
 
-export type JulianDateJSON = string;
+import { z } from 'zod';
+
+export type JulianDateJSON = z.infer<typeof JulianDateParse.zodJsonchema>;
 
 /**
  * Serialize a `JulianDate` instance to JSON and deserialize from JSON
  */
-export class JulianDateSerialize {
+export class JulianDateParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is JulianDate {
-    return value instanceof JulianDate;
-  };
+  static readonly zodJsonchema = z.string();
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(JulianDate);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: JulianDate): JulianDateJSON | undefined {
-    if (notNullish(instance)) {
-      return instance.toString();
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return instance.toString();
   }
 
   /**
@@ -35,6 +40,7 @@ export class JulianDateSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = JulianDate.fromIso8601(json);
     return result ? instance.clone(result) : instance;
   }

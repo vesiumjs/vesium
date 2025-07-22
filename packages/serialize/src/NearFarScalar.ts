@@ -1,39 +1,44 @@
-import { notNullish } from '@vueuse/core';
-
 import { NearFarScalar } from 'cesium';
 
-export interface NearFarScalarJSON {
-  near: number;
-  nearValue: number;
-  far: number;
-  farValue: number;
-}
+import { z } from 'zod';
+
+export type NearFarScalarJSON = z.infer<typeof NearFarScalarParse.zodJsonchema>;
 
 /**
  * Serialize a `NearFarScalar` instance to JSON and deserialize from JSON
  */
-export class NearFarScalarSerialize {
+export class NearFarScalarParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is NearFarScalar {
-    return value instanceof NearFarScalar;
-  };
+  static readonly zodJsonchema = z.object({
+    near: z.number(),
+    nearValue: z.number(),
+    far: z.number(),
+    farValue: z.number(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(NearFarScalar);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: NearFarScalar): NearFarScalarJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        near: instance.near,
-        nearValue: instance.nearValue,
-        far: instance.far,
-        farValue: instance.farValue,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      near: instance.near,
+      nearValue: instance.nearValue,
+      far: instance.far,
+      farValue: instance.farValue,
+    };
   }
 
   /**
@@ -45,11 +50,12 @@ export class NearFarScalarSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new NearFarScalar(
-      json.near,
-      json.nearValue,
-      json.far,
-      json.farValue,
+      json.near ?? undefined,
+      json.nearValue ?? undefined,
+      json.far ?? undefined,
+      json.farValue ?? undefined,
     );
     return result ? instance.clone(result) : instance;
   }

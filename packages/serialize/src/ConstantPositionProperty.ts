@@ -1,26 +1,29 @@
 import type { JulianDate } from 'cesium';
 import { notNullish } from '@vueuse/core';
 import { ConstantPositionProperty } from 'cesium';
-import { Cartesian3Serialize } from './Cartesian3';
+import { z } from 'zod';
+import { Cartesian3Parse } from './Cartesian3';
 
-export interface ConstantPositionPropertyJSON {
-  x: number;
-  y: number;
-  z: number;
-}
-
+export type ConstantPositionPropertyJSON = z.infer<typeof ConstantPositionPropertyParse.zodJsonchema>;
 /**
  * Serialize a `ConstantPositionProperty` instance to JSON and deserialize from JSON
  */
-export class ConstantPositionPropertySerialize {
+export class ConstantPositionPropertyParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is ConstantPositionProperty {
-    return value instanceof ConstantPositionProperty;
-  };
+  static readonly zodJsonchema = z.object({
+    x: z.number().optional(),
+    y: z.number().optional(),
+    z: z.number().optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(ConstantPositionProperty);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +32,7 @@ export class ConstantPositionPropertySerialize {
     if (!notNullish(instance)) {
       return;
     }
-    return Cartesian3Serialize.toJSON(instance.getValue(time));
+    return Cartesian3Parse.toJSON(instance?.getValue(time));
   }
 
   /**
@@ -38,16 +41,12 @@ export class ConstantPositionPropertySerialize {
    * @param result - Used to store the resulting instance. If not provided, a new instance will be created
    */
   static fromJSON(json?: ConstantPositionPropertyJSON, result?: ConstantPositionProperty): ConstantPositionProperty | undefined {
-    const value = Cartesian3Serialize.fromJSON(json);
-    if (!value) {
-      return;
+    if (!json) {
+      return undefined;
     }
-    if (ConstantPositionPropertySerialize.predicate(result)) {
-      result.setValue(value);
-      return result;
-    }
-    else {
-      return new ConstantPositionProperty(value);
-    }
+    json = this.zodJsonchema.parse(result);
+    const instance = new ConstantPositionProperty(Cartesian3Parse.fromJSON(json));
+    result && instance.setValue(result.getValue());
+    return instance;
   }
 }

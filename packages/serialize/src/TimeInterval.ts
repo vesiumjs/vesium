@@ -1,43 +1,46 @@
-import type { JulianDateJSON } from './JulianDate';
-
-import { notNullish } from '@vueuse/core';
 import { TimeInterval } from 'cesium';
-import { JulianDateSerialize } from './JulianDate';
+import { z } from 'zod';
+import { JulianDateParse } from './JulianDate';
 
-export interface TimeIntervalJSON {
-  start?: JulianDateJSON;
-  stop?: JulianDateJSON;
-  isStartIncluded?: boolean;
-  isStopIncluded?: boolean;
-  data?: any;
-}
+export type TimeIntervalJSON = z.infer<typeof TimeIntervalParse.zodJsonchema>;
 
 /**
  * Serialize a `TimeInterval` instance to JSON and deserialize from JSON
  */
-export class TimeIntervalSerialize {
+export class TimeIntervalParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is TimeInterval {
-    return value instanceof TimeInterval;
-  };
+  static readonly zodJsonchema = z.object({
+    start: JulianDateParse.zodJsonchema.optional(),
+    stop: JulianDateParse.zodJsonchema.optional(),
+    isStartIncluded: z.boolean().optional(),
+    isStopIncluded: z.boolean().optional(),
+    data: z.any().optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(TimeInterval);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: TimeInterval): TimeIntervalJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        start: JulianDateSerialize.toJSON(instance.start),
-        stop: JulianDateSerialize.toJSON(instance.stop),
-        isStartIncluded: instance.isStartIncluded,
-        isStopIncluded: instance.isStopIncluded,
-        data: instance.data,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      start: JulianDateParse.toJSON(instance?.start),
+      stop: JulianDateParse.toJSON(instance?.stop),
+      isStartIncluded: instance.isStartIncluded,
+      isStopIncluded: instance.isStopIncluded,
+      data: instance.data,
+    };
   }
 
   /**
@@ -49,12 +52,13 @@ export class TimeIntervalSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new TimeInterval({
-      start: JulianDateSerialize.fromJSON(json.start),
-      stop: JulianDateSerialize.fromJSON(json.stop),
-      isStartIncluded: json.isStartIncluded,
-      isStopIncluded: json.isStopIncluded,
-      data: json.data,
+      start: JulianDateParse.fromJSON(json?.start),
+      stop: JulianDateParse.fromJSON(json?.stop),
+      isStartIncluded: json.isStartIncluded ?? undefined,
+      isStopIncluded: json.isStopIncluded ?? undefined,
+      data: json.data ?? undefined,
     });
     return result ? instance.clone(result) : instance;
   }

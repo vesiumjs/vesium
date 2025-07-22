@@ -1,66 +1,65 @@
 import type { JulianDate } from 'cesium';
-import type { Cartesian2JSON } from './Cartesian2';
-import type { ColorJSON } from './Color';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { MaterialPropertyJSON } from './MaterialProperty';
-import type { PlaneJSON } from './Plane';
-import type { ShadowModeJSON } from './ShadowMode';
-import { notNullish } from '@vueuse/core';
 import { PlaneGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
+import { z } from 'zod';
 
-import { Cartesian2Serialize } from './Cartesian2';
-import { ColorSerialize } from './Color';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { MaterialPropertySerialize } from './MaterialProperty';
-import { PlaneSerialize } from './Plane';
+import { Cartesian2Parse } from './Cartesian2';
+import { ColorParse } from './Color';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { MaterialPropertyParse } from './MaterialProperty';
+import { PlaneParse } from './Plane';
 
-import { ShadowModeSerialize } from './ShadowMode';
+import { ShadowModeParse } from './ShadowMode';
 
-export interface PlaneGraphicsJSON {
-  show?: boolean;
-  plane?: PlaneJSON;
-  dimensions?: Cartesian2JSON;
-  fill?: boolean;
-  material?: MaterialPropertyJSON;
-  outline?: boolean;
-  outlineColor?: ColorJSON;
-  outlineWidth?: number;
-  shadows?: ShadowModeJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-}
+export type PlaneGraphicsJSON = z.infer<typeof PlaneGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `PlaneGraphics` instance to JSON and deserialize from JSON
  */
-export class PlaneGraphicsSerialize {
+export class PlaneGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is PlaneGraphics {
-    return value instanceof PlaneGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    plane: PlaneParse.zodJsonchema.optional(),
+    dimensions: Cartesian2Parse.zodJsonchema.optional(),
+    fill: z.boolean().optional(),
+    material: MaterialPropertyParse.zodJsonchema.optional(),
+    outline: z.boolean().optional(),
+    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineWidth: z.number().optional(),
+    shadows: ShadowModeParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(PlaneGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PlaneGraphics, time?: JulianDate): PlaneGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        plane: PlaneSerialize.toJSON(toPropertyValue(instance.plane, time)),
-        dimensions: Cartesian2Serialize.toJSON(toPropertyValue(instance.dimensions, time)),
-        fill: toPropertyValue(instance.fill, time),
-        material: MaterialPropertySerialize.toJSON(toPropertyValue(instance.material, time)),
-        outline: toPropertyValue(instance.outline, time),
-        outlineColor: ColorSerialize.toJSON(toPropertyValue(instance.outlineColor, time)),
-        outlineWidth: toPropertyValue(instance.outlineWidth, time),
-        shadows: ShadowModeSerialize.toJSON(toPropertyValue(instance.shadows, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      plane: PlaneParse.toJSON(toPropertyValue(instance.plane, time)),
+      dimensions: Cartesian2Parse.toJSON(toPropertyValue(instance.dimensions, time)),
+      fill: toPropertyValue(instance.fill, time),
+      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      outline: toPropertyValue(instance.outline, time),
+      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: toPropertyValue(instance.outlineWidth, time),
+      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+    };
   }
 
   /**
@@ -72,17 +71,18 @@ export class PlaneGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new PlaneGraphics({
-      show: json.show,
-      plane: PlaneSerialize.fromJSON(json.plane),
-      dimensions: Cartesian2Serialize.fromJSON(json.dimensions),
-      fill: json.fill,
-      material: MaterialPropertySerialize.fromJSON(json.material),
-      outline: json.outline,
-      outlineColor: ColorSerialize.fromJSON(json.outlineColor),
-      outlineWidth: json.outlineWidth,
-      shadows: ShadowModeSerialize.fromJSON(json.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
+      show: json.show ?? undefined,
+      plane: PlaneParse.fromJSON(json?.plane),
+      dimensions: Cartesian2Parse.fromJSON(json?.dimensions),
+      fill: json.fill ?? undefined,
+      material: MaterialPropertyParse.fromJSON(json?.material),
+      outline: json.outline ?? undefined,
+      outlineColor: ColorParse.fromJSON(json?.outlineColor),
+      outlineWidth: json.outlineWidth ?? undefined,
+      shadows: ShadowModeParse.fromJSON(json?.shadows),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
     });
     return result ? instance.clone(result) : instance;
   }

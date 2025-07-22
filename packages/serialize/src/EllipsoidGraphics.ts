@@ -1,81 +1,80 @@
 import type { JulianDate } from 'cesium';
-import type { Cartesian3JSON } from './Cartesian3';
-import type { ColorJSON } from './Color';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { HeightReferenceJSON } from './HeightReference';
-import type { MaterialPropertyJSON } from './MaterialProperty';
-import type { ShadowModeJSON } from './ShadowMode';
-import { notNullish } from '@vueuse/core';
 import { EllipsoidGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { Cartesian3Serialize } from './Cartesian3';
-import { ColorSerialize } from './Color';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { HeightReferenceSerialize } from './HeightReference';
-import { MaterialPropertySerialize } from './MaterialProperty';
+import { z } from 'zod';
+import { Cartesian3Parse } from './Cartesian3';
+import { ColorParse } from './Color';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { HeightReferenceParse } from './HeightReference';
+import { MaterialPropertyParse } from './MaterialProperty';
 
-import { ShadowModeSerialize } from './ShadowMode';
+import { ShadowModeParse } from './ShadowMode';
 
-export interface EllipsoidGraphicsJSON {
-  show?: boolean;
-  radii?: Cartesian3JSON;
-  innerRadii?: Cartesian3JSON;
-  minimumClock?: number;
-  maximumClock?: number;
-  minimumCone?: number;
-  maximumCone?: number;
-  heightReference?: HeightReferenceJSON;
-  fill?: boolean;
-  material?: MaterialPropertyJSON;
-  outline?: boolean;
-  outlineColor?: ColorJSON;
-  outlineWidth?: number;
-  stackPartitions?: number;
-  slicePartitions?: number;
-  subdivisions?: number;
-  shadows?: ShadowModeJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-}
+export type EllipsoidGraphicsJSON = z.infer<typeof EllipsoidGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `EllipsoidGraphics` instance to JSON and deserialize from JSON
  */
-export class EllipsoidGraphicsSerialize {
+export class EllipsoidGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is EllipsoidGraphics {
-    return value instanceof EllipsoidGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    radii: Cartesian3Parse.zodJsonchema.optional(),
+    innerRadii: Cartesian3Parse.zodJsonchema.optional(),
+    minimumClock: z.number().optional(),
+    maximumClock: z.number().optional(),
+    minimumCone: z.number().optional(),
+    maximumCone: z.number().optional(),
+    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    fill: z.boolean().optional(),
+    material: MaterialPropertyParse.zodJsonchema.optional(),
+    outline: z.boolean().optional(),
+    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineWidth: z.number().optional(),
+    stackPartitions: z.number().optional(),
+    slicePartitions: z.number().optional(),
+    subdivisions: z.number().optional(),
+    shadows: ShadowModeParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(EllipsoidGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: EllipsoidGraphics, time?: JulianDate): EllipsoidGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        radii: Cartesian3Serialize.toJSON(toPropertyValue(instance.radii, time)),
-        innerRadii: Cartesian3Serialize.toJSON(toPropertyValue(instance.innerRadii, time)),
-        minimumClock: toPropertyValue(instance.minimumClock, time),
-        maximumClock: toPropertyValue(instance.maximumClock, time),
-        minimumCone: toPropertyValue(instance.minimumCone, time),
-        maximumCone: toPropertyValue(instance.maximumCone, time),
-        heightReference: HeightReferenceSerialize.toJSON(toPropertyValue(instance.heightReference, time)),
-        fill: toPropertyValue(instance.fill, time),
-        material: MaterialPropertySerialize.toJSON(toPropertyValue(instance.material, time)),
-        outline: toPropertyValue(instance.outline, time),
-        outlineColor: ColorSerialize.toJSON(toPropertyValue(instance.outlineColor, time)),
-        outlineWidth: toPropertyValue(instance.outlineWidth, time),
-        stackPartitions: toPropertyValue(instance.stackPartitions, time),
-        slicePartitions: toPropertyValue(instance.slicePartitions, time),
-        subdivisions: toPropertyValue(instance.subdivisions, time),
-        shadows: ShadowModeSerialize.toJSON(toPropertyValue(instance.shadows, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      radii: Cartesian3Parse.toJSON(toPropertyValue(instance.radii, time)),
+      innerRadii: Cartesian3Parse.toJSON(toPropertyValue(instance.innerRadii, time)),
+      minimumClock: toPropertyValue(instance.minimumClock, time),
+      maximumClock: toPropertyValue(instance.maximumClock, time),
+      minimumCone: toPropertyValue(instance.minimumCone, time),
+      maximumCone: toPropertyValue(instance.maximumCone, time),
+      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
+      fill: toPropertyValue(instance.fill, time),
+      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      outline: toPropertyValue(instance.outline, time),
+      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: toPropertyValue(instance.outlineWidth, time),
+      stackPartitions: toPropertyValue(instance.stackPartitions, time),
+      slicePartitions: toPropertyValue(instance.slicePartitions, time),
+      subdivisions: toPropertyValue(instance.subdivisions, time),
+      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+    };
   }
 
   /**
@@ -87,25 +86,26 @@ export class EllipsoidGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new EllipsoidGraphics({
-      show: json.show,
-      radii: Cartesian3Serialize.fromJSON(json.radii),
-      innerRadii: Cartesian3Serialize.fromJSON(json.innerRadii),
-      minimumClock: json.minimumClock,
-      maximumClock: json.maximumClock,
-      minimumCone: json.minimumCone,
-      maximumCone: json.maximumCone,
-      heightReference: HeightReferenceSerialize.fromJSON(json.heightReference),
-      fill: json.fill,
-      material: MaterialPropertySerialize.fromJSON(json.material),
-      outline: json.outline,
-      outlineColor: ColorSerialize.fromJSON(json.outlineColor),
-      outlineWidth: json.outlineWidth,
-      stackPartitions: json.stackPartitions,
-      slicePartitions: json.slicePartitions,
-      subdivisions: json.subdivisions,
-      shadows: ShadowModeSerialize.fromJSON(json.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
+      show: json.show ?? undefined,
+      radii: Cartesian3Parse.fromJSON(json?.radii),
+      innerRadii: Cartesian3Parse.fromJSON(json?.innerRadii),
+      minimumClock: json.minimumClock ?? undefined,
+      maximumClock: json.maximumClock ?? undefined,
+      minimumCone: json.minimumCone ?? undefined,
+      maximumCone: json.maximumCone ?? undefined,
+      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
+      fill: json.fill ?? undefined,
+      material: MaterialPropertyParse.fromJSON(json?.material),
+      outline: json.outline ?? undefined,
+      outlineColor: ColorParse.fromJSON(json?.outlineColor),
+      outlineWidth: json.outlineWidth ?? undefined,
+      stackPartitions: json.stackPartitions ?? undefined,
+      slicePartitions: json.slicePartitions ?? undefined,
+      subdivisions: json.subdivisions ?? undefined,
+      shadows: ShadowModeParse.fromJSON(json?.shadows),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
     });
     return result ? instance.clone(result) : instance;
   }

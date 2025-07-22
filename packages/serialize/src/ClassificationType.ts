@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { ClassificationType } from 'cesium';
 
-export type ClassificationTypeJSON = 'TERRAIN' | 'CESIUM_3D_TILE' | 'BOTH';
+import { z } from 'zod';
+
+export const strings = ['TERRAIN', 'CESIUM_3D_TILE', 'BOTH'] as const;
+
+export type ClassificationTypeJSON = z.infer<typeof ClassificationTypeParse.zodJsonchema>;
 
 /**
  * Serialize a `ClassificationType` instance to JSON and deserialize from JSON
  */
-export class ClassificationTypeSerialize {
+export class ClassificationTypeParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is ClassificationType {
-    return Object.values(ClassificationType).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(ClassificationType);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ClassificationType): ClassificationTypeJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(ClassificationType) as ClassificationTypeJSON[];
-      return keys.find(key => ClassificationType[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(ClassificationType).find((key: any) => Reflect.get(ClassificationType, key) === instance) as any;
   }
 
   /**

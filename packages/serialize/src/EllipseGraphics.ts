@@ -1,85 +1,84 @@
-import type { ConstantProperty, JulianDate } from 'cesium';
-import type { ClassificationTypeJSON } from './ClassificationType';
-import type { ColorJSON } from './Color';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { HeightReferenceJSON } from './HeightReference';
-import type { MaterialPropertyJSON } from './MaterialProperty';
-import type { ShadowModeJSON } from './ShadowMode';
-import { notNullish } from '@vueuse/core';
+import type { JulianDate } from 'cesium';
 import { EllipseGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { ClassificationTypeSerialize } from './ClassificationType';
-import { ColorSerialize } from './Color';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { HeightReferenceSerialize } from './HeightReference';
-import { MaterialPropertySerialize } from './MaterialProperty';
+import { z } from 'zod';
+import { ClassificationTypeParse } from './ClassificationType';
+import { ColorParse } from './Color';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { HeightReferenceParse } from './HeightReference';
+import { MaterialPropertyParse } from './MaterialProperty';
 
-import { ShadowModeSerialize } from './ShadowMode';
+import { ShadowModeParse } from './ShadowMode';
 
-export interface EllipseGraphicsJSON {
-  show?: boolean;
-  semiMajorAxis?: number;
-  semiMinorAxis?: number;
-  height?: number;
-  heightReference?: HeightReferenceJSON;
-  extrudedHeight?: number;
-  extrudedHeightReference?: HeightReferenceJSON;
-  rotation?: number;
-  stRotation?: number;
-  granularity?: number;
-  fill?: boolean;
-  material?: MaterialPropertyJSON;
-  outline?: boolean;
-  outlineColor?: ColorJSON;
-  outlineWidth?: number;
-  numberOfVerticalLines?: number;
-  shadows?: ShadowModeJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-  classificationType?: ClassificationTypeJSON;
-  zIndex?: ConstantProperty | number;
-}
+export type EllipseGraphicsJSON = z.infer<typeof EllipseGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `EllipseGraphics` instance to JSON and deserialize from JSON
  */
-export class EllipseGraphicsSerialize {
+export class EllipseGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is EllipseGraphics {
-    return value instanceof EllipseGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    semiMajorAxis: z.number().optional(),
+    semiMinorAxis: z.number().optional(),
+    height: z.number().optional(),
+    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    extrudedHeight: z.number().optional(),
+    extrudedHeightReference: HeightReferenceParse.zodJsonchema.optional(),
+    rotation: z.number().optional(),
+    stRotation: z.number().optional(),
+    granularity: z.number().optional(),
+    fill: z.boolean().optional(),
+    material: MaterialPropertyParse.zodJsonchema.optional(),
+    outline: z.boolean().optional(),
+    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineWidth: z.number().optional(),
+    numberOfVerticalLines: z.number().optional(),
+    shadows: ShadowModeParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    classificationType: ClassificationTypeParse.zodJsonchema.optional(),
+    zIndex: z.number().optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(EllipseGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: EllipseGraphics, time?: JulianDate): EllipseGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        semiMajorAxis: toPropertyValue(instance.semiMajorAxis, time),
-        semiMinorAxis: toPropertyValue(instance.semiMinorAxis, time),
-        height: toPropertyValue(instance.height, time),
-        heightReference: HeightReferenceSerialize.toJSON(toPropertyValue(instance.heightReference, time)),
-        extrudedHeight: toPropertyValue(instance.extrudedHeight, time),
-        extrudedHeightReference: HeightReferenceSerialize.toJSON(toPropertyValue(instance.extrudedHeightReference, time)),
-        rotation: toPropertyValue(instance.rotation, time),
-        stRotation: toPropertyValue(instance.stRotation, time),
-        granularity: toPropertyValue(instance.granularity, time),
-        fill: toPropertyValue(instance.fill, time),
-        material: MaterialPropertySerialize.toJSON(toPropertyValue(instance.material, time)),
-        outline: toPropertyValue(instance.outline, time),
-        outlineColor: ColorSerialize.toJSON(toPropertyValue(instance.outlineColor, time)),
-        outlineWidth: toPropertyValue(instance.outlineWidth, time),
-        numberOfVerticalLines: toPropertyValue(instance.numberOfVerticalLines, time),
-        shadows: ShadowModeSerialize.toJSON(toPropertyValue(instance.shadows, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-        classificationType: ClassificationTypeSerialize.toJSON(toPropertyValue(instance.classificationType, time)),
-        zIndex: toPropertyValue(instance.zIndex, time),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      semiMajorAxis: toPropertyValue(instance.semiMajorAxis, time),
+      semiMinorAxis: toPropertyValue(instance.semiMinorAxis, time),
+      height: toPropertyValue(instance.height, time),
+      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
+      extrudedHeight: toPropertyValue(instance.extrudedHeight, time),
+      extrudedHeightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.extrudedHeightReference, time)),
+      rotation: toPropertyValue(instance.rotation, time),
+      stRotation: toPropertyValue(instance.stRotation, time),
+      granularity: toPropertyValue(instance.granularity, time),
+      fill: toPropertyValue(instance.fill, time),
+      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      outline: toPropertyValue(instance.outline, time),
+      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: toPropertyValue(instance.outlineWidth, time),
+      numberOfVerticalLines: toPropertyValue(instance.numberOfVerticalLines, time),
+      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      classificationType: ClassificationTypeParse.toJSON(toPropertyValue(instance.classificationType, time)),
+      zIndex: toPropertyValue(instance.zIndex, time),
+    };
   }
 
   /**
@@ -91,27 +90,28 @@ export class EllipseGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new EllipseGraphics({
-      show: json.show,
-      semiMajorAxis: json.semiMajorAxis,
-      semiMinorAxis: json.semiMinorAxis,
-      height: json.height,
-      heightReference: HeightReferenceSerialize.fromJSON(json.heightReference),
-      extrudedHeight: json.extrudedHeight,
-      extrudedHeightReference: HeightReferenceSerialize.fromJSON(json.extrudedHeightReference),
-      rotation: json.rotation,
-      stRotation: json.stRotation,
-      granularity: json.granularity,
-      fill: json.fill,
-      material: MaterialPropertySerialize.fromJSON(json.material),
-      outline: json.outline,
-      outlineColor: ColorSerialize.fromJSON(json.outlineColor),
-      outlineWidth: json.outlineWidth,
-      numberOfVerticalLines: json.numberOfVerticalLines,
-      shadows: ShadowModeSerialize.fromJSON(json.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
-      classificationType: ClassificationTypeSerialize.fromJSON(json.classificationType),
-      zIndex: json.zIndex,
+      show: json.show ?? undefined,
+      semiMajorAxis: json.semiMajorAxis ?? undefined,
+      semiMinorAxis: json.semiMinorAxis ?? undefined,
+      height: json.height ?? undefined,
+      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
+      extrudedHeight: json.extrudedHeight ?? undefined,
+      extrudedHeightReference: HeightReferenceParse.fromJSON(json?.extrudedHeightReference),
+      rotation: json.rotation ?? undefined,
+      stRotation: json.stRotation ?? undefined,
+      granularity: json.granularity ?? undefined,
+      fill: json.fill ?? undefined,
+      material: MaterialPropertyParse.fromJSON(json?.material),
+      outline: json.outline ?? undefined,
+      outlineColor: ColorParse.fromJSON(json?.outlineColor),
+      outlineWidth: json.outlineWidth ?? undefined,
+      numberOfVerticalLines: json.numberOfVerticalLines ?? undefined,
+      shadows: ShadowModeParse.fromJSON(json?.shadows),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
+      classificationType: ClassificationTypeParse.fromJSON(json?.classificationType),
+      zIndex: json.zIndex ?? undefined,
     });
     return result ? instance.clone(result) : instance;
   }

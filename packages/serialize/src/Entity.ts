@@ -1,130 +1,113 @@
 import type { JulianDate } from 'cesium';
-import type { BillboardGraphicsJSON } from './BillboardGraphics';
 
-import type { BoxGraphicsJSON } from './BoxGraphics';
-import type { Cartesian3JSON } from './Cartesian3';
-import type { Cesium3DTilesetGraphicsJSON } from './Cesium3DTilesetGraphics';
-import type { CorridorGraphicsJSON } from './CorridorGraphics';
-import type { CylinderGraphicsJSON } from './CylinderGraphics';
-import type { EllipseGraphicsJSON } from './EllipseGraphics';
-import type { EllipsoidGraphicsJSON } from './EllipsoidGraphics';
-import type { LabelGraphicsJSON } from './LabelGraphics';
-import type { ModelGraphicsJSON } from './ModelGraphics';
-import type { PathGraphicsJSON } from './PathGraphics';
-import type { PlaneGraphicsJSON } from './PlaneGraphics';
-import type { PointGraphicsJSON } from './PointGraphics';
-import type { PolygonGraphicsJSON } from './PolygonGraphics';
-import type { PolylineGraphicsJSON } from './PolylineGraphics';
-import type { PolylineVolumeGraphicsJSON } from './PolylineVolumeGraphics';
-import type { PositionPropertyJSON } from './PositionProperty';
-import type { PropertyBagJSON } from './PropertyBag';
-import type { QuaternionJSON } from './Quaternion';
-import type { RectangleGraphicsJSON } from './RectangleGraphics';
-import type { TimeIntervalCollectionJSON } from './TimeIntervalCollection';
-import type { WallGraphicsJSON } from './WallGraphics';
-import { notNullish } from '@vueuse/core';
 import { Entity } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { BillboardGraphicsSerialize } from './BillboardGraphics';
-import { BoxGraphicsSerialize } from './BoxGraphics';
-import { Cartesian3Serialize } from './Cartesian3';
-import { Cesium3DTilesetGraphicsSerialize } from './Cesium3DTilesetGraphics';
-import { CorridorGraphicsSerialize } from './CorridorGraphics';
-import { CylinderGraphicsSerialize } from './CylinderGraphics';
-import { EllipseGraphicsSerialize } from './EllipseGraphics';
-import { EllipsoidGraphicsSerialize } from './EllipsoidGraphics';
-import { LabelGraphicsSerialize } from './LabelGraphics';
-import { ModelGraphicsSerialize } from './ModelGraphics';
-import { PathGraphicsSerialize } from './PathGraphics';
-import { PlaneGraphicsSerialize } from './PlaneGraphics';
-import { PointGraphicsSerialize } from './PointGraphics';
-import { PolygonGraphicsSerialize } from './PolygonGraphics';
-import { PolylineGraphicsSerialize } from './PolylineGraphics';
-import { PolylineVolumeGraphicsSerialize } from './PolylineVolumeGraphics';
-import { PositionPropertySerialize } from './PositionProperty';
-import { PropertyBagSerialize } from './PropertyBag';
-import { QuaternionSerialize } from './Quaternion';
-import { RectangleGraphicsSerialize } from './RectangleGraphics';
-import { TimeIntervalCollectionSerialize } from './TimeIntervalCollection';
-import { WallGraphicsSerialize } from './WallGraphics';
+import { z } from 'zod';
+import { BillboardGraphicsParse } from './BillboardGraphics';
+import { BoxGraphicsParse } from './BoxGraphics';
+import { Cartesian3Parse } from './Cartesian3';
+import { Cesium3DTilesetGraphicsParse } from './Cesium3DTilesetGraphics';
+import { CorridorGraphicsParse } from './CorridorGraphics';
+import { CylinderGraphicsParse } from './CylinderGraphics';
+import { EllipseGraphicsParse } from './EllipseGraphics';
+import { EllipsoidGraphicsParse } from './EllipsoidGraphics';
+import { LabelGraphicsParse } from './LabelGraphics';
+import { ModelGraphicsParse } from './ModelGraphics';
+import { PathGraphicsParse } from './PathGraphics';
+import { PlaneGraphicsParse } from './PlaneGraphics';
+import { PointGraphicsParse } from './PointGraphics';
+import { PolygonGraphicsParse } from './PolygonGraphics';
+import { PolylineGraphicsParse } from './PolylineGraphics';
+import { PolylineVolumeGraphicsParse } from './PolylineVolumeGraphics';
+import { PositionPropertyParse } from './PositionProperty';
+import { PropertyBagParse } from './PropertyBag';
+import { QuaternionParse } from './Quaternion';
+import { RectangleGraphicsParse } from './RectangleGraphics';
+import { TimeIntervalCollectionParse } from './TimeIntervalCollection';
+import { WallGraphicsParse } from './WallGraphics';
 
-export interface EntityJSON {
-  id?: string;
-  name?: string;
-  availability?: TimeIntervalCollectionJSON;
-  show?: boolean;
-  description?: string;
-  position?: PositionPropertyJSON;
-  orientation?: QuaternionJSON;
-  viewFrom?: Cartesian3JSON;
-  parent?: string;
-  billboard?: BillboardGraphicsJSON;
-  box?: BoxGraphicsJSON;
-  corridor?: CorridorGraphicsJSON;
-  cylinder?: CylinderGraphicsJSON;
-  ellipse?: EllipseGraphicsJSON;
-  ellipsoid?: EllipsoidGraphicsJSON;
-  label?: LabelGraphicsJSON;
-  model?: ModelGraphicsJSON;
-  tileset?: Cesium3DTilesetGraphicsJSON;
-  path?: PathGraphicsJSON;
-  plane?: PlaneGraphicsJSON;
-  point?: PointGraphicsJSON;
-  polygon?: PolygonGraphicsJSON;
-  polyline?: PolylineGraphicsJSON;
-  properties?: PropertyBagJSON;
-  polylineVolume?: PolylineVolumeGraphicsJSON;
-  rectangle?: RectangleGraphicsJSON;
-  wall?: WallGraphicsJSON;
-}
+export type EntityJSON = z.infer<typeof EntityParse.zodJsonchema>;
 
 /**
  * Serialize a `Entity` instance to JSON and deserialize from JSON
  */
-export class EntitySerialize {
+export class EntityParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is Entity {
-    return value instanceof Entity;
-  };
+  static readonly zodJsonchema = z.object({
+    id: z.string().optional(),
+    name: z.string().optional(),
+    availability: TimeIntervalCollectionParse.zodJsonchema.optional(),
+    show: z.boolean().optional(),
+    description: z.string().optional(),
+    position: PositionPropertyParse.zodJsonchema.optional(),
+    orientation: QuaternionParse.zodJsonchema.optional(),
+    viewFrom: Cartesian3Parse.zodJsonchema.optional(),
+    parent: z.string().optional(),
+    billboard: BillboardGraphicsParse.zodJsonchema.optional(),
+    box: BoxGraphicsParse.zodJsonchema.optional(),
+    corridor: CorridorGraphicsParse.zodJsonchema.optional(),
+    cylinder: CylinderGraphicsParse.zodJsonchema.optional(),
+    ellipse: EllipseGraphicsParse.zodJsonchema.optional(),
+    ellipsoid: EllipsoidGraphicsParse.zodJsonchema.optional(),
+    label: LabelGraphicsParse.zodJsonchema.optional(),
+    model: ModelGraphicsParse.zodJsonchema.optional(),
+    tileset: Cesium3DTilesetGraphicsParse.zodJsonchema.optional(),
+    path: PathGraphicsParse.zodJsonchema.optional(),
+    plane: PlaneGraphicsParse.zodJsonchema.optional(),
+    point: PointGraphicsParse.zodJsonchema.optional(),
+    polygon: PolygonGraphicsParse.zodJsonchema.optional(),
+    polyline: PolylineGraphicsParse.zodJsonchema.optional(),
+    properties: PropertyBagParse.zodJsonchema.optional(),
+    polylineVolume: PolylineVolumeGraphicsParse.zodJsonchema.optional(),
+    rectangle: RectangleGraphicsParse.zodJsonchema.optional(),
+    wall: WallGraphicsParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(Entity);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Entity, time?: JulianDate): EntityJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        id: instance.id,
-        name: instance.name,
-        availability: TimeIntervalCollectionSerialize.toJSON(instance.availability),
-        show: !!instance.show,
-        description: toPropertyValue(instance.description, time),
-        position: PositionPropertySerialize.toJSON(instance.position),
-        orientation: QuaternionSerialize.toJSON(toPropertyValue(instance.orientation, time)),
-        viewFrom: Cartesian3Serialize.toJSON(toPropertyValue(instance.viewFrom, time)),
-        billboard: BillboardGraphicsSerialize.toJSON(instance.billboard),
-        box: BoxGraphicsSerialize.toJSON(instance.box),
-        corridor: CorridorGraphicsSerialize.toJSON(instance.corridor),
-        cylinder: CylinderGraphicsSerialize.toJSON(instance.cylinder),
-        ellipse: EllipseGraphicsSerialize.toJSON(instance.ellipse),
-        ellipsoid: EllipsoidGraphicsSerialize.toJSON(instance.ellipsoid),
-        label: LabelGraphicsSerialize.toJSON(instance.label),
-        model: ModelGraphicsSerialize.toJSON(instance.model),
-        tileset: Cesium3DTilesetGraphicsSerialize.toJSON(instance.tileset),
-        path: PathGraphicsSerialize.toJSON(instance.path),
-        plane: PlaneGraphicsSerialize.toJSON(instance.plane),
-        point: PointGraphicsSerialize.toJSON(instance.point),
-        polygon: PolygonGraphicsSerialize.toJSON(instance.polygon),
-        polyline: PolylineGraphicsSerialize.toJSON(instance.polyline),
-        properties: PropertyBagSerialize.toJSON(instance.properties),
-        polylineVolume: PolylineVolumeGraphicsSerialize.toJSON(instance.polylineVolume),
-        rectangle: RectangleGraphicsSerialize.toJSON(instance.rectangle),
-        wall: WallGraphicsSerialize.toJSON(instance.wall),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      id: instance.id,
+      name: instance.name,
+      availability: TimeIntervalCollectionParse.toJSON(instance?.availability),
+      show: !!instance.show,
+      description: toPropertyValue(instance.description, time),
+      position: PositionPropertyParse.toJSON(instance?.position),
+      orientation: QuaternionParse.toJSON(toPropertyValue(instance.orientation, time)),
+      viewFrom: Cartesian3Parse.toJSON(toPropertyValue(instance.viewFrom, time)),
+      billboard: BillboardGraphicsParse.toJSON(instance?.billboard),
+      box: BoxGraphicsParse.toJSON(instance?.box),
+      corridor: CorridorGraphicsParse.toJSON(instance?.corridor),
+      cylinder: CylinderGraphicsParse.toJSON(instance?.cylinder),
+      ellipse: EllipseGraphicsParse.toJSON(instance?.ellipse),
+      ellipsoid: EllipsoidGraphicsParse.toJSON(instance?.ellipsoid),
+      label: LabelGraphicsParse.toJSON(instance?.label),
+      model: ModelGraphicsParse.toJSON(instance?.model),
+      tileset: Cesium3DTilesetGraphicsParse.toJSON(instance?.tileset),
+      path: PathGraphicsParse.toJSON(instance?.path),
+      plane: PlaneGraphicsParse.toJSON(instance?.plane),
+      point: PointGraphicsParse.toJSON(instance?.point),
+      polygon: PolygonGraphicsParse.toJSON(instance?.polygon),
+      polyline: PolylineGraphicsParse.toJSON(instance?.polyline),
+      properties: PropertyBagParse.toJSON(instance?.properties),
+      polylineVolume: PolylineVolumeGraphicsParse.toJSON(instance?.polylineVolume),
+      rectangle: RectangleGraphicsParse.toJSON(instance?.rectangle),
+      wall: WallGraphicsParse.toJSON(instance?.wall),
+    };
   }
 
   /**
@@ -135,33 +118,34 @@ export class EntitySerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(json);
     const instance = new Entity({
-      id: json.id,
-      name: json.name,
-      availability: TimeIntervalCollectionSerialize.fromJSON(json.availability),
-      show: !!json.show,
-      description: json.description,
-      position: PositionPropertySerialize.fromJSON(json.position),
-      orientation: QuaternionSerialize.fromJSON((json.orientation)),
-      viewFrom: Cartesian3Serialize.fromJSON(json.viewFrom),
-      billboard: BillboardGraphicsSerialize.fromJSON(json.billboard),
-      box: BoxGraphicsSerialize.fromJSON(json.box),
-      corridor: CorridorGraphicsSerialize.fromJSON(json.corridor),
-      cylinder: CylinderGraphicsSerialize.fromJSON(json.cylinder),
-      ellipse: EllipseGraphicsSerialize.fromJSON(json.ellipse),
-      ellipsoid: EllipsoidGraphicsSerialize.fromJSON(json.ellipsoid),
-      label: LabelGraphicsSerialize.fromJSON(json.label),
-      model: ModelGraphicsSerialize.fromJSON(json.model),
-      tileset: Cesium3DTilesetGraphicsSerialize.fromJSON(json.tileset),
-      path: PathGraphicsSerialize.fromJSON(json.path),
-      plane: PlaneGraphicsSerialize.fromJSON(json.plane),
-      point: PointGraphicsSerialize.fromJSON(json.point),
-      polygon: PolygonGraphicsSerialize.fromJSON(json.polygon),
-      polyline: PolylineGraphicsSerialize.fromJSON(json.polyline),
-      properties: PropertyBagSerialize.fromJSON(json.properties),
-      polylineVolume: PolylineVolumeGraphicsSerialize.fromJSON(json.polylineVolume),
-      rectangle: RectangleGraphicsSerialize.fromJSON(json.rectangle),
-      wall: WallGraphicsSerialize.fromJSON(json.wall),
+      id: json.id ?? undefined,
+      name: json.name ?? undefined,
+      availability: TimeIntervalCollectionParse.fromJSON(json?.availability),
+      show: json.show ?? undefined,
+      description: json.description ?? undefined,
+      position: PositionPropertyParse.fromJSON(json?.position),
+      orientation: QuaternionParse.fromJSON((json.orientation)) ?? undefined,
+      viewFrom: Cartesian3Parse.fromJSON(json?.viewFrom),
+      billboard: BillboardGraphicsParse.fromJSON(json?.billboard),
+      box: BoxGraphicsParse.fromJSON(json?.box),
+      corridor: CorridorGraphicsParse.fromJSON(json?.corridor),
+      cylinder: CylinderGraphicsParse.fromJSON(json?.cylinder),
+      ellipse: EllipseGraphicsParse.fromJSON(json?.ellipse),
+      ellipsoid: EllipsoidGraphicsParse.fromJSON(json?.ellipsoid),
+      label: LabelGraphicsParse.fromJSON(json?.label),
+      model: ModelGraphicsParse.fromJSON(json?.model),
+      tileset: Cesium3DTilesetGraphicsParse.fromJSON(json?.tileset),
+      path: PathGraphicsParse.fromJSON(json?.path),
+      plane: PlaneGraphicsParse.fromJSON(json?.plane),
+      point: PointGraphicsParse.fromJSON(json?.point),
+      polygon: PolygonGraphicsParse.fromJSON(json?.polygon),
+      polyline: PolylineGraphicsParse.fromJSON(json?.polyline),
+      properties: PropertyBagParse.fromJSON(json?.properties),
+      polylineVolume: PolylineVolumeGraphicsParse.fromJSON(json?.polylineVolume),
+      rectangle: RectangleGraphicsParse.fromJSON(json?.rectangle),
+      wall: WallGraphicsParse.fromJSON(json?.wall),
     });
     return instance;
   }

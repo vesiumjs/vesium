@@ -1,67 +1,67 @@
 import type { JulianDate } from 'cesium';
-import type { Cartesian3JSON } from './Cartesian3';
-import type { ColorJSON } from './Color';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { MaterialPropertyJSON } from './MaterialProperty';
-import type { ShadowModeJSON } from './ShadowMode';
-import { notNullish } from '@vueuse/core';
 import { WallGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { Cartesian3Serialize } from './Cartesian3';
-import { ColorSerialize } from './Color';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { MaterialPropertySerialize } from './MaterialProperty';
+import { z } from 'zod';
+import { Cartesian3Parse } from './Cartesian3';
+import { ColorParse } from './Color';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { MaterialPropertyParse } from './MaterialProperty';
 
-import { ShadowModeSerialize } from './ShadowMode';
+import { ShadowModeParse } from './ShadowMode';
 
-export interface WallGraphicsJSON {
-  show?: boolean;
-  positions?: Cartesian3JSON[];
-  minimumHeights?: number[];
-  maximumHeights?: number[];
-  granularity?: number;
-  fill?: boolean;
-  material?: MaterialPropertyJSON;
-  outline?: boolean;
-  outlineColor?: ColorJSON;
-  outlineWidth?: number;
-  shadows?: ShadowModeJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-}
+export type WallGraphicsJSON = z.infer<typeof WallGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `WallGraphics` instance to JSON and deserialize from JSON
  */
-export class WallGraphicsSerialize {
+export class WallGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is WallGraphics {
-    return value instanceof WallGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    positions: z.array(Cartesian3Parse.zodJsonchema).optional(),
+    minimumHeights: z.array(z.number()).optional(),
+    maximumHeights: z.array(z.number()).optional(),
+    granularity: z.number().optional(),
+    fill: z.boolean().optional(),
+    material: MaterialPropertyParse.zodJsonchema.optional(),
+    outline: z.boolean().optional(),
+    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineWidth: z.number().optional(),
+    shadows: ShadowModeParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(WallGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: WallGraphics, time?: JulianDate): WallGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Serialize.toJSON(item)),
-        minimumHeights: toPropertyValue(instance.minimumHeights, time),
-        maximumHeights: toPropertyValue(instance.maximumHeights, time),
-        granularity: toPropertyValue(instance.granularity, time),
-        fill: toPropertyValue(instance.fill, time),
-        material: MaterialPropertySerialize.toJSON(toPropertyValue(instance.material, time)),
-        outline: toPropertyValue(instance.outline, time),
-        outlineColor: ColorSerialize.toJSON(toPropertyValue(instance.outlineColor, time)),
-        outlineWidth: toPropertyValue(instance.outlineWidth, time),
-        shadows: ShadowModeSerialize.toJSON(toPropertyValue(instance.shadows, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Parse.toJSON(item)),
+      minimumHeights: toPropertyValue(instance.minimumHeights, time),
+      maximumHeights: toPropertyValue(instance.maximumHeights, time),
+      granularity: toPropertyValue(instance.granularity, time),
+      fill: toPropertyValue(instance.fill, time),
+      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      outline: toPropertyValue(instance.outline, time),
+      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: toPropertyValue(instance.outlineWidth, time),
+      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+    };
   }
 
   /**
@@ -73,19 +73,20 @@ export class WallGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new WallGraphics({
-      show: json.show,
-      positions: json.positions?.map(item => Cartesian3Serialize.fromJSON(item)!),
-      minimumHeights: json.minimumHeights,
-      maximumHeights: json.maximumHeights,
-      granularity: json.granularity,
-      fill: json.fill,
-      material: MaterialPropertySerialize.fromJSON(json.material),
-      outline: json.outline,
-      outlineColor: ColorSerialize.fromJSON(json.outlineColor),
-      outlineWidth: json.outlineWidth,
-      shadows: ShadowModeSerialize.fromJSON(json.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
+      show: json.show ?? undefined,
+      positions: json.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,
+      minimumHeights: json.minimumHeights ?? undefined,
+      maximumHeights: json.maximumHeights ?? undefined,
+      granularity: json.granularity ?? undefined,
+      fill: json.fill ?? undefined,
+      material: MaterialPropertyParse.fromJSON(json?.material),
+      outline: json.outline ?? undefined,
+      outlineColor: ColorParse.fromJSON(json?.outlineColor),
+      outlineWidth: json.outlineWidth ?? undefined,
+      shadows: ShadowModeParse.fromJSON(json?.shadows),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
     });
     return result ? instance.clone(result) : instance;
   }

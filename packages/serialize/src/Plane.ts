@@ -1,37 +1,41 @@
-import type { Cartesian3JSON } from './Cartesian3';
-import { notNullish } from '@vueuse/core';
 import { Plane } from 'cesium';
+import { z } from 'zod';
 
-import { Cartesian3Serialize } from './Cartesian3';
+import { Cartesian3Parse } from './Cartesian3';
 
-export interface PlaneJSON {
-  normal: Cartesian3JSON;
-  distance: number;
-}
+export type PlaneJSON = z.infer<typeof PlaneParse.zodJsonchema>;
 
 /**
  * Serialize a `Plane` instance to JSON and deserialize from JSON
  */
-export class PlaneSerialize {
+export class PlaneParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is Plane {
-    return value instanceof Plane;
-  };
+  static readonly zodJsonchema = z.object({
+    normal: Cartesian3Parse.zodJsonchema,
+    distance: z.number(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(Plane);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Plane): PlaneJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        normal: Cartesian3Serialize.toJSON(instance.normal)!,
-        distance: instance.distance,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      normal: Cartesian3Parse.toJSON(instance?.normal)!,
+      distance: instance.distance,
+    };
   }
 
   /**
@@ -43,9 +47,10 @@ export class PlaneSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new Plane(
-      Cartesian3Serialize.fromJSON(json.normal)!,
-      json.distance,
+      Cartesian3Parse.fromJSON(json?.normal)!,
+      json.distance ?? undefined,
     );
 
     return result ? Plane.clone(instance, result) : instance;

@@ -1,95 +1,90 @@
 import type { JulianDate } from 'cesium';
-import type { BoundingRectangleJSON } from './BoundingRectangle';
-import type { Cartesian2JSON } from './Cartesian2';
-import type { Cartesian3JSON } from './Cartesian3';
-import type { ColorJSON } from './Color';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { HeightReferenceJSON } from './HeightReference';
-import type { HorizontalOriginJSON } from './HorizontalOrigin';
-import type { NearFarScalarJSON } from './NearFarScalar';
-import type { SplitDirectionJSON } from './SplitDirection';
-import type { VerticalOriginJSON } from './VerticalOrigin';
-import { notNullish } from '@vueuse/core';
 import { BillboardGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { BoundingRectangleSerialize } from './BoundingRectangle';
-import { Cartesian2Serialize } from './Cartesian2';
-import { Cartesian3Serialize } from './Cartesian3';
-import { ColorSerialize } from './Color';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { HeightReferenceSerialize } from './HeightReference';
-import { HorizontalOriginSerialize } from './HorizontalOrigin';
-import { NearFarScalarSerialize } from './NearFarScalar';
+import { z } from 'zod';
+import { BoundingRectangleParse } from './BoundingRectangle';
+import { Cartesian2Parse } from './Cartesian2';
+import { Cartesian3Parse } from './Cartesian3';
+import { ColorParse } from './Color';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { HeightReferenceParse } from './HeightReference';
+import { HorizontalOriginParse } from './HorizontalOrigin';
+import { NearFarScalarParse } from './NearFarScalar';
 
-import { SplitDirectionSerialize } from './SplitDirection';
-import { VerticalOriginSerialize } from './VerticalOrigin';
+import { SplitDirectionParse } from './SplitDirection';
+import { VerticalOriginParse } from './VerticalOrigin';
 
-export interface BillboardGraphicsJSON {
-  show?: boolean;
-  image?: string;
-  scale?: number;
-  pixelOffset?: Cartesian2JSON;
-  eyeOffset?: Cartesian3JSON;
-  horizontalOrigin?: HorizontalOriginJSON;
-  verticalOrigin?: VerticalOriginJSON;
-  heightReference?: HeightReferenceJSON;
-  color?: ColorJSON;
-  rotation?: number;
-  alignedAxis?: Cartesian3JSON;
-  sizeInMeters?: boolean;
-  width?: number;
-  height?: number;
-  scaleByDistance?: NearFarScalarJSON;
-  translucencyByDistance?: NearFarScalarJSON;
-  pixelOffsetScaleByDistance?: NearFarScalarJSON;
-  imageSubRegion?: BoundingRectangleJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-  disableDepthTestDistance?: number;
-  splitDirection?: SplitDirectionJSON;
-}
+export type BillboardGraphicsJSON = z.infer<typeof BillboardGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `BillboardGraphics` instance to JSON and deserialize from JSON
  */
-export class BillboardGraphicsSerialize {
+export class BillboardGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is BillboardGraphics {
-    return value instanceof BillboardGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    image: z.string().optional(),
+    scale: z.number().optional(),
+    pixelOffset: Cartesian2Parse.zodJsonchema.optional(),
+    eyeOffset: Cartesian3Parse.zodJsonchema.optional(),
+    horizontalOrigin: HorizontalOriginParse.zodJsonchema.optional(),
+    verticalOrigin: VerticalOriginParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    color: ColorParse.zodJsonchema.optional(),
+    rotation: z.number().optional(),
+    alignedAxis: Cartesian3Parse.zodJsonchema.optional(),
+    sizeInMeters: z.boolean().optional(),
+    width: z.number().optional(),
+    height: z.number().optional(),
+    scaleByDistance: NearFarScalarParse.zodJsonchema.optional(),
+    translucencyByDistance: NearFarScalarParse.zodJsonchema.optional(),
+    pixelOffsetScaleByDistance: NearFarScalarParse.zodJsonchema.optional(),
+    imageSubRegion: BoundingRectangleParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    disableDepthTestDistance: z.number().optional(),
+    splitDirection: SplitDirectionParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(BillboardGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: BillboardGraphics, time?: JulianDate): BillboardGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        image: toPropertyValue(instance.image, time),
-        scale: toPropertyValue(instance.scale, time),
-        pixelOffset: Cartesian2Serialize.toJSON(toPropertyValue(instance.pixelOffset, time)),
-        eyeOffset: Cartesian3Serialize.toJSON(toPropertyValue(instance.eyeOffset, time)),
-        horizontalOrigin: HorizontalOriginSerialize.toJSON(toPropertyValue(instance.horizontalOrigin, time)),
-        verticalOrigin: VerticalOriginSerialize.toJSON(toPropertyValue(instance.verticalOrigin, time)),
-        heightReference: HeightReferenceSerialize.toJSON(toPropertyValue(instance.heightReference, time)),
-        color: ColorSerialize.toJSON(toPropertyValue(instance.color, time)),
-        rotation: toPropertyValue(instance.rotation, time),
-        alignedAxis: Cartesian3Serialize.toJSON(toPropertyValue(instance.alignedAxis, time)),
-        sizeInMeters: toPropertyValue(instance.sizeInMeters, time),
-        width: toPropertyValue(instance.width, time),
-        height: toPropertyValue(instance.height, time),
-        scaleByDistance: NearFarScalarSerialize.toJSON(toPropertyValue(instance.scaleByDistance, time)),
-        translucencyByDistance: NearFarScalarSerialize.toJSON(toPropertyValue(instance.translucencyByDistance, time)),
-        pixelOffsetScaleByDistance: NearFarScalarSerialize.toJSON(toPropertyValue(instance.pixelOffsetScaleByDistance, time)),
-        imageSubRegion: BoundingRectangleSerialize.toJSON(toPropertyValue(instance.imageSubRegion, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-        disableDepthTestDistance: toPropertyValue(instance.disableDepthTestDistance, time),
-        splitDirection: SplitDirectionSerialize.toJSON(toPropertyValue(instance.splitDirection, time)),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      image: toPropertyValue(instance.image, time),
+      scale: toPropertyValue(instance.scale, time),
+      pixelOffset: Cartesian2Parse.toJSON(toPropertyValue(instance.pixelOffset, time)),
+      eyeOffset: Cartesian3Parse.toJSON(toPropertyValue(instance.eyeOffset, time)),
+      horizontalOrigin: HorizontalOriginParse.toJSON(toPropertyValue(instance.horizontalOrigin, time)),
+      verticalOrigin: VerticalOriginParse.toJSON(toPropertyValue(instance.verticalOrigin, time)),
+      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
+      color: ColorParse.toJSON(toPropertyValue(instance.color, time)),
+      rotation: toPropertyValue(instance.rotation, time),
+      alignedAxis: Cartesian3Parse.toJSON(toPropertyValue(instance.alignedAxis, time)),
+      sizeInMeters: toPropertyValue(instance.sizeInMeters, time),
+      width: toPropertyValue(instance.width, time),
+      height: toPropertyValue(instance.height, time),
+      scaleByDistance: NearFarScalarParse.toJSON(toPropertyValue(instance.scaleByDistance, time)),
+      translucencyByDistance: NearFarScalarParse.toJSON(toPropertyValue(instance.translucencyByDistance, time)),
+      pixelOffsetScaleByDistance: NearFarScalarParse.toJSON(toPropertyValue(instance.pixelOffsetScaleByDistance, time)),
+      imageSubRegion: BoundingRectangleParse.toJSON(toPropertyValue(instance.imageSubRegion, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      disableDepthTestDistance: toPropertyValue(instance.disableDepthTestDistance, time),
+      splitDirection: SplitDirectionParse.toJSON(toPropertyValue(instance.splitDirection, time)),
+    };
   }
 
   /**
@@ -101,28 +96,29 @@ export class BillboardGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new BillboardGraphics({
-      show: json.show,
-      image: json.image,
-      scale: json.scale,
-      pixelOffset: Cartesian2Serialize.fromJSON(json.pixelOffset),
-      eyeOffset: Cartesian3Serialize.fromJSON(json.eyeOffset),
-      horizontalOrigin: HorizontalOriginSerialize.fromJSON(json.horizontalOrigin),
-      verticalOrigin: VerticalOriginSerialize.fromJSON(json.verticalOrigin),
-      heightReference: HeightReferenceSerialize.fromJSON(json.heightReference),
-      color: ColorSerialize.fromJSON(json.color),
-      rotation: json.rotation,
-      alignedAxis: Cartesian3Serialize.fromJSON(json.alignedAxis),
-      sizeInMeters: json.sizeInMeters,
-      width: json.width,
-      height: json.height,
-      scaleByDistance: NearFarScalarSerialize.fromJSON(json.scaleByDistance),
-      translucencyByDistance: NearFarScalarSerialize.fromJSON(json.translucencyByDistance),
-      pixelOffsetScaleByDistance: NearFarScalarSerialize.fromJSON(json.pixelOffsetScaleByDistance),
-      imageSubRegion: BoundingRectangleSerialize.fromJSON(json.imageSubRegion),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
-      disableDepthTestDistance: json.disableDepthTestDistance,
-      splitDirection: SplitDirectionSerialize.fromJSON(json.splitDirection),
+      show: json.show ?? undefined,
+      image: json.image ?? undefined,
+      scale: json.scale ?? undefined,
+      pixelOffset: Cartesian2Parse.fromJSON(json?.pixelOffset),
+      eyeOffset: Cartesian3Parse.fromJSON(json?.eyeOffset),
+      horizontalOrigin: HorizontalOriginParse.fromJSON(json?.horizontalOrigin),
+      verticalOrigin: VerticalOriginParse.fromJSON(json?.verticalOrigin),
+      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
+      color: ColorParse.fromJSON(json?.color),
+      rotation: json.rotation ?? undefined,
+      alignedAxis: Cartesian3Parse.fromJSON(json?.alignedAxis),
+      sizeInMeters: json.sizeInMeters ?? undefined,
+      width: json.width ?? undefined,
+      height: json.height ?? undefined,
+      scaleByDistance: NearFarScalarParse.fromJSON(json?.scaleByDistance),
+      translucencyByDistance: NearFarScalarParse.fromJSON(json?.translucencyByDistance),
+      pixelOffsetScaleByDistance: NearFarScalarParse.fromJSON(json?.pixelOffsetScaleByDistance),
+      imageSubRegion: BoundingRectangleParse.fromJSON(json?.imageSubRegion),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
+      disableDepthTestDistance: json.disableDepthTestDistance ?? undefined,
+      splitDirection: SplitDirectionParse.fromJSON(json?.splitDirection),
     });
     return result ? instance.clone(result) : instance;
   }

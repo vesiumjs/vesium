@@ -1,95 +1,92 @@
-import type { JulianDate, Resource } from 'cesium';
-import type { Cartesian2JSON } from './Cartesian2';
-import type { ClippingPlaneCollectionJSON } from './ClippingPlaneCollection';
-import type { ColorJSON } from './Color';
-import type { ColorBlendModeJSON } from './ColorBlendMode';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { HeightReferenceJSON } from './HeightReference';
-import type { PropertyBagJSON } from './PropertyBag';
-import type { ShadowModeJSON } from './ShadowMode';
-import { notNullish } from '@vueuse/core';
+import type { JulianDate } from 'cesium';
 import { ModelGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { Cartesian2Serialize } from './Cartesian2';
-import { ClippingPlaneCollectionSerialize } from './ClippingPlaneCollection';
-import { ColorSerialize } from './Color';
-import { ColorBlendModeSerialize } from './ColorBlendMode';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { HeightReferenceSerialize } from './HeightReference';
-import { PropertyBagSerialize } from './PropertyBag';
+import { z } from 'zod';
+import { Cartesian2Parse } from './Cartesian2';
+import { ClippingPlaneCollectionParse } from './ClippingPlaneCollection';
+import { ColorParse } from './Color';
+import { ColorBlendModeParse } from './ColorBlendMode';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { HeightReferenceParse } from './HeightReference';
+import { PropertyBagParse } from './PropertyBag';
 
-import { ShadowModeSerialize } from './ShadowMode';
+import { ShadowModeParse } from './ShadowMode';
 
-export interface ModelGraphicsJSON {
-  show?: boolean;
-  uri?: string | Resource;
-  scale?: number;
-  enableVerticalExaggeration?: boolean;
-  minimumPixelSize?: number;
-  maximumScale?: number;
-  incrementallyLoadTextures?: boolean;
-  runAnimations?: boolean;
-  clampAnimations?: boolean;
-  shadows?: ShadowModeJSON;
-  heightReference?: HeightReferenceJSON;
-  silhouetteColor?: ColorJSON;
-  silhouetteSize?: number;
-  color?: ColorJSON;
-  colorBlendMode?: ColorBlendModeJSON;
-  colorBlendAmount?: number;
-  imageBasedLightingFactor?: Cartesian2JSON;
-  lightColor?: ColorJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-  nodeTransformations?: PropertyBagJSON;
-  articulations?: PropertyBagJSON;
-  clippingPlanes?: ClippingPlaneCollectionJSON;
-  // customShader?: CustomShaderJSON;
-}
+export type ModelGraphicsJSON = z.infer<typeof ModelGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `ModelGraphics` instance to JSON and deserialize from JSON
  */
-export class ModelGraphicsSerialize {
+export class ModelGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is ModelGraphics {
-    return value instanceof ModelGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    uri: z.string().optional(),
+    scale: z.number().optional(),
+    enableVerticalExaggeration: z.boolean().optional(),
+    minimumPixelSize: z.number().optional(),
+    maximumScale: z.number().optional(),
+    incrementallyLoadTextures: z.boolean().optional(),
+    runAnimations: z.boolean().optional(),
+    clampAnimations: z.boolean().optional(),
+    shadows: ShadowModeParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    silhouetteColor: ColorParse.zodJsonchema.optional(),
+    silhouetteSize: z.number().optional(),
+    color: ColorParse.zodJsonchema.optional(),
+    colorBlendMode: ColorBlendModeParse.zodJsonchema.optional(),
+    colorBlendAmount: z.number().optional(),
+    imageBasedLightingFactor: Cartesian2Parse.zodJsonchema.optional(),
+    lightColor: ColorParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    nodeTransformations: PropertyBagParse.zodJsonchema.optional(),
+    articulations: PropertyBagParse.zodJsonchema.optional(),
+    clippingPlanes: ClippingPlaneCollectionParse.zodJsonchema.optional(),
+  // customShader: CustomShaderParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(ModelGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ModelGraphics, time?: JulianDate): ModelGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        uri: toPropertyValue(instance.uri, time),
-        scale: toPropertyValue(instance.scale, time),
-        enableVerticalExaggeration: toPropertyValue(instance.enableVerticalExaggeration, time),
-        minimumPixelSize: toPropertyValue(instance.minimumPixelSize, time),
-        maximumScale: toPropertyValue(instance.maximumScale, time),
-        incrementallyLoadTextures: toPropertyValue(instance.incrementallyLoadTextures, time),
-        runAnimations: toPropertyValue(instance.runAnimations, time),
-        clampAnimations: toPropertyValue(instance.clampAnimations, time),
-        shadows: ShadowModeSerialize.toJSON(toPropertyValue(instance.shadows, time)),
-        heightReference: HeightReferenceSerialize.toJSON(toPropertyValue(instance.heightReference, time)),
-        silhouetteColor: ColorSerialize.toJSON(toPropertyValue(instance.silhouetteColor, time)),
-        silhouetteSize: toPropertyValue(instance.silhouetteSize, time),
-        color: ColorSerialize.toJSON(toPropertyValue(instance.color, time)),
-        colorBlendMode: ColorBlendModeSerialize.toJSON(toPropertyValue(instance.colorBlendMode, time)),
-        colorBlendAmount: toPropertyValue(instance.colorBlendAmount, time),
-        imageBasedLightingFactor: Cartesian2Serialize.toJSON(toPropertyValue(instance.imageBasedLightingFactor, time)),
-        lightColor: ColorSerialize.toJSON(toPropertyValue(instance.lightColor, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-        nodeTransformations: PropertyBagSerialize.toJSON(toPropertyValue(instance.nodeTransformations, time)),
-        articulations: PropertyBagSerialize.toJSON(toPropertyValue(instance.articulations, time)),
-        clippingPlanes: ClippingPlaneCollectionSerialize.toJSON(toPropertyValue(instance.clippingPlanes, time)),
-        // customShader: CustomShaderSerialize.toJSON(toPropertyValue(instance.customShader, time)),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      uri: toPropertyValue(instance.uri, time),
+      scale: toPropertyValue(instance.scale, time),
+      enableVerticalExaggeration: toPropertyValue(instance.enableVerticalExaggeration, time),
+      minimumPixelSize: toPropertyValue(instance.minimumPixelSize, time),
+      maximumScale: toPropertyValue(instance.maximumScale, time),
+      incrementallyLoadTextures: toPropertyValue(instance.incrementallyLoadTextures, time),
+      runAnimations: toPropertyValue(instance.runAnimations, time),
+      clampAnimations: toPropertyValue(instance.clampAnimations, time),
+      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
+      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
+      silhouetteColor: ColorParse.toJSON(toPropertyValue(instance.silhouetteColor, time)),
+      silhouetteSize: toPropertyValue(instance.silhouetteSize, time),
+      color: ColorParse.toJSON(toPropertyValue(instance.color, time)),
+      colorBlendMode: ColorBlendModeParse.toJSON(toPropertyValue(instance.colorBlendMode, time)),
+      colorBlendAmount: toPropertyValue(instance.colorBlendAmount, time),
+      imageBasedLightingFactor: Cartesian2Parse.toJSON(toPropertyValue(instance.imageBasedLightingFactor, time)),
+      lightColor: ColorParse.toJSON(toPropertyValue(instance.lightColor, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      nodeTransformations: PropertyBagParse.toJSON(toPropertyValue(instance.nodeTransformations, time)),
+      articulations: PropertyBagParse.toJSON(toPropertyValue(instance.articulations, time)),
+      clippingPlanes: ClippingPlaneCollectionParse.toJSON(toPropertyValue(instance.clippingPlanes, time)),
+      // customShader: CustomShaderParse.toJSON(toPropertyValue(instance.customShader, time)),
+    };
   }
 
   /**
@@ -101,30 +98,31 @@ export class ModelGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new ModelGraphics({
-      show: json.show,
-      uri: json.uri,
-      scale: json.scale,
-      enableVerticalExaggeration: json.enableVerticalExaggeration,
-      minimumPixelSize: json.minimumPixelSize,
-      maximumScale: json.maximumScale,
-      incrementallyLoadTextures: json.incrementallyLoadTextures,
-      runAnimations: json.runAnimations,
-      clampAnimations: json.clampAnimations,
-      shadows: ShadowModeSerialize.fromJSON(json.shadows),
-      heightReference: HeightReferenceSerialize.fromJSON(json.heightReference),
-      silhouetteColor: ColorSerialize.fromJSON(json.silhouetteColor),
-      silhouetteSize: json.silhouetteSize,
-      color: ColorSerialize.fromJSON(json.color),
-      colorBlendMode: ColorBlendModeSerialize.fromJSON(json.colorBlendMode),
-      colorBlendAmount: json.colorBlendAmount,
-      imageBasedLightingFactor: Cartesian2Serialize.fromJSON(json.imageBasedLightingFactor),
-      lightColor: ColorSerialize.fromJSON(json.lightColor),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
-      nodeTransformations: PropertyBagSerialize.fromJSON(json.nodeTransformations),
-      articulations: PropertyBagSerialize.fromJSON(json.articulations),
-      clippingPlanes: ClippingPlaneCollectionSerialize.fromJSON(json.clippingPlanes),
-      // customShader: CustomShaderSerialize.fromJSON(json.customShader),
+      show: json.show ?? undefined,
+      uri: json.uri ?? undefined,
+      scale: json.scale ?? undefined,
+      enableVerticalExaggeration: json.enableVerticalExaggeration ?? undefined,
+      minimumPixelSize: json.minimumPixelSize ?? undefined,
+      maximumScale: json.maximumScale ?? undefined,
+      incrementallyLoadTextures: json.incrementallyLoadTextures ?? undefined,
+      runAnimations: json.runAnimations ?? undefined,
+      clampAnimations: json.clampAnimations ?? undefined,
+      shadows: ShadowModeParse.fromJSON(json?.shadows),
+      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
+      silhouetteColor: ColorParse.fromJSON(json?.silhouetteColor),
+      silhouetteSize: json.silhouetteSize ?? undefined,
+      color: ColorParse.fromJSON(json?.color),
+      colorBlendMode: ColorBlendModeParse.fromJSON(json?.colorBlendMode),
+      colorBlendAmount: json.colorBlendAmount ?? undefined,
+      imageBasedLightingFactor: Cartesian2Parse.fromJSON(json?.imageBasedLightingFactor),
+      lightColor: ColorParse.fromJSON(json?.lightColor),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
+      nodeTransformations: PropertyBagParse.fromJSON(json?.nodeTransformations),
+      articulations: PropertyBagParse.fromJSON(json?.articulations),
+      clippingPlanes: ClippingPlaneCollectionParse.fromJSON(json?.clippingPlanes),
+      // customShader: CustomShaderParse.fromJSON(json?.customShader),
     });
     return result ? instance.clone(result) : instance;
   }

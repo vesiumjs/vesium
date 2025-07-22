@@ -1,8 +1,8 @@
 import type { ConstantPositionProperty, JulianDate, PositionProperty, SampledPositionProperty } from 'cesium';
 
-import { notNullish } from '@vueuse/core';
-import { ConstantPositionPropertySerialize } from './ConstantPositionProperty';
-import { SampledPositionPropertySerialize } from './SampledPositionProperty';
+import { z } from 'zod';
+import { ConstantPositionPropertyParse } from './ConstantPositionProperty';
+import { SampledPositionPropertyParse } from './SampledPositionProperty';
 
 export interface PositionPropertyJSON {
   type: 'ConstantPositionProperty' | 'SampledPositionProperty';
@@ -12,37 +12,39 @@ export interface PositionPropertyJSON {
 /**
  * Serialize a `PositionProperty` instance to JSON and deserialize from JSON
  */
-export class PositionPropertySerialize {
+export class PositionPropertyParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is PositionProperty {
-    return SampledPositionPropertySerialize.predicate(value)
-      || ConstantPositionPropertySerialize.predicate(value);
-  };
+  static readonly zodJsonchema = z.object({
+    type: z.enum(['ConstantPositionProperty', 'SampledPositionProperty'] as const),
+    content: z.union([ConstantPositionPropertyParse.zodJsonchema, SampledPositionPropertyParse.zodJsonchema]),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.union([ConstantPositionPropertyParse.zodInstanceSchema, SampledPositionPropertyParse.zodInstanceSchema]);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PositionProperty, time?: JulianDate): PositionPropertyJSON | undefined {
-    if (!notNullish(instance)) {
-      return;
-    }
-    if (ConstantPositionPropertySerialize.predicate(instance)) {
+    if (ConstantPositionPropertyParse.zodInstanceSchema.safeParse(instance)) {
       return {
         type: 'ConstantPositionProperty',
-        content: ConstantPositionPropertySerialize.toJSON(instance, time),
+        content: ConstantPositionPropertyParse.toJSON(instance as ConstantPositionProperty, time),
       };
     }
 
-    if (SampledPositionPropertySerialize.predicate(instance)) {
+    if (SampledPositionPropertyParse.zodInstanceSchema.safeParse(instance)) {
       return {
         type: 'SampledPositionProperty',
-        content: SampledPositionPropertySerialize.toJSON(instance),
+        content: SampledPositionPropertyParse.toJSON(instance as SampledPositionProperty),
       };
-    }
+    };
   }
 
   /**
@@ -55,10 +57,10 @@ export class PositionPropertySerialize {
       return;
     }
     if (json.type === 'ConstantPositionProperty') {
-      return ConstantPositionPropertySerialize.fromJSON(json.content, result as ConstantPositionProperty);
+      return ConstantPositionPropertyParse.fromJSON(json?.content, result as ConstantPositionProperty);
     }
     if (json.type === 'SampledPositionProperty') {
-      return SampledPositionPropertySerialize.fromJSON(json.content, result as SampledPositionProperty);
+      return SampledPositionPropertyParse.fromJSON(json?.content, result as SampledPositionProperty);
     }
   }
 }

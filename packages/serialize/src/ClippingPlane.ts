@@ -1,37 +1,41 @@
-import type { Cartesian3JSON } from './Cartesian3';
-import { notNullish } from '@vueuse/core';
 import { ClippingPlane } from 'cesium';
+import { z } from 'zod';
 
-import { Cartesian3Serialize } from './Cartesian3';
+import { Cartesian3Parse } from './Cartesian3';
 
-export interface ClippingPlaneJSON {
-  normal: Cartesian3JSON;
-  distance: number;
-}
+export type ClippingPlaneJSON = z.infer<typeof ClippingPlaneParse.zodJsonchema>;
 
 /**
  * Serialize a `ClippingPlane` instance to JSON and deserialize from JSON
  */
-export class ClippingPlaneSerialize {
+export class ClippingPlaneParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is ClippingPlane {
-    return value instanceof ClippingPlane;
-  };
+  static readonly zodJsonchema = z.object({
+    normal: Cartesian3Parse.zodJsonchema,
+    distance: z.number(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(ClippingPlane);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ClippingPlane): ClippingPlaneJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        normal: Cartesian3Serialize.toJSON(instance.normal)!,
-        distance: instance.distance,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      normal: Cartesian3Parse.toJSON(instance?.normal)!,
+      distance: instance.distance,
+    };
   }
 
   /**
@@ -43,9 +47,10 @@ export class ClippingPlaneSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new ClippingPlane(
-      Cartesian3Serialize.fromJSON(json.normal)!,
-      json.distance,
+      Cartesian3Parse.fromJSON(json?.normal)!,
+      json.distance ?? undefined,
     );
     return result ? ClippingPlane.clone(instance, result) : instance;
   }

@@ -1,35 +1,40 @@
-import { notNullish } from '@vueuse/core';
-
 import { DistanceDisplayCondition } from 'cesium';
 
-export interface DistanceDisplayConditionJSON {
-  near: number;
-  far: number;
-}
+import { z } from 'zod';
+
+export type DistanceDisplayConditionJSON = z.infer<typeof DistanceDisplayConditionParse.zodJsonchema>;
 
 /**
  * Serialize a `DistanceDisplayCondition` instance to JSON and deserialize from JSON
  */
-export class DistanceDisplayConditionSerialize {
+export class DistanceDisplayConditionParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is DistanceDisplayCondition {
-    return value instanceof DistanceDisplayCondition;
-  };
+  static readonly zodJsonchema = z.object({
+    near: z.number(),
+    far: z.number(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(DistanceDisplayCondition);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: DistanceDisplayCondition): DistanceDisplayConditionJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        near: instance.near,
-        far: instance.far,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      near: instance.near,
+      far: instance.far,
+    };
   }
 
   /**
@@ -41,9 +46,10 @@ export class DistanceDisplayConditionSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new DistanceDisplayCondition(
-      json.near,
-      json.far,
+      json.near ?? undefined,
+      json.far ?? undefined,
     );
     return result ? instance.clone(result) : instance;
   }

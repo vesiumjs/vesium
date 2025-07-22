@@ -1,51 +1,54 @@
 import type { JulianDate } from 'cesium';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { MaterialPropertyJSON } from './MaterialProperty';
-import { notNullish } from '@vueuse/core';
 import { PathGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
+import { z } from 'zod';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
 
-import { MaterialPropertySerialize } from './MaterialProperty';
+import { MaterialPropertyParse } from './MaterialProperty';
 
-export interface PathGraphicsJSON {
-  show?: boolean;
-  leadTime?: number;
-  trailTime?: number;
-  width?: number;
-  resolution?: number;
-  material?: MaterialPropertyJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-}
+export type PathGraphicsJSON = z.infer<typeof PathGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `PathGraphics` instance to JSON and deserialize from JSON
  */
-export class PathGraphicsSerialize {
+export class PathGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is PathGraphics {
-    return value instanceof PathGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    leadTime: z.number().optional(),
+    trailTime: z.number().optional(),
+    width: z.number().optional(),
+    resolution: z.number().optional(),
+    material: MaterialPropertyParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(PathGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PathGraphics, time?: JulianDate): PathGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        leadTime: toPropertyValue(instance.leadTime, time),
-        trailTime: toPropertyValue(instance.trailTime, time),
-        width: toPropertyValue(instance.width, time),
-        resolution: toPropertyValue(instance.resolution, time),
-        material: MaterialPropertySerialize.toJSON(toPropertyValue(instance.material, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      leadTime: toPropertyValue(instance.leadTime, time),
+      trailTime: toPropertyValue(instance.trailTime, time),
+      width: toPropertyValue(instance.width, time),
+      resolution: toPropertyValue(instance.resolution, time),
+      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+    };
   }
 
   /**
@@ -57,14 +60,15 @@ export class PathGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new PathGraphics({
-      show: json.show,
-      leadTime: json.leadTime,
-      trailTime: json.trailTime,
-      width: json.width,
-      resolution: json.resolution,
-      material: MaterialPropertySerialize.fromJSON(json.material),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
+      show: json.show ?? undefined,
+      leadTime: json.leadTime ?? undefined,
+      trailTime: json.trailTime ?? undefined,
+      width: json.width ?? undefined,
+      resolution: json.resolution ?? undefined,
+      material: MaterialPropertyParse.fromJSON(json?.material),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
     });
     return result ? instance.clone(result) : instance;
   }

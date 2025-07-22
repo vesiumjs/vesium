@@ -1,66 +1,65 @@
 import type { JulianDate } from 'cesium';
-import type { Cartesian3JSON } from './Cartesian3';
-import type { ColorJSON } from './Color';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { HeightReferenceJSON } from './HeightReference';
-import type { MaterialPropertyJSON } from './MaterialProperty';
-import type { ShadowModeJSON } from './ShadowMode';
 
-import { notNullish } from '@vueuse/core';
 import { BoxGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { Cartesian3Serialize } from './Cartesian3';
-import { ColorSerialize } from './Color';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { HeightReferenceSerialize } from './HeightReference';
-import { MaterialPropertySerialize } from './MaterialProperty';
+import { z } from 'zod';
+import { Cartesian3Parse } from './Cartesian3';
+import { ColorParse } from './Color';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { HeightReferenceParse } from './HeightReference';
+import { MaterialPropertyParse } from './MaterialProperty';
 
-import { ShadowModeSerialize } from './ShadowMode';
+import { ShadowModeParse } from './ShadowMode';
 
-export interface BoxGraphicsJSON {
-  show?: boolean;
-  dimensions?: Cartesian3JSON;
-  heightReference?: HeightReferenceJSON;
-  fill?: boolean;
-  material?: MaterialPropertyJSON;
-  outline?: boolean;
-  outlineColor?: ColorJSON;
-  outlineWidth?: number;
-  shadows?: ShadowModeJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-}
+export type BoxGraphicsJSON = z.infer<typeof BoxGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `BoxGraphics` instance to JSON and deserialize from JSON
  */
-export class BoxGraphicsSerialize {
+export class BoxGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is BoxGraphics {
-    return value instanceof BoxGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    dimensions: Cartesian3Parse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    fill: z.boolean().optional(),
+    material: MaterialPropertyParse.zodJsonchema.optional(),
+    outline: z.boolean().optional(),
+    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineWidth: z.number().optional(),
+    shadows: ShadowModeParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(BoxGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: BoxGraphics, time?: JulianDate): BoxGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        dimensions: Cartesian3Serialize.toJSON(toPropertyValue(instance.dimensions, time)),
-        heightReference: HeightReferenceSerialize.toJSON(toPropertyValue(instance.heightReference, time)),
-        fill: toPropertyValue(instance.fill, time),
-        material: MaterialPropertySerialize.toJSON(toPropertyValue(instance.material, time)),
-        outline: toPropertyValue(instance.outline, time),
-        outlineColor: ColorSerialize.toJSON(toPropertyValue(instance.outlineColor, time)),
-        outlineWidth: toPropertyValue(instance.outlineWidth, time),
-        shadows: ShadowModeSerialize.toJSON(toPropertyValue(instance.shadows, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      dimensions: Cartesian3Parse.toJSON(toPropertyValue(instance.dimensions, time)),
+      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
+      fill: toPropertyValue(instance.fill, time),
+      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      outline: toPropertyValue(instance.outline, time),
+      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: toPropertyValue(instance.outlineWidth, time),
+      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+    };
   }
 
   /**
@@ -72,17 +71,18 @@ export class BoxGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new BoxGraphics({
-      show: json.show,
-      dimensions: Cartesian3Serialize.fromJSON(json.dimensions),
-      heightReference: HeightReferenceSerialize.fromJSON(json.heightReference),
-      fill: json.fill,
-      material: MaterialPropertySerialize.fromJSON(json.material),
-      outline: json.outline,
-      outlineColor: ColorSerialize.fromJSON(json.outlineColor),
-      outlineWidth: json.outlineWidth,
-      shadows: ShadowModeSerialize.fromJSON(json.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
+      show: json.show ?? undefined,
+      dimensions: Cartesian3Parse.fromJSON(json?.dimensions),
+      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
+      fill: json.fill ?? undefined,
+      material: MaterialPropertyParse.fromJSON(json?.material),
+      outline: json.outline ?? undefined,
+      outlineColor: ColorParse.fromJSON(json?.outlineColor) ?? undefined,
+      outlineWidth: json.outlineWidth ?? undefined,
+      shadows: ShadowModeParse.fromJSON(json?.shadows),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
     });
     return result ? instance.clone(result) : instance;
   }

@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { ShadowMode } from 'cesium';
 
-export type ShadowModeJSON = 'DISABLED' | 'ENABLED' | 'CAST_ONLY' | 'RECEIVE_ONLY';
+import { z } from 'zod';
+
+export const strings = ['DISABLED', 'ENABLED', 'CAST_ONLY', 'RECEIVE_ONLY'] as const;
+
+export type ShadowModeJSON = z.infer<typeof ShadowModeParse.zodJsonchema>;
 
 /**
  * Serialize a `ShadowMode` instance to JSON and deserialize from JSON
  */
-export class ShadowModeSerialize {
+export class ShadowModeParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is ShadowMode {
-    return Object.values(ShadowMode).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(ShadowMode);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ShadowMode): ShadowModeJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(ShadowMode) as ShadowModeJSON[];
-      return keys.find(key => ShadowMode[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(ShadowMode).find((key: any) => Reflect.get(ShadowMode, key) === instance) as any;
   }
 
   /**

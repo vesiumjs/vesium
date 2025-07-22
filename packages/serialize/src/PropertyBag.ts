@@ -1,39 +1,44 @@
 import type { JulianDate } from 'cesium';
-import { notNullish } from '@vueuse/core';
-
 import { PropertyBag } from 'cesium';
 
-export interface PropertyBagJSON {
-  propertyNames: string[];
-  content: Record<string, any>;
-}
+import { z } from 'zod';
+
+export type PropertyBagJSON = z.infer<typeof PropertyBagParse.zodJsonchema>;
 
 /**
  * Serialize a `PropertyBag` instance to JSON and deserialize from JSON
  */
-export class PropertyBagSerialize {
+export class PropertyBagParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is PropertyBag {
-    return value instanceof PropertyBag;
-  };
+  static readonly zodJsonchema = z.object({
+    propertyNames: z.array(z.string()),
+    content: z.record(z.string(), z.any()),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(PropertyBag);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PropertyBag, time?: JulianDate): PropertyBagJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        propertyNames: instance.propertyNames,
-        content: instance.propertyNames.reduce((key, content) => {
-          content[key] = instance[key]?.getValue(time);
-          return content;
-        }, {} as Record<string, any>),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      propertyNames: instance.propertyNames,
+      content: instance.propertyNames.reduce((key, content) => {
+        content[key] = instance[key]?.getValue(time);
+        return content;
+      }, {} as Record<string, any>),
+    };
   }
 
   /**
@@ -45,11 +50,12 @@ export class PropertyBagSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     if (result) {
       result.propertyNames.forEach(key => result.removeProperty(key));
     }
     const instance = result ?? new PropertyBag();
-    json.propertyNames.forEach(key => instance.addProperty(key, json.content[key]));
+    json.propertyNames.forEach(key => instance.addProperty(key ?? undefined, json.content[key]));
     return instance ? instance.clone(result) : instance;
   }
 }

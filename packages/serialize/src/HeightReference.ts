@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { HeightReference } from 'cesium';
 
-export type HeightReferenceJSON = 'NONE' | 'CLAMP_TO_GROUND' | 'RELATIVE_TO_GROUND' | 'CLAMP_TO_TERRAIN' | 'RELATIVE_TO_TERRAIN' | 'CLAMP_TO_3D_TILE' | 'RELATIVE_TO_3D_TILE';
+import { z } from 'zod';
+
+export const strings = ['NONE', 'CLAMP_TO_GROUND', 'RELATIVE_TO_GROUND', 'CLAMP_TO_TERRAIN', 'RELATIVE_TO_TERRAIN', 'CLAMP_TO_3D_TILE', 'RELATIVE_TO_3D_TILE'] as const;
+
+export type HeightReferenceJSON = z.infer<typeof HeightReferenceParse.zodJsonchema>;
 
 /**
  * Serialize a `HeightReference` instance to JSON and deserialize from JSON
  */
-export class HeightReferenceSerialize {
+export class HeightReferenceParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is HeightReference {
-    return Object.values(HeightReference).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(HeightReference);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: HeightReference): HeightReferenceJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(HeightReference) as HeightReferenceJSON[];
-      return keys.find(key => HeightReference[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(HeightReference).find((key: any) => Reflect.get(HeightReference, key) === instance) as any;
   }
 
   /**

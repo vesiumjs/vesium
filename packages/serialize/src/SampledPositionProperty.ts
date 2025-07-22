@@ -1,51 +1,53 @@
 import type { Cartesian3, JulianDate } from 'cesium';
-import type { Cartesian3JSON } from './Cartesian3';
-import type { JulianDateJSON } from './JulianDate';
-import type { ReferenceFrameJSON } from './ReferenceFrame';
 
-import { notNullish } from '@vueuse/core';
 import { SampledPositionProperty } from 'cesium';
-import { Cartesian3Serialize } from './Cartesian3';
-import { JulianDateSerialize } from './JulianDate';
-import { ReferenceFrameSerialize } from './ReferenceFrame';
+import { z } from 'zod';
+import { Cartesian3Parse } from './Cartesian3';
+import { JulianDateParse } from './JulianDate';
+import { ReferenceFrameParse } from './ReferenceFrame';
 
-export interface SampledPositionPropertyJSON {
-  referenceFrame?: ReferenceFrameJSON;
-  numberOfDerivatives?: number;
-  times?: JulianDateJSON[];
-  values?: Cartesian3JSON[];
-}
+export type SampledPositionPropertyJSON = z.infer<typeof SampledPositionPropertyParse.zodJsonchema>;
 
 /**
  * Serialize a `SampledPositionProperty` instance to JSON and deserialize from JSON
  */
-export class SampledPositionPropertySerialize {
+export class SampledPositionPropertyParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is SampledPositionProperty {
-    return value instanceof SampledPositionProperty;
-  };
+  static readonly zodJsonchema = z.object({
+    referenceFrame: ReferenceFrameParse.zodJsonchema.optional(),
+    numberOfDerivatives: z.number().optional(),
+    times: z.array(JulianDateParse.zodJsonchema).optional(),
+    values: z.array(Cartesian3Parse.zodJsonchema).optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(SampledPositionProperty);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: SampledPositionProperty): SampledPositionPropertyJSON | undefined {
-    if (notNullish(instance)) {
-      // SampledProperty
-      const property = (instance as any)._property;
-      const times: JulianDate[] = property._times;
-      const values: Cartesian3[] = property._values;
-
-      return {
-        referenceFrame: ReferenceFrameSerialize.toJSON(instance.referenceFrame),
-        numberOfDerivatives: instance.numberOfDerivatives,
-        times: times.map(item => JulianDateSerialize.toJSON(item)!),
-        values: values.map(item => Cartesian3Serialize.toJSON(item)!),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    // SampledProperty
+    const property = (instance as any)._property;
+    const times: JulianDate[] = property._times;
+    const values: Cartesian3[] = property._values;
+
+    return {
+      referenceFrame: ReferenceFrameParse.toJSON(instance?.referenceFrame),
+      numberOfDerivatives: instance.numberOfDerivatives,
+      times: times.map(item => JulianDateParse.toJSON(item)!),
+      values: values.map(item => Cartesian3Parse.toJSON(item)!),
+    };
   }
 
   /**
@@ -57,10 +59,11 @@ export class SampledPositionPropertySerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
 
     const instance = new SampledPositionProperty(
-      ReferenceFrameSerialize.fromJSON(json.referenceFrame),
-      json.numberOfDerivatives,
+      ReferenceFrameParse.fromJSON(json?.referenceFrame),
+      json.numberOfDerivatives ?? undefined,
     );
     if (!(result instanceof SampledPositionProperty)) {
       result = instance;
@@ -69,8 +72,8 @@ export class SampledPositionPropertySerialize {
     result.referenceFrame = instance.referenceFrame;
     result.numberOfDerivatives = instance.numberOfDerivatives;
 
-    const times = json.times?.map(item => JulianDateSerialize.fromJSON(item)!);
-    const values = json.values?.map(item => Cartesian3Serialize.fromJSON(item)!);
+    const times = json.times?.map(item => JulianDateParse.fromJSON(item)!);
+    const values = json.values?.map(item => Cartesian3Parse.fromJSON(item)!);
     times?.forEach(item => result.removeSample(item));
 
     if (times?.length && values?.length) {

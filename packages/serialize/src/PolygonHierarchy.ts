@@ -1,8 +1,8 @@
 import type { Cartesian3JSON } from './Cartesian3';
-import { notNullish } from '@vueuse/core';
 import { PolygonHierarchy } from 'cesium';
 
-import { Cartesian3Serialize } from './Cartesian3';
+import { z } from 'zod';
+import { Cartesian3Parse } from './Cartesian3';
 
 export interface PolygonHierarchyJSON {
   positions: Cartesian3JSON[];
@@ -12,26 +12,36 @@ export interface PolygonHierarchyJSON {
 /**
  * Serialize a `PolygonHierarchy` instance to JSON and deserialize from JSON
  */
-export class PolygonHierarchySerialize {
+export class PolygonHierarchyParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is PolygonHierarchy {
-    return value instanceof PolygonHierarchy;
-  };
+  static readonly zodJsonchema: any = z.lazy(() => {
+    return z.object({
+      positions: z.array(Cartesian3Parse.zodJsonchema),
+      holes: z.array(PolygonHierarchyParse.zodJsonchema),
+    });
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(PolygonHierarchy);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PolygonHierarchy): PolygonHierarchyJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        positions: instance.positions.map((item: any) => Cartesian3Serialize.toJSON(item)!),
-        holes: instance.holes.map((item: any) => PolygonHierarchySerialize.toJSON(item)!),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      positions: instance.positions.map((item: any) => Cartesian3Parse.toJSON(item)!),
+      holes: instance.holes.map((item: any) => PolygonHierarchyParse.toJSON(item)!),
+    };
   }
 
   /**
@@ -43,9 +53,10 @@ export class PolygonHierarchySerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new PolygonHierarchy(
-      json.positions?.map(item => Cartesian3Serialize.fromJSON(item)!),
-      json.holes?.map(item => PolygonHierarchySerialize.fromJSON(item)!),
+      json!.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,
+      json!.holes?.map(item => PolygonHierarchyParse.fromJSON(item)!) ?? undefined,
     );
     if (!result) {
       return instance;

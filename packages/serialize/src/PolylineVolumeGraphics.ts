@@ -1,71 +1,69 @@
 import type { JulianDate } from 'cesium';
-import type { Cartesian2JSON } from './Cartesian2';
-import type { Cartesian3JSON } from './Cartesian3';
-import type { ColorJSON } from './Color';
-import type { CornerTypeJSON } from './CornerType';
-import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
-import type { MaterialPropertyJSON } from './MaterialProperty';
-import type { ShadowModeJSON } from './ShadowMode';
-import { notNullish } from '@vueuse/core';
 import { PolylineVolumeGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-import { Cartesian2Serialize } from './Cartesian2';
-import { Cartesian3Serialize } from './Cartesian3';
-import { ColorSerialize } from './Color';
-import { CornerTypeSerialize } from './CornerType';
-import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
-import { MaterialPropertySerialize } from './MaterialProperty';
+import { z } from 'zod';
+import { Cartesian2Parse } from './Cartesian2';
+import { Cartesian3Parse } from './Cartesian3';
+import { ColorParse } from './Color';
+import { CornerTypeParse } from './CornerType';
+import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
+import { MaterialPropertyParse } from './MaterialProperty';
 
-import { ShadowModeSerialize } from './ShadowMode';
+import { ShadowModeParse } from './ShadowMode';
 
-export interface PolylineVolumeGraphicsJSON {
-  show?: boolean;
-  positions?: Cartesian3JSON[];
-  shape?: Cartesian2JSON[];
-  cornerType?: CornerTypeJSON;
-  granularity?: number;
-  fill?: boolean;
-  material?: MaterialPropertyJSON;
-  outline?: boolean;
-  outlineColor?: ColorJSON;
-  outlineWidth?: number;
-  shadows?: ShadowModeJSON;
-  distanceDisplayCondition?: DistanceDisplayConditionJSON;
-}
+export type PolylineVolumeGraphicsJSON = z.infer<typeof PolylineVolumeGraphicsParse.zodJsonchema>;
 
 /**
  * Serialize a `PolylineVolumeGraphics` instance to JSON and deserialize from JSON
  */
-export class PolylineVolumeGraphicsSerialize {
+export class PolylineVolumeGraphicsParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is PolylineVolumeGraphics {
-    return value instanceof PolylineVolumeGraphics;
-  };
+  static readonly zodJsonchema = z.object({
+    show: z.boolean().optional(),
+    positions: z.array(Cartesian3Parse.zodJsonchema).optional(),
+    shape: z.array(Cartesian2Parse.zodJsonchema).optional(),
+    cornerType: CornerTypeParse.zodJsonchema.optional(),
+    granularity: z.number().optional(),
+    fill: z.boolean().optional(),
+    material: MaterialPropertyParse.zodJsonchema.optional(),
+    outline: z.boolean().optional(),
+    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineWidth: z.number().optional(),
+    shadows: ShadowModeParse.zodJsonchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(PolylineVolumeGraphics);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PolylineVolumeGraphics, time?: JulianDate): PolylineVolumeGraphicsJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        show: toPropertyValue(instance.show, time),
-        positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Serialize.toJSON(item)),
-        shape: toPropertyValue(instance.shape, time)?.map((item: any) => Cartesian2Serialize.toJSON(item)),
-        cornerType: CornerTypeSerialize.toJSON(toPropertyValue(instance.cornerType, time)),
-        granularity: toPropertyValue(instance.granularity, time),
-        fill: toPropertyValue(instance.fill, time),
-        material: MaterialPropertySerialize.toJSON(toPropertyValue(instance.material, time)),
-        outline: toPropertyValue(instance.outline, time),
-        outlineColor: ColorSerialize.toJSON(toPropertyValue(instance.outlineColor, time)),
-        outlineWidth: toPropertyValue(instance.outlineWidth, time),
-        shadows: ShadowModeSerialize.toJSON(toPropertyValue(instance.shadows, time)),
-        distanceDisplayCondition: DistanceDisplayConditionSerialize.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      show: toPropertyValue(instance.show, time),
+      positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Parse.toJSON(item)),
+      shape: toPropertyValue(instance.shape, time)?.map((item: any) => Cartesian2Parse.toJSON(item)),
+      cornerType: CornerTypeParse.toJSON(toPropertyValue(instance.cornerType, time)),
+      granularity: toPropertyValue(instance.granularity, time),
+      fill: toPropertyValue(instance.fill, time),
+      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      outline: toPropertyValue(instance.outline, time),
+      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: toPropertyValue(instance.outlineWidth, time),
+      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+    };
   }
 
   /**
@@ -77,19 +75,20 @@ export class PolylineVolumeGraphicsSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new PolylineVolumeGraphics({
-      show: json.show,
-      positions: json.positions?.map(item => Cartesian3Serialize.fromJSON(item)!),
-      shape: json.shape?.map((item: any) => Cartesian2Serialize.fromJSON(item)!),
-      cornerType: CornerTypeSerialize.fromJSON(json.cornerType),
-      granularity: json.granularity,
-      fill: json.fill,
-      material: MaterialPropertySerialize.fromJSON(json.material),
-      outline: json.outline,
-      outlineColor: ColorSerialize.fromJSON(json.outlineColor),
-      outlineWidth: json.outlineWidth,
-      shadows: ShadowModeSerialize.fromJSON(json.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionSerialize.fromJSON(json.distanceDisplayCondition),
+      show: json.show ?? undefined,
+      positions: json.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,
+      shape: json.shape?.map((item: any) => Cartesian2Parse.fromJSON(item)!) ?? undefined,
+      cornerType: CornerTypeParse.fromJSON(json?.cornerType),
+      granularity: json.granularity ?? undefined,
+      fill: json.fill ?? undefined,
+      material: MaterialPropertyParse.fromJSON(json?.material),
+      outline: json.outline ?? undefined,
+      outlineColor: ColorParse.fromJSON(json?.outlineColor),
+      outlineWidth: json.outlineWidth ?? undefined,
+      shadows: ShadowModeParse.fromJSON(json?.shadows),
+      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
     });
     return result ? instance.clone(result) : instance;
   }

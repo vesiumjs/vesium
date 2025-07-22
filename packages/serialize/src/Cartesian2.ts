@@ -1,35 +1,40 @@
-import { notNullish } from '@vueuse/core';
-
 import { Cartesian2 } from 'cesium';
 
-export interface Cartesian2JSON {
-  x: number;
-  y: number;
-}
+import { z } from 'zod';
+
+export type Cartesian2JSON = z.infer<typeof Cartesian2Parse.zodJsonchema>;
 
 /**
  * Serialize a `Cartesian2` instance to JSON and deserialize from JSON
  */
-export class Cartesian2Serialize {
+export class Cartesian2Parse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is Cartesian2 {
-    return value instanceof Cartesian2;
-  };
+  static readonly zodJsonchema = z.object({
+    x: z.number().optional(),
+    y: z.number().optional(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(Cartesian2);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Cartesian2): Cartesian2JSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        x: instance.x,
-        y: instance.y,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      x: instance.x,
+      y: instance.y,
+    };
   }
 
   /**
@@ -41,9 +46,10 @@ export class Cartesian2Serialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new Cartesian2(
-      json.x,
-      json.y,
+      json.x ?? undefined ?? undefined,
+      json.y ?? undefined ?? undefined,
     );
     return result ? instance.clone(result) : instance;
   }

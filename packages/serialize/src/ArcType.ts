@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { ArcType } from 'cesium';
 
-export type ArcTypeJSON = 'NONE' | 'GEODESIC' | 'RHUMB';
+import { z } from 'zod';
+
+export const strings = ['NONE', 'GEODESIC', 'RHUMB'] as const;
+
+export type ArcTypeJSON = z.infer<typeof ArcTypeParse.zodJsonchema>;
 
 /**
  * Serialize a `ArcType` instance to JSON and deserialize from JSON
  */
-export class ArcTypeSerialize {
+export class ArcTypeParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is ArcType {
-    return Object.values(ArcType).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(ArcType);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ArcType): ArcTypeJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(ArcType) as ArcTypeJSON[];
-      return keys.find(key => ArcType[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(ArcType).find((key: any) => Reflect.get(ArcType, key) === instance) as any;
   }
 
   /**

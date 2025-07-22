@@ -1,30 +1,36 @@
-import { notNullish } from '@vueuse/core';
-
 import { CornerType } from 'cesium';
 
-export type CornerTypeJSON = 'ROUNDED' | 'MITERED' | 'BEVELED';
+import { z } from 'zod';
+
+export const strings = ['ROUNDED', 'MITERED', 'BEVELED'] as const;
+
+export type CornerTypeJSON = z.infer<typeof CornerTypeParse.zodJsonchema>;
 
 /**
  * Serialize a `CornerType` instance to JSON and deserialize from JSON
  */
-export class CornerTypeSerialize {
+export class CornerTypeParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is CornerType {
-    return Object.values(CornerType).includes(value);
-  };
+  static readonly zodJsonchema = z.enum(strings);
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.enum(CornerType);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: CornerType): CornerTypeJSON | undefined {
-    if (notNullish(instance)) {
-      const keys = Object.keys(CornerType) as CornerTypeJSON[];
-      return keys.find(key => CornerType[key] === instance);
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return Object.keys(CornerType).find((key: any) => Reflect.get(CornerType, key) === instance) as any;
   }
 
   /**

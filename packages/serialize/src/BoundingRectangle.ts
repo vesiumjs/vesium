@@ -1,38 +1,43 @@
-import { notNullish } from '@vueuse/core';
 import { BoundingRectangle } from 'cesium';
+import { z } from 'zod';
 
-export interface BoundingRectangleJSON {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+export type BoundingRectangleJSON = z.infer<typeof BoundingRectangleParse.zodJsonchema>;
 
 /**
  * Serialize a `BoundingRectangle` instance to JSON and deserialize from JSON
  */
-export class BoundingRectangleSerialize {
+export class BoundingRectangleParse {
   private constructor() {}
 
   /**
-   * Predicate whether the given value is the target instance
+   * zod schema for validating JSON data
    */
-  static predicate(value: any): value is BoundingRectangle {
-    return value instanceof BoundingRectangle;
-  };
+  static readonly zodJsonchema = z.object({
+    x: z.number(),
+    y: z.number(),
+    width: z.number(),
+    height: z.number(),
+  });
+
+  /**
+   * zod schema for validating instance data
+   */
+  static readonly zodInstanceSchema = z.instanceof(BoundingRectangle);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: BoundingRectangle): BoundingRectangleJSON | undefined {
-    if (notNullish(instance)) {
-      return {
-        x: instance.x,
-        y: instance.y,
-        width: instance.width,
-        height: instance.height,
-      };
+    if (!instance) {
+      return undefined;
     }
+    instance = this.zodInstanceSchema.parse(instance);
+    return {
+      x: instance.x,
+      y: instance.y,
+      width: instance.width,
+      height: instance.height,
+    };
   }
 
   /**
@@ -44,11 +49,12 @@ export class BoundingRectangleSerialize {
     if (!json) {
       return undefined;
     }
+    json = this.zodJsonchema.parse(result);
     const instance = new BoundingRectangle(
-      json.x,
-      json.y,
-      json.width,
-      json.height,
+      json.x ?? undefined,
+      json.y ?? undefined,
+      json.width ?? undefined,
+      json.height ?? undefined,
     );
     return result ? instance.clone(result) : instance;
   }
