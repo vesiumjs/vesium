@@ -9,7 +9,7 @@ import { generateSidebar } from './utils/generateSidebar';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
 
-const importmap = `
+let transformHtml = `
 <script> window.CESIUM_BASE_URL="https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
 <script type="importmap">${
   JSON.stringify(
@@ -21,10 +21,21 @@ const importmap = `
   )
 }</script>`;
 
+// baidu统计
+transformHtml += `<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?11594e19495496996d5bf28bf9e89220";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+`;
+
 // https://vitepress.dev/reference/site-config
 export default withPwa(defineConfig({
   pwa: {
-
     registerType: 'autoUpdate',
     injectRegister: 'script-defer',
     includeAssets: ['favicon.svg'],
@@ -58,7 +69,7 @@ export default withPwa(defineConfig({
   vite: { configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)) },
   title: 'Vesium',
   head: [
-    ['link', { rel: 'icon', href: '/favicon.svg' }],
+    ['link', { rel: 'icon', href: '/favicon.svg' }],,
   ],
   rewrites: {
     '(.*).en.md': '(.*).md',
@@ -155,6 +166,6 @@ export default withPwa(defineConfig({
     },
   },
   transformHtml(html) {
-    return html.replace('<head>', `<head>${importmap}`);
+    return html.replace('<head>', `<head>${transformHtml}`);
   },
 }));
