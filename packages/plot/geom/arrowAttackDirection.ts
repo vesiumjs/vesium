@@ -85,7 +85,7 @@ export function getArrowCoords(
   coord3: CoordArray,
   clockWise: boolean,
   options: GetArrowCoordsOptions = {},
-) {
+): CoordArray[] | undefined {
   const midCoord = mid(coord1, coord2);
   const len = mathDistance(midCoord, coord3);
   let midCoord1 = getThirdCoord(coord3, midCoord, 0, len * 0.3, true);
@@ -171,7 +171,7 @@ export function getArrowHeadCoords(points: CoordArray[], options: GetArrowHeadCo
  * @param neckRight
  * @param tailWidthFactor
  */
-export function getArrowBodyCoords(points, neckLeft, neckRight, tailWidthFactor): Array<CoordArray> {
+export function getArrowBodyCoords(points: CoordArray[], neckLeft: CoordArray, neckRight: CoordArray, tailWidthFactor: number): Array<CoordArray> {
   const allLen = wholeDistance(points);
   const len = getBaseLength(points);
   const tailWidth = len * tailWidthFactor;
@@ -199,7 +199,7 @@ export function getArrowBodyCoords(points, neckLeft, neckRight, tailWidthFactor)
  * @param lineCoord2
  * @param coord
  */
-export function getTempCoord4(lineCoord1: CoordArray, lineCoord2: CoordArray, coord: CoordArray) {
+export function getTempCoord4(lineCoord1: CoordArray, lineCoord2: CoordArray, coord: CoordArray): CoordArray {
   const midCoord = mid(lineCoord1, lineCoord2);
   const len = mathDistance(midCoord, coord);
   const angle = getAngleOfThreeCoords(lineCoord1, midCoord, coord);

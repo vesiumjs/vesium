@@ -5,7 +5,7 @@ import { arrowStraightSharp } from './arrowStraightSharp';
 /**
  * 直箭头
  */
-export function arrowStraight(coords: CoordArray[]) {
+export function arrowStraight(coords: CoordArray[]): CoordArray[] {
   const tailWidthFactor = 0.05;
   const neckWidthFactor = 0.1;
   const headWidthFactor = 0.15;

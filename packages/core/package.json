@@ -42,12 +42,10 @@
     }
   },
   "dependencies": {
+    "@types/geojson": "catalog:deps",
     "@vueuse/core": "catalog:deps",
     "@vueuse/shared": "catalog:deps",
     "cesium": "catalog:deps",
     "vue": "catalog:deps"
-  },
-  "devDependencies": {
-    "@types/geojson": "catalog:deps"
   }
 }

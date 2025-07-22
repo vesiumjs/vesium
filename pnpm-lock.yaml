@@ -228,6 +228,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@types/geojson':
+        specifier: catalog:deps
+        version: 7946.0.16
       '@vueuse/core':
         specifier: catalog:deps
         version: 13.5.0(vue@3.5.17(typescript@5.8.3))
@@ -240,10 +243,6 @@ importers:
       vue:
         specifier: catalog:deps
         version: 3.5.17(typescript@5.8.3)
-    devDependencies:
-      '@types/geojson':
-        specifier: catalog:deps
-        version: 7946.0.16
 
   packages/plot:
     dependencies:
