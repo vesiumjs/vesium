@@ -10,12 +10,12 @@ import { generateSidebar } from './utils/generateSidebar';
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
 
 let transformHtml = `
-<script> window.CESIUM_BASE_URL="https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
+<script> window.CESIUM_BASE_URL="https://esm.sh/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
 <script type="importmap">${
   JSON.stringify(
     {
       imports: {
-        cesium: `https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/+esm`,
+        cesium: `https://esm.sh/cesium@${CESIUM_VERSION}/Source/Cesium.js?standalone`,
       },
     },
   )
