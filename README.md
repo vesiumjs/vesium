@@ -25,7 +25,7 @@
 
 ## Documentation
 
-To view the documentation, visit <a href="https://cesium.geovue.org" target="__blank">cesium.geovue.org</a>
+To view the documentation, visit <a href="https://vesium.geovue.org" target="__blank">cesium.geovue.org</a>
 
 ## Features
 

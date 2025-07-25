@@ -25,7 +25,7 @@
 
 ## 文档
 
-要查看文档，请访问 <a href="https://cesium.geovue.org" target="__blank">cesium.geovue.org</a>
+要查看文档，请访问 <a href="https://vesium.geovue.org" target="__blank">cesium.geovue.org</a>
 
 ## 特性
 
