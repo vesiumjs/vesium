@@ -51,15 +51,15 @@ if (inBrowser) {
 <template>
   <DefaultTheme.Layout>
     <template #home-hero-before>
-      <teleport to="#app">
-        <div
-          position="fixed inset-0"
-          bg="#000"
-          of="hidden"
-          z--1
-        />
-      </teleport>
       <client-only>
+        <teleport to="#app">
+          <div
+            position="fixed inset-0"
+            bg="#000"
+            of="hidden"
+            z--1
+          />
+        </teleport>
         <HomeHeroBefore />
       </client-only>
     </template>
