@@ -3,7 +3,6 @@ import UnoCSS from 'unocss/vite';
 import UnpluginCesium from 'unplugin-cesium/vite';
 import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
 import VueDevTools from 'vite-plugin-vue-devtools';
 
 export default defineConfig(({ mode }) => {
@@ -19,7 +18,6 @@ export default defineConfig(({ mode }) => {
         include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
         dts: fileURLToPath(new URL('./components.d.ts', import.meta.url)),
       }),
-      VitePWA(),
     ],
     server: { port: 9574 },
     publicDir: '.vitepress/public',

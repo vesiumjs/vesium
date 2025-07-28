@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from 'node:url';
-import { withPwa } from '@vite-pwa/vitepress';
 import { getPackageInfoSync } from 'local-pkg';
 import { defineConfig } from 'vitepress';
 import { badgeTransform } from './plugins/badge';
@@ -34,37 +33,8 @@ var _hmt = _hmt || [];
 `;
 
 // https://vitepress.dev/reference/site-config
-export default withPwa(defineConfig({
-  pwa: {
-    registerType: 'autoUpdate',
-    injectRegister: 'script-defer',
-    includeAssets: ['favicon.svg'],
-    manifest: {
-      name: 'Vesium',
-      short_name: 'Vesium',
-      theme_color: '#ffffff',
-      icons: [
-        {
-          src: '/favicon.svg',
-          sizes: '64x64',
-          type: 'image/svg',
-        },
-      ],
-    },
-    workbox: {
-      globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,woff2}'],
-    },
+export default defineConfig({
 
-    experimental: {
-      includeAllowlist: true,
-    },
-    devOptions: {
-      enabled: true,
-      suppressWarnings: true,
-      navigateFallback: '/',
-      resolveTempFolder: () => fileURLToPath(new URL('./dev-dist', import.meta.url)),
-    },
-  },
   srcDir: './',
   vite: { configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)) },
   title: 'Vesium',
@@ -168,4 +138,4 @@ export default withPwa(defineConfig({
   transformHtml(html) {
     return html.replace('<head>', `<head>${transformHtml}`);
   },
-}));
+});
