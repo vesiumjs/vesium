@@ -16,9 +16,6 @@ import {
   PlotSchemePolygonArrowUnitCombatOperation,
   PlotSchemePolygonArrowUnitCombatOperationTailed,
   PlotSchemePolygonAssemblingPlace,
-  PlotSchemePolygonFlagCurve,
-  PlotSchemePolygonFlagRect,
-  PlotSchemePolygonFlagTriangle,
   PlotSchemePolygonSmooth,
   PlotSchemePolyline,
   PlotSchemePolylineCurve,
@@ -92,18 +89,6 @@ const otpions = [
   {
     label: 'PolygonAssemblingPlace',
     scheme: PlotSchemePolygonAssemblingPlace,
-  },
-  {
-    label: 'PolygonFlagCurve',
-    scheme: PlotSchemePolygonFlagCurve,
-  },
-  {
-    label: 'PolygonFlagRect',
-    scheme: PlotSchemePolygonFlagRect,
-  },
-  {
-    label: 'PolygonFlagTriangle',
-    scheme: PlotSchemePolygonFlagTriangle,
   },
   {
     label: 'PolygonSmooth',

@@ -4,7 +4,7 @@ import type { PlotFeature } from './PlotFeature';
 import { watchArray } from '@vueuse/core';
 import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'cesium';
 import { arrayDiff, canvasCoordToCartesian, useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventHandler, useViewer } from 'vesium';
-import { computed, shallowRef, watch } from 'vue';
+import { computed, nextTick, shallowRef, watch } from 'vue';
 
 export interface UseProductRetrun {
   primitives: ComputedRef<any[]>;
@@ -75,6 +75,7 @@ export function useRender(
   );
 
   const update = async (plot: PlotFeature) => {
+    await nextTick();
     const reslut = await plot.scheme.render?.({
       packable: plot.sampled.getValue(getCurrentTime()),
       mouse: plot.defining ? mouseCartesian.value : undefined,
