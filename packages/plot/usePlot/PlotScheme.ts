@@ -14,7 +14,7 @@ export interface PlotRenderResult {
 
 export interface PlotRenderContext<D = any> {
   /**
-   * 当前标绘点位数据
+   * 当前标绘采集到点位原始数据
    */
   packable: SampledPlotPackable<D>;
 
@@ -32,6 +32,11 @@ export interface PlotRenderContext<D = any> {
    * 上一次的渲染结果
    */
   previous: PlotRenderResult;
+
+  /**
+   * 当前有效的点位数组，若处于定义态时，还会包含鼠标位置
+   */
+  getPositions: () => Cartesian3[];
 }
 
 export interface PlotSchemeConstructorOptions {
@@ -121,7 +126,7 @@ export class PlotScheme {
   /**
    * 当标绘数据变化时，会触发`render`回调，返回的数据会被添加到cesium中
    */
-  render?: (options: PlotRenderContext) => PlotRenderResult | Promise<PlotRenderResult>;
+  render?: (context: PlotRenderContext) => PlotRenderResult | Promise<PlotRenderResult>;
 
   private static _record = new Map<string, PlotScheme>();
 

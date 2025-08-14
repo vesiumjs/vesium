@@ -76,20 +76,27 @@ export function useRender(
 
   const update = async (plot: PlotFeature) => {
     await nextTick();
-    const reslut = await plot.scheme.render?.({
-      packable: plot.sampled.getValue(getCurrentTime()),
-      mouse: plot.defining ? mouseCartesian.value : undefined,
+    const packable = plot.sampled.getValue(getCurrentTime());
+    const mouse = plot.defining ? mouseCartesian.value : undefined;
+    const result = await plot.scheme.render?.({
+      packable,
+      mouse,
       defining: plot.defining,
       previous: {
         entities: plot.entities,
         primitives: plot.primitives,
         groundPrimitives: plot.groundPrimitives,
       },
+      getPositions() {
+        const points = packable.positions;
+        mouse && points.push(mouse);
+        return points;
+      },
     });
 
-    plot.entities = reslut?.entities ?? [];
-    plot.primitives = reslut?.primitives ?? [];
-    plot.groundPrimitives = reslut?.groundPrimitives ?? [];
+    plot.entities = result?.entities ?? [];
+    plot.primitives = result?.primitives ?? [];
+    plot.groundPrimitives = result?.groundPrimitives ?? [];
   };
 
   watch(current, (plot, previous) => {
