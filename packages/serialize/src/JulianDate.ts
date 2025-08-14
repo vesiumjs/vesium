@@ -2,7 +2,7 @@ import { JulianDate } from 'cesium';
 
 import { z } from 'zod';
 
-export type JulianDateJSON = z.infer<typeof JulianDateParse.zodJsonchema>;
+export type JulianDateJSON = z.infer<typeof JulianDateParse.JsonSchema>;
 
 /**
  * Serialize a `JulianDate` instance to JSON and deserialize from JSON
@@ -13,12 +13,12 @@ export class JulianDateParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.string();
+  static readonly JsonSchema = z.string();
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(JulianDate);
+  static readonly InstanceSchema = z.instanceof(JulianDate);
 
   /**
    * Convert an instance to a JSON
@@ -27,7 +27,7 @@ export class JulianDateParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return instance.toString();
   }
 
@@ -40,7 +40,7 @@ export class JulianDateParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = JulianDate.fromIso8601(json);
     return result ? instance.clone(result) : instance;
   }

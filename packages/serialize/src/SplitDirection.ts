@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const strings = ['LEFT', 'NONE', 'RIGHT'] as const;
 
-export type SplitDirectionJSON = z.infer<typeof SplitDirectionParse.zodJsonchema>;
+export type SplitDirectionJSON = z.infer<typeof SplitDirectionParse.JsonSchema>;
 
 /**
  * Serialize a `SplitDirection` instance to JSON and deserialize from JSON
@@ -15,12 +15,12 @@ export class SplitDirectionParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.enum(strings);
+  static readonly JsonSchema = z.enum(strings);
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.enum(SplitDirection);
+  static readonly InstanceSchema = z.enum(SplitDirection);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +29,7 @@ export class SplitDirectionParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return Object.keys(SplitDirection).find((key: any) => Reflect.get(SplitDirection, key) === instance) as any;
   }
 

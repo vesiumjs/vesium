@@ -18,28 +18,28 @@ export class PositionPropertyParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     type: z.enum(['ConstantPositionProperty', 'SampledPositionProperty'] as const),
-    content: z.union([ConstantPositionPropertyParse.zodJsonchema, SampledPositionPropertyParse.zodJsonchema]),
+    content: z.union([ConstantPositionPropertyParse.JsonSchema, SampledPositionPropertyParse.JsonSchema]),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.union([ConstantPositionPropertyParse.zodInstanceSchema, SampledPositionPropertyParse.zodInstanceSchema]);
+  static readonly InstanceSchema = z.union([ConstantPositionPropertyParse.InstanceSchema, SampledPositionPropertyParse.InstanceSchema]);
 
   /**
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PositionProperty, time?: JulianDate): PositionPropertyJSON | undefined {
-    if (ConstantPositionPropertyParse.zodInstanceSchema.safeParse(instance)) {
+    if (ConstantPositionPropertyParse.InstanceSchema.safeParse(instance)) {
       return {
         type: 'ConstantPositionProperty',
         content: ConstantPositionPropertyParse.toJSON(instance as ConstantPositionProperty, time),
       };
     }
 
-    if (SampledPositionPropertyParse.zodInstanceSchema.safeParse(instance)) {
+    if (SampledPositionPropertyParse.InstanceSchema.safeParse(instance)) {
       return {
         type: 'SampledPositionProperty',
         content: SampledPositionPropertyParse.toJSON(instance as SampledPositionProperty),

@@ -2,7 +2,7 @@ import { Quaternion } from 'cesium';
 
 import { z } from 'zod';
 
-export type QuaternionJSON = z.infer<typeof QuaternionParse.zodJsonchema>;
+export type QuaternionJSON = z.infer<typeof QuaternionParse.JsonSchema>;
 
 /**
  * Serialize a `Quaternion` instance to JSON and deserialize from JSON
@@ -13,7 +13,7 @@ export class QuaternionParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     x: z.number(),
     y: z.number(),
     z: z.number(),
@@ -23,7 +23,7 @@ export class QuaternionParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Quaternion);
+  static readonly InstanceSchema = z.instanceof(Quaternion);
 
   /**
    * Convert an instance to a JSON
@@ -32,7 +32,7 @@ export class QuaternionParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       x: instance.x,
       y: instance.y,
@@ -50,7 +50,7 @@ export class QuaternionParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new Quaternion(
       json.x ?? undefined,
       json.y ?? undefined,

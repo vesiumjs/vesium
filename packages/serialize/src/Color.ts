@@ -1,7 +1,7 @@
 import { Color } from 'cesium';
 import { z } from 'zod';
 
-export type ColorJSON = z.infer<typeof ColorParse.zodJsonchema>;
+export type ColorJSON = z.infer<typeof ColorParse.JsonSchema>;
 
 /**
  * Serialize a `Color` instance to JSON and deserialize from JSON
@@ -12,7 +12,7 @@ export class ColorParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     red: z.number().optional(),
     green: z.number().optional(),
     blue: z.number().optional(),
@@ -22,7 +22,7 @@ export class ColorParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Color);
+  static readonly InstanceSchema = z.instanceof(Color);
 
   /**
    * Convert an instance to a JSON
@@ -31,7 +31,7 @@ export class ColorParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       red: instance.red,
       green: instance.green,
@@ -49,12 +49,12 @@ export class ColorParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new Color(
-      json.red ?? undefined ?? undefined,
-      json.green ?? undefined ?? undefined,
-      json.blue ?? undefined ?? undefined,
-      json.alpha ?? undefined ?? undefined,
+      json.red ?? undefined,
+      json.green ?? undefined,
+      json.blue ?? undefined,
+      json.alpha ?? undefined,
     );
     return result ? instance.clone(result) : instance;
   }

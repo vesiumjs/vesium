@@ -3,7 +3,7 @@ import { PropertyBag } from 'cesium';
 
 import { z } from 'zod';
 
-export type PropertyBagJSON = z.infer<typeof PropertyBagParse.zodJsonchema>;
+export type PropertyBagJSON = z.infer<typeof PropertyBagParse.JsonSchema>;
 
 /**
  * Serialize a `PropertyBag` instance to JSON and deserialize from JSON
@@ -14,7 +14,7 @@ export class PropertyBagParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     propertyNames: z.array(z.string()),
     content: z.record(z.string(), z.any()),
   });
@@ -22,7 +22,7 @@ export class PropertyBagParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(PropertyBag);
+  static readonly InstanceSchema = z.instanceof(PropertyBag);
 
   /**
    * Convert an instance to a JSON
@@ -31,7 +31,7 @@ export class PropertyBagParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       propertyNames: instance.propertyNames,
       content: instance.propertyNames.reduce((key, content) => {
@@ -50,7 +50,7 @@ export class PropertyBagParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     if (result) {
       result.propertyNames.forEach(key => result.removeProperty(key));
     }

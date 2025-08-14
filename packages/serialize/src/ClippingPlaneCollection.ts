@@ -4,7 +4,7 @@ import { ClippingPlaneParse } from './ClippingPlane';
 import { ColorParse } from './Color';
 import { Matrix4Parse } from './Matrix4';
 
-export type ClippingPlaneCollectionJSON = z.infer<typeof ClippingPlaneCollectionParse.zodJsonchema>;
+export type ClippingPlaneCollectionJSON = z.infer<typeof ClippingPlaneCollectionParse.JsonSchema>;
 
 /**
  * Serialize a `ClippingPlaneCollection` instance to JSON and deserialize from JSON
@@ -15,19 +15,19 @@ export class ClippingPlaneCollectionParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
-    planes: z.array(ClippingPlaneParse.zodJsonchema),
+  static readonly JsonSchema = z.object({
+    planes: z.array(ClippingPlaneParse.JsonSchema),
     enabled: z.boolean(),
-    modelMatrix: Matrix4Parse.zodJsonchema,
+    modelMatrix: Matrix4Parse.JsonSchema,
     unionClippingRegions: z.boolean(),
-    edgeColor: ColorParse.zodJsonchema,
+    edgeColor: ColorParse.JsonSchema,
     edgeWidth: z.number(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(ClippingPlaneCollection);
+  static readonly InstanceSchema = z.instanceof(ClippingPlaneCollection);
 
   /**
    * Convert an instance to a JSON
@@ -36,7 +36,7 @@ export class ClippingPlaneCollectionParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     const planes = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
     return {
       planes: planes.map(item => ClippingPlaneParse.toJSON(item)!),
@@ -56,7 +56,7 @@ export class ClippingPlaneCollectionParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const planes = json.planes.map(item => ClippingPlaneParse.fromJSON(item)!);
     const instance = new ClippingPlaneCollection({
       planes: json.planes.map(item => ClippingPlaneParse.fromJSON(item)!) ?? undefined,

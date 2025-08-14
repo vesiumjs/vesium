@@ -4,7 +4,7 @@ import { toPropertyValue } from 'vesium';
 
 import { z } from 'zod';
 
-export type Cesium3DTilesetGraphicsJSON = z.infer<typeof Cesium3DTilesetGraphicsParse.zodJsonchema>;
+export type Cesium3DTilesetGraphicsJSON = z.infer<typeof Cesium3DTilesetGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `Cesium3DTilesetGraphics` instance to JSON and deserialize from JSON
@@ -15,7 +15,7 @@ export class Cesium3DTilesetGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
     uri: z.string().optional(),
     maximumScreenSpaceError: z.number().optional(),
@@ -24,7 +24,7 @@ export class Cesium3DTilesetGraphicsParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Cesium3DTilesetGraphics);
+  static readonly InstanceSchema = z.instanceof(Cesium3DTilesetGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -33,7 +33,7 @@ export class Cesium3DTilesetGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       uri: toPropertyValue(instance.uri, time),
@@ -50,7 +50,7 @@ export class Cesium3DTilesetGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new Cesium3DTilesetGraphics({
       show: json.show ?? undefined,
       uri: json.uri ?? undefined,

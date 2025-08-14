@@ -1,7 +1,7 @@
 import { BoundingRectangle } from 'cesium';
 import { z } from 'zod';
 
-export type BoundingRectangleJSON = z.infer<typeof BoundingRectangleParse.zodJsonchema>;
+export type BoundingRectangleJSON = z.infer<typeof BoundingRectangleParse.JsonSchema>;
 
 /**
  * Serialize a `BoundingRectangle` instance to JSON and deserialize from JSON
@@ -12,7 +12,7 @@ export class BoundingRectangleParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     x: z.number(),
     y: z.number(),
     width: z.number(),
@@ -22,7 +22,7 @@ export class BoundingRectangleParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(BoundingRectangle);
+  static readonly InstanceSchema = z.instanceof(BoundingRectangle);
 
   /**
    * Convert an instance to a JSON
@@ -31,7 +31,7 @@ export class BoundingRectangleParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       x: instance.x,
       y: instance.y,
@@ -49,7 +49,7 @@ export class BoundingRectangleParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new BoundingRectangle(
       json.x ?? undefined,
       json.y ?? undefined,

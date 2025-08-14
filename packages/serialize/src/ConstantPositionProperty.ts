@@ -4,7 +4,7 @@ import { ConstantPositionProperty } from 'cesium';
 import { z } from 'zod';
 import { Cartesian3Parse } from './Cartesian3';
 
-export type ConstantPositionPropertyJSON = z.infer<typeof ConstantPositionPropertyParse.zodJsonchema>;
+export type ConstantPositionPropertyJSON = z.infer<typeof ConstantPositionPropertyParse.JsonSchema>;
 /**
  * Serialize a `ConstantPositionProperty` instance to JSON and deserialize from JSON
  */
@@ -14,7 +14,7 @@ export class ConstantPositionPropertyParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     x: z.number().optional(),
     y: z.number().optional(),
     z: z.number().optional(),
@@ -23,7 +23,7 @@ export class ConstantPositionPropertyParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(ConstantPositionProperty);
+  static readonly InstanceSchema = z.instanceof(ConstantPositionProperty);
 
   /**
    * Convert an instance to a JSON
@@ -44,7 +44,7 @@ export class ConstantPositionPropertyParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new ConstantPositionProperty(Cartesian3Parse.fromJSON(json));
     result && instance.setValue(result.getValue());
     return instance;

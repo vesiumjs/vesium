@@ -12,7 +12,7 @@ import { PropertyBagParse } from './PropertyBag';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type ModelGraphicsJSON = z.infer<typeof ModelGraphicsParse.zodJsonchema>;
+export type ModelGraphicsJSON = z.infer<typeof ModelGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `ModelGraphics` instance to JSON and deserialize from JSON
@@ -23,7 +23,7 @@ export class ModelGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
     uri: z.string().optional(),
     scale: z.number().optional(),
@@ -33,26 +33,26 @@ export class ModelGraphicsParse {
     incrementallyLoadTextures: z.boolean().optional(),
     runAnimations: z.boolean().optional(),
     clampAnimations: z.boolean().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
-    silhouetteColor: ColorParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
+    silhouetteColor: ColorParse.JsonSchema.optional(),
     silhouetteSize: z.number().optional(),
-    color: ColorParse.zodJsonchema.optional(),
-    colorBlendMode: ColorBlendModeParse.zodJsonchema.optional(),
+    color: ColorParse.JsonSchema.optional(),
+    colorBlendMode: ColorBlendModeParse.JsonSchema.optional(),
     colorBlendAmount: z.number().optional(),
-    imageBasedLightingFactor: Cartesian2Parse.zodJsonchema.optional(),
-    lightColor: ColorParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
-    nodeTransformations: PropertyBagParse.zodJsonchema.optional(),
-    articulations: PropertyBagParse.zodJsonchema.optional(),
-    clippingPlanes: ClippingPlaneCollectionParse.zodJsonchema.optional(),
-  // customShader: CustomShaderParse.zodJsonchema.optional(),
+    imageBasedLightingFactor: Cartesian2Parse.JsonSchema.optional(),
+    lightColor: ColorParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
+    nodeTransformations: PropertyBagParse.JsonSchema.optional(),
+    articulations: PropertyBagParse.JsonSchema.optional(),
+    clippingPlanes: ClippingPlaneCollectionParse.JsonSchema.optional(),
+  // customShader: CustomShaderParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(ModelGraphics);
+  static readonly InstanceSchema = z.instanceof(ModelGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -61,7 +61,7 @@ export class ModelGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       uri: toPropertyValue(instance.uri, time),
@@ -98,7 +98,7 @@ export class ModelGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new ModelGraphics({
       show: json.show ?? undefined,
       uri: json.uri ?? undefined,

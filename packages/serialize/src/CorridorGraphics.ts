@@ -12,7 +12,7 @@ import { MaterialPropertyParse } from './MaterialProperty';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type CorridorGraphicsJSON = z.infer<typeof CorridorGraphicsParse.zodJsonchema>;
+export type CorridorGraphicsJSON = z.infer<typeof CorridorGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `CorridorGraphics` instance to JSON and deserialize from JSON
@@ -23,31 +23,31 @@ export class CorridorGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
-    positions: z.array(Cartesian3Parse.zodJsonchema).optional(),
+    positions: z.array(Cartesian3Parse.JsonSchema).optional(),
     width: z.number().optional(),
     height: z.number().optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
     extrudedHeight: z.number().optional(),
-    extrudedHeightReference: HeightReferenceParse.zodJsonchema.optional(),
-    cornerType: CornerTypeParse.zodJsonchema.optional(),
+    extrudedHeightReference: HeightReferenceParse.JsonSchema.optional(),
+    cornerType: CornerTypeParse.JsonSchema.optional(),
     granularity: z.number().optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
-    classificationType: ClassificationTypeParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
+    classificationType: ClassificationTypeParse.JsonSchema.optional(),
     zIndex: z.number().optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(CorridorGraphics);
+  static readonly InstanceSchema = z.instanceof(CorridorGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -56,7 +56,7 @@ export class CorridorGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Parse.toJSON(item)),
@@ -88,7 +88,7 @@ export class CorridorGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new CorridorGraphics({
       show: json.show ?? undefined,
       positions: json.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,

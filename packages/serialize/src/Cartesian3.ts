@@ -2,7 +2,7 @@ import { Cartesian3 } from 'cesium';
 
 import { z } from 'zod';
 
-export type Cartesian3JSON = z.infer<typeof Cartesian3Parse.zodJsonchema>;
+export type Cartesian3JSON = z.infer<typeof Cartesian3Parse.JsonSchema>;
 
 /**
  * Serialize a `Cartesian3` instance to JSON and deserialize from JSON
@@ -13,7 +13,7 @@ export class Cartesian3Parse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     x: z.number().optional(),
     y: z.number().optional(),
     z: z.number().optional(),
@@ -22,7 +22,7 @@ export class Cartesian3Parse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Cartesian3);
+  static readonly InstanceSchema = z.instanceof(Cartesian3);
 
   /**
    * Convert an instance to a JSON
@@ -31,7 +31,7 @@ export class Cartesian3Parse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       x: instance.x,
       y: instance.y,
@@ -48,7 +48,7 @@ export class Cartesian3Parse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new Cartesian3(
       json.x ?? undefined,
       json.y ?? undefined,

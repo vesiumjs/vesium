@@ -2,7 +2,7 @@ import { Rectangle } from 'cesium';
 
 import { z } from 'zod';
 
-export type RectangleJSON = z.infer<typeof RectangleParse.zodJsonchema>;
+export type RectangleJSON = z.infer<typeof RectangleParse.JsonSchema>;
 
 /**
  * Serialize a `Rectangle` instance to JSON and deserialize from JSON
@@ -13,7 +13,7 @@ export class RectangleParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     west: z.number(),
     south: z.number(),
     east: z.number(),
@@ -23,7 +23,7 @@ export class RectangleParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Rectangle);
+  static readonly InstanceSchema = z.instanceof(Rectangle);
 
   /**
    * Convert an instance to a JSON
@@ -32,7 +32,7 @@ export class RectangleParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       west: instance.west,
       south: instance.south,
@@ -50,7 +50,7 @@ export class RectangleParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new Rectangle(
       json.west ?? undefined,
       json.south ?? undefined,

@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const strings = ['DISABLED', 'ENABLED', 'CAST_ONLY', 'RECEIVE_ONLY'] as const;
 
-export type ShadowModeJSON = z.infer<typeof ShadowModeParse.zodJsonchema>;
+export type ShadowModeJSON = z.infer<typeof ShadowModeParse.JsonSchema>;
 
 /**
  * Serialize a `ShadowMode` instance to JSON and deserialize from JSON
@@ -15,12 +15,12 @@ export class ShadowModeParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.enum(strings);
+  static readonly JsonSchema = z.enum(strings);
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.enum(ShadowMode);
+  static readonly InstanceSchema = z.enum(ShadowMode);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +29,7 @@ export class ShadowModeParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return Object.keys(ShadowMode).find((key: any) => Reflect.get(ShadowMode, key) === instance) as any;
   }
 

@@ -1,3 +1,54 @@
+import { ArcTypeParse } from './src/ArcType';
+import { BillboardGraphicsParse } from './src/BillboardGraphics';
+import { BoundingRectangleParse } from './src/BoundingRectangle';
+import { BoxGraphicsParse } from './src/BoxGraphics';
+import { Cartesian2Parse } from './src/Cartesian2';
+import { Cartesian3Parse } from './src/Cartesian3';
+import { Cesium3DTilesetGraphicsParse } from './src/Cesium3DTilesetGraphics';
+import { ClassificationTypeParse } from './src/ClassificationType';
+import { ClippingPlaneParse } from './src/ClippingPlane';
+import { ClippingPlaneCollectionParse } from './src/ClippingPlaneCollection';
+import { ColorParse } from './src/Color';
+import { ColorBlendModeParse } from './src/ColorBlendMode';
+import { ConstantPositionPropertyParse } from './src/ConstantPositionProperty';
+import { CornerTypeParse } from './src/CornerType';
+import { CorridorGraphicsParse } from './src/CorridorGraphics';
+import { CylinderGraphicsParse } from './src/CylinderGraphics';
+import { DistanceDisplayConditionParse } from './src/DistanceDisplayCondition';
+import { EllipseGraphicsParse } from './src/EllipseGraphics';
+import { EllipsoidGraphicsParse } from './src/EllipsoidGraphics';
+import { EntityParse } from './src/Entity';
+import { HeightReferenceParse } from './src/HeightReference';
+import { HorizontalOriginParse } from './src/HorizontalOrigin';
+import { JulianDateParse } from './src/JulianDate';
+import { LabelGraphicsParse } from './src/LabelGraphics';
+import { LabelStyleParse } from './src/LabelStyle';
+import { MaterialPropertyParse } from './src/MaterialProperty';
+import { Matrix4Parse } from './src/Matrix4';
+import { ModelGraphicsParse } from './src/ModelGraphics';
+import { NearFarScalarParse } from './src/NearFarScalar';
+import { PathGraphicsParse } from './src/PathGraphics';
+import { PlaneParse } from './src/Plane';
+import { PlaneGraphicsParse } from './src/PlaneGraphics';
+import { PointGraphicsParse } from './src/PointGraphics';
+import { PolygonGraphicsParse } from './src/PolygonGraphics';
+import { PolygonHierarchyParse } from './src/PolygonHierarchy';
+import { PolylineGraphicsParse } from './src/PolylineGraphics';
+import { PolylineVolumeGraphicsParse } from './src/PolylineVolumeGraphics';
+import { PositionPropertyParse } from './src/PositionProperty';
+import { PropertyBagParse } from './src/PropertyBag';
+import { QuaternionParse } from './src/Quaternion';
+import { RectangleParse } from './src/Rectangle';
+import { RectangleGraphicsParse } from './src/RectangleGraphics';
+import { ReferenceFrameParse } from './src/ReferenceFrame';
+import { SampledPositionPropertyParse } from './src/SampledPositionProperty';
+import { ShadowModeParse } from './src/ShadowMode';
+import { SplitDirectionParse } from './src/SplitDirection';
+import { TimeIntervalParse } from './src/TimeInterval';
+import { TimeIntervalCollectionParse } from './src/TimeIntervalCollection';
+import { VerticalOriginParse } from './src/VerticalOrigin';
+import { WallGraphicsParse } from './src/WallGraphics';
+
 export * from './src/ArcType';
 export * from './src/BillboardGraphics';
 export * from './src/BoundingRectangle';
@@ -48,3 +99,59 @@ export * from './src/TimeInterval';
 export * from './src/TimeIntervalCollection';
 export * from './src/VerticalOrigin';
 export * from './src/WallGraphics';
+
+/**
+ * All serialization
+ */
+export const Parse = {
+  ArcType: ArcTypeParse,
+  BillboardGraphics: BillboardGraphicsParse,
+  BoundingRectangle: BoundingRectangleParse,
+  BoxGraphics: BoxGraphicsParse,
+  Cartesian2: Cartesian2Parse,
+  Cartesian3: Cartesian3Parse,
+  Cesium3DTilesetGraphics: Cesium3DTilesetGraphicsParse,
+  ClassificationType: ClassificationTypeParse,
+  ClippingPlane: ClippingPlaneParse,
+  ClippingPlaneCollection: ClippingPlaneCollectionParse,
+  Color: ColorParse,
+  ColorBlendMode: ColorBlendModeParse,
+  ConstantPositionProperty: ConstantPositionPropertyParse,
+  CornerType: CornerTypeParse,
+  CorridorGraphics: CorridorGraphicsParse,
+  CylinderGraphics: CylinderGraphicsParse,
+  DistanceDisplayCondition: DistanceDisplayConditionParse,
+  EllipseGraphics: EllipseGraphicsParse,
+  EllipsoidGraphics: EllipsoidGraphicsParse,
+  Entity: EntityParse,
+  HeightReference: HeightReferenceParse,
+  HorizontalOrigin: HorizontalOriginParse,
+  JulianDate: JulianDateParse,
+  LabelGraphics: LabelGraphicsParse,
+  LabelStyle: LabelStyleParse,
+  MaterialProperty: MaterialPropertyParse,
+  Matrix4: Matrix4Parse,
+  ModelGraphics: ModelGraphicsParse,
+  NearFarScalar: NearFarScalarParse,
+  PathGraphics: PathGraphicsParse,
+  Plane: PlaneParse,
+  PlaneGraphics: PlaneGraphicsParse,
+  PointGraphics: PointGraphicsParse,
+  PolygonGraphics: PolygonGraphicsParse,
+  PolygonHierarchy: PolygonHierarchyParse,
+  PolylineGraphics: PolylineGraphicsParse,
+  PolylineVolumeGraphics: PolylineVolumeGraphicsParse,
+  PositionProperty: PositionPropertyParse,
+  PropertyBag: PropertyBagParse,
+  Quaternion: QuaternionParse,
+  Rectangle: RectangleParse,
+  RectangleGraphics: RectangleGraphicsParse,
+  ReferenceFrame: ReferenceFrameParse,
+  SampledPositionProperty: SampledPositionPropertyParse,
+  ShadowMode: ShadowModeParse,
+  SplitDirection: SplitDirectionParse,
+  TimeInterval: TimeIntervalParse,
+  TimeIntervalCollection: TimeIntervalCollectionParse,
+  VerticalOrigin: VerticalOriginParse,
+  WallGraphics: WallGraphicsParse,
+};

@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const strings = ['FIXED', 'INERTIAL'] as const;
 
-export type ReferenceFrameJSON = z.infer<typeof ReferenceFrameParse.zodJsonchema>;
+export type ReferenceFrameJSON = z.infer<typeof ReferenceFrameParse.JsonSchema>;
 
 /**
  * Serialize a `ReferenceFrame` instance to JSON and deserialize from JSON
@@ -15,12 +15,12 @@ export class ReferenceFrameParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.enum(strings);
+  static readonly JsonSchema = z.enum(strings);
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.enum(ReferenceFrame);
+  static readonly InstanceSchema = z.enum(ReferenceFrame);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +29,7 @@ export class ReferenceFrameParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return Object.keys(ReferenceFrame).find((key: any) => Reflect.get(ReferenceFrame, key) === instance) as any;
   }
 

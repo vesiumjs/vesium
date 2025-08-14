@@ -26,7 +26,7 @@ import { RectangleGraphicsParse } from './RectangleGraphics';
 import { TimeIntervalCollectionParse } from './TimeIntervalCollection';
 import { WallGraphicsParse } from './WallGraphics';
 
-export type EntityJSON = z.infer<typeof EntityParse.zodJsonchema>;
+export type EntityJSON = z.infer<typeof EntityParse.JsonSchema>;
 
 /**
  * Serialize a `Entity` instance to JSON and deserialize from JSON
@@ -37,40 +37,40 @@ export class EntityParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     id: z.string().optional(),
     name: z.string().optional(),
-    availability: TimeIntervalCollectionParse.zodJsonchema.optional(),
+    availability: TimeIntervalCollectionParse.JsonSchema.optional(),
     show: z.boolean().optional(),
     description: z.string().optional(),
-    position: PositionPropertyParse.zodJsonchema.optional(),
-    orientation: QuaternionParse.zodJsonchema.optional(),
-    viewFrom: Cartesian3Parse.zodJsonchema.optional(),
+    position: PositionPropertyParse.JsonSchema.optional(),
+    orientation: QuaternionParse.JsonSchema.optional(),
+    viewFrom: Cartesian3Parse.JsonSchema.optional(),
     parent: z.string().optional(),
-    billboard: BillboardGraphicsParse.zodJsonchema.optional(),
-    box: BoxGraphicsParse.zodJsonchema.optional(),
-    corridor: CorridorGraphicsParse.zodJsonchema.optional(),
-    cylinder: CylinderGraphicsParse.zodJsonchema.optional(),
-    ellipse: EllipseGraphicsParse.zodJsonchema.optional(),
-    ellipsoid: EllipsoidGraphicsParse.zodJsonchema.optional(),
-    label: LabelGraphicsParse.zodJsonchema.optional(),
-    model: ModelGraphicsParse.zodJsonchema.optional(),
-    tileset: Cesium3DTilesetGraphicsParse.zodJsonchema.optional(),
-    path: PathGraphicsParse.zodJsonchema.optional(),
-    plane: PlaneGraphicsParse.zodJsonchema.optional(),
-    point: PointGraphicsParse.zodJsonchema.optional(),
-    polygon: PolygonGraphicsParse.zodJsonchema.optional(),
-    polyline: PolylineGraphicsParse.zodJsonchema.optional(),
-    properties: PropertyBagParse.zodJsonchema.optional(),
-    polylineVolume: PolylineVolumeGraphicsParse.zodJsonchema.optional(),
-    rectangle: RectangleGraphicsParse.zodJsonchema.optional(),
-    wall: WallGraphicsParse.zodJsonchema.optional(),
+    billboard: BillboardGraphicsParse.JsonSchema.optional(),
+    box: BoxGraphicsParse.JsonSchema.optional(),
+    corridor: CorridorGraphicsParse.JsonSchema.optional(),
+    cylinder: CylinderGraphicsParse.JsonSchema.optional(),
+    ellipse: EllipseGraphicsParse.JsonSchema.optional(),
+    ellipsoid: EllipsoidGraphicsParse.JsonSchema.optional(),
+    label: LabelGraphicsParse.JsonSchema.optional(),
+    model: ModelGraphicsParse.JsonSchema.optional(),
+    tileset: Cesium3DTilesetGraphicsParse.JsonSchema.optional(),
+    path: PathGraphicsParse.JsonSchema.optional(),
+    plane: PlaneGraphicsParse.JsonSchema.optional(),
+    point: PointGraphicsParse.JsonSchema.optional(),
+    polygon: PolygonGraphicsParse.JsonSchema.optional(),
+    polyline: PolylineGraphicsParse.JsonSchema.optional(),
+    properties: PropertyBagParse.JsonSchema.optional(),
+    polylineVolume: PolylineVolumeGraphicsParse.JsonSchema.optional(),
+    rectangle: RectangleGraphicsParse.JsonSchema.optional(),
+    wall: WallGraphicsParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Entity);
+  static readonly InstanceSchema = z.instanceof(Entity);
 
   /**
    * Convert an instance to a JSON
@@ -79,7 +79,7 @@ export class EntityParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       id: instance.id,
       name: instance.name,
@@ -118,7 +118,7 @@ export class EntityParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(json);
+    json = this.JsonSchema.parse(json);
     const instance = new Entity({
       id: json.id ?? undefined,
       name: json.name ?? undefined,

@@ -11,7 +11,7 @@ import { PlaneParse } from './Plane';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type PlaneGraphicsJSON = z.infer<typeof PlaneGraphicsParse.zodJsonchema>;
+export type PlaneGraphicsJSON = z.infer<typeof PlaneGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `PlaneGraphics` instance to JSON and deserialize from JSON
@@ -22,23 +22,23 @@ export class PlaneGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
-    plane: PlaneParse.zodJsonchema.optional(),
-    dimensions: Cartesian2Parse.zodJsonchema.optional(),
+    plane: PlaneParse.JsonSchema.optional(),
+    dimensions: Cartesian2Parse.JsonSchema.optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(PlaneGraphics);
+  static readonly InstanceSchema = z.instanceof(PlaneGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -47,7 +47,7 @@ export class PlaneGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       plane: PlaneParse.toJSON(toPropertyValue(instance.plane, time)),
@@ -71,7 +71,7 @@ export class PlaneGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new PlaneGraphics({
       show: json.show ?? undefined,
       plane: PlaneParse.fromJSON(json?.plane),

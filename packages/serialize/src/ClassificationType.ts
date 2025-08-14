@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const strings = ['TERRAIN', 'CESIUM_3D_TILE', 'BOTH'] as const;
 
-export type ClassificationTypeJSON = z.infer<typeof ClassificationTypeParse.zodJsonchema>;
+export type ClassificationTypeJSON = z.infer<typeof ClassificationTypeParse.JsonSchema>;
 
 /**
  * Serialize a `ClassificationType` instance to JSON and deserialize from JSON
@@ -15,12 +15,12 @@ export class ClassificationTypeParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.enum(strings);
+  static readonly JsonSchema = z.enum(strings);
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.enum(ClassificationType);
+  static readonly InstanceSchema = z.enum(ClassificationType);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +29,7 @@ export class ClassificationTypeParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return Object.keys(ClassificationType).find((key: any) => Reflect.get(ClassificationType, key) === instance) as any;
   }
 

@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { Cartesian3Parse } from './Cartesian3';
 
-export type PlaneJSON = z.infer<typeof PlaneParse.zodJsonchema>;
+export type PlaneJSON = z.infer<typeof PlaneParse.JsonSchema>;
 
 /**
  * Serialize a `Plane` instance to JSON and deserialize from JSON
@@ -14,15 +14,15 @@ export class PlaneParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
-    normal: Cartesian3Parse.zodJsonchema,
+  static readonly JsonSchema = z.object({
+    normal: Cartesian3Parse.JsonSchema,
     distance: z.number(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Plane);
+  static readonly InstanceSchema = z.instanceof(Plane);
 
   /**
    * Convert an instance to a JSON
@@ -31,7 +31,7 @@ export class PlaneParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       normal: Cartesian3Parse.toJSON(instance?.normal)!,
       distance: instance.distance,
@@ -47,7 +47,7 @@ export class PlaneParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new Plane(
       Cartesian3Parse.fromJSON(json?.normal)!,
       json.distance ?? undefined,

@@ -10,7 +10,7 @@ import { MaterialPropertyParse } from './MaterialProperty';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type EllipseGraphicsJSON = z.infer<typeof EllipseGraphicsParse.zodJsonchema>;
+export type EllipseGraphicsJSON = z.infer<typeof EllipseGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `EllipseGraphics` instance to JSON and deserialize from JSON
@@ -21,33 +21,33 @@ export class EllipseGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
     semiMajorAxis: z.number().optional(),
     semiMinorAxis: z.number().optional(),
     height: z.number().optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
     extrudedHeight: z.number().optional(),
-    extrudedHeightReference: HeightReferenceParse.zodJsonchema.optional(),
+    extrudedHeightReference: HeightReferenceParse.JsonSchema.optional(),
     rotation: z.number().optional(),
     stRotation: z.number().optional(),
     granularity: z.number().optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
     numberOfVerticalLines: z.number().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
-    classificationType: ClassificationTypeParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
+    classificationType: ClassificationTypeParse.JsonSchema.optional(),
     zIndex: z.number().optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(EllipseGraphics);
+  static readonly InstanceSchema = z.instanceof(EllipseGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -56,7 +56,7 @@ export class EllipseGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       semiMajorAxis: toPropertyValue(instance.semiMajorAxis, time),
@@ -90,7 +90,7 @@ export class EllipseGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new EllipseGraphics({
       show: json.show ?? undefined,
       semiMajorAxis: json.semiMajorAxis ?? undefined,

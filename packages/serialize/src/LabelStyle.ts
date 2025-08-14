@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const strings = ['FILL', 'OUTLINE', 'FILL_AND_OUTLINE'] as const;
 
-export type LabelStyleJSON = z.infer<typeof LabelStyleParse.zodJsonchema>;
+export type LabelStyleJSON = z.infer<typeof LabelStyleParse.JsonSchema>;
 
 /**
  * Serialize a `LabelStyle` instance to JSON and deserialize from JSON
@@ -15,12 +15,12 @@ export class LabelStyleParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.enum(strings);
+  static readonly JsonSchema = z.enum(strings);
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.enum(LabelStyle);
+  static readonly InstanceSchema = z.enum(LabelStyle);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +29,7 @@ export class LabelStyleParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return Object.keys(LabelStyle).find((key: any) => Reflect.get(LabelStyle, key) === instance) as any;
   }
 

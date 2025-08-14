@@ -2,7 +2,7 @@ import { NearFarScalar } from 'cesium';
 
 import { z } from 'zod';
 
-export type NearFarScalarJSON = z.infer<typeof NearFarScalarParse.zodJsonchema>;
+export type NearFarScalarJSON = z.infer<typeof NearFarScalarParse.JsonSchema>;
 
 /**
  * Serialize a `NearFarScalar` instance to JSON and deserialize from JSON
@@ -13,7 +13,7 @@ export class NearFarScalarParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     near: z.number(),
     nearValue: z.number(),
     far: z.number(),
@@ -23,7 +23,7 @@ export class NearFarScalarParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(NearFarScalar);
+  static readonly InstanceSchema = z.instanceof(NearFarScalar);
 
   /**
    * Convert an instance to a JSON
@@ -32,7 +32,7 @@ export class NearFarScalarParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       near: instance.near,
       nearValue: instance.nearValue,
@@ -50,7 +50,7 @@ export class NearFarScalarParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new NearFarScalar(
       json.near ?? undefined,
       json.nearValue ?? undefined,

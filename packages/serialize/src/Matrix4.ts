@@ -2,7 +2,7 @@ import { Matrix4 } from 'cesium';
 
 import { z } from 'zod';
 
-export type Matrix4JSON = z.infer<typeof Matrix4Parse.zodJsonchema>;
+export type Matrix4JSON = z.infer<typeof Matrix4Parse.JsonSchema>;
 
 /**
  * Serialize a `Matrix4` instance to JSON and deserialize from JSON
@@ -13,12 +13,12 @@ export class Matrix4Parse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.array(z.number());
+  static readonly JsonSchema = z.array(z.number());
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Matrix4);
+  static readonly InstanceSchema = z.instanceof(Matrix4);
 
   /**
    * Convert an instance to a JSON
@@ -27,7 +27,7 @@ export class Matrix4Parse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return Array.from(instance);
   }
 
@@ -40,7 +40,7 @@ export class Matrix4Parse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new Matrix4(...json);
     return result ? instance.clone(result) : instance;
   }

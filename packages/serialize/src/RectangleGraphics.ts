@@ -12,7 +12,7 @@ import { RectangleParse } from './Rectangle';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type RectangleGraphicsJSON = z.infer<typeof RectangleGraphicsParse.zodJsonchema>;
+export type RectangleGraphicsJSON = z.infer<typeof RectangleGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `RectangleGraphics` instance to JSON and deserialize from JSON
@@ -23,31 +23,31 @@ export class RectangleGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
-    coordinates: RectangleParse.zodJsonchema.optional(),
+    coordinates: RectangleParse.JsonSchema.optional(),
     height: z.number().optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
     extrudedHeight: z.number().optional(),
-    extrudedHeightReference: HeightReferenceParse.zodJsonchema.optional(),
+    extrudedHeightReference: HeightReferenceParse.JsonSchema.optional(),
     rotation: z.number().optional(),
     stRotation: z.number().optional(),
     granularity: z.number().optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
-    classificationType: ClassificationTypeParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
+    classificationType: ClassificationTypeParse.JsonSchema.optional(),
     zIndex: z.number().optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(RectangleGraphics);
+  static readonly InstanceSchema = z.instanceof(RectangleGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -56,7 +56,7 @@ export class RectangleGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       coordinates: RectangleParse.toJSON(toPropertyValue(instance.coordinates, time)),
@@ -88,7 +88,7 @@ export class RectangleGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new RectangleGraphics({
       show: json.show ?? undefined,
       coordinates: RectangleParse.fromJSON(json?.coordinates),

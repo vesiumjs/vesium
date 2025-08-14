@@ -12,7 +12,7 @@ import { PolygonHierarchyParse } from './PolygonHierarchy';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type PolygonGraphicsJSON = z.infer<typeof PolygonGraphicsParse.zodJsonchema>;
+export type PolygonGraphicsJSON = z.infer<typeof PolygonGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `PolygonGraphics` instance to JSON and deserialize from JSON
@@ -23,35 +23,35 @@ export class PolygonGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
-    hierarchy: PolygonHierarchyParse.zodJsonchema.optional(),
+    hierarchy: PolygonHierarchyParse.JsonSchema.optional(),
     height: z.number().optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
     extrudedHeight: z.number().optional(),
-    extrudedHeightReference: HeightReferenceParse.zodJsonchema.optional(),
+    extrudedHeightReference: HeightReferenceParse.JsonSchema.optional(),
     stRotation: z.number().optional(),
     granularity: z.number().optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
     perPositionHeight: z.boolean().optional(),
     closeTop: z.boolean().optional(),
     closeBottom: z.boolean().optional(),
-    arcType: ArcTypeParse.zodJsonchema.optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
-    classificationType: ClassificationTypeParse.zodJsonchema.optional(),
+    arcType: ArcTypeParse.JsonSchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
+    classificationType: ClassificationTypeParse.JsonSchema.optional(),
     zIndex: z.number().optional(),
-    textureCoordinates: PolygonHierarchyParse.zodJsonchema.optional(),
+    textureCoordinates: PolygonHierarchyParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(PolygonGraphics);
+  static readonly InstanceSchema = z.instanceof(PolygonGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -60,7 +60,7 @@ export class PolygonGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       hierarchy: PolygonHierarchyParse.toJSON(toPropertyValue(instance.hierarchy, time)),
@@ -96,7 +96,7 @@ export class PolygonGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new PolygonGraphics({
       show: json.show ?? undefined,
       hierarchy: PolygonHierarchyParse.fromJSON(json?.hierarchy),

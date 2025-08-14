@@ -2,7 +2,7 @@ import { Cartesian2 } from 'cesium';
 
 import { z } from 'zod';
 
-export type Cartesian2JSON = z.infer<typeof Cartesian2Parse.zodJsonchema>;
+export type Cartesian2JSON = z.infer<typeof Cartesian2Parse.JsonSchema>;
 
 /**
  * Serialize a `Cartesian2` instance to JSON and deserialize from JSON
@@ -13,7 +13,7 @@ export class Cartesian2Parse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     x: z.number().optional(),
     y: z.number().optional(),
   });
@@ -21,7 +21,7 @@ export class Cartesian2Parse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(Cartesian2);
+  static readonly InstanceSchema = z.instanceof(Cartesian2);
 
   /**
    * Convert an instance to a JSON
@@ -30,7 +30,7 @@ export class Cartesian2Parse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       x: instance.x,
       y: instance.y,
@@ -46,10 +46,10 @@ export class Cartesian2Parse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new Cartesian2(
-      json.x ?? undefined ?? undefined,
-      json.y ?? undefined ?? undefined,
+      json.x ?? undefined,
+      json.y ?? undefined,
     );
     return result ? instance.clone(result) : instance;
   }

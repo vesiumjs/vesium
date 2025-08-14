@@ -2,7 +2,7 @@ import { DistanceDisplayCondition } from 'cesium';
 
 import { z } from 'zod';
 
-export type DistanceDisplayConditionJSON = z.infer<typeof DistanceDisplayConditionParse.zodJsonchema>;
+export type DistanceDisplayConditionJSON = z.infer<typeof DistanceDisplayConditionParse.JsonSchema>;
 
 /**
  * Serialize a `DistanceDisplayCondition` instance to JSON and deserialize from JSON
@@ -13,7 +13,7 @@ export class DistanceDisplayConditionParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     near: z.number(),
     far: z.number(),
   });
@@ -21,7 +21,7 @@ export class DistanceDisplayConditionParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(DistanceDisplayCondition);
+  static readonly InstanceSchema = z.instanceof(DistanceDisplayCondition);
 
   /**
    * Convert an instance to a JSON
@@ -30,7 +30,7 @@ export class DistanceDisplayConditionParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       near: instance.near,
       far: instance.far,
@@ -46,7 +46,7 @@ export class DistanceDisplayConditionParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new DistanceDisplayCondition(
       json.near ?? undefined,
       json.far ?? undefined,

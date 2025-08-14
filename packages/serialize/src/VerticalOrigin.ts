@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const strings = ['CENTER', 'BOTTOM', 'BASELINE', 'TOP'] as const;
 
-export type VerticalOriginJSON = z.infer<typeof VerticalOriginParse.zodJsonchema>;
+export type VerticalOriginJSON = z.infer<typeof VerticalOriginParse.JsonSchema>;
 
 /**
  * Serialize a `VerticalOrigin` instance to JSON and deserialize from JSON
@@ -15,12 +15,12 @@ export class VerticalOriginParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.enum(strings);
+  static readonly JsonSchema = z.enum(strings);
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.enum(VerticalOrigin);
+  static readonly InstanceSchema = z.enum(VerticalOrigin);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +29,7 @@ export class VerticalOriginParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return Object.keys(VerticalOrigin).find((key: any) => Reflect.get(VerticalOrigin, key) === instance) as any;
   }
 

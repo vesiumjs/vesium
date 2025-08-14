@@ -13,7 +13,7 @@ import { NearFarScalarParse } from './NearFarScalar';
 
 import { VerticalOriginParse } from './VerticalOrigin';
 
-export type LabelGraphicsJSON = z.infer<typeof LabelGraphicsParse.zodJsonchema>;
+export type LabelGraphicsJSON = z.infer<typeof LabelGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `LabelGraphics` instance to JSON and deserialize from JSON
@@ -24,34 +24,34 @@ export class LabelGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
     text: z.string().optional(),
     font: z.string().optional(),
-    style: LabelStyleParse.zodJsonchema.optional(),
+    style: LabelStyleParse.JsonSchema.optional(),
     scale: z.number().optional(),
     showBackground: z.boolean().optional(),
-    backgroundColor: ColorParse.zodJsonchema.optional(),
-    backgroundPadding: Cartesian2Parse.zodJsonchema.optional(),
-    pixelOffset: Cartesian2Parse.zodJsonchema.optional(),
-    eyeOffset: Cartesian3Parse.zodJsonchema.optional(),
-    horizontalOrigin: HorizontalOriginParse.zodJsonchema.optional(),
-    verticalOrigin: VerticalOriginParse.zodJsonchema.optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
-    fillColor: ColorParse.zodJsonchema.optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    backgroundColor: ColorParse.JsonSchema.optional(),
+    backgroundPadding: Cartesian2Parse.JsonSchema.optional(),
+    pixelOffset: Cartesian2Parse.JsonSchema.optional(),
+    eyeOffset: Cartesian3Parse.JsonSchema.optional(),
+    horizontalOrigin: HorizontalOriginParse.JsonSchema.optional(),
+    verticalOrigin: VerticalOriginParse.JsonSchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
+    fillColor: ColorParse.JsonSchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
-    translucencyByDistance: NearFarScalarParse.zodJsonchema.optional(),
-    pixelOffsetScaleByDistance: NearFarScalarParse.zodJsonchema.optional(),
-    scaleByDistance: NearFarScalarParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    translucencyByDistance: NearFarScalarParse.JsonSchema.optional(),
+    pixelOffsetScaleByDistance: NearFarScalarParse.JsonSchema.optional(),
+    scaleByDistance: NearFarScalarParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
     disableDepthTestDistance: z.number().optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(LabelGraphics);
+  static readonly InstanceSchema = z.instanceof(LabelGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -60,7 +60,7 @@ export class LabelGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       text: toPropertyValue(instance.text, time),
@@ -95,7 +95,7 @@ export class LabelGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new LabelGraphics({
       show: json.show ?? undefined,
       text: json.text ?? undefined,

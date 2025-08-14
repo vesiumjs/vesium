@@ -2,7 +2,7 @@ import { TimeIntervalCollection } from 'cesium';
 import { z } from 'zod';
 import { TimeIntervalParse } from './TimeInterval';
 
-export type TimeIntervalCollectionJSON = z.infer<typeof TimeIntervalCollectionParse.zodJsonchema>;
+export type TimeIntervalCollectionJSON = z.infer<typeof TimeIntervalCollectionParse.JsonSchema>;
 
 /**
  * Serialize a `TimeIntervalCollection` instance to JSON and deserialize from JSON
@@ -13,14 +13,14 @@ export class TimeIntervalCollectionParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
-    intervals: z.array(TimeIntervalParse.zodJsonchema),
+  static readonly JsonSchema = z.object({
+    intervals: z.array(TimeIntervalParse.JsonSchema),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(TimeIntervalCollection);
+  static readonly InstanceSchema = z.instanceof(TimeIntervalCollection);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +29,7 @@ export class TimeIntervalCollectionParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     const intervals = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
     return {
       intervals: intervals.map(item => TimeIntervalParse.toJSON(item)!),
@@ -45,7 +45,7 @@ export class TimeIntervalCollectionParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const intervals = json.intervals.map(item => TimeIntervalParse.fromJSON(item)!);
     if (result) {
       result.removeAll();

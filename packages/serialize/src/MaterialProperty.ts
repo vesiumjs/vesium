@@ -17,7 +17,7 @@ export interface MaterialPropertyProgram<T extends MaterialProperty = any> {
   fromJSON: (content?: Record<string, any>) => T | undefined;
 }
 
-export type MaterialPropertyJSON = z.infer<typeof MaterialPropertyParse.zodJsonchema>;
+export type MaterialPropertyJSON = z.infer<typeof MaterialPropertyParse.JsonSchema>;
 
 /**
  * Serialize a `MaterialProperty` instance to JSON and deserialize from JSON
@@ -51,7 +51,7 @@ export class MaterialPropertyParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     name: z.string(),
     content: z.record(z.string(), z.any()),
   });
@@ -59,7 +59,7 @@ export class MaterialPropertyParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(MaterialProperty);
+  static readonly InstanceSchema = z.instanceof(MaterialProperty);
 
   /**
    * Convert an instance to a JSON

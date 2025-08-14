@@ -14,7 +14,7 @@ import { NearFarScalarParse } from './NearFarScalar';
 import { SplitDirectionParse } from './SplitDirection';
 import { VerticalOriginParse } from './VerticalOrigin';
 
-export type BillboardGraphicsJSON = z.infer<typeof BillboardGraphicsParse.zodJsonchema>;
+export type BillboardGraphicsJSON = z.infer<typeof BillboardGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `BillboardGraphics` instance to JSON and deserialize from JSON
@@ -25,34 +25,34 @@ export class BillboardGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
     image: z.string().optional(),
     scale: z.number().optional(),
-    pixelOffset: Cartesian2Parse.zodJsonchema.optional(),
-    eyeOffset: Cartesian3Parse.zodJsonchema.optional(),
-    horizontalOrigin: HorizontalOriginParse.zodJsonchema.optional(),
-    verticalOrigin: VerticalOriginParse.zodJsonchema.optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
-    color: ColorParse.zodJsonchema.optional(),
+    pixelOffset: Cartesian2Parse.JsonSchema.optional(),
+    eyeOffset: Cartesian3Parse.JsonSchema.optional(),
+    horizontalOrigin: HorizontalOriginParse.JsonSchema.optional(),
+    verticalOrigin: VerticalOriginParse.JsonSchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
+    color: ColorParse.JsonSchema.optional(),
     rotation: z.number().optional(),
-    alignedAxis: Cartesian3Parse.zodJsonchema.optional(),
+    alignedAxis: Cartesian3Parse.JsonSchema.optional(),
     sizeInMeters: z.boolean().optional(),
     width: z.number().optional(),
     height: z.number().optional(),
-    scaleByDistance: NearFarScalarParse.zodJsonchema.optional(),
-    translucencyByDistance: NearFarScalarParse.zodJsonchema.optional(),
-    pixelOffsetScaleByDistance: NearFarScalarParse.zodJsonchema.optional(),
-    imageSubRegion: BoundingRectangleParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    scaleByDistance: NearFarScalarParse.JsonSchema.optional(),
+    translucencyByDistance: NearFarScalarParse.JsonSchema.optional(),
+    pixelOffsetScaleByDistance: NearFarScalarParse.JsonSchema.optional(),
+    imageSubRegion: BoundingRectangleParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
     disableDepthTestDistance: z.number().optional(),
-    splitDirection: SplitDirectionParse.zodJsonchema.optional(),
+    splitDirection: SplitDirectionParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(BillboardGraphics);
+  static readonly InstanceSchema = z.instanceof(BillboardGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -61,7 +61,7 @@ export class BillboardGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       image: toPropertyValue(instance.image, time),
@@ -96,7 +96,7 @@ export class BillboardGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new BillboardGraphics({
       show: json.show ?? undefined,
       image: json.image ?? undefined,

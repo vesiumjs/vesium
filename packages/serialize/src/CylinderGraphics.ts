@@ -10,7 +10,7 @@ import { MaterialPropertyParse } from './MaterialProperty';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type CylinderGraphicsJSON = z.infer<typeof CylinderGraphicsParse.zodJsonchema>;
+export type CylinderGraphicsJSON = z.infer<typeof CylinderGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `CylinderGraphics` instance to JSON and deserialize from JSON
@@ -21,27 +21,27 @@ export class CylinderGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
     length: z.number().optional(),
     topRadius: z.number().optional(),
     bottomRadius: z.number().optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
     numberOfVerticalLines: z.number().optional(),
     slices: z.number().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(CylinderGraphics);
+  static readonly InstanceSchema = z.instanceof(CylinderGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -50,7 +50,7 @@ export class CylinderGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       length: toPropertyValue(instance.length, time),
@@ -78,7 +78,7 @@ export class CylinderGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new CylinderGraphics({
       show: json.show ?? undefined,
       length: json.length ?? undefined,

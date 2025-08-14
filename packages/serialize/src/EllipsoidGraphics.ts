@@ -10,7 +10,7 @@ import { MaterialPropertyParse } from './MaterialProperty';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type EllipsoidGraphicsJSON = z.infer<typeof EllipsoidGraphicsParse.zodJsonchema>;
+export type EllipsoidGraphicsJSON = z.infer<typeof EllipsoidGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `EllipsoidGraphics` instance to JSON and deserialize from JSON
@@ -21,31 +21,31 @@ export class EllipsoidGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
-    radii: Cartesian3Parse.zodJsonchema.optional(),
-    innerRadii: Cartesian3Parse.zodJsonchema.optional(),
+    radii: Cartesian3Parse.JsonSchema.optional(),
+    innerRadii: Cartesian3Parse.JsonSchema.optional(),
     minimumClock: z.number().optional(),
     maximumClock: z.number().optional(),
     minimumCone: z.number().optional(),
     maximumCone: z.number().optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
     stackPartitions: z.number().optional(),
     slicePartitions: z.number().optional(),
     subdivisions: z.number().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(EllipsoidGraphics);
+  static readonly InstanceSchema = z.instanceof(EllipsoidGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -54,7 +54,7 @@ export class EllipsoidGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       radii: Cartesian3Parse.toJSON(toPropertyValue(instance.radii, time)),
@@ -86,7 +86,7 @@ export class EllipsoidGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new EllipsoidGraphics({
       show: json.show ?? undefined,
       radii: Cartesian3Parse.fromJSON(json?.radii),

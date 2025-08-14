@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const strings = ['HIGHLIGHT', 'REPLACE', 'MIX'] as const;
 
-export type ColorBlendModeJSON = z.infer<typeof ColorBlendModeParse.zodJsonchema>;
+export type ColorBlendModeJSON = z.infer<typeof ColorBlendModeParse.JsonSchema>;
 
 /**
  * Serialize a `ColorBlendMode` instance to JSON and deserialize from JSON
@@ -15,12 +15,12 @@ export class ColorBlendModeParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.enum(strings);
+  static readonly JsonSchema = z.enum(strings);
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.enum(ColorBlendMode);
+  static readonly InstanceSchema = z.enum(ColorBlendMode);
 
   /**
    * Convert an instance to a JSON
@@ -29,7 +29,7 @@ export class ColorBlendModeParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return Object.keys(ColorBlendMode).find((key: any) => Reflect.get(ColorBlendMode, key) === instance) as any;
   }
 

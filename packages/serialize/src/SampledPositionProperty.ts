@@ -6,7 +6,7 @@ import { Cartesian3Parse } from './Cartesian3';
 import { JulianDateParse } from './JulianDate';
 import { ReferenceFrameParse } from './ReferenceFrame';
 
-export type SampledPositionPropertyJSON = z.infer<typeof SampledPositionPropertyParse.zodJsonchema>;
+export type SampledPositionPropertyJSON = z.infer<typeof SampledPositionPropertyParse.JsonSchema>;
 
 /**
  * Serialize a `SampledPositionProperty` instance to JSON and deserialize from JSON
@@ -17,17 +17,17 @@ export class SampledPositionPropertyParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
-    referenceFrame: ReferenceFrameParse.zodJsonchema.optional(),
+  static readonly JsonSchema = z.object({
+    referenceFrame: ReferenceFrameParse.JsonSchema.optional(),
     numberOfDerivatives: z.number().optional(),
-    times: z.array(JulianDateParse.zodJsonchema).optional(),
-    values: z.array(Cartesian3Parse.zodJsonchema).optional(),
+    times: z.array(JulianDateParse.JsonSchema).optional(),
+    values: z.array(Cartesian3Parse.JsonSchema).optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(SampledPositionProperty);
+  static readonly InstanceSchema = z.instanceof(SampledPositionProperty);
 
   /**
    * Convert an instance to a JSON
@@ -36,7 +36,7 @@ export class SampledPositionPropertyParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     // SampledProperty
     const property = (instance as any)._property;
     const times: JulianDate[] = property._times;
@@ -59,7 +59,7 @@ export class SampledPositionPropertyParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
 
     const instance = new SampledPositionProperty(
       ReferenceFrameParse.fromJSON(json?.referenceFrame),

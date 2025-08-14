@@ -2,7 +2,7 @@ import { TimeInterval } from 'cesium';
 import { z } from 'zod';
 import { JulianDateParse } from './JulianDate';
 
-export type TimeIntervalJSON = z.infer<typeof TimeIntervalParse.zodJsonchema>;
+export type TimeIntervalJSON = z.infer<typeof TimeIntervalParse.JsonSchema>;
 
 /**
  * Serialize a `TimeInterval` instance to JSON and deserialize from JSON
@@ -13,9 +13,9 @@ export class TimeIntervalParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
-    start: JulianDateParse.zodJsonchema.optional(),
-    stop: JulianDateParse.zodJsonchema.optional(),
+  static readonly JsonSchema = z.object({
+    start: JulianDateParse.JsonSchema.optional(),
+    stop: JulianDateParse.JsonSchema.optional(),
     isStartIncluded: z.boolean().optional(),
     isStopIncluded: z.boolean().optional(),
     data: z.any().optional(),
@@ -24,7 +24,7 @@ export class TimeIntervalParse {
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(TimeInterval);
+  static readonly InstanceSchema = z.instanceof(TimeInterval);
 
   /**
    * Convert an instance to a JSON
@@ -33,7 +33,7 @@ export class TimeIntervalParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       start: JulianDateParse.toJSON(instance?.start),
       stop: JulianDateParse.toJSON(instance?.stop),
@@ -52,7 +52,7 @@ export class TimeIntervalParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new TimeInterval({
       start: JulianDateParse.fromJSON(json?.start),
       stop: JulianDateParse.fromJSON(json?.stop),

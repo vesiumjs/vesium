@@ -6,7 +6,7 @@ import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
 
 import { MaterialPropertyParse } from './MaterialProperty';
 
-export type PathGraphicsJSON = z.infer<typeof PathGraphicsParse.zodJsonchema>;
+export type PathGraphicsJSON = z.infer<typeof PathGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `PathGraphics` instance to JSON and deserialize from JSON
@@ -17,20 +17,20 @@ export class PathGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
     leadTime: z.number().optional(),
     trailTime: z.number().optional(),
     width: z.number().optional(),
     resolution: z.number().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(PathGraphics);
+  static readonly InstanceSchema = z.instanceof(PathGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -39,7 +39,7 @@ export class PathGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       leadTime: toPropertyValue(instance.leadTime, time),
@@ -60,7 +60,7 @@ export class PathGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new PathGraphics({
       show: json.show ?? undefined,
       leadTime: json.leadTime ?? undefined,

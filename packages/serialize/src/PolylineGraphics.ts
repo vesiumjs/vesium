@@ -10,7 +10,7 @@ import { MaterialPropertyParse } from './MaterialProperty';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type PolylineGraphicsJSON = z.infer<typeof PolylineGraphicsParse.zodJsonchema>;
+export type PolylineGraphicsJSON = z.infer<typeof PolylineGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `PolylineGraphics` instance to JSON and deserialize from JSON
@@ -21,25 +21,25 @@ export class PolylineGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
-    positions: z.array(Cartesian3Parse.zodJsonchema).optional(),
+    positions: z.array(Cartesian3Parse.JsonSchema).optional(),
     width: z.number().optional(),
     granularity: z.number().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
-    depthFailMaterial: MaterialPropertyParse.zodJsonchema.optional(),
-    arcType: ArcTypeParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
+    depthFailMaterial: MaterialPropertyParse.JsonSchema.optional(),
+    arcType: ArcTypeParse.JsonSchema.optional(),
     clampToGround: z.boolean().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
-    classificationType: ClassificationTypeParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
+    classificationType: ClassificationTypeParse.JsonSchema.optional(),
     zIndex: z.number().optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(PolylineGraphics);
+  static readonly InstanceSchema = z.instanceof(PolylineGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -48,7 +48,7 @@ export class PolylineGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Parse.toJSON(item)),
@@ -74,7 +74,7 @@ export class PolylineGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new PolylineGraphics({
       show: json.show ?? undefined,
       positions: json.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,

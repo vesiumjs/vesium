@@ -9,7 +9,7 @@ import { MaterialPropertyParse } from './MaterialProperty';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type WallGraphicsJSON = z.infer<typeof WallGraphicsParse.zodJsonchema>;
+export type WallGraphicsJSON = z.infer<typeof WallGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `WallGraphics` instance to JSON and deserialize from JSON
@@ -20,25 +20,25 @@ export class WallGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
-    positions: z.array(Cartesian3Parse.zodJsonchema).optional(),
+    positions: z.array(Cartesian3Parse.JsonSchema).optional(),
     minimumHeights: z.array(z.number()).optional(),
     maximumHeights: z.array(z.number()).optional(),
     granularity: z.number().optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(WallGraphics);
+  static readonly InstanceSchema = z.instanceof(WallGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -47,7 +47,7 @@ export class WallGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Parse.toJSON(item)),
@@ -73,7 +73,7 @@ export class WallGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new WallGraphics({
       show: json.show ?? undefined,
       positions: json.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,

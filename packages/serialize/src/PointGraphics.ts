@@ -9,7 +9,7 @@ import { NearFarScalarParse } from './NearFarScalar';
 
 import { SplitDirectionParse } from './SplitDirection';
 
-export type PointGraphicsJSON = z.infer<typeof PointGraphicsParse.zodJsonchema>;
+export type PointGraphicsJSON = z.infer<typeof PointGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `PointGraphics` instance to JSON and deserialize from JSON
@@ -20,24 +20,24 @@ export class PointGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
     pixelSize: z.number().optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
-    color: ColorParse.zodJsonchema.optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
+    color: ColorParse.JsonSchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
-    scaleByDistance: NearFarScalarParse.zodJsonchema.optional(),
-    translucencyByDistance: NearFarScalarParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    scaleByDistance: NearFarScalarParse.JsonSchema.optional(),
+    translucencyByDistance: NearFarScalarParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
     disableDepthTestDistance: z.number().optional(),
-    splitDirection: SplitDirectionParse.zodJsonchema.optional(),
+    splitDirection: SplitDirectionParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(PointGraphics);
+  static readonly InstanceSchema = z.instanceof(PointGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -46,7 +46,7 @@ export class PointGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       pixelSize: toPropertyValue(instance.pixelSize, time),
@@ -71,7 +71,7 @@ export class PointGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new PointGraphics({
       show: json.show ?? undefined,
       pixelSize: json.pixelSize ?? undefined,

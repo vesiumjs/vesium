@@ -18,17 +18,17 @@ export class PolygonHierarchyParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema: any = z.lazy(() => {
+  static readonly JsonSchema: any = z.lazy(() => {
     return z.object({
-      positions: z.array(Cartesian3Parse.zodJsonchema),
-      holes: z.array(PolygonHierarchyParse.zodJsonchema),
+      positions: z.array(Cartesian3Parse.JsonSchema),
+      holes: z.array(PolygonHierarchyParse.JsonSchema),
     });
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(PolygonHierarchy);
+  static readonly InstanceSchema = z.instanceof(PolygonHierarchy);
 
   /**
    * Convert an instance to a JSON
@@ -37,7 +37,7 @@ export class PolygonHierarchyParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       positions: instance.positions.map((item: any) => Cartesian3Parse.toJSON(item)!),
       holes: instance.holes.map((item: any) => PolygonHierarchyParse.toJSON(item)!),
@@ -53,7 +53,7 @@ export class PolygonHierarchyParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new PolygonHierarchy(
       json!.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,
       json!.holes?.map(item => PolygonHierarchyParse.fromJSON(item)!) ?? undefined,

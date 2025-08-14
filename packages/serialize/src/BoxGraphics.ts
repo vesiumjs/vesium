@@ -11,7 +11,7 @@ import { MaterialPropertyParse } from './MaterialProperty';
 
 import { ShadowModeParse } from './ShadowMode';
 
-export type BoxGraphicsJSON = z.infer<typeof BoxGraphicsParse.zodJsonchema>;
+export type BoxGraphicsJSON = z.infer<typeof BoxGraphicsParse.JsonSchema>;
 
 /**
  * Serialize a `BoxGraphics` instance to JSON and deserialize from JSON
@@ -22,23 +22,23 @@ export class BoxGraphicsParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
+  static readonly JsonSchema = z.object({
     show: z.boolean().optional(),
-    dimensions: Cartesian3Parse.zodJsonchema.optional(),
-    heightReference: HeightReferenceParse.zodJsonchema.optional(),
+    dimensions: Cartesian3Parse.JsonSchema.optional(),
+    heightReference: HeightReferenceParse.JsonSchema.optional(),
     fill: z.boolean().optional(),
-    material: MaterialPropertyParse.zodJsonchema.optional(),
+    material: MaterialPropertyParse.JsonSchema.optional(),
     outline: z.boolean().optional(),
-    outlineColor: ColorParse.zodJsonchema.optional(),
+    outlineColor: ColorParse.JsonSchema.optional(),
     outlineWidth: z.number().optional(),
-    shadows: ShadowModeParse.zodJsonchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.zodJsonchema.optional(),
+    shadows: ShadowModeParse.JsonSchema.optional(),
+    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(BoxGraphics);
+  static readonly InstanceSchema = z.instanceof(BoxGraphics);
 
   /**
    * Convert an instance to a JSON
@@ -47,7 +47,7 @@ export class BoxGraphicsParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       show: toPropertyValue(instance.show, time),
       dimensions: Cartesian3Parse.toJSON(toPropertyValue(instance.dimensions, time)),
@@ -71,7 +71,7 @@ export class BoxGraphicsParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new BoxGraphics({
       show: json.show ?? undefined,
       dimensions: Cartesian3Parse.fromJSON(json?.dimensions),

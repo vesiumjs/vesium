@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { Cartesian3Parse } from './Cartesian3';
 
-export type ClippingPlaneJSON = z.infer<typeof ClippingPlaneParse.zodJsonchema>;
+export type ClippingPlaneJSON = z.infer<typeof ClippingPlaneParse.JsonSchema>;
 
 /**
  * Serialize a `ClippingPlane` instance to JSON and deserialize from JSON
@@ -14,15 +14,15 @@ export class ClippingPlaneParse {
   /**
    * zod schema for validating JSON data
    */
-  static readonly zodJsonchema = z.object({
-    normal: Cartesian3Parse.zodJsonchema,
+  static readonly JsonSchema = z.object({
+    normal: Cartesian3Parse.JsonSchema,
     distance: z.number(),
   });
 
   /**
    * zod schema for validating instance data
    */
-  static readonly zodInstanceSchema = z.instanceof(ClippingPlane);
+  static readonly InstanceSchema = z.instanceof(ClippingPlane);
 
   /**
    * Convert an instance to a JSON
@@ -31,7 +31,7 @@ export class ClippingPlaneParse {
     if (!instance) {
       return undefined;
     }
-    instance = this.zodInstanceSchema.parse(instance);
+    instance = this.InstanceSchema.parse(instance);
     return {
       normal: Cartesian3Parse.toJSON(instance?.normal)!,
       distance: instance.distance,
@@ -47,7 +47,7 @@ export class ClippingPlaneParse {
     if (!json) {
       return undefined;
     }
-    json = this.zodJsonchema.parse(result);
+    json = this.JsonSchema.parse(result);
     const instance = new ClippingPlane(
       Cartesian3Parse.fromJSON(json?.normal)!,
       json.distance ?? undefined,
