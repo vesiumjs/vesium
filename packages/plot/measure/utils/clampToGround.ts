@@ -70,15 +70,15 @@ export async function clampToHeightMostDetailedByTilesetOrTerrain(
     }
   });
   const [tilesetPositions, terrainPositions] = await Promise.all([tilesetPromise, terrainPromise]);
-  const resluts: Cartesian3[] = [];
+  const results: Cartesian3[] = [];
 
   positions.forEach((item, index) => {
     const position
       = tilesetPositions[index] || terrainPositions[index]
         ? Ellipsoid.WGS84.cartographicToCartesian(terrainPositions[index])
         : item.clone();
-    resluts.push(position);
+    results.push(position);
   });
 
-  return resluts;
+  return results;
 }

@@ -88,8 +88,8 @@ export function useElementOverlay(
         coord.value = undefined;
       }
       else {
-        const reslut = cartesianToCanvasCoord(cartesian3.value, viewer.value.scene);
-        coord.value = !Cartesian2.equals(reslut, coord.value) ? reslut : coord.value;
+        const result = cartesianToCanvasCoord(cartesian3.value, viewer.value.scene);
+        coord.value = !Cartesian2.equals(result, coord.value) ? result : coord.value;
       }
     },
   );
