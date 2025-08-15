@@ -231,6 +231,9 @@ importers:
       '@types/geojson':
         specifier: catalog:deps
         version: 7946.0.16
+      '@vesium/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@vueuse/core':
         specifier: catalog:deps
         version: 13.5.0(vue@3.5.17(typescript@5.8.3))
@@ -244,11 +247,26 @@ importers:
         specifier: catalog:deps
         version: 3.5.17(typescript@5.8.3)
 
+  packages/geometry:
+    dependencies:
+      '@turf/turf':
+        specifier: catalog:deps
+        version: 7.2.0
+      '@vesium/shared':
+        specifier: workspace:*
+        version: link:../shared
+      cesium:
+        specifier: catalog:deps
+        version: 1.131.0
+
   packages/plot:
     dependencies:
       '@turf/turf':
         specifier: catalog:deps
         version: 7.2.0
+      '@vesium/geometry':
+        specifier: workspace:*
+        version: link:../geometry
       '@vueuse/core':
         specifier: catalog:deps
         version: 13.5.0(vue@3.5.17(typescript@5.8.3))
@@ -279,6 +297,15 @@ importers:
       zod:
         specifier: catalog:deps
         version: 4.0.5
+
+  packages/shared:
+    dependencies:
+      '@types/geojson':
+        specifier: catalog:deps
+        version: 7946.0.16
+      cesium:
+        specifier: catalog:deps
+        version: 1.131.0
 
 packages:
 
@@ -7201,7 +7228,7 @@ snapshots:
 
   '@babel/helper-annotate-as-pure@7.27.3':
     dependencies:
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
 
   '@babel/helper-compilation-targets@7.26.5':
     dependencies:
@@ -7275,7 +7302,7 @@ snapshots:
   '@babel/helper-member-expression-to-functions@7.27.1':
     dependencies:
       '@babel/traverse': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
     transitivePeerDependencies:
       - supports-color
 
@@ -7289,7 +7316,7 @@ snapshots:
   '@babel/helper-module-imports@7.27.1':
     dependencies:
       '@babel/traverse': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
     transitivePeerDependencies:
       - supports-color
 
@@ -7317,7 +7344,7 @@ snapshots:
 
   '@babel/helper-optimise-call-expression@7.27.1':
     dependencies:
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
 
   '@babel/helper-plugin-utils@7.26.5': {}
 
@@ -7360,7 +7387,7 @@ snapshots:
   '@babel/helper-skip-transparent-expression-wrappers@7.27.1':
     dependencies:
       '@babel/traverse': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
     transitivePeerDependencies:
       - supports-color
 
@@ -7376,7 +7403,7 @@ snapshots:
     dependencies:
       '@babel/template': 7.27.2
       '@babel/traverse': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
     transitivePeerDependencies:
       - supports-color
 
@@ -7906,7 +7933,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.26.8
       '@babel/helper-plugin-utils': 7.27.1
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
       esutils: 2.0.3
 
   '@babel/runtime@7.27.6': {}
@@ -7921,7 +7948,7 @@ snapshots:
     dependencies:
       '@babel/code-frame': 7.27.1
       '@babel/parser': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
 
   '@babel/traverse@7.26.8':
     dependencies:
@@ -7942,7 +7969,7 @@ snapshots:
       '@babel/helper-globals': 7.28.0
       '@babel/parser': 7.28.0
       '@babel/template': 7.27.2
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
       debug: 4.4.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
