@@ -1,7 +1,7 @@
+import { assemblingPlace } from '@vesium/geometry';
 import { CallbackProperty, Cartographic, Entity, PolygonHierarchy } from 'cesium';
-import { toCartesian3, toCartographic, toCoord } from 'vesium';
 
-import { assemblingPlace } from '../geom';
+import { toCartesian3, toCartographic, toCoord } from 'vesium';
 
 import { control, interval, moved } from '../skeleton';
 import { PlotScheme } from '../usePlot';

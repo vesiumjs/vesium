@@ -1,7 +1,7 @@
+import { arrowUnitCombatOperationTailed } from '@vesium/geometry';
 import { CallbackProperty, Entity, PolygonHierarchy } from 'cesium';
-import { toCartesian3, toCoord } from 'vesium';
 
-import { arrowUnitCombatOperationTailed } from '../geom';
+import { toCartesian3, toCoord } from 'vesium';
 
 import { control, interval, moved } from '../skeleton';
 import { PlotScheme } from '../usePlot';
