@@ -1,8 +1,8 @@
+import type { CesiumDataSource } from '@vesium/shared';
 import type { Arrayable } from '@vueuse/core';
 import type { DataSourceCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import type { MaybeRefOrAsyncGetter } from '../toPromiseValue';
-import type { CesiumDataSource } from '../utils';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
 import { toPromiseValue } from '../toPromiseValue';

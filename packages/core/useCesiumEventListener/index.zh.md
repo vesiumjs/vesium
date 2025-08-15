@@ -19,9 +19,9 @@ subText: 事件订阅
 :::
 
 ```ts
+import { throttle } from '@vesium/shared';
 import { refThrottled } from '@vueuse/core';
 import { useCesiumEventListener } from 'vesium';
-import { throttle } from '../utils';
 
 const listener = throttle(() => {
   // TODO

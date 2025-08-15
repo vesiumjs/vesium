@@ -1,5 +1,5 @@
 {
-  "name": "vesium",
+  "name": "@vesium/shared",
   "type": "module",
   "version": "1.0.1-beta.52",
   "description": "Vue component and composition-api library for Cesium.",
@@ -43,10 +43,6 @@
   },
   "dependencies": {
     "@types/geojson": "catalog:deps",
-    "@vesium/shared": "workspace:*",
-    "@vueuse/core": "catalog:deps",
-    "@vueuse/shared": "catalog:deps",
-    "cesium": "catalog:deps",
-    "vue": "catalog:deps"
+    "cesium": "catalog:deps"
   }
 }

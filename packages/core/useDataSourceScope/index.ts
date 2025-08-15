@@ -1,7 +1,7 @@
+import type { CesiumDataSource } from '@vesium/shared';
 import type { DataSourceCollection } from 'cesium';
 import type { MaybeRefOrGetter, ShallowReactive } from 'vue';
 import type { EffcetRemovePredicate } from '../useCollectionScope';
-import type { CesiumDataSource } from '../utils';
 import { computed, toValue } from 'vue';
 import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';

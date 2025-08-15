@@ -1,10 +1,10 @@
 import type { KeyboardEventModifier, ScreenSpaceEventType } from 'cesium';
 import type { MaybeRefOrGetter, WatchStopHandle } from 'vue';
+import { isDef } from '@vesium/shared';
 import { tryOnScopeDispose } from '@vueuse/core';
 import { ScreenSpaceEventHandler } from 'cesium';
 import { computed, toRef, toValue, watch, watchEffect } from 'vue';
 import { useViewer } from '../useViewer';
-import { isDef } from '../utils';
 
 export type ScreenSpaceEvent<T extends ScreenSpaceEventType> = {
   [ScreenSpaceEventType.LEFT_DOWN]: ScreenSpaceEventHandler.PositionedEvent;

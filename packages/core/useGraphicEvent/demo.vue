@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { canvasCoordToCartesian, toProperty } from '@vesium/shared';
 import * as Cesium from 'cesium';
 import { useEntity, useGraphicEvent, useViewer } from 'vesium';
 import { watchEffect } from 'vue';
-import { canvasCoordToCartesian, toProperty } from '../utils';
 
 const viewer = useViewer();
 
