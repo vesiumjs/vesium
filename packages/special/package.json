@@ -1,0 +1,45 @@
+{
+  "name": "@vesium/special",
+  "type": "module",
+  "version": "1.0.1-beta.52",
+  "description": "Vue component and composition-api library for Cesium.",
+  "license": "MIT",
+  "homepage": "https://github.com/vesiumjs/vesium",
+  "repository": {
+    "url": "https://github.com/vesiumjs/vesium"
+  },
+  "bugs": {
+    "url": "https://github.com/vesiumjs/vesium/issues"
+  },
+  "keywords": [
+    "vue",
+    "cesium",
+    "vueuse",
+    "hooks",
+    "composition-api"
+  ],
+  "exports": {
+    ".": "./index.ts",
+    "./package.json": "./package.json"
+  },
+  "unpkg": "./dist/index.iife.min.js",
+  "jsdelivr": "./dist/index.iife.min.js",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/*"
+  ],
+  "publishConfig": {
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "exports": {
+      ".": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.cjs"
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "dependencies": {}
+}
