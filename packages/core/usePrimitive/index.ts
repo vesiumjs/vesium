@@ -43,7 +43,7 @@ export function usePrimitive<T = any>(
  * overLoaded2: Parameter supports passing in an array.
  */
 export function usePrimitive<T = any>(
-  primitives?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
+  primitives?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,
   options?: UsePrimitiveOptions
 ): ComputedRef<T[] | undefined>;
 

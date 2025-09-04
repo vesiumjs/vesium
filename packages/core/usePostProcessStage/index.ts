@@ -42,7 +42,7 @@ export function usePostProcessStage<T extends PostProcessStage = PostProcessStag
  * overLoaded2: Parameter supports passing in an array.
  */
 export function usePostProcessStage<T extends PostProcessStage = PostProcessStage>(
-  stages?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
+  stages?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,
   options?: UsePostProcessStageOptions
 ): ComputedRef<T[] | undefined>;
 

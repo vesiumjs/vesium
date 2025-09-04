@@ -42,7 +42,7 @@ export function useEntity<T extends Entity = Entity>(
  * overLoaded2: Parameter supports passing in an array.
  */
 export function useEntity<T extends Entity = Entity>(
-  entities?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
+  entities?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,
   options?: UseEntityOptions
 ): ComputedRef<T[] | undefined>;
 

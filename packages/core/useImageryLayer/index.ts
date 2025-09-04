@@ -50,7 +50,7 @@ export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
  * overLoaded2: Parameter supports passing in an array.
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
-  layers?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
+  layers?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,
   options?: UseImageryLayerOptions
 ): ComputedRef<T[] | undefined>;
 
