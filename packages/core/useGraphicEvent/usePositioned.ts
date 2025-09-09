@@ -5,17 +5,17 @@ import { useViewer } from '../useViewer';
 
 export type PositionedEventType = 'LEFT_DOWN' | 'LEFT_UP' | 'LEFT_CLICK' | 'LEFT_DOUBLE_CLICK' | 'RIGHT_DOWN' | 'RIGHT_UP' | 'RIGHT_CLICK' | 'MIDDLE_DOWN' | 'MIDDLE_UP' | 'MIDDLE_CLICK';
 
- type PositiondScreenSpaceEventType
-   = ScreenSpaceEventType.LEFT_DOWN
-     | ScreenSpaceEventType.LEFT_UP
-     | ScreenSpaceEventType.LEFT_CLICK
-     | ScreenSpaceEventType.LEFT_DOUBLE_CLICK
-     | ScreenSpaceEventType.RIGHT_DOWN
-     | ScreenSpaceEventType.RIGHT_UP
-     | ScreenSpaceEventType.RIGHT_CLICK
-     | ScreenSpaceEventType.MIDDLE_DOWN
-     | ScreenSpaceEventType.MIDDLE_UP
-     | ScreenSpaceEventType.MIDDLE_CLICK;
+type PositiondScreenSpaceEventType
+  = ScreenSpaceEventType.LEFT_DOWN
+    | ScreenSpaceEventType.LEFT_UP
+    | ScreenSpaceEventType.LEFT_CLICK
+    | ScreenSpaceEventType.LEFT_DOUBLE_CLICK
+    | ScreenSpaceEventType.RIGHT_DOWN
+    | ScreenSpaceEventType.RIGHT_UP
+    | ScreenSpaceEventType.RIGHT_CLICK
+    | ScreenSpaceEventType.MIDDLE_DOWN
+    | ScreenSpaceEventType.MIDDLE_UP
+    | ScreenSpaceEventType.MIDDLE_CLICK;
 
 /**
  * @internal

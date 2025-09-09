@@ -32,9 +32,9 @@ const POSITIONED_EVENT_TYPES: PositionedEventType[] = [
 ];
 
 export type GraphicEventListener<T extends GraphicEventType>
-= T extends 'DRAG' ? (event: GraphicDragEvent) => void
-  : T extends 'HOVER' ? (event: GraphicHoverEvent) => void
-    : (event: GraphicPositionedEvent) => void;
+  = T extends 'DRAG' ? (event: GraphicDragEvent) => void
+    : T extends 'HOVER' ? (event: GraphicHoverEvent) => void
+      : (event: GraphicPositionedEvent) => void;
 
 export type RemoveGraphicEventFn = () => void;
 
