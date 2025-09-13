@@ -87,11 +87,11 @@ export function useSkeleton(
     plot.skeletons = entities;
   };
 
-  const { addGraphicEvent } = useGraphicEvent();
+  const graphicEvent = useGraphicEvent();
 
   watchEffect((onCleanup) => {
     // cursor 仅在不存在定义态的标绘时才生效
-    const remove = addGraphicEvent('global', 'DRAG', ({ event, pick, dragging, lockCamera }) => {
+    const remove = graphicEvent.add('global', 'DRAG', ({ event, pick, dragging, lockCamera }) => {
       if (pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as PlotSkeletonEntity;
 
@@ -155,7 +155,7 @@ export function useSkeleton(
   });
 
   watchEffect((onCleanup) => {
-    const remove = addGraphicEvent('global', 'HOVER', ({ hovering, pick }) => {
+    const remove = graphicEvent.add('global', 'HOVER', ({ hovering, pick }) => {
       if (hovering && pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as PlotSkeletonEntity;
         hoverEntity.value = entity;
@@ -168,7 +168,7 @@ export function useSkeleton(
   });
 
   watchEffect((onCleanup) => {
-    const remove = addGraphicEvent('global', 'LEFT_CLICK', ({ event, pick }) => {
+    const remove = graphicEvent.add('global', 'LEFT_CLICK', ({ event, pick }) => {
       if (pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as PlotSkeletonEntity;
         activeEntity.value = entity;

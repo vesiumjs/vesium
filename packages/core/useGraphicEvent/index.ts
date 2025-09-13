@@ -36,7 +36,7 @@ export type GraphicEventListener<T extends GraphicEventType>
     : T extends 'HOVER' ? (event: GraphicHoverEvent) => void
       : (event: GraphicPositionedEvent) => void;
 
-export type RemoveGraphicEventFn = () => void;
+export type removeFn = () => void;
 
 export interface AddGraphicEventOptions {
   /**
@@ -59,7 +59,7 @@ export interface UseGraphicEventRetrun {
    * @param type - The event type, 'all' indicates clearing all events.
    * @param listener - The event listener function.
    */
-  addGraphicEvent: <T extends GraphicEventType>(graphic: CesiumGraphic | 'global', type: T, listener: GraphicEventListener<T>, options?: AddGraphicEventOptions) => RemoveGraphicEventFn;
+  add: <T extends GraphicEventType>(graphic: CesiumGraphic | 'global', type: T, listener: GraphicEventListener<T>, options?: AddGraphicEventOptions) => removeFn;
 
   /**
    * Remove a graphic event listener.
@@ -67,14 +67,14 @@ export interface UseGraphicEventRetrun {
    * @param type - The event type, 'all' indicates clearing all events.
    * @param listener - The event listener function.
    */
-  removeGraphicEvent: <T extends GraphicEventType>(graphic: CesiumGraphic | 'global', type: T, listener: GraphicEventListener<T>) => void;
+  remove: <T extends GraphicEventType>(graphic: CesiumGraphic | 'global', type: T, listener: GraphicEventListener<T>) => void;
 
   /**
    * Clear graphic event listeners.
    * @param graphic - The graphic object.
    * @param type - The event type, 'all' indicates clearing all events.
    */
-  clearGraphicEvent: (graphic: CesiumGraphic | 'global', type: GraphicEventType | 'all') => void;
+  clear: (graphic: CesiumGraphic | 'global', type: GraphicEventType | 'all') => void;
 }
 
 /**
@@ -86,7 +86,7 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
   const cursorCollection = new WeakMap<CesiumGraphic | GlobalGraphicSymbol, Map<GraphicEventType, Map<AnyFn, AnyFn>>>();
   const dragCursorCollection = new WeakMap<CesiumGraphic | GlobalGraphicSymbol, Map<GraphicEventType, Map<AnyFn, AnyFn>>>();
 
-  const removeGraphicEvent = (graphic: CesiumGraphic | 'global', type: GraphicEventType, listener: AnyFn) => {
+  const remove = (graphic: CesiumGraphic | 'global', type: GraphicEventType, listener: AnyFn) => {
     const _graphic: CesiumGraphic | GlobalGraphicSymbol = graphic === 'global' ? GLOBAL_GRAPHIC_SYMBOL : graphic;
 
     // Remove the listener for the specified type
@@ -120,7 +120,7 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
     }
   };
 
-  const addGraphicEvent = (graphic: CesiumGraphic | 'global', type: GraphicEventType, listener: AnyFn, options: AddGraphicEventOptions = {}) => {
+  const add = (graphic: CesiumGraphic | 'global', type: GraphicEventType, listener: AnyFn, options: AddGraphicEventOptions = {}) => {
     const _graphic: CesiumGraphic | GlobalGraphicSymbol = graphic === 'global' ? GLOBAL_GRAPHIC_SYMBOL : graphic;
     // Ensure the event map for the graphic exists
     collection.get(_graphic) ?? collection.set(_graphic, new Map());
@@ -156,10 +156,10 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
       dragCursorCollection.get(_graphic)!.get(type)!.set(listener, _dragCursor);
     }
 
-    return () => removeGraphicEvent(graphic, type, listener);
+    return () => remove(graphic, type, listener);
   };
 
-  const clearGraphicEvent = (graphic: CesiumGraphic | 'global', type: GraphicEventType | 'all') => {
+  const clear = (graphic: CesiumGraphic | 'global', type: GraphicEventType | 'all') => {
     const _graphic: CesiumGraphic | GlobalGraphicSymbol = graphic === 'global' ? GLOBAL_GRAPHIC_SYMBOL : graphic;
     // Clear all events
     if (type === 'all') {
@@ -231,8 +231,8 @@ export function useGraphicEvent(): UseGraphicEventRetrun {
   });
 
   return {
-    addGraphicEvent,
-    removeGraphicEvent,
-    clearGraphicEvent,
+    add,
+    remove,
+    clear,
   };
 }

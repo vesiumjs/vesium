@@ -12,7 +12,7 @@ watchEffect(() => {
   });
 });
 
-const { addGraphicEvent } = useGraphicEvent();
+const graphicEvent = useGraphicEvent();
 
 // =========[CLICK]============
 useEntity(() => {
@@ -25,7 +25,7 @@ useEntity(() => {
       text: 'CLICK ME',
     },
   });
-  addGraphicEvent(
+  graphicEvent.add(
     entity,
     'LEFT_CLICK',
     (_params) => {
@@ -49,7 +49,7 @@ useEntity(() => {
       text: 'HOVER ME',
     },
   });
-  addGraphicEvent(
+  graphicEvent.add(
     entity,
     'HOVER',
     (params) => {
@@ -74,7 +74,7 @@ useEntity(() => {
     },
   });
 
-  addGraphicEvent(
+  graphicEvent.add(
     entity,
     'DRAG',
     (params) => {

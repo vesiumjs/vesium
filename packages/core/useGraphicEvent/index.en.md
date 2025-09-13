@@ -9,15 +9,15 @@ You don't need to overly worry about memory leaks from the function, as it autom
 :::
 
 ```ts
-const { addGraphicEvent } = useGraphicEvent();
+const graphicEvent = useGraphicEvent();
 
-addGraphicEvent(primitive, 'LEFT_CLICK', (params) => {});
+graphicEvent.add(primitive, 'LEFT_CLICK', (params) => {});
 
-addGraphicEvent(entity, 'DRAG', (params) => {});
+graphicEvent.add(entity, 'DRAG', (params) => {});
 
-addGraphicEvent(dataSource, 'DRAG', (params) => {});
+graphicEvent.add(dataSource, 'DRAG', (params) => {});
 
-addGraphicEvent('global', 'DRAG', (params) => {});
+graphicEvent.add('global', 'DRAG', (params) => {});
 ```
 
 ## Type Definitions
