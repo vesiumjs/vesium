@@ -44,7 +44,7 @@ export type RectangleGraphicsJSON = z.infer<ReturnType<typeof RectangleGraphicsZ
 /**
  * Convert `Cesium.RectangleGraphics` instance to JSON
  */
-export function RectangleGraphicsToJSON(instance?: RectangleGraphics, time?: JulianDate): RectangleGraphicsJSON | undefined {
+export function RectangleGraphicsToJSON(instance?: RectangleGraphics, time?: JulianDate, omit?: keyof RectangleGraphics): RectangleGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -52,24 +52,24 @@ export function RectangleGraphicsToJSON(instance?: RectangleGraphics, time?: Jul
   return {
     parser: 'RectangleGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      coordinates: RectangleToJSON(toPropertyValue(instance.coordinates, time)),
-      height: toPropertyValue(instance.height, time),
-      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
-      extrudedHeight: toPropertyValue(instance.extrudedHeight, time),
-      extrudedHeightReference: HeightReferenceToJSON(toPropertyValue(instance.extrudedHeightReference, time)),
-      rotation: toPropertyValue(instance.rotation, time),
-      stRotation: toPropertyValue(instance.stRotation, time),
-      granularity: toPropertyValue(instance.granularity, time),
-      fill: toPropertyValue(instance.fill, time),
-      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
-      outline: toPropertyValue(instance.outline, time),
-      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
-      outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      classificationType: ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
-      zIndex: toPropertyValue(instance.zIndex, time),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      coordinates: omit?.includes('coordinates') ? undefined : RectangleToJSON(toPropertyValue(instance.coordinates, time)),
+      height: omit?.includes('height') ? undefined : toPropertyValue(instance.height, time),
+      heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      extrudedHeight: omit?.includes('extrudedHeight') ? undefined : toPropertyValue(instance.extrudedHeight, time),
+      extrudedHeightReference: omit?.includes('extrudedHeightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.extrudedHeightReference, time)),
+      rotation: omit?.includes('rotation') ? undefined : toPropertyValue(instance.rotation, time),
+      stRotation: omit?.includes('stRotation') ? undefined : toPropertyValue(instance.stRotation, time),
+      granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
+      fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
+      outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
+      shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      classificationType: omit?.includes('classificationType') ? undefined : ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
+      zIndex: omit?.includes('zIndex') ? undefined : toPropertyValue(instance.zIndex, time),
     },
   };
 }
@@ -79,30 +79,30 @@ export function RectangleGraphicsToJSON(instance?: RectangleGraphics, time?: Jul
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function RectangleGraphicsFromJSON(json?: RectangleGraphicsJSON, result?: RectangleGraphics): RectangleGraphics | undefined {
+export function RectangleGraphicsFromJSON(json?: RectangleGraphicsJSON, result?: RectangleGraphics, omit?: keyof RectangleGraphics): RectangleGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = RectangleGraphicsZodSchema().parse(json);
   const instance = new RectangleGraphics({
-    show: json.value.show,
-    coordinates: RectangleFromJSON(json.value.coordinates),
-    height: json.value.height,
-    heightReference: HeightReferenceFromJSON(json.value.heightReference),
-    extrudedHeight: json.value.extrudedHeight,
-    extrudedHeightReference: HeightReferenceFromJSON(json.value.extrudedHeightReference),
-    rotation: json.value.rotation,
-    stRotation: json.value.stRotation,
-    granularity: json.value.granularity,
-    fill: json.value.fill,
-    material: MaterialPropertyFromJSON(json.value.material),
-    outline: json.value.outline,
-    outlineColor: ColorFromJSON(json.value.outlineColor),
-    outlineWidth: json.value.outlineWidth,
-    shadows: ShadowModeFromJSON(json.value.shadows),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
-    classificationType: ClassificationTypeFromJSON(json.value.classificationType),
-    zIndex: json.value.zIndex,
+    show: omit?.includes('show') ? undefined : json.value.show,
+    coordinates: omit?.includes('coordinates') ? undefined : RectangleFromJSON(json.value.coordinates),
+    height: omit?.includes('height') ? undefined : json.value.height,
+    heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceFromJSON(json.value.heightReference),
+    extrudedHeight: omit?.includes('extrudedHeight') ? undefined : json.value.extrudedHeight,
+    extrudedHeightReference: omit?.includes('extrudedHeightReference') ? undefined : HeightReferenceFromJSON(json.value.extrudedHeightReference),
+    rotation: omit?.includes('rotation') ? undefined : json.value.rotation,
+    stRotation: omit?.includes('stRotation') ? undefined : json.value.stRotation,
+    granularity: omit?.includes('granularity') ? undefined : json.value.granularity,
+    fill: omit?.includes('fill') ? undefined : json.value.fill,
+    material: omit?.includes('material') ? undefined : MaterialPropertyFromJSON(json.value.material),
+    outline: omit?.includes('outline') ? undefined : json.value.outline,
+    outlineColor: omit?.includes('outlineColor') ? undefined : ColorFromJSON(json.value.outlineColor),
+    outlineWidth: omit?.includes('outlineWidth') ? undefined : json.value.outlineWidth,
+    shadows: omit?.includes('shadows') ? undefined : ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    classificationType: omit?.includes('classificationType') ? undefined : ClassificationTypeFromJSON(json.value.classificationType),
+    zIndex: omit?.includes('zIndex') ? undefined : json.value.zIndex,
   });
   return result ? instance.clone(result) : instance;
 }

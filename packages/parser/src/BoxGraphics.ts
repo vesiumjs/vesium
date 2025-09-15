@@ -35,7 +35,7 @@ export type BoxGraphicsJSON = z.infer<ReturnType<typeof BoxGraphicsZodSchema>>;
 /**
  * Convert `Cesium.BoxGraphics` instance to JSON
  */
-export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate): BoxGraphicsJSON | undefined {
+export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate, omit?: keyof BoxGraphics): BoxGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -43,16 +43,16 @@ export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate): Bo
   return {
     parser: 'BoxGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      dimensions: Cartesian3ToJSON(toPropertyValue(instance.dimensions, time)),
-      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
-      fill: toPropertyValue(instance.fill, time),
-      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
-      outline: toPropertyValue(instance.outline, time),
-      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
-      outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      dimensions: omit?.includes('dimensions') ? undefined : Cartesian3ToJSON(toPropertyValue(instance.dimensions, time)),
+      heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
+      outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
+      shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
     },
   };
 }
@@ -62,22 +62,22 @@ export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate): Bo
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function BoxGraphicsFromJSON(json?: BoxGraphicsJSON, result?: BoxGraphics): BoxGraphics | undefined {
+export function BoxGraphicsFromJSON(json?: BoxGraphicsJSON, result?: BoxGraphics, omit?: keyof BoxGraphics): BoxGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = BoxGraphicsZodSchema().parse(json);
   const instance = new BoxGraphics({
-    show: json.value.show,
-    dimensions: Cartesian3FromJSON(json.value.dimensions),
-    heightReference: HeightReferenceFromJSON(json.value.heightReference),
-    fill: json.value.fill,
-    material: MaterialPropertyFromJSON(json.value.material),
-    outline: json.value.outline,
-    outlineColor: ColorFromJSON(json.value.outlineColor),
-    outlineWidth: json.value.outlineWidth,
-    shadows: ShadowModeFromJSON(json.value.shadows),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    show: omit?.includes('show') ? undefined : json.value.show,
+    dimensions: omit?.includes('dimensions') ? undefined : Cartesian3FromJSON(json.value.dimensions),
+    heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceFromJSON(json.value.heightReference),
+    fill: omit?.includes('fill') ? undefined : json.value.fill,
+    material: omit?.includes('material') ? undefined : MaterialPropertyFromJSON(json.value.material),
+    outline: omit?.includes('outline') ? undefined : json.value.outline,
+    outlineColor: omit?.includes('outlineColor') ? undefined : ColorFromJSON(json.value.outlineColor),
+    outlineWidth: omit?.includes('outlineWidth') ? undefined : json.value.outlineWidth,
+    shadows: omit?.includes('shadows') ? undefined : ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
   });
   return result ? instance.clone(result) : instance;
 }

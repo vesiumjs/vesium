@@ -89,7 +89,7 @@ Vesium includes the following main modules:
   - `useImageryLayer`: Imagery layer control
   - For more features, refer to the API documentation
 
-- **@vesium/serialize**: Serialization tools module
+- **@vesium/parser**: Serialization tools module
   - Supports saving and restoring scene states
   - Provides data import/export functionality
 

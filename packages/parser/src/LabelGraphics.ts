@@ -49,7 +49,7 @@ export type LabelGraphicsJSON = z.infer<ReturnType<typeof LabelGraphicsZodSchema
 /**
  * Convert `Cesium.LabelGraphics` instance to JSON
  */
-export function LabelGraphicsToJSON(instance?: LabelGraphics, time?: JulianDate): LabelGraphicsJSON | undefined {
+export function LabelGraphicsToJSON(instance?: LabelGraphics, time?: JulianDate, omit?: keyof LabelGraphics): LabelGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -57,27 +57,27 @@ export function LabelGraphicsToJSON(instance?: LabelGraphics, time?: JulianDate)
   return {
     parser: 'LabelGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      text: toPropertyValue(instance.text, time),
-      font: toPropertyValue(instance.font, time),
-      style: LabelStyleToJSON(toPropertyValue(instance.style, time)),
-      scale: toPropertyValue(instance.scale, time),
-      showBackground: toPropertyValue(instance.showBackground, time),
-      backgroundColor: ColorToJSON(toPropertyValue(instance.backgroundColor, time)),
-      backgroundPadding: Cartesian2ToJSON(toPropertyValue(instance.backgroundPadding, time)),
-      pixelOffset: Cartesian2ToJSON(toPropertyValue(instance.pixelOffset, time)),
-      eyeOffset: Cartesian3ToJSON(toPropertyValue(instance.eyeOffset, time)),
-      horizontalOrigin: HorizontalOriginToJSON(toPropertyValue(instance.horizontalOrigin, time)),
-      verticalOrigin: VerticalOriginToJSON(toPropertyValue(instance.verticalOrigin, time)),
-      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
-      fillColor: ColorToJSON(toPropertyValue(instance.fillColor, time)),
-      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
-      outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      translucencyByDistance: NearFarScalarToJSON(toPropertyValue(instance.translucencyByDistance, time)),
-      pixelOffsetScaleByDistance: NearFarScalarToJSON(toPropertyValue(instance.pixelOffsetScaleByDistance, time)),
-      scaleByDistance: NearFarScalarToJSON(toPropertyValue(instance.scaleByDistance, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      disableDepthTestDistance: toPropertyValue(instance.disableDepthTestDistance, time),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      text: omit?.includes('text') ? undefined : toPropertyValue(instance.text, time),
+      font: omit?.includes('font') ? undefined : toPropertyValue(instance.font, time),
+      style: omit?.includes('style') ? undefined : LabelStyleToJSON(toPropertyValue(instance.style, time)),
+      scale: omit?.includes('scale') ? undefined : toPropertyValue(instance.scale, time),
+      showBackground: omit?.includes('showBackground') ? undefined : toPropertyValue(instance.showBackground, time),
+      backgroundColor: omit?.includes('backgroundColor') ? undefined : ColorToJSON(toPropertyValue(instance.backgroundColor, time)),
+      backgroundPadding: omit?.includes('backgroundPadding') ? undefined : Cartesian2ToJSON(toPropertyValue(instance.backgroundPadding, time)),
+      pixelOffset: omit?.includes('pixelOffset') ? undefined : Cartesian2ToJSON(toPropertyValue(instance.pixelOffset, time)),
+      eyeOffset: omit?.includes('eyeOffset') ? undefined : Cartesian3ToJSON(toPropertyValue(instance.eyeOffset, time)),
+      horizontalOrigin: omit?.includes('horizontalOrigin') ? undefined : HorizontalOriginToJSON(toPropertyValue(instance.horizontalOrigin, time)),
+      verticalOrigin: omit?.includes('verticalOrigin') ? undefined : VerticalOriginToJSON(toPropertyValue(instance.verticalOrigin, time)),
+      heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      fillColor: omit?.includes('fillColor') ? undefined : ColorToJSON(toPropertyValue(instance.fillColor, time)),
+      outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
+      translucencyByDistance: omit?.includes('translucencyByDistance') ? undefined : NearFarScalarToJSON(toPropertyValue(instance.translucencyByDistance, time)),
+      pixelOffsetScaleByDistance: omit?.includes('pixelOffsetScaleByDistance') ? undefined : NearFarScalarToJSON(toPropertyValue(instance.pixelOffsetScaleByDistance, time)),
+      scaleByDistance: omit?.includes('scaleByDistance') ? undefined : NearFarScalarToJSON(toPropertyValue(instance.scaleByDistance, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      disableDepthTestDistance: omit?.includes('disableDepthTestDistance') ? undefined : toPropertyValue(instance.disableDepthTestDistance, time),
     },
   };
 }
@@ -87,33 +87,33 @@ export function LabelGraphicsToJSON(instance?: LabelGraphics, time?: JulianDate)
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function LabelGraphicsFromJSON(json?: LabelGraphicsJSON, result?: LabelGraphics): LabelGraphics | undefined {
+export function LabelGraphicsFromJSON(json?: LabelGraphicsJSON, result?: LabelGraphics, omit?: keyof LabelGraphics): LabelGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = LabelGraphicsZodSchema().parse(json);
   const instance = new LabelGraphics({
-    show: json.value.show,
-    text: json.value.text,
-    font: json.value.font,
-    style: LabelStyleFromJSON(json.value.style),
-    scale: json.value.scale,
-    showBackground: json.value.showBackground,
-    backgroundColor: ColorFromJSON(json.value.backgroundColor),
-    backgroundPadding: Cartesian2FromJSON(json.value.backgroundPadding),
-    pixelOffset: Cartesian2FromJSON(json.value.pixelOffset),
-    eyeOffset: Cartesian3FromJSON(json.value.eyeOffset),
-    horizontalOrigin: HorizontalOriginFromJSON(json.value.horizontalOrigin),
-    verticalOrigin: VerticalOriginFromJSON(json.value.verticalOrigin),
-    heightReference: HeightReferenceFromJSON(json.value.heightReference),
-    fillColor: ColorFromJSON(json.value.fillColor),
-    outlineColor: ColorFromJSON(json.value.outlineColor),
-    outlineWidth: json.value.outlineWidth,
-    translucencyByDistance: NearFarScalarFromJSON(json.value.translucencyByDistance),
-    pixelOffsetScaleByDistance: NearFarScalarFromJSON(json.value.pixelOffsetScaleByDistance),
-    scaleByDistance: NearFarScalarFromJSON(json.value.scaleByDistance),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
-    disableDepthTestDistance: json.value.disableDepthTestDistance,
+    show: omit?.includes('show') ? undefined : json.value.show,
+    text: omit?.includes('text') ? undefined : json.value.text,
+    font: omit?.includes('font') ? undefined : json.value.font,
+    style: omit?.includes('style') ? undefined : LabelStyleFromJSON(json.value.style),
+    scale: omit?.includes('scale') ? undefined : json.value.scale,
+    showBackground: omit?.includes('showBackground') ? undefined : json.value.showBackground,
+    backgroundColor: omit?.includes('backgroundColor') ? undefined : ColorFromJSON(json.value.backgroundColor),
+    backgroundPadding: omit?.includes('backgroundPadding') ? undefined : Cartesian2FromJSON(json.value.backgroundPadding),
+    pixelOffset: omit?.includes('pixelOffset') ? undefined : Cartesian2FromJSON(json.value.pixelOffset),
+    eyeOffset: omit?.includes('eyeOffset') ? undefined : Cartesian3FromJSON(json.value.eyeOffset),
+    horizontalOrigin: omit?.includes('horizontalOrigin') ? undefined : HorizontalOriginFromJSON(json.value.horizontalOrigin),
+    verticalOrigin: omit?.includes('verticalOrigin') ? undefined : VerticalOriginFromJSON(json.value.verticalOrigin),
+    heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceFromJSON(json.value.heightReference),
+    fillColor: omit?.includes('fillColor') ? undefined : ColorFromJSON(json.value.fillColor),
+    outlineColor: omit?.includes('outlineColor') ? undefined : ColorFromJSON(json.value.outlineColor),
+    outlineWidth: omit?.includes('outlineWidth') ? undefined : json.value.outlineWidth,
+    translucencyByDistance: omit?.includes('translucencyByDistance') ? undefined : NearFarScalarFromJSON(json.value.translucencyByDistance),
+    pixelOffsetScaleByDistance: omit?.includes('pixelOffsetScaleByDistance') ? undefined : NearFarScalarFromJSON(json.value.pixelOffsetScaleByDistance),
+    scaleByDistance: omit?.includes('scaleByDistance') ? undefined : NearFarScalarFromJSON(json.value.scaleByDistance),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    disableDepthTestDistance: omit?.includes('disableDepthTestDistance') ? undefined : json.value.disableDepthTestDistance,
   });
   return result ? instance.clone(result) : instance;
 }

@@ -37,7 +37,7 @@ export type PolylineGraphicsJSON = z.infer<ReturnType<typeof PolylineGraphicsZod
 /**
  * Convert `Cesium.PolylineGraphics` instance to JSON
  */
-export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: JulianDate): PolylineGraphicsJSON | undefined {
+export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: JulianDate, omit?: keyof PolylineGraphics): PolylineGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -45,18 +45,18 @@ export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: Julia
   return {
     parser: 'PolylineGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3ToJSON(item)),
-      width: toPropertyValue(instance.width, time),
-      granularity: toPropertyValue(instance.granularity, time),
-      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
-      depthFailMaterial: MaterialPropertyToJSON(toPropertyValue(instance.depthFailMaterial, time)),
-      arcType: ArcTypeToJSON(toPropertyValue(instance.arcType, time)),
-      clampToGround: toPropertyValue(instance.clampToGround, time),
-      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      classificationType: ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
-      zIndex: toPropertyValue(instance.zIndex, time),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      positions: omit?.includes('positions') ? undefined : toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3ToJSON(item)),
+      width: omit?.includes('width') ? undefined : toPropertyValue(instance.width, time),
+      granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      depthFailMaterial: omit?.includes('depthFailMaterial') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.depthFailMaterial, time)),
+      arcType: omit?.includes('arcType') ? undefined : ArcTypeToJSON(toPropertyValue(instance.arcType, time)),
+      clampToGround: omit?.includes('clampToGround') ? undefined : toPropertyValue(instance.clampToGround, time),
+      shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      classificationType: omit?.includes('classificationType') ? undefined : ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
+      zIndex: omit?.includes('zIndex') ? undefined : toPropertyValue(instance.zIndex, time),
     },
   };
 }
@@ -66,24 +66,24 @@ export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: Julia
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function PolylineGraphicsFromJSON(json?: PolylineGraphicsJSON, result?: PolylineGraphics): PolylineGraphics | undefined {
+export function PolylineGraphicsFromJSON(json?: PolylineGraphicsJSON, result?: PolylineGraphics, omit?: keyof PolylineGraphics): PolylineGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = PolylineGraphicsZodSchema().parse(json);
   const instance = new PolylineGraphics({
-    show: json.value.show,
-    positions: json.value.positions?.map(item => Cartesian3FromJSON(item)!),
-    width: json.value.width,
-    granularity: json.value.granularity,
-    material: MaterialPropertyFromJSON(json.value.material),
-    depthFailMaterial: MaterialPropertyFromJSON(json.value.depthFailMaterial),
-    arcType: ArcTypeFromJSON(json.value.arcType),
-    clampToGround: json.value.clampToGround,
-    shadows: ShadowModeFromJSON(json.value.shadows),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
-    classificationType: ClassificationTypeFromJSON(json.value.classificationType),
-    zIndex: json.value.zIndex,
+    show: omit?.includes('show') ? undefined : json.value.show,
+    positions: omit?.includes('positions') ? undefined : json.value.positions?.map(item => Cartesian3FromJSON(item)!),
+    width: omit?.includes('width') ? undefined : json.value.width,
+    granularity: omit?.includes('granularity') ? undefined : json.value.granularity,
+    material: omit?.includes('material') ? undefined : MaterialPropertyFromJSON(json.value.material),
+    depthFailMaterial: omit?.includes('depthFailMaterial') ? undefined : MaterialPropertyFromJSON(json.value.depthFailMaterial),
+    arcType: omit?.includes('arcType') ? undefined : ArcTypeFromJSON(json.value.arcType),
+    clampToGround: omit?.includes('clampToGround') ? undefined : json.value.clampToGround,
+    shadows: omit?.includes('shadows') ? undefined : ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    classificationType: omit?.includes('classificationType') ? undefined : ClassificationTypeFromJSON(json.value.classificationType),
+    zIndex: omit?.includes('zIndex') ? undefined : json.value.zIndex,
   });
   return result ? instance.clone(result) : instance;
 }

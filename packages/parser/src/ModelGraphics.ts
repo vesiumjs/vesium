@@ -50,7 +50,7 @@ export type ModelGraphicsJSON = z.infer<ReturnType<typeof ModelGraphicsZodSchema
 /**
  * Convert `Cesium.ModelGraphics` instance to JSON
  */
-export function ModelGraphicsToJSON(instance?: ModelGraphics, time?: JulianDate): ModelGraphicsJSON | undefined {
+export function ModelGraphicsToJSON(instance?: ModelGraphics, time?: JulianDate, omit?: keyof ModelGraphics): ModelGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -58,29 +58,29 @@ export function ModelGraphicsToJSON(instance?: ModelGraphics, time?: JulianDate)
   return {
     parser: 'ModelGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      uri: toPropertyValue(instance.uri, time),
-      scale: toPropertyValue(instance.scale, time),
-      enableVerticalExaggeration: toPropertyValue(instance.enableVerticalExaggeration, time),
-      minimumPixelSize: toPropertyValue(instance.minimumPixelSize, time),
-      maximumScale: toPropertyValue(instance.maximumScale, time),
-      incrementallyLoadTextures: toPropertyValue(instance.incrementallyLoadTextures, time),
-      runAnimations: toPropertyValue(instance.runAnimations, time),
-      clampAnimations: toPropertyValue(instance.clampAnimations, time),
-      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
-      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
-      silhouetteColor: ColorToJSON(toPropertyValue(instance.silhouetteColor, time)),
-      silhouetteSize: toPropertyValue(instance.silhouetteSize, time),
-      color: ColorToJSON(toPropertyValue(instance.color, time)),
-      colorBlendMode: ColorBlendModeToJSON(toPropertyValue(instance.colorBlendMode, time)),
-      colorBlendAmount: toPropertyValue(instance.colorBlendAmount, time),
-      imageBasedLightingFactor: Cartesian2ToJSON(toPropertyValue(instance.imageBasedLightingFactor, time)),
-      lightColor: ColorToJSON(toPropertyValue(instance.lightColor, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      nodeTransformations: PropertyBagToJSON(toPropertyValue(instance.nodeTransformations, time)),
-      articulations: PropertyBagToJSON(toPropertyValue(instance.articulations, time)),
-      clippingPlanes: ClippingPlaneCollectionToJSON(toPropertyValue(instance.clippingPlanes, time)),
-    // customShader: CustomShaderToJSON(toPropertyValue(instance.customShader, time)),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      uri: omit?.includes('uri') ? undefined : toPropertyValue(instance.uri, time),
+      scale: omit?.includes('scale') ? undefined : toPropertyValue(instance.scale, time),
+      enableVerticalExaggeration: omit?.includes('enableVerticalExaggeration') ? undefined : toPropertyValue(instance.enableVerticalExaggeration, time),
+      minimumPixelSize: omit?.includes('minimumPixelSize') ? undefined : toPropertyValue(instance.minimumPixelSize, time),
+      maximumScale: omit?.includes('maximumScale') ? undefined : toPropertyValue(instance.maximumScale, time),
+      incrementallyLoadTextures: omit?.includes('incrementallyLoadTextures') ? undefined : toPropertyValue(instance.incrementallyLoadTextures, time),
+      runAnimations: omit?.includes('runAnimations') ? undefined : toPropertyValue(instance.runAnimations, time),
+      clampAnimations: omit?.includes('clampAnimations') ? undefined : toPropertyValue(instance.clampAnimations, time),
+      shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      silhouetteColor: omit?.includes('silhouetteColor') ? undefined : ColorToJSON(toPropertyValue(instance.silhouetteColor, time)),
+      silhouetteSize: omit?.includes('silhouetteSize') ? undefined : toPropertyValue(instance.silhouetteSize, time),
+      color: omit?.includes('color') ? undefined : ColorToJSON(toPropertyValue(instance.color, time)),
+      colorBlendMode: omit?.includes('colorBlendMode') ? undefined : ColorBlendModeToJSON(toPropertyValue(instance.colorBlendMode, time)),
+      colorBlendAmount: omit?.includes('colorBlendAmount') ? undefined : toPropertyValue(instance.colorBlendAmount, time),
+      imageBasedLightingFactor: omit?.includes('imageBasedLightingFactor') ? undefined : Cartesian2ToJSON(toPropertyValue(instance.imageBasedLightingFactor, time)),
+      lightColor: omit?.includes('lightColor') ? undefined : ColorToJSON(toPropertyValue(instance.lightColor, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      nodeTransformations: omit?.includes('nodeTransformations') ? undefined : PropertyBagToJSON(toPropertyValue(instance.nodeTransformations, time)),
+      articulations: omit?.includes('articulations') ? undefined : PropertyBagToJSON(toPropertyValue(instance.articulations, time)),
+      clippingPlanes: omit?.includes('clippingPlanes') ? undefined : ClippingPlaneCollectionToJSON(toPropertyValue(instance.clippingPlanes, time)),
+    // customShader: omit?.includes('customShader') ? undefined :CustomShaderToJSON(toPropertyValue(instance.customShader, time)),
     },
   };
 }
@@ -90,35 +90,35 @@ export function ModelGraphicsToJSON(instance?: ModelGraphics, time?: JulianDate)
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function ModelGraphicsFromJSON(json?: ModelGraphicsJSON, result?: ModelGraphics): ModelGraphics | undefined {
+export function ModelGraphicsFromJSON(json?: ModelGraphicsJSON, result?: ModelGraphics, omit?: keyof ModelGraphics): ModelGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = ModelGraphicsZodSchema().parse(json);
   const instance = new ModelGraphics({
-    show: json.value.show,
-    uri: json.value.uri,
-    scale: json.value.scale,
-    enableVerticalExaggeration: json.value.enableVerticalExaggeration,
-    minimumPixelSize: json.value.minimumPixelSize,
-    maximumScale: json.value.maximumScale,
-    incrementallyLoadTextures: json.value.incrementallyLoadTextures,
-    runAnimations: json.value.runAnimations,
-    clampAnimations: json.value.clampAnimations,
-    shadows: ShadowModeFromJSON(json.value.shadows),
-    heightReference: HeightReferenceFromJSON(json.value.heightReference),
-    silhouetteColor: ColorFromJSON(json.value.silhouetteColor),
-    silhouetteSize: json.value.silhouetteSize,
-    color: ColorFromJSON(json.value.color),
-    colorBlendMode: ColorBlendModeFromJSON(json.value.colorBlendMode),
-    colorBlendAmount: json.value.colorBlendAmount,
-    imageBasedLightingFactor: Cartesian2FromJSON(json.value.imageBasedLightingFactor),
-    lightColor: ColorFromJSON(json.value.lightColor),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
-    nodeTransformations: PropertyBagFromJSON(json.value.nodeTransformations),
-    articulations: PropertyBagFromJSON(json.value.articulations),
-    clippingPlanes: ClippingPlaneCollectionFromJSON(json.value.clippingPlanes),
-    // customShader: CustomShaderFromJSON(json.value.customShader),
+    show: omit?.includes('show') ? undefined : json.value.show,
+    uri: omit?.includes('uri') ? undefined : json.value.uri,
+    scale: omit?.includes('scale') ? undefined : json.value.scale,
+    enableVerticalExaggeration: omit?.includes('enableVerticalExaggeration') ? undefined : json.value.enableVerticalExaggeration,
+    minimumPixelSize: omit?.includes('minimumPixelSize') ? undefined : json.value.minimumPixelSize,
+    maximumScale: omit?.includes('maximumScale') ? undefined : json.value.maximumScale,
+    incrementallyLoadTextures: omit?.includes('incrementallyLoadTextures') ? undefined : json.value.incrementallyLoadTextures,
+    runAnimations: omit?.includes('runAnimations') ? undefined : json.value.runAnimations,
+    clampAnimations: omit?.includes('clampAnimations') ? undefined : json.value.clampAnimations,
+    shadows: omit?.includes('shadows') ? undefined : ShadowModeFromJSON(json.value.shadows),
+    heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceFromJSON(json.value.heightReference),
+    silhouetteColor: omit?.includes('silhouetteColor') ? undefined : ColorFromJSON(json.value.silhouetteColor),
+    silhouetteSize: omit?.includes('silhouetteSize') ? undefined : json.value.silhouetteSize,
+    color: omit?.includes('color') ? undefined : ColorFromJSON(json.value.color),
+    colorBlendMode: omit?.includes('colorBlendMode') ? undefined : ColorBlendModeFromJSON(json.value.colorBlendMode),
+    colorBlendAmount: omit?.includes('colorBlendAmount') ? undefined : json.value.colorBlendAmount,
+    imageBasedLightingFactor: omit?.includes('imageBasedLightingFactor') ? undefined : Cartesian2FromJSON(json.value.imageBasedLightingFactor),
+    lightColor: omit?.includes('lightColor') ? undefined : ColorFromJSON(json.value.lightColor),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    nodeTransformations: omit?.includes('nodeTransformations') ? undefined : PropertyBagFromJSON(json.value.nodeTransformations),
+    articulations: omit?.includes('articulations') ? undefined : PropertyBagFromJSON(json.value.articulations),
+    clippingPlanes: omit?.includes('clippingPlanes') ? undefined : ClippingPlaneCollectionFromJSON(json.value.clippingPlanes),
+    // customShader: omit?.includes('customShader') ? undefined :CustomShaderFromJSON(json.value.customShader),
   });
   return result ? instance.clone(result) : instance;
 }

@@ -43,7 +43,7 @@ export type EllipsoidGraphicsJSON = z.infer<ReturnType<typeof EllipsoidGraphicsZ
 /**
  * Convert `Cesium.EllipsoidGraphics` instance to JSON
  */
-export function EllipsoidGraphicsToJSON(instance?: EllipsoidGraphics, time?: JulianDate): EllipsoidGraphicsJSON | undefined {
+export function EllipsoidGraphicsToJSON(instance?: EllipsoidGraphics, time?: JulianDate, omit?: keyof EllipsoidGraphics): EllipsoidGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -51,24 +51,24 @@ export function EllipsoidGraphicsToJSON(instance?: EllipsoidGraphics, time?: Jul
   return {
     parser: 'EllipsoidGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      radii: Cartesian3ToJSON(toPropertyValue(instance.radii, time)),
-      innerRadii: Cartesian3ToJSON(toPropertyValue(instance.innerRadii, time)),
-      minimumClock: toPropertyValue(instance.minimumClock, time),
-      maximumClock: toPropertyValue(instance.maximumClock, time),
-      minimumCone: toPropertyValue(instance.minimumCone, time),
-      maximumCone: toPropertyValue(instance.maximumCone, time),
-      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
-      fill: toPropertyValue(instance.fill, time),
-      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
-      outline: toPropertyValue(instance.outline, time),
-      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
-      outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      stackPartitions: toPropertyValue(instance.stackPartitions, time),
-      slicePartitions: toPropertyValue(instance.slicePartitions, time),
-      subdivisions: toPropertyValue(instance.subdivisions, time),
-      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      radii: omit?.includes('radii') ? undefined : Cartesian3ToJSON(toPropertyValue(instance.radii, time)),
+      innerRadii: omit?.includes('innerRadii') ? undefined : Cartesian3ToJSON(toPropertyValue(instance.innerRadii, time)),
+      minimumClock: omit?.includes('minimumClock') ? undefined : toPropertyValue(instance.minimumClock, time),
+      maximumClock: omit?.includes('maximumClock') ? undefined : toPropertyValue(instance.maximumClock, time),
+      minimumCone: omit?.includes('minimumCone') ? undefined : toPropertyValue(instance.minimumCone, time),
+      maximumCone: omit?.includes('maximumCone') ? undefined : toPropertyValue(instance.maximumCone, time),
+      heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
+      outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
+      stackPartitions: omit?.includes('stackPartitions') ? undefined : toPropertyValue(instance.stackPartitions, time),
+      slicePartitions: omit?.includes('slicePartitions') ? undefined : toPropertyValue(instance.slicePartitions, time),
+      subdivisions: omit?.includes('subdivisions') ? undefined : toPropertyValue(instance.subdivisions, time),
+      shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
     },
   };
 }
@@ -78,30 +78,30 @@ export function EllipsoidGraphicsToJSON(instance?: EllipsoidGraphics, time?: Jul
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function EllipsoidGraphicsFromJSON(json?: EllipsoidGraphicsJSON, result?: EllipsoidGraphics): EllipsoidGraphics | undefined {
+export function EllipsoidGraphicsFromJSON(json?: EllipsoidGraphicsJSON, result?: EllipsoidGraphics, omit?: keyof EllipsoidGraphics): EllipsoidGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = EllipsoidGraphicsZodSchema().parse(json);
   const instance = new EllipsoidGraphics({
-    show: json.value.show,
-    radii: Cartesian3FromJSON(json.value.radii),
-    innerRadii: Cartesian3FromJSON(json.value.innerRadii),
-    minimumClock: json.value.minimumClock,
-    maximumClock: json.value.maximumClock,
-    minimumCone: json.value.minimumCone,
-    maximumCone: json.value.maximumCone,
-    heightReference: HeightReferenceFromJSON(json.value.heightReference),
-    fill: json.value.fill,
-    material: MaterialPropertyFromJSON(json.value.material),
-    outline: json.value.outline,
-    outlineColor: ColorFromJSON(json.value.outlineColor),
-    outlineWidth: json.value.outlineWidth,
-    stackPartitions: json.value.stackPartitions,
-    slicePartitions: json.value.slicePartitions,
-    subdivisions: json.value.subdivisions,
-    shadows: ShadowModeFromJSON(json.value.shadows),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    show: omit?.includes('show') ? undefined : json.value.show,
+    radii: omit?.includes('radii') ? undefined : Cartesian3FromJSON(json.value.radii),
+    innerRadii: omit?.includes('innerRadii') ? undefined : Cartesian3FromJSON(json.value.innerRadii),
+    minimumClock: omit?.includes('minimumClock') ? undefined : json.value.minimumClock,
+    maximumClock: omit?.includes('maximumClock') ? undefined : json.value.maximumClock,
+    minimumCone: omit?.includes('minimumCone') ? undefined : json.value.minimumCone,
+    maximumCone: omit?.includes('maximumCone') ? undefined : json.value.maximumCone,
+    heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceFromJSON(json.value.heightReference),
+    fill: omit?.includes('fill') ? undefined : json.value.fill,
+    material: omit?.includes('material') ? undefined : MaterialPropertyFromJSON(json.value.material),
+    outline: omit?.includes('outline') ? undefined : json.value.outline,
+    outlineColor: omit?.includes('outlineColor') ? undefined : ColorFromJSON(json.value.outlineColor),
+    outlineWidth: omit?.includes('outlineWidth') ? undefined : json.value.outlineWidth,
+    stackPartitions: omit?.includes('stackPartitions') ? undefined : json.value.stackPartitions,
+    slicePartitions: omit?.includes('slicePartitions') ? undefined : json.value.slicePartitions,
+    subdivisions: omit?.includes('subdivisions') ? undefined : json.value.subdivisions,
+    shadows: omit?.includes('shadows') ? undefined : ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
   });
   return result ? instance.clone(result) : instance;
 }

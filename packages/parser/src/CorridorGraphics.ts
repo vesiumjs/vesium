@@ -45,7 +45,7 @@ export type CorridorGraphicsJSON = z.infer<ReturnType<typeof CorridorGraphicsZod
 /**
  * Convert `Cesium.CorridorGraphics` instance to JSON
  */
-export function CorridorGraphicsToJSON(instance?: CorridorGraphics, time?: JulianDate): CorridorGraphicsJSON | undefined {
+export function CorridorGraphicsToJSON(instance?: CorridorGraphics, time?: JulianDate, omit?: keyof CorridorGraphics): CorridorGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -53,24 +53,24 @@ export function CorridorGraphicsToJSON(instance?: CorridorGraphics, time?: Julia
   return {
     parser: 'CorridorGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3ToJSON(item)),
-      width: toPropertyValue(instance.width, time),
-      height: toPropertyValue(instance.height, time),
-      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
-      extrudedHeight: toPropertyValue(instance.extrudedHeight, time),
-      extrudedHeightReference: HeightReferenceToJSON(toPropertyValue(instance.extrudedHeightReference, time)),
-      cornerType: CornerTypeToJSON(toPropertyValue(instance.cornerType, time)),
-      granularity: toPropertyValue(instance.granularity, time),
-      fill: toPropertyValue(instance.fill, time),
-      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
-      outline: toPropertyValue(instance.outline, time),
-      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
-      outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      classificationType: ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
-      zIndex: toPropertyValue(instance.zIndex, time),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      positions: omit?.includes('positions') ? undefined : toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3ToJSON(item)),
+      width: omit?.includes('width') ? undefined : toPropertyValue(instance.width, time),
+      height: omit?.includes('height') ? undefined : toPropertyValue(instance.height, time),
+      heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      extrudedHeight: omit?.includes('extrudedHeight') ? undefined : toPropertyValue(instance.extrudedHeight, time),
+      extrudedHeightReference: omit?.includes('extrudedHeightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.extrudedHeightReference, time)),
+      cornerType: omit?.includes('cornerType') ? undefined : CornerTypeToJSON(toPropertyValue(instance.cornerType, time)),
+      granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
+      fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
+      outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
+      shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      classificationType: omit?.includes('classificationType') ? undefined : ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
+      zIndex: omit?.includes('zIndex') ? undefined : toPropertyValue(instance.zIndex, time),
     },
   };
 }
@@ -80,30 +80,30 @@ export function CorridorGraphicsToJSON(instance?: CorridorGraphics, time?: Julia
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function CorridorGraphicsFromJSON(json?: CorridorGraphicsJSON, result?: CorridorGraphics): CorridorGraphics | undefined {
+export function CorridorGraphicsFromJSON(json?: CorridorGraphicsJSON, result?: CorridorGraphics, omit?: keyof CorridorGraphics): CorridorGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = CorridorGraphicsZodSchema().parse(json);
   const instance = new CorridorGraphics({
-    show: json.value.show,
-    positions: json.value.positions?.map(item => Cartesian3FromJSON(item)!),
-    width: json.value.width,
-    height: json.value.height,
-    heightReference: HeightReferenceFromJSON(json.value.heightReference),
-    extrudedHeight: json.value.extrudedHeight,
-    extrudedHeightReference: HeightReferenceFromJSON(json.value.extrudedHeightReference),
-    cornerType: CornerTypeFromJSON(json.value.cornerType),
-    granularity: json.value.granularity,
-    fill: json.value.fill,
-    material: MaterialPropertyFromJSON(json.value.material),
-    outline: json.value.outline,
-    outlineColor: ColorFromJSON(json.value.outlineColor),
-    outlineWidth: json.value.outlineWidth,
-    shadows: ShadowModeFromJSON(json.value.shadows),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
-    classificationType: ClassificationTypeFromJSON(json.value.classificationType),
-    zIndex: json.value.zIndex,
+    show: omit?.includes('show') ? undefined : json.value.show,
+    positions: omit?.includes('positions') ? undefined : json.value.positions?.map(item => Cartesian3FromJSON(item)!),
+    width: omit?.includes('width') ? undefined : json.value.width,
+    height: omit?.includes('height') ? undefined : json.value.height,
+    heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceFromJSON(json.value.heightReference),
+    extrudedHeight: omit?.includes('extrudedHeight') ? undefined : json.value.extrudedHeight,
+    extrudedHeightReference: omit?.includes('extrudedHeightReference') ? undefined : HeightReferenceFromJSON(json.value.extrudedHeightReference),
+    cornerType: omit?.includes('cornerType') ? undefined : CornerTypeFromJSON(json.value.cornerType),
+    granularity: omit?.includes('granularity') ? undefined : json.value.granularity,
+    fill: omit?.includes('fill') ? undefined : json.value.fill,
+    material: omit?.includes('material') ? undefined : MaterialPropertyFromJSON(json.value.material),
+    outline: omit?.includes('outline') ? undefined : json.value.outline,
+    outlineColor: omit?.includes('outlineColor') ? undefined : ColorFromJSON(json.value.outlineColor),
+    outlineWidth: omit?.includes('outlineWidth') ? undefined : json.value.outlineWidth,
+    shadows: omit?.includes('shadows') ? undefined : ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    classificationType: omit?.includes('classificationType') ? undefined : ClassificationTypeFromJSON(json.value.classificationType),
+    zIndex: omit?.includes('zIndex') ? undefined : json.value.zIndex,
   });
   return result ? instance.clone(result) : instance;
 }

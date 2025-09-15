@@ -68,7 +68,7 @@ export type EntityJSON = z.infer<ReturnType<typeof EntityZodSchema>>;
 /**
  * Convert `Cesium.Entity` instance to JSON
  */
-export function EntityToJSON(instance?: Entity, time?: JulianDate): EntityJSON | undefined {
+export function EntityToJSON(instance?: Entity, time?: JulianDate, omit?: keyof Entity): EntityJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -76,32 +76,32 @@ export function EntityToJSON(instance?: Entity, time?: JulianDate): EntityJSON |
   return {
     parser: 'Entity',
     value: {
-      id: instance.id,
-      name: instance.name,
-      availability: TimeIntervalCollectionToJSON(instance.availability),
-      show: !!instance.show,
-      description: toPropertyValue(instance.description, time),
-      position: PositionPropertyToJSON(instance.position),
-      orientation: QuaternionToJSON(toPropertyValue(instance.orientation, time)),
-      viewFrom: Cartesian3ToJSON(toPropertyValue(instance.viewFrom, time)),
-      billboard: BillboardGraphicsToJSON(instance.billboard),
-      box: BoxGraphicsToJSON(instance.box),
-      corridor: CorridorGraphicsToJSON(instance.corridor),
-      cylinder: CylinderGraphicsToJSON(instance.cylinder),
-      ellipse: EllipseGraphicsToJSON(instance.ellipse),
-      ellipsoid: EllipsoidGraphicsToJSON(instance.ellipsoid),
-      label: LabelGraphicsToJSON(instance.label),
-      model: ModelGraphicsToJSON(instance.model),
-      tileset: Cesium3DTilesetGraphicsToJSON(instance.tileset),
-      path: PathGraphicsToJSON(instance.path),
-      plane: PlaneGraphicsToJSON(instance.plane),
-      point: PointGraphicsToJSON(instance.point),
-      polygon: PolygonGraphicsToJSON(instance.polygon),
-      polyline: PolylineGraphicsToJSON(instance.polyline),
-      properties: PropertyBagToJSON(instance.properties),
-      polylineVolume: PolylineVolumeGraphicsToJSON(instance.polylineVolume),
-      rectangle: RectangleGraphicsToJSON(instance.rectangle),
-      wall: WallGraphicsToJSON(instance.wall),
+      id: omit?.includes('id') ? undefined : instance.id,
+      name: omit?.includes('name') ? undefined : instance.name,
+      availability: omit?.includes('availability') ? undefined : TimeIntervalCollectionToJSON(instance.availability),
+      show: omit?.includes('show') ? undefined : !!instance.show,
+      description: omit?.includes('description') ? undefined : toPropertyValue(instance.description, time),
+      position: omit?.includes('position') ? undefined : PositionPropertyToJSON(instance.position),
+      orientation: omit?.includes('orientation') ? undefined : QuaternionToJSON(toPropertyValue(instance.orientation, time)),
+      viewFrom: omit?.includes('viewFrom') ? undefined : Cartesian3ToJSON(toPropertyValue(instance.viewFrom, time)),
+      billboard: omit?.includes('billboard') ? undefined : BillboardGraphicsToJSON(instance.billboard),
+      box: omit?.includes('box') ? undefined : BoxGraphicsToJSON(instance.box),
+      corridor: omit?.includes('corridor') ? undefined : CorridorGraphicsToJSON(instance.corridor),
+      cylinder: omit?.includes('cylinder') ? undefined : CylinderGraphicsToJSON(instance.cylinder),
+      ellipse: omit?.includes('ellipse') ? undefined : EllipseGraphicsToJSON(instance.ellipse),
+      ellipsoid: omit?.includes('ellipsoid') ? undefined : EllipsoidGraphicsToJSON(instance.ellipsoid),
+      label: omit?.includes('label') ? undefined : LabelGraphicsToJSON(instance.label),
+      model: omit?.includes('model') ? undefined : ModelGraphicsToJSON(instance.model),
+      tileset: omit?.includes('tileset') ? undefined : Cesium3DTilesetGraphicsToJSON(instance.tileset),
+      path: omit?.includes('path') ? undefined : PathGraphicsToJSON(instance.path),
+      plane: omit?.includes('plane') ? undefined : PlaneGraphicsToJSON(instance.plane),
+      point: omit?.includes('point') ? undefined : PointGraphicsToJSON(instance.point),
+      polygon: omit?.includes('polygon') ? undefined : PolygonGraphicsToJSON(instance.polygon),
+      polyline: omit?.includes('polyline') ? undefined : PolylineGraphicsToJSON(instance.polyline),
+      properties: omit?.includes('properties') ? undefined : PropertyBagToJSON(instance.properties),
+      polylineVolume: omit?.includes('polylineVolume') ? undefined : PolylineVolumeGraphicsToJSON(instance.polylineVolume),
+      rectangle: omit?.includes('rectangle') ? undefined : RectangleGraphicsToJSON(instance.rectangle),
+      wall: omit?.includes('wall') ? undefined : WallGraphicsToJSON(instance.wall),
     },
   };
 }
@@ -109,38 +109,38 @@ export function EntityToJSON(instance?: Entity, time?: JulianDate): EntityJSON |
 /**
  * Convert JSON to `Cesium.Entity` instance
  */
-export function EntityFromJSON(json?: EntityJSON): Entity | undefined {
+export function EntityFromJSON(json?: EntityJSON, omit?: keyof Entity): Entity | undefined {
   if (!json) {
     return undefined;
   }
   json = EntityZodSchema().parse(json);
   const instance = new Entity({
-    id: json.value.id,
-    name: json.value.name,
-    availability: TimeIntervalCollectionFromJSON(json.value.availability),
-    show: json.value.show,
-    description: json.value.description,
-    position: PositionPropertyFromJSON(json.value.position),
-    orientation: QuaternionFromJSON((json.value.orientation)),
-    viewFrom: Cartesian3FromJSON(json.value.viewFrom),
-    billboard: BillboardGraphicsFromJSON(json.value.billboard),
-    box: BoxGraphicsFromJSON(json.value.box),
-    corridor: CorridorGraphicsFromJSON(json.value.corridor),
-    cylinder: CylinderGraphicsFromJSON(json.value.cylinder),
-    ellipse: EllipseGraphicsFromJSON(json.value.ellipse),
-    ellipsoid: EllipsoidGraphicsFromJSON(json.value.ellipsoid),
-    label: LabelGraphicsFromJSON(json.value.label),
-    model: ModelGraphicsFromJSON(json.value.model),
-    tileset: Cesium3DTilesetGraphicsFromJSON(json.value.tileset),
-    path: PathGraphicsFromJSON(json.value.path),
-    plane: PlaneGraphicsFromJSON(json.value.plane),
-    point: PointGraphicsFromJSON(json.value.point),
-    polygon: PolygonGraphicsFromJSON(json.value.polygon),
-    polyline: PolylineGraphicsFromJSON(json.value.polyline),
-    properties: PropertyBagFromJSON(json.value.properties),
-    polylineVolume: PolylineVolumeGraphicsFromJSON(json.value.polylineVolume),
-    rectangle: RectangleGraphicsFromJSON(json.value.rectangle),
-    wall: WallGraphicsFromJSON(json.value.wall),
+    id: omit?.includes('id') ? undefined : json.value.id,
+    name: omit?.includes('name') ? undefined : json.value.name,
+    availability: omit?.includes('availability') ? undefined : TimeIntervalCollectionFromJSON(json.value.availability),
+    show: omit?.includes('show') ? undefined : json.value.show,
+    description: omit?.includes('description') ? undefined : json.value.description,
+    position: omit?.includes('position') ? undefined : PositionPropertyFromJSON(json.value.position),
+    orientation: omit?.includes('orientation') ? undefined : QuaternionFromJSON((json.value.orientation)),
+    viewFrom: omit?.includes('viewFrom') ? undefined : Cartesian3FromJSON(json.value.viewFrom),
+    billboard: omit?.includes('billboard') ? undefined : BillboardGraphicsFromJSON(json.value.billboard),
+    box: omit?.includes('box') ? undefined : BoxGraphicsFromJSON(json.value.box),
+    corridor: omit?.includes('corridor') ? undefined : CorridorGraphicsFromJSON(json.value.corridor),
+    cylinder: omit?.includes('cylinder') ? undefined : CylinderGraphicsFromJSON(json.value.cylinder),
+    ellipse: omit?.includes('ellipse') ? undefined : EllipseGraphicsFromJSON(json.value.ellipse),
+    ellipsoid: omit?.includes('ellipsoid') ? undefined : EllipsoidGraphicsFromJSON(json.value.ellipsoid),
+    label: omit?.includes('label') ? undefined : LabelGraphicsFromJSON(json.value.label),
+    model: omit?.includes('model') ? undefined : ModelGraphicsFromJSON(json.value.model),
+    tileset: omit?.includes('tileset') ? undefined : Cesium3DTilesetGraphicsFromJSON(json.value.tileset),
+    path: omit?.includes('path') ? undefined : PathGraphicsFromJSON(json.value.path),
+    plane: omit?.includes('plane') ? undefined : PlaneGraphicsFromJSON(json.value.plane),
+    point: omit?.includes('point') ? undefined : PointGraphicsFromJSON(json.value.point),
+    polygon: omit?.includes('polygon') ? undefined : PolygonGraphicsFromJSON(json.value.polygon),
+    polyline: omit?.includes('polyline') ? undefined : PolylineGraphicsFromJSON(json.value.polyline),
+    properties: omit?.includes('properties') ? undefined : PropertyBagFromJSON(json.value.properties),
+    polylineVolume: omit?.includes('polylineVolume') ? undefined : PolylineVolumeGraphicsFromJSON(json.value.polylineVolume),
+    rectangle: omit?.includes('rectangle') ? undefined : RectangleGraphicsFromJSON(json.value.rectangle),
+    wall: omit?.includes('wall') ? undefined : WallGraphicsFromJSON(json.value.wall),
   });
   return instance;
 }

@@ -49,7 +49,7 @@ export type PolygonGraphicsJSON = z.infer<ReturnType<typeof PolygonGraphicsZodSc
 /**
  * Convert `Cesium.PolygonGraphics` instance to JSON
  */
-export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianDate): PolygonGraphicsJSON | undefined {
+export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianDate, omit?: keyof PolygonGraphics): PolygonGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -57,28 +57,28 @@ export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianD
   return {
     parser: 'PolygonGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      hierarchy: PolygonHierarchyToJSON(toPropertyValue(instance.hierarchy, time)),
-      height: toPropertyValue(instance.height, time),
-      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
-      extrudedHeight: toPropertyValue(instance.extrudedHeight, time),
-      extrudedHeightReference: HeightReferenceToJSON(toPropertyValue(instance.extrudedHeightReference, time)),
-      stRotation: toPropertyValue(instance.stRotation, time),
-      granularity: toPropertyValue(instance.granularity, time),
-      fill: toPropertyValue(instance.fill, time),
-      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
-      outline: toPropertyValue(instance.outline, time),
-      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
-      outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      perPositionHeight: toPropertyValue(instance.perPositionHeight, time),
-      closeTop: toPropertyValue(instance.closeTop, time),
-      closeBottom: toPropertyValue(instance.closeBottom, time),
-      arcType: ArcTypeToJSON(toPropertyValue(instance.arcType, time)),
-      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      classificationType: ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
-      zIndex: toPropertyValue(instance.zIndex, time),
-      textureCoordinates: PolygonHierarchyToJSON(toPropertyValue(instance.textureCoordinates, time)),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      hierarchy: omit?.includes('hierarchy') ? undefined : PolygonHierarchyToJSON(toPropertyValue(instance.hierarchy, time)),
+      height: omit?.includes('height') ? undefined : toPropertyValue(instance.height, time),
+      heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      extrudedHeight: omit?.includes('extrudedHeight') ? undefined : toPropertyValue(instance.extrudedHeight, time),
+      extrudedHeightReference: omit?.includes('extrudedHeightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.extrudedHeightReference, time)),
+      stRotation: omit?.includes('stRotation') ? undefined : toPropertyValue(instance.stRotation, time),
+      granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
+      fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
+      outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
+      perPositionHeight: omit?.includes('perPositionHeight') ? undefined : toPropertyValue(instance.perPositionHeight, time),
+      closeTop: omit?.includes('closeTop') ? undefined : toPropertyValue(instance.closeTop, time),
+      closeBottom: omit?.includes('closeBottom') ? undefined : toPropertyValue(instance.closeBottom, time),
+      arcType: omit?.includes('arcType') ? undefined : ArcTypeToJSON(toPropertyValue(instance.arcType, time)),
+      shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      classificationType: omit?.includes('classificationType') ? undefined : ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
+      zIndex: omit?.includes('zIndex') ? undefined : toPropertyValue(instance.zIndex, time),
+      textureCoordinates: omit?.includes('textureCoordinates') ? undefined : PolygonHierarchyToJSON(toPropertyValue(instance.textureCoordinates, time)),
     },
   };
 }
@@ -88,34 +88,34 @@ export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianD
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function PolygonGraphicsFromJSON(json?: PolygonGraphicsJSON, result?: PolygonGraphics): PolygonGraphics | undefined {
+export function PolygonGraphicsFromJSON(json?: PolygonGraphicsJSON, result?: PolygonGraphics, omit?: keyof PolygonGraphics): PolygonGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = PolygonGraphicsZodSchema().parse(json);
   const instance = new PolygonGraphics({
-    show: json.value.show,
-    hierarchy: PolygonHierarchyFromJSON(json.value.hierarchy),
-    height: json.value.height,
-    heightReference: HeightReferenceFromJSON(json.value.heightReference),
-    extrudedHeight: json.value.extrudedHeight,
-    extrudedHeightReference: HeightReferenceFromJSON(json.value.extrudedHeightReference),
-    stRotation: json.value.stRotation,
-    granularity: json.value.granularity,
-    fill: json.value.fill,
-    material: MaterialPropertyFromJSON(json.value.material),
-    outline: json.value.outline,
-    outlineColor: ColorFromJSON(json.value.outlineColor),
-    outlineWidth: json.value.outlineWidth,
-    perPositionHeight: json.value.perPositionHeight,
-    closeTop: json.value.closeTop,
-    closeBottom: json.value.closeBottom,
-    arcType: ArcTypeFromJSON(json.value.arcType),
-    shadows: ShadowModeFromJSON(json.value.shadows),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
-    classificationType: ClassificationTypeFromJSON(json.value.classificationType),
-    zIndex: json.value.zIndex,
-    textureCoordinates: PolygonHierarchyFromJSON(json.value.textureCoordinates),
+    show: omit?.includes('show') ? undefined : json.value.show,
+    hierarchy: omit?.includes('hierarchy') ? undefined : PolygonHierarchyFromJSON(json.value.hierarchy),
+    height: omit?.includes('height') ? undefined : json.value.height,
+    heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceFromJSON(json.value.heightReference),
+    extrudedHeight: omit?.includes('extrudedHeight') ? undefined : json.value.extrudedHeight,
+    extrudedHeightReference: omit?.includes('extrudedHeightReference') ? undefined : HeightReferenceFromJSON(json.value.extrudedHeightReference),
+    stRotation: omit?.includes('stRotation') ? undefined : json.value.stRotation,
+    granularity: omit?.includes('granularity') ? undefined : json.value.granularity,
+    fill: omit?.includes('fill') ? undefined : json.value.fill,
+    material: omit?.includes('material') ? undefined : MaterialPropertyFromJSON(json.value.material),
+    outline: omit?.includes('outline') ? undefined : json.value.outline,
+    outlineColor: omit?.includes('outlineColor') ? undefined : ColorFromJSON(json.value.outlineColor),
+    outlineWidth: omit?.includes('outlineWidth') ? undefined : json.value.outlineWidth,
+    perPositionHeight: omit?.includes('perPositionHeight') ? undefined : json.value.perPositionHeight,
+    closeTop: omit?.includes('closeTop') ? undefined : json.value.closeTop,
+    closeBottom: omit?.includes('closeBottom') ? undefined : json.value.closeBottom,
+    arcType: omit?.includes('arcType') ? undefined : ArcTypeFromJSON(json.value.arcType),
+    shadows: omit?.includes('shadows') ? undefined : ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    classificationType: omit?.includes('classificationType') ? undefined : ClassificationTypeFromJSON(json.value.classificationType),
+    zIndex: omit?.includes('zIndex') ? undefined : json.value.zIndex,
+    textureCoordinates: omit?.includes('textureCoordinates') ? undefined : PolygonHierarchyFromJSON(json.value.textureCoordinates),
   });
   return result ? instance.clone(result) : instance;
 }

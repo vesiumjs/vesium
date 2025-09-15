@@ -36,7 +36,7 @@ export type WallGraphicsJSON = z.infer<ReturnType<typeof WallGraphicsZodSchema>>
 /**
  * Convert `Cesium.WallGraphics` instance to JSON
  */
-export function WallGraphicsToJSON(instance?: WallGraphics, time?: JulianDate): WallGraphicsJSON | undefined {
+export function WallGraphicsToJSON(instance?: WallGraphics, time?: JulianDate, omit?: keyof WallGraphics): WallGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -44,18 +44,18 @@ export function WallGraphicsToJSON(instance?: WallGraphics, time?: JulianDate): 
   return {
     parser: 'WallGraphics',
     value: {
-      show: toPropertyValue(instance.show, time),
-      positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3ToJSON(item)),
-      minimumHeights: toPropertyValue(instance.minimumHeights, time),
-      maximumHeights: toPropertyValue(instance.maximumHeights, time),
-      granularity: toPropertyValue(instance.granularity, time),
-      fill: toPropertyValue(instance.fill, time),
-      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
-      outline: toPropertyValue(instance.outline, time),
-      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
-      outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      positions: omit?.includes('positions') ? undefined : toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3ToJSON(item)),
+      minimumHeights: omit?.includes('minimumHeights') ? undefined : toPropertyValue(instance.minimumHeights, time),
+      maximumHeights: omit?.includes('maximumHeights') ? undefined : toPropertyValue(instance.maximumHeights, time),
+      granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
+      fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
+      outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
+      shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
     },
   };
 }
@@ -65,24 +65,24 @@ export function WallGraphicsToJSON(instance?: WallGraphics, time?: JulianDate): 
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function WallGraphicsFromJSON(json?: WallGraphicsJSON, result?: WallGraphics): WallGraphics | undefined {
+export function WallGraphicsFromJSON(json?: WallGraphicsJSON, result?: WallGraphics, omit?: keyof WallGraphics): WallGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = WallGraphicsZodSchema().parse(json);
   const instance = new WallGraphics({
-    show: json.value.show,
-    positions: json.value.positions?.map(item => Cartesian3FromJSON(item)!),
-    minimumHeights: json.value.minimumHeights,
-    maximumHeights: json.value.maximumHeights,
-    granularity: json.value.granularity,
-    fill: json.value.fill,
-    material: MaterialPropertyFromJSON(json.value.material),
-    outline: json.value.outline,
-    outlineColor: ColorFromJSON(json.value.outlineColor),
-    outlineWidth: json.value.outlineWidth,
-    shadows: ShadowModeFromJSON(json.value.shadows),
-    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    show: omit?.includes('show') ? undefined : json.value.show,
+    positions: omit?.includes('positions') ? undefined : json.value.positions?.map(item => Cartesian3FromJSON(item)!),
+    minimumHeights: omit?.includes('minimumHeights') ? undefined : json.value.minimumHeights,
+    maximumHeights: omit?.includes('maximumHeights') ? undefined : json.value.maximumHeights,
+    granularity: omit?.includes('granularity') ? undefined : json.value.granularity,
+    fill: omit?.includes('fill') ? undefined : json.value.fill,
+    material: omit?.includes('material') ? undefined : MaterialPropertyFromJSON(json.value.material),
+    outline: omit?.includes('outline') ? undefined : json.value.outline,
+    outlineColor: omit?.includes('outlineColor') ? undefined : ColorFromJSON(json.value.outlineColor),
+    outlineWidth: omit?.includes('outlineWidth') ? undefined : json.value.outlineWidth,
+    shadows: omit?.includes('shadows') ? undefined : ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
   });
   return result ? instance.clone(result) : instance;
 }
