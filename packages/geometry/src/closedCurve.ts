@@ -1,4 +1,4 @@
-import type { CoordArray } from 'vesium';
+import type { CoordArray } from '@vesium/shared';
 import { FITTING_COUNT, getBisectorNormals, getCubicValue } from './helper';
 /**
  * 闭合曲面

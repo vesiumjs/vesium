@@ -1,4 +1,4 @@
-import type { CoordArray } from 'vesium';
+import type { CoordArray } from '@vesium/shared';
 
 /**
  * 斜矩形1

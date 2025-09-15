@@ -1,4 +1,4 @@
-import type { CoordArray } from 'vesium';
+import type { CoordArray } from '@vesium/shared';
 
 /**
  * 规则矩形

@@ -1,4 +1,4 @@
-import type { CoordArray } from 'vesium';
+import type { CoordArray } from '@vesium/shared';
 
 export const FITTING_COUNT = 100;
 export const HALF_PI = Math.PI / 2;

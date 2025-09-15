@@ -1,4 +1,4 @@
-import type { CoordArray } from 'vesium';
+import type { CoordArray } from '@vesium/shared';
 import { getArcCoords, getAzimuth, getCircleCenterOfThreeCoords, isClockWise, mathDistance } from './helper';
 
 /**

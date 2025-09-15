@@ -1,4 +1,4 @@
-import type { CoordArray } from 'vesium';
+import type { CoordArray } from '@vesium/shared';
 import { getArrowBodyCoords, getArrowHeadCoords } from './arrowAttackDirection';
 import { getBaseLength, getQBSplineCoords, getThirdCoord, HALF_PI } from './helper';
 
