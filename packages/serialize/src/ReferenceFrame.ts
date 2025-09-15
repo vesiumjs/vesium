@@ -1,44 +1,39 @@
 import { ReferenceFrame } from 'cesium';
-
 import { z } from 'zod';
 
 const strings = ['FIXED', 'INERTIAL'] as const;
 
-export type ReferenceFrameJSON = z.infer<typeof ReferenceFrameParse.JsonSchema>;
+/**
+ * `Cesium.ReferenceFrame` JSON ZodSchema
+ */
+export function ReferenceFrameZodSchema() {
+  return z.object({
+    parser: z.literal('ReferenceFrame'),
+    value: z.enum(strings),
+  });
+}
+
+export type ReferenceFrameJSON = z.infer<ReturnType<typeof ReferenceFrameZodSchema>>;
 
 /**
- * Serialize a `ReferenceFrame` instance to JSON and deserialize from JSON
+ * Convert `Cesium.ReferenceFrame` instance to JSON
  */
-export class ReferenceFrameParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.enum(strings);
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.enum(ReferenceFrame);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: ReferenceFrame): ReferenceFrameJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return Object.keys(ReferenceFrame).find((key: any) => Reflect.get(ReferenceFrame, key) === instance) as any;
+export function ReferenceFrameToJSON(instance?: ReferenceFrame): ReferenceFrameJSON | undefined {
+  if (!instance) {
+    return undefined;
   }
+  instance = z.enum(ReferenceFrame).parse(instance);
+  return {
+    parser: 'ReferenceFrame',
+    value: Object.keys(ReferenceFrame).find((key: any) => Reflect.get(ReferenceFrame, key) === instance) as any,
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   */
-  static fromJSON(json?: ReferenceFrameJSON): ReferenceFrame | undefined {
-    if (json) {
-      return ReferenceFrame[json];
-    }
+/**
+ * Convert JSON to `Cesium.ReferenceFrame` instance
+ */
+export function ReferenceFrameFromJSON(json?: ReferenceFrameJSON): ReferenceFrame | undefined {
+  if (json) {
+    return ReferenceFrame[json.value];
   }
 }

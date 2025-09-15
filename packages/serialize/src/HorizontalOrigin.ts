@@ -1,44 +1,39 @@
 import { HorizontalOrigin } from 'cesium';
-
 import { z } from 'zod';
 
 const strings = ['CENTER', 'LEFT', 'RIGHT'] as const;
 
-export type HorizontalOriginJSON = z.infer<typeof HorizontalOriginParse.JsonSchema>;
+/**
+ * `Cesium.HorizontalOrigin` JSON ZodSchema
+ */
+export function HorizontalOriginZodSchema() {
+  return z.object({
+    parser: z.literal('HorizontalOrigin'),
+    value: z.enum(strings),
+  });
+}
+
+export type HorizontalOriginJSON = z.infer<ReturnType<typeof HorizontalOriginZodSchema>>;
 
 /**
- * Serialize a `HorizontalOrigin` instance to JSON and deserialize from JSON
+ * Convert `Cesium.HorizontalOrigin` instance to JSON
  */
-export class HorizontalOriginParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.enum(strings);
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.enum(HorizontalOrigin);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: HorizontalOrigin): HorizontalOriginJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return Object.keys(HorizontalOrigin).find((key: any) => Reflect.get(HorizontalOrigin, key) === instance) as any;
+export function HorizontalOriginToJSON(instance?: HorizontalOrigin): HorizontalOriginJSON | undefined {
+  if (!instance) {
+    return undefined;
   }
+  instance = z.enum(HorizontalOrigin).parse(instance);
+  return {
+    parser: 'HorizontalOrigin',
+    value: Object.keys(HorizontalOrigin).find((key: any) => Reflect.get(HorizontalOrigin, key) === instance) as any,
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   */
-  static fromJSON(json?: HorizontalOriginJSON): HorizontalOrigin | undefined {
-    if (json) {
-      return HorizontalOrigin[json];
-    }
+/**
+ * Convert JSON to `Cesium.HorizontalOrigin` instance
+ */
+export function HorizontalOriginFromJSON(json?: HorizontalOriginJSON): HorizontalOrigin | undefined {
+  if (json) {
+    return HorizontalOrigin[json.value];
   }
 }

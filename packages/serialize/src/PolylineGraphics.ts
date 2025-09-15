@@ -2,93 +2,88 @@ import type { JulianDate } from 'cesium';
 import { PolylineGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
 import { z } from 'zod';
-import { ArcTypeParse } from './ArcType';
-import { Cartesian3Parse } from './Cartesian3';
-import { ClassificationTypeParse } from './ClassificationType';
-import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
-import { MaterialPropertyParse } from './MaterialProperty';
-
-import { ShadowModeParse } from './ShadowMode';
-
-export type PolylineGraphicsJSON = z.infer<typeof PolylineGraphicsParse.JsonSchema>;
+import { ArcTypeFromJSON, ArcTypeToJSON, ArcTypeZodSchema } from './ArcType';
+import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
+import { ClassificationTypeFromJSON, ClassificationTypeToJSON, ClassificationTypeZodSchema } from './ClassificationType';
+import { DistanceDisplayConditionFromJSON, DistanceDisplayConditionToJSON, DistanceDisplayConditionZodSchema } from './DistanceDisplayCondition';
+import { MaterialPropertyFromJSON, MaterialPropertyToJSON, MaterialPropertyZodSchema } from './MaterialProperty';
+import { ShadowModeFromJSON, ShadowModeToJSON, ShadowModeZodSchema } from './ShadowMode';
 
 /**
- * Serialize a `PolylineGraphics` instance to JSON and deserialize from JSON
+ * `Cesium.PolylineGraphics` JSON ZodSchema
  */
-export class PolylineGraphicsParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    show: z.boolean().optional(),
-    positions: z.array(Cartesian3Parse.JsonSchema).optional(),
-    width: z.number().optional(),
-    granularity: z.number().optional(),
-    material: MaterialPropertyParse.JsonSchema.optional(),
-    depthFailMaterial: MaterialPropertyParse.JsonSchema.optional(),
-    arcType: ArcTypeParse.JsonSchema.optional(),
-    clampToGround: z.boolean().optional(),
-    shadows: ShadowModeParse.JsonSchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
-    classificationType: ClassificationTypeParse.JsonSchema.optional(),
-    zIndex: z.number().optional(),
+export function PolylineGraphicsZodSchema() {
+  return z.object({
+    parser: z.literal('PolylineGraphics'),
+    value: z.object({
+      show: z.boolean().optional(),
+      positions: z.array(Cartesian3ZodSchema()).optional(),
+      width: z.number().optional(),
+      granularity: z.number().optional(),
+      material: MaterialPropertyZodSchema().optional(),
+      depthFailMaterial: MaterialPropertyZodSchema().optional(),
+      arcType: ArcTypeZodSchema().optional(),
+      clampToGround: z.boolean().optional(),
+      shadows: ShadowModeZodSchema().optional(),
+      distanceDisplayCondition: DistanceDisplayConditionZodSchema().optional(),
+      classificationType: ClassificationTypeZodSchema().optional(),
+      zIndex: z.number().optional(),
+    }),
   });
+}
 
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(PolylineGraphics);
+export type PolylineGraphicsJSON = z.infer<ReturnType<typeof PolylineGraphicsZodSchema>>;
 
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: PolylineGraphics, time?: JulianDate): PolylineGraphicsJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
+/**
+ * Convert `Cesium.PolylineGraphics` instance to JSON
+ */
+export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: JulianDate): PolylineGraphicsJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(PolylineGraphics).parse(instance);
+  return {
+    parser: 'PolylineGraphics',
+    value: {
       show: toPropertyValue(instance.show, time),
-      positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Parse.toJSON(item)),
+      positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3ToJSON(item)),
       width: toPropertyValue(instance.width, time),
       granularity: toPropertyValue(instance.granularity, time),
-      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
-      depthFailMaterial: MaterialPropertyParse.toJSON(toPropertyValue(instance.depthFailMaterial, time)),
-      arcType: ArcTypeParse.toJSON(toPropertyValue(instance.arcType, time)),
+      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      depthFailMaterial: MaterialPropertyToJSON(toPropertyValue(instance.depthFailMaterial, time)),
+      arcType: ArcTypeToJSON(toPropertyValue(instance.arcType, time)),
       clampToGround: toPropertyValue(instance.clampToGround, time),
-      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      classificationType: ClassificationTypeParse.toJSON(toPropertyValue(instance.classificationType, time)),
+      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      classificationType: ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
       zIndex: toPropertyValue(instance.zIndex, time),
-    };
-  }
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: PolylineGraphicsJSON, result?: PolylineGraphics): PolylineGraphics | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new PolylineGraphics({
-      show: json.show ?? undefined,
-      positions: json.positions?.map(item => Cartesian3Parse.fromJSON(item)!) ?? undefined,
-      width: json.width ?? undefined,
-      granularity: json.granularity ?? undefined,
-      material: MaterialPropertyParse.fromJSON(json?.material),
-      depthFailMaterial: MaterialPropertyParse.fromJSON(json?.depthFailMaterial),
-      arcType: ArcTypeParse.fromJSON(json?.arcType),
-      clampToGround: json.clampToGround ?? undefined,
-      shadows: ShadowModeParse.fromJSON(json?.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
-      classificationType: ClassificationTypeParse.fromJSON(json?.classificationType),
-      zIndex: json.zIndex ?? undefined,
-    });
-    return result ? instance.clone(result) : instance;
+/**
+ * Convert JSON to `Cesium.PolylineGraphics` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function PolylineGraphicsFromJSON(json?: PolylineGraphicsJSON, result?: PolylineGraphics): PolylineGraphics | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = PolylineGraphicsZodSchema().parse(result);
+  const instance = new PolylineGraphics({
+    show: json.value.show,
+    positions: json.value.positions?.map(item => Cartesian3FromJSON(item)!),
+    width: json.value.width,
+    granularity: json.value.granularity,
+    material: MaterialPropertyFromJSON(json.value.material),
+    depthFailMaterial: MaterialPropertyFromJSON(json.value.depthFailMaterial),
+    arcType: ArcTypeFromJSON(json.value.arcType),
+    clampToGround: json.value.clampToGround,
+    shadows: ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    classificationType: ClassificationTypeFromJSON(json.value.classificationType),
+    zIndex: json.value.zIndex,
+  });
+  return result ? instance.clone(result) : instance;
 }

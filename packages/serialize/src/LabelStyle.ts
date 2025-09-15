@@ -1,44 +1,39 @@
 import { LabelStyle } from 'cesium';
-
 import { z } from 'zod';
 
 const strings = ['FILL', 'OUTLINE', 'FILL_AND_OUTLINE'] as const;
 
-export type LabelStyleJSON = z.infer<typeof LabelStyleParse.JsonSchema>;
+/**
+ * `Cesium.LabelStyle` JSON ZodSchema
+ */
+export function LabelStyleZodSchema() {
+  return z.object({
+    parser: z.literal('LabelStyle'),
+    value: z.enum(strings),
+  });
+}
+
+export type LabelStyleJSON = z.infer<ReturnType<typeof LabelStyleZodSchema>>;
 
 /**
- * Serialize a `LabelStyle` instance to JSON and deserialize from JSON
+ * Convert `Cesium.LabelStyle` instance to JSON
  */
-export class LabelStyleParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.enum(strings);
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.enum(LabelStyle);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: LabelStyle): LabelStyleJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return Object.keys(LabelStyle).find((key: any) => Reflect.get(LabelStyle, key) === instance) as any;
+export function LabelStyleToJSON(instance?: LabelStyle): LabelStyleJSON | undefined {
+  if (!instance) {
+    return undefined;
   }
+  instance = z.enum(LabelStyle).parse(instance);
+  return {
+    parser: 'LabelStyle',
+    value: Object.keys(LabelStyle).find((key: any) => Reflect.get(LabelStyle, key) === instance) as any,
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   */
-  static fromJSON(json?: LabelStyleJSON): LabelStyle | undefined {
-    if (json) {
-      return LabelStyle[json];
-    }
+/**
+ * Convert JSON to `Cesium.LabelStyle` instance
+ */
+export function LabelStyleFromJSON(json?: LabelStyleJSON): LabelStyle | undefined {
+  if (json) {
+    return LabelStyle[json.value];
   }
 }

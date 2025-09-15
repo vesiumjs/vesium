@@ -2,125 +2,120 @@ import type { JulianDate } from 'cesium';
 import { PolygonGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
 import { z } from 'zod';
-import { ArcTypeParse } from './ArcType';
-import { ClassificationTypeParse } from './ClassificationType';
-import { ColorParse } from './Color';
-import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
-import { HeightReferenceParse } from './HeightReference';
-import { MaterialPropertyParse } from './MaterialProperty';
-import { PolygonHierarchyParse } from './PolygonHierarchy';
-
-import { ShadowModeParse } from './ShadowMode';
-
-export type PolygonGraphicsJSON = z.infer<typeof PolygonGraphicsParse.JsonSchema>;
+import { ArcTypeFromJSON, ArcTypeToJSON, ArcTypeZodSchema } from './ArcType';
+import { ClassificationTypeFromJSON, ClassificationTypeToJSON, ClassificationTypeZodSchema } from './ClassificationType';
+import { ColorFromJSON, ColorToJSON, ColorZodSchema } from './Color';
+import { DistanceDisplayConditionFromJSON, DistanceDisplayConditionToJSON, DistanceDisplayConditionZodSchema } from './DistanceDisplayCondition';
+import { HeightReferenceFromJSON, HeightReferenceToJSON, HeightReferenceZodSchema } from './HeightReference';
+import { MaterialPropertyFromJSON, MaterialPropertyToJSON, MaterialPropertyZodSchema } from './MaterialProperty';
+import { PolygonHierarchyFromJSON, PolygonHierarchyToJSON, PolygonHierarchyZodSchema } from './PolygonHierarchy';
+import { ShadowModeFromJSON, ShadowModeToJSON, ShadowModeZodSchema } from './ShadowMode';
 
 /**
- * Serialize a `PolygonGraphics` instance to JSON and deserialize from JSON
+ * `Cesium.PolygonGraphics` JSON ZodSchema
  */
-export class PolygonGraphicsParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    show: z.boolean().optional(),
-    hierarchy: PolygonHierarchyParse.JsonSchema.optional(),
-    height: z.number().optional(),
-    heightReference: HeightReferenceParse.JsonSchema.optional(),
-    extrudedHeight: z.number().optional(),
-    extrudedHeightReference: HeightReferenceParse.JsonSchema.optional(),
-    stRotation: z.number().optional(),
-    granularity: z.number().optional(),
-    fill: z.boolean().optional(),
-    material: MaterialPropertyParse.JsonSchema.optional(),
-    outline: z.boolean().optional(),
-    outlineColor: ColorParse.JsonSchema.optional(),
-    outlineWidth: z.number().optional(),
-    perPositionHeight: z.boolean().optional(),
-    closeTop: z.boolean().optional(),
-    closeBottom: z.boolean().optional(),
-    arcType: ArcTypeParse.JsonSchema.optional(),
-    shadows: ShadowModeParse.JsonSchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
-    classificationType: ClassificationTypeParse.JsonSchema.optional(),
-    zIndex: z.number().optional(),
-    textureCoordinates: PolygonHierarchyParse.JsonSchema.optional(),
+export function PolygonGraphicsZodSchema() {
+  return z.object({
+    parser: z.literal('PolygonGraphics'),
+    value: z.object({
+      show: z.boolean().optional(),
+      hierarchy: PolygonHierarchyZodSchema().optional(),
+      height: z.number().optional(),
+      heightReference: HeightReferenceZodSchema().optional(),
+      extrudedHeight: z.number().optional(),
+      extrudedHeightReference: HeightReferenceZodSchema().optional(),
+      stRotation: z.number().optional(),
+      granularity: z.number().optional(),
+      fill: z.boolean().optional(),
+      material: MaterialPropertyZodSchema().optional(),
+      outline: z.boolean().optional(),
+      outlineColor: ColorZodSchema().optional(),
+      outlineWidth: z.number().optional(),
+      perPositionHeight: z.boolean().optional(),
+      closeTop: z.boolean().optional(),
+      closeBottom: z.boolean().optional(),
+      arcType: ArcTypeZodSchema().optional(),
+      shadows: ShadowModeZodSchema().optional(),
+      distanceDisplayCondition: DistanceDisplayConditionZodSchema().optional(),
+      classificationType: ClassificationTypeZodSchema().optional(),
+      zIndex: z.number().optional(),
+      textureCoordinates: PolygonHierarchyZodSchema().optional(),
+    }),
   });
+}
 
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(PolygonGraphics);
+export type PolygonGraphicsJSON = z.infer<ReturnType<typeof PolygonGraphicsZodSchema>>;
 
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: PolygonGraphics, time?: JulianDate): PolygonGraphicsJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
+/**
+ * Convert `Cesium.PolygonGraphics` instance to JSON
+ */
+export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianDate): PolygonGraphicsJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(PolygonGraphics).parse(instance);
+  return {
+    parser: 'PolygonGraphics',
+    value: {
       show: toPropertyValue(instance.show, time),
-      hierarchy: PolygonHierarchyParse.toJSON(toPropertyValue(instance.hierarchy, time)),
+      hierarchy: PolygonHierarchyToJSON(toPropertyValue(instance.hierarchy, time)),
       height: toPropertyValue(instance.height, time),
-      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
+      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
       extrudedHeight: toPropertyValue(instance.extrudedHeight, time),
-      extrudedHeightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.extrudedHeightReference, time)),
+      extrudedHeightReference: HeightReferenceToJSON(toPropertyValue(instance.extrudedHeightReference, time)),
       stRotation: toPropertyValue(instance.stRotation, time),
       granularity: toPropertyValue(instance.granularity, time),
       fill: toPropertyValue(instance.fill, time),
-      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
       outline: toPropertyValue(instance.outline, time),
-      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: toPropertyValue(instance.outlineWidth, time),
       perPositionHeight: toPropertyValue(instance.perPositionHeight, time),
       closeTop: toPropertyValue(instance.closeTop, time),
       closeBottom: toPropertyValue(instance.closeBottom, time),
-      arcType: ArcTypeParse.toJSON(toPropertyValue(instance.arcType, time)),
-      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-      classificationType: ClassificationTypeParse.toJSON(toPropertyValue(instance.classificationType, time)),
+      arcType: ArcTypeToJSON(toPropertyValue(instance.arcType, time)),
+      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      classificationType: ClassificationTypeToJSON(toPropertyValue(instance.classificationType, time)),
       zIndex: toPropertyValue(instance.zIndex, time),
-      textureCoordinates: PolygonHierarchyParse.toJSON(toPropertyValue(instance.textureCoordinates, time)),
-    };
-  }
+      textureCoordinates: PolygonHierarchyToJSON(toPropertyValue(instance.textureCoordinates, time)),
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: PolygonGraphicsJSON, result?: PolygonGraphics): PolygonGraphics | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new PolygonGraphics({
-      show: json.show ?? undefined,
-      hierarchy: PolygonHierarchyParse.fromJSON(json?.hierarchy),
-      height: json.height ?? undefined,
-      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
-      extrudedHeight: json.extrudedHeight ?? undefined,
-      extrudedHeightReference: HeightReferenceParse.fromJSON(json?.extrudedHeightReference),
-      stRotation: json.stRotation ?? undefined,
-      granularity: json.granularity ?? undefined,
-      fill: json.fill ?? undefined,
-      material: MaterialPropertyParse.fromJSON(json?.material),
-      outline: json.outline ?? undefined,
-      outlineColor: ColorParse.fromJSON(json?.outlineColor),
-      outlineWidth: json.outlineWidth ?? undefined,
-      perPositionHeight: json.perPositionHeight ?? undefined,
-      closeTop: json.closeTop ?? undefined,
-      closeBottom: json.closeBottom ?? undefined,
-      arcType: ArcTypeParse.fromJSON(json?.arcType),
-      shadows: ShadowModeParse.fromJSON(json?.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
-      classificationType: ClassificationTypeParse.fromJSON(json?.classificationType),
-      zIndex: json.zIndex ?? undefined,
-      textureCoordinates: PolygonHierarchyParse.fromJSON(json?.textureCoordinates),
-    });
-    return result ? instance.clone(result) : instance;
+/**
+ * Convert JSON to `Cesium.PolygonGraphics` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function PolygonGraphicsFromJSON(json?: PolygonGraphicsJSON, result?: PolygonGraphics): PolygonGraphics | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = PolygonGraphicsZodSchema().parse(result);
+  const instance = new PolygonGraphics({
+    show: json.value.show,
+    hierarchy: PolygonHierarchyFromJSON(json.value.hierarchy),
+    height: json.value.height,
+    heightReference: HeightReferenceFromJSON(json.value.heightReference),
+    extrudedHeight: json.value.extrudedHeight,
+    extrudedHeightReference: HeightReferenceFromJSON(json.value.extrudedHeightReference),
+    stRotation: json.value.stRotation,
+    granularity: json.value.granularity,
+    fill: json.value.fill,
+    material: MaterialPropertyFromJSON(json.value.material),
+    outline: json.value.outline,
+    outlineColor: ColorFromJSON(json.value.outlineColor),
+    outlineWidth: json.value.outlineWidth,
+    perPositionHeight: json.value.perPositionHeight,
+    closeTop: json.value.closeTop,
+    closeBottom: json.value.closeBottom,
+    arcType: ArcTypeFromJSON(json.value.arcType),
+    shadows: ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    classificationType: ClassificationTypeFromJSON(json.value.classificationType),
+    zIndex: json.value.zIndex,
+    textureCoordinates: PolygonHierarchyFromJSON(json.value.textureCoordinates),
+  });
+  return result ? instance.clone(result) : instance;
 }

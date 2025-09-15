@@ -1,44 +1,39 @@
 import { VerticalOrigin } from 'cesium';
-
 import { z } from 'zod';
 
 const strings = ['CENTER', 'BOTTOM', 'BASELINE', 'TOP'] as const;
 
-export type VerticalOriginJSON = z.infer<typeof VerticalOriginParse.JsonSchema>;
+/**
+ * `Cesium.VerticalOrigin` JSON ZodSchema
+ */
+export function VerticalOriginZodSchema() {
+  return z.object({
+    parser: z.literal('VerticalOrigin'),
+    value: z.enum(strings),
+  });
+}
+
+export type VerticalOriginJSON = z.infer<ReturnType<typeof VerticalOriginZodSchema>>;
 
 /**
- * Serialize a `VerticalOrigin` instance to JSON and deserialize from JSON
+ * Convert `Cesium.VerticalOrigin` instance to JSON
  */
-export class VerticalOriginParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.enum(strings);
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.enum(VerticalOrigin);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: VerticalOrigin): VerticalOriginJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return Object.keys(VerticalOrigin).find((key: any) => Reflect.get(VerticalOrigin, key) === instance) as any;
+export function VerticalOriginToJSON(instance?: VerticalOrigin): VerticalOriginJSON | undefined {
+  if (!instance) {
+    return undefined;
   }
+  instance = z.enum(VerticalOrigin).parse(instance);
+  return {
+    parser: 'VerticalOrigin',
+    value: Object.keys(VerticalOrigin).find((key: any) => Reflect.get(VerticalOrigin, key) === instance) as any,
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   */
-  static fromJSON(json?: VerticalOriginJSON): VerticalOrigin | undefined {
-    if (json) {
-      return VerticalOrigin[json];
-    }
+/**
+ * Convert JSON to `Cesium.VerticalOrigin` instance
+ */
+export function VerticalOriginFromJSON(json?: VerticalOriginJSON): VerticalOrigin | undefined {
+  if (json) {
+    return VerticalOrigin[json.value];
   }
 }

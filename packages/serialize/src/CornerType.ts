@@ -1,44 +1,39 @@
 import { CornerType } from 'cesium';
-
 import { z } from 'zod';
 
 const strings = ['ROUNDED', 'MITERED', 'BEVELED'] as const;
 
-export type CornerTypeJSON = z.infer<typeof CornerTypeParse.JsonSchema>;
+/**
+ * `Cesium.CornerType` JSON ZodSchema
+ */
+export function CornerTypeZodSchema() {
+  return z.object({
+    parser: z.literal('CornerType'),
+    value: z.enum(strings),
+  });
+}
+
+export type CornerTypeJSON = z.infer<ReturnType<typeof CornerTypeZodSchema>>;
 
 /**
- * Serialize a `CornerType` instance to JSON and deserialize from JSON
+ * Convert `Cesium.CornerType` instance to JSON
  */
-export class CornerTypeParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.enum(strings);
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.enum(CornerType);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: CornerType): CornerTypeJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return Object.keys(CornerType).find((key: any) => Reflect.get(CornerType, key) === instance) as any;
+export function CornerTypeToJSON(instance?: CornerType): CornerTypeJSON | undefined {
+  if (!instance) {
+    return undefined;
   }
+  instance = z.enum(CornerType).parse(instance);
+  return {
+    parser: 'CornerType',
+    value: Object.keys(CornerType).find((key: any) => Reflect.get(CornerType, key) === instance) as any,
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   */
-  static fromJSON(json?: CornerTypeJSON): CornerType | undefined {
-    if (json) {
-      return CornerType[json];
-    }
+/**
+ * Convert JSON to `Cesium.CornerType` instance
+ */
+export function CornerTypeFromJSON(json?: CornerTypeJSON): CornerType | undefined {
+  if (json) {
+    return CornerType[json.value];
   }
 }

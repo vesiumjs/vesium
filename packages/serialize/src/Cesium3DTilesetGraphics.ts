@@ -1,61 +1,56 @@
 import type { JulianDate } from 'cesium';
 import { Cesium3DTilesetGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
-
 import { z } from 'zod';
 
-export type Cesium3DTilesetGraphicsJSON = z.infer<typeof Cesium3DTilesetGraphicsParse.JsonSchema>;
+/**
+ * `Cesium.Cesium3DTilesetGraphics` JSON ZodSchema
+ */
+export function Cesium3DTilesetGraphicsZodSchema() {
+  return z.object({
+    parser: z.literal('Cesium3DTilesetGraphics'),
+    value: z.object({
+      show: z.boolean().optional(),
+      uri: z.string().optional(),
+      maximumScreenSpaceError: z.number().optional(),
+    }),
+  });
+}
+
+export type Cesium3DTilesetGraphicsJSON = z.infer<ReturnType<typeof Cesium3DTilesetGraphicsZodSchema>>;
 
 /**
- * Serialize a `Cesium3DTilesetGraphics` instance to JSON and deserialize from JSON
+ * Convert `Cesium.Cesium3DTilesetGraphics` instance to JSON
  */
-export class Cesium3DTilesetGraphicsParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    show: z.boolean().optional(),
-    uri: z.string().optional(),
-    maximumScreenSpaceError: z.number().optional(),
-  });
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(Cesium3DTilesetGraphics);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: Cesium3DTilesetGraphics, time?: JulianDate): Cesium3DTilesetGraphicsJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
+export function Cesium3DTilesetGraphicsToJSON(instance?: Cesium3DTilesetGraphics, time?: JulianDate): Cesium3DTilesetGraphicsJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(Cesium3DTilesetGraphics).parse(instance);
+  return {
+    parser: 'Cesium3DTilesetGraphics',
+    value: {
       show: toPropertyValue(instance.show, time),
       uri: toPropertyValue(instance.uri, time),
       maximumScreenSpaceError: toPropertyValue(instance.maximumScreenSpaceError, time),
-    };
-  }
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: Cesium3DTilesetGraphicsJSON, result?: Cesium3DTilesetGraphics): Cesium3DTilesetGraphics | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new Cesium3DTilesetGraphics({
-      show: json.show ?? undefined,
-      uri: json.uri ?? undefined,
-      maximumScreenSpaceError: json.maximumScreenSpaceError ?? undefined,
-    });
-    return result ? instance.clone(result) : instance;
+/**
+ * Convert JSON to `Cesium.Cesium3DTilesetGraphics` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function Cesium3DTilesetGraphicsFromJSON(json?: Cesium3DTilesetGraphicsJSON, result?: Cesium3DTilesetGraphics): Cesium3DTilesetGraphics | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = Cesium3DTilesetGraphicsZodSchema().parse(result);
+  const instance = new Cesium3DTilesetGraphics({
+    show: json.value.show,
+    uri: json.value.uri,
+    maximumScreenSpaceError: json.value.maximumScreenSpaceError,
+  });
+  return result ? instance.clone(result) : instance;
 }

@@ -2,89 +2,84 @@ import type { JulianDate } from 'cesium';
 import { PointGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
 import { z } from 'zod';
-import { ColorParse } from './Color';
-import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
-import { HeightReferenceParse } from './HeightReference';
-import { NearFarScalarParse } from './NearFarScalar';
-
-import { SplitDirectionParse } from './SplitDirection';
-
-export type PointGraphicsJSON = z.infer<typeof PointGraphicsParse.JsonSchema>;
+import { ColorFromJSON, ColorToJSON, ColorZodSchema } from './Color';
+import { DistanceDisplayConditionFromJSON, DistanceDisplayConditionToJSON, DistanceDisplayConditionZodSchema } from './DistanceDisplayCondition';
+import { HeightReferenceFromJSON, HeightReferenceToJSON, HeightReferenceZodSchema } from './HeightReference';
+import { NearFarScalarFromJSON, NearFarScalarToJSON, NearFarScalarZodSchema } from './NearFarScalar';
+import { SplitDirectionFromJSON, SplitDirectionToJSON, SplitDirectionZodSchema } from './SplitDirection';
 
 /**
- * Serialize a `PointGraphics` instance to JSON and deserialize from JSON
+ * `Cesium.PointGraphics` JSON ZodSchema
  */
-export class PointGraphicsParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    show: z.boolean().optional(),
-    pixelSize: z.number().optional(),
-    heightReference: HeightReferenceParse.JsonSchema.optional(),
-    color: ColorParse.JsonSchema.optional(),
-    outlineColor: ColorParse.JsonSchema.optional(),
-    outlineWidth: z.number().optional(),
-    scaleByDistance: NearFarScalarParse.JsonSchema.optional(),
-    translucencyByDistance: NearFarScalarParse.JsonSchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
-    disableDepthTestDistance: z.number().optional(),
-    splitDirection: SplitDirectionParse.JsonSchema.optional(),
+export function PointGraphicsZodSchema() {
+  return z.object({
+    parser: z.literal('PointGraphics'),
+    value: z.object({
+      show: z.boolean().optional(),
+      pixelSize: z.number().optional(),
+      heightReference: HeightReferenceZodSchema().optional(),
+      color: ColorZodSchema().optional(),
+      outlineColor: ColorZodSchema().optional(),
+      outlineWidth: z.number().optional(),
+      scaleByDistance: NearFarScalarZodSchema().optional(),
+      translucencyByDistance: NearFarScalarZodSchema().optional(),
+      distanceDisplayCondition: DistanceDisplayConditionZodSchema().optional(),
+      disableDepthTestDistance: z.number().optional(),
+      splitDirection: SplitDirectionZodSchema().optional(),
+    }),
   });
+}
 
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(PointGraphics);
+export type PointGraphicsJSON = z.infer<ReturnType<typeof PointGraphicsZodSchema>>;
 
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: PointGraphics, time?: JulianDate): PointGraphicsJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
+/**
+ * Convert `Cesium.PointGraphics` instance to JSON
+ */
+export function PointGraphicsToJSON(instance?: PointGraphics, time?: JulianDate): PointGraphicsJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(PointGraphics).parse(instance);
+  return {
+    parser: 'PointGraphics',
+    value: {
       show: toPropertyValue(instance.show, time),
       pixelSize: toPropertyValue(instance.pixelSize, time),
-      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
-      color: ColorParse.toJSON(toPropertyValue(instance.color, time)),
-      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      color: ColorToJSON(toPropertyValue(instance.color, time)),
+      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      scaleByDistance: NearFarScalarParse.toJSON(toPropertyValue(instance.scaleByDistance, time)),
-      translucencyByDistance: NearFarScalarParse.toJSON(toPropertyValue(instance.translucencyByDistance, time)),
-      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      scaleByDistance: NearFarScalarToJSON(toPropertyValue(instance.scaleByDistance, time)),
+      translucencyByDistance: NearFarScalarToJSON(toPropertyValue(instance.translucencyByDistance, time)),
+      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
       disableDepthTestDistance: toPropertyValue(instance.disableDepthTestDistance, time),
-      splitDirection: SplitDirectionParse.toJSON(toPropertyValue(instance.splitDirection, time)),
-    };
-  }
+      splitDirection: SplitDirectionToJSON(toPropertyValue(instance.splitDirection, time)),
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: PointGraphicsJSON, result?: PointGraphics): PointGraphics | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new PointGraphics({
-      show: json.show ?? undefined,
-      pixelSize: json.pixelSize ?? undefined,
-      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
-      color: ColorParse.fromJSON(json?.color),
-      outlineColor: ColorParse.fromJSON(json?.outlineColor),
-      outlineWidth: json.outlineWidth ?? undefined,
-      scaleByDistance: NearFarScalarParse.fromJSON(json?.scaleByDistance),
-      translucencyByDistance: NearFarScalarParse.fromJSON(json?.translucencyByDistance),
-      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
-      disableDepthTestDistance: json.disableDepthTestDistance ?? undefined,
-      splitDirection: SplitDirectionParse.fromJSON(json?.splitDirection),
-    });
-    return result ? instance.clone(result) : instance;
+/**
+ * Convert JSON to `Cesium.PointGraphics` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function PointGraphicsFromJSON(json?: PointGraphicsJSON, result?: PointGraphics): PointGraphics | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = PointGraphicsZodSchema().parse(result);
+  const instance = new PointGraphics({
+    show: json.value.show,
+    pixelSize: json.value.pixelSize,
+    heightReference: HeightReferenceFromJSON(json.value.heightReference),
+    color: ColorFromJSON(json.value.color),
+    outlineColor: ColorFromJSON(json.value.outlineColor),
+    outlineWidth: json.value.outlineWidth,
+    scaleByDistance: NearFarScalarFromJSON(json.value.scaleByDistance),
+    translucencyByDistance: NearFarScalarFromJSON(json.value.translucencyByDistance),
+    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    disableDepthTestDistance: json.value.disableDepthTestDistance,
+    splitDirection: SplitDirectionFromJSON(json.value.splitDirection),
+  });
+  return result ? instance.clone(result) : instance;
 }

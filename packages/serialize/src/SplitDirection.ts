@@ -1,44 +1,39 @@
 import { SplitDirection } from 'cesium';
-
 import { z } from 'zod';
 
 const strings = ['LEFT', 'NONE', 'RIGHT'] as const;
 
-export type SplitDirectionJSON = z.infer<typeof SplitDirectionParse.JsonSchema>;
+/**
+ * `Cesium.SplitDirection` JSON ZodSchema
+ */
+export function SplitDirectionZodSchema() {
+  return z.object({
+    parser: z.literal('SplitDirection'),
+    value: z.enum(strings),
+  });
+}
+
+export type SplitDirectionJSON = z.infer<ReturnType<typeof SplitDirectionZodSchema>>;
 
 /**
- * Serialize a `SplitDirection` instance to JSON and deserialize from JSON
+ * Convert `Cesium.SplitDirection` instance to JSON
  */
-export class SplitDirectionParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.enum(strings);
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.enum(SplitDirection);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: SplitDirection): SplitDirectionJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return Object.keys(SplitDirection).find((key: any) => Reflect.get(SplitDirection, key) === instance) as any;
+export function SplitDirectionToJSON(instance?: SplitDirection): SplitDirectionJSON | undefined {
+  if (!instance) {
+    return undefined;
   }
+  instance = z.enum(SplitDirection).parse(instance);
+  return {
+    parser: 'SplitDirection',
+    value: Object.keys(SplitDirection).find((key: any) => Reflect.get(SplitDirection, key) === instance) as any,
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   */
-  static fromJSON(json?: SplitDirectionJSON): SplitDirection | undefined {
-    if (json) {
-      return SplitDirection[json];
-    }
+/**
+ * Convert JSON to `Cesium.SplitDirection` instance
+ */
+export function SplitDirectionFromJSON(json?: SplitDirectionJSON): SplitDirection | undefined {
+  if (json) {
+    return SplitDirection[json.value];
   }
 }

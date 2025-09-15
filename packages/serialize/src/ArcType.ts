@@ -1,44 +1,39 @@
 import { ArcType } from 'cesium';
-
 import { z } from 'zod';
 
 const strings = ['NONE', 'GEODESIC', 'RHUMB'] as const;
 
-export type ArcTypeJSON = z.infer<typeof ArcTypeParse.JsonSchema>;
+/**
+ * `Cesium.ArcType` JSON ZodSchema
+ */
+export function ArcTypeZodSchema() {
+  return z.object({
+    parser: z.literal('ArcType'),
+    value: z.enum(strings),
+  });
+}
+
+export type ArcTypeJSON = z.infer<ReturnType<typeof ArcTypeZodSchema>>;
 
 /**
- * Serialize a `ArcType` instance to JSON and deserialize from JSON
+ * Convert `Cesium.ArcType` instance to JSON
  */
-export class ArcTypeParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.enum(strings);
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.enum(ArcType);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: ArcType): ArcTypeJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return Object.keys(ArcType).find((key: any) => Reflect.get(ArcType, key) === instance) as any;
+export function ArcTypeToJSON(instance?: ArcType): ArcTypeJSON | undefined {
+  if (!instance) {
+    return undefined;
   }
+  instance = z.enum(ArcType).parse(instance);
+  return {
+    parser: 'ArcType',
+    value: Object.keys(ArcType).find((key: any) => Reflect.get(ArcType, key) === instance) as any,
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   */
-  static fromJSON(json?: ArcTypeJSON): ArcType | undefined {
-    if (json) {
-      return ArcType[json];
-    }
+/**
+ * Convert JSON to `Cesium.ArcType` instance
+ */
+export function ArcTypeFromJSON(json?: ArcTypeJSON): ArcType | undefined {
+  if (json) {
+    return ArcType[json.value];
   }
 }

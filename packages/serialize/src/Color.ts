@@ -1,61 +1,57 @@
 import { Color } from 'cesium';
 import { z } from 'zod';
 
-export type ColorJSON = z.infer<typeof ColorParse.JsonSchema>;
+/**
+ * `Cesium.Color` JSON ZodSchema
+ */
+export function ColorZodSchema() {
+  return z.object({
+    parser: z.literal('Color'),
+    value: z.object({
+      red: z.number().optional(),
+      green: z.number().optional(),
+      blue: z.number().optional(),
+      alpha: z.number().optional(),
+    }),
+  });
+}
+
+export type ColorJSON = z.infer<ReturnType<typeof ColorZodSchema>>;
 
 /**
- * Serialize a `Color` instance to JSON and deserialize from JSON
+ * Convert `Cesium.Color` instance to JSON
  */
-export class ColorParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    red: z.number().optional(),
-    green: z.number().optional(),
-    blue: z.number().optional(),
-    alpha: z.number().optional(),
-  });
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(Color);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: Color): ColorJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
+export function ColorToJSON(instance?: Color): ColorJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(Color).parse(instance);
+  return {
+    parser: 'Color',
+    value: {
       red: instance.red,
       green: instance.green,
       blue: instance.blue,
       alpha: instance.alpha,
-    };
-  }
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: ColorJSON, result?: Color): Color | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new Color(
-      json.red ?? undefined,
-      json.green ?? undefined,
-      json.blue ?? undefined,
-      json.alpha ?? undefined,
-    );
-    return result ? instance.clone(result) : instance;
+/**
+ * Convert JSON to `Cesium.Color` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function ColorFromJSON(json?: ColorJSON, result?: Color): Color | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = ColorZodSchema().parse(result);
+  const instance = new Color(
+    json.value.red,
+    json.value.green,
+    json.value.blue,
+    json.value.alpha,
+  );
+  return result ? instance.clone(result) : instance;
 }

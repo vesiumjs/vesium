@@ -1,58 +1,53 @@
 import { Plane } from 'cesium';
 import { z } from 'zod';
-
-import { Cartesian3Parse } from './Cartesian3';
-
-export type PlaneJSON = z.infer<typeof PlaneParse.JsonSchema>;
+import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
 
 /**
- * Serialize a `Plane` instance to JSON and deserialize from JSON
+ * `Cesium.Plane` JSON ZodSchema
  */
-export class PlaneParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    normal: Cartesian3Parse.JsonSchema,
-    distance: z.number(),
+export function PlaneZodSchema() {
+  return z.object({
+    parser: z.literal('Plane'),
+    value: z.object({
+      normal: Cartesian3ZodSchema(),
+      distance: z.number(),
+    }),
   });
+}
 
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(Plane);
+export type PlaneJSON = z.infer<ReturnType<typeof PlaneZodSchema>>;
 
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: Plane): PlaneJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
-      normal: Cartesian3Parse.toJSON(instance?.normal)!,
+/**
+ * Convert `Cesium.Plane` instance to JSON
+ */
+export function PlaneToJSON(instance?: Plane): PlaneJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(Plane).parse(instance);
+  return {
+    parser: 'Plane',
+    value: {
+      normal: Cartesian3ToJSON(instance.normal)!,
       distance: instance.distance,
-    };
-  }
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: PlaneJSON, result?: Plane): Plane | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new Plane(
-      Cartesian3Parse.fromJSON(json?.normal)!,
-      json.distance ?? undefined,
-    );
-
-    return result ? Plane.clone(instance, result) : instance;
+/**
+ * Convert JSON to `Cesium.Plane` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function PlaneFromJSON(json?: PlaneJSON, result?: Plane): Plane | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = PlaneZodSchema().parse(result);
+  const instance = new Plane(
+    Cartesian3FromJSON(json.value.normal)!,
+    json.value.distance,
+  );
+
+  return result ? Plane.clone(instance, result) : instance;
 }

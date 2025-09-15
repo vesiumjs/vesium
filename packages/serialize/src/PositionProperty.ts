@@ -1,8 +1,7 @@
 import type { ConstantPositionProperty, JulianDate, PositionProperty, SampledPositionProperty } from 'cesium';
-
 import { z } from 'zod';
-import { ConstantPositionPropertyParse } from './ConstantPositionProperty';
-import { SampledPositionPropertyParse } from './SampledPositionProperty';
+import { ConstantPositionPropertyFromJSON, ConstantPositionPropertyInstanceSchema, ConstantPositionPropertyToJSON, ConstantPositionPropertyZodSchema } from './ConstantPositionProperty';
+import { SampledPositionPropertyFromJSON, SampledPositionPropertyInstanceSchema, SampledPositionPropertyToJSON, SampledPositionPropertyZodSchema } from './SampledPositionProperty';
 
 export interface PositionPropertyJSON {
   type: 'ConstantPositionProperty' | 'SampledPositionProperty';
@@ -10,57 +9,52 @@ export interface PositionPropertyJSON {
 }
 
 /**
- * Serialize a `PositionProperty` instance to JSON and deserialize from JSON
+ * `Cesium.PositionProperty` JSON ZodSchema
  */
-export class PositionPropertyParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    type: z.enum(['ConstantPositionProperty', 'SampledPositionProperty'] as const),
-    content: z.union([ConstantPositionPropertyParse.JsonSchema, SampledPositionPropertyParse.JsonSchema]),
+export function PositionPropertyZodSchema() {
+  return z.object({
+    parser: z.literal('PositionProperty'),
+    value: z.object({
+      type: z.enum(['ConstantPositionProperty', 'SampledPositionProperty'] as const),
+      content: z.union([ConstantPositionPropertyZodSchema, SampledPositionPropertyZodSchema]),
+    }),
   });
+}
 
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.union([ConstantPositionPropertyParse.InstanceSchema, SampledPositionPropertyParse.InstanceSchema]);
+export const PositionPropertyInstanceSchema = () => z.union([ConstantPositionPropertyInstanceSchema, SampledPositionPropertyInstanceSchema]);
 
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: PositionProperty, time?: JulianDate): PositionPropertyJSON | undefined {
-    if (ConstantPositionPropertyParse.InstanceSchema.safeParse(instance)) {
-      return {
-        type: 'ConstantPositionProperty',
-        content: ConstantPositionPropertyParse.toJSON(instance as ConstantPositionProperty, time),
-      };
-    }
-
-    if (SampledPositionPropertyParse.InstanceSchema.safeParse(instance)) {
-      return {
-        type: 'SampledPositionProperty',
-        content: SampledPositionPropertyParse.toJSON(instance as SampledPositionProperty),
-      };
+/**
+ * Convert `Cesium.PositionProperty` instance to JSON
+ */
+export function PositionPropertyToJSON(instance?: PositionProperty, time?: JulianDate): PositionPropertyJSON | undefined {
+  if (ConstantPositionPropertyInstanceSchema.safeParse(instance)) {
+    return {
+      type: 'ConstantPositionProperty',
+      content: ConstantPositionPropertyToJSON(instance as ConstantPositionProperty, time),
     };
   }
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: PositionPropertyJSON, result?: PositionProperty): PositionProperty | undefined {
-    if (!json) {
-      return;
-    }
-    if (json.type === 'ConstantPositionProperty') {
-      return ConstantPositionPropertyParse.fromJSON(json?.content, result as ConstantPositionProperty);
-    }
-    if (json.type === 'SampledPositionProperty') {
-      return SampledPositionPropertyParse.fromJSON(json?.content, result as SampledPositionProperty);
-    }
+  if (SampledPositionPropertyInstanceSchema.safeParse(instance)) {
+    return {
+      type: 'SampledPositionProperty',
+      content: SampledPositionPropertyToJSON(instance as SampledPositionProperty),
+    };
+  };
+}
+
+/**
+ * Convert JSON to `Cesium.PositionProperty` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function PositionPropertyFromJSON(json?: PositionPropertyJSON, result?: PositionProperty): PositionProperty | undefined {
+  if (!json) {
+    return;
+  }
+  if (json.value.type === 'ConstantPositionProperty') {
+    return ConstantPositionPropertyFromJSON(json.value.content, result as ConstantPositionProperty);
+  }
+  if (json.value.type === 'SampledPositionProperty') {
+    return SampledPositionPropertyFromJSON(json.value.content, result as SampledPositionProperty);
   }
 }

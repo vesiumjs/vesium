@@ -2,123 +2,118 @@ import type { JulianDate } from 'cesium';
 import { LabelGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
 import { z } from 'zod';
-import { Cartesian2Parse } from './Cartesian2';
-import { Cartesian3Parse } from './Cartesian3';
-import { ColorParse } from './Color';
-import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
-import { HeightReferenceParse } from './HeightReference';
-import { HorizontalOriginParse } from './HorizontalOrigin';
-import { LabelStyleParse } from './LabelStyle';
-import { NearFarScalarParse } from './NearFarScalar';
-
-import { VerticalOriginParse } from './VerticalOrigin';
-
-export type LabelGraphicsJSON = z.infer<typeof LabelGraphicsParse.JsonSchema>;
+import { Cartesian2FromJSON, Cartesian2ToJSON, Cartesian2ZodSchema } from './Cartesian2';
+import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
+import { ColorFromJSON, ColorToJSON, ColorZodSchema } from './Color';
+import { DistanceDisplayConditionFromJSON, DistanceDisplayConditionToJSON, DistanceDisplayConditionZodSchema } from './DistanceDisplayCondition';
+import { HeightReferenceFromJSON, HeightReferenceToJSON, HeightReferenceZodSchema } from './HeightReference';
+import { HorizontalOriginFromJSON, HorizontalOriginToJSON, HorizontalOriginZodSchema } from './HorizontalOrigin';
+import { LabelStyleFromJSON, LabelStyleToJSON, LabelStyleZodSchema } from './LabelStyle';
+import { NearFarScalarFromJSON, NearFarScalarToJSON, NearFarScalarZodSchema } from './NearFarScalar';
+import { VerticalOriginFromJSON, VerticalOriginToJSON, VerticalOriginZodSchema } from './VerticalOrigin';
 
 /**
- * Serialize a `LabelGraphics` instance to JSON and deserialize from JSON
+ * `Cesium.LabelGraphics` JSON ZodSchema
  */
-export class LabelGraphicsParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    show: z.boolean().optional(),
-    text: z.string().optional(),
-    font: z.string().optional(),
-    style: LabelStyleParse.JsonSchema.optional(),
-    scale: z.number().optional(),
-    showBackground: z.boolean().optional(),
-    backgroundColor: ColorParse.JsonSchema.optional(),
-    backgroundPadding: Cartesian2Parse.JsonSchema.optional(),
-    pixelOffset: Cartesian2Parse.JsonSchema.optional(),
-    eyeOffset: Cartesian3Parse.JsonSchema.optional(),
-    horizontalOrigin: HorizontalOriginParse.JsonSchema.optional(),
-    verticalOrigin: VerticalOriginParse.JsonSchema.optional(),
-    heightReference: HeightReferenceParse.JsonSchema.optional(),
-    fillColor: ColorParse.JsonSchema.optional(),
-    outlineColor: ColorParse.JsonSchema.optional(),
-    outlineWidth: z.number().optional(),
-    translucencyByDistance: NearFarScalarParse.JsonSchema.optional(),
-    pixelOffsetScaleByDistance: NearFarScalarParse.JsonSchema.optional(),
-    scaleByDistance: NearFarScalarParse.JsonSchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
-    disableDepthTestDistance: z.number().optional(),
+export function LabelGraphicsZodSchema() {
+  return z.object({
+    parser: z.literal('LabelGraphics'),
+    value: z.object({
+      show: z.boolean().optional(),
+      text: z.string().optional(),
+      font: z.string().optional(),
+      style: LabelStyleZodSchema().optional(),
+      scale: z.number().optional(),
+      showBackground: z.boolean().optional(),
+      backgroundColor: ColorZodSchema().optional(),
+      backgroundPadding: Cartesian2ZodSchema().optional(),
+      pixelOffset: Cartesian2ZodSchema().optional(),
+      eyeOffset: Cartesian3ZodSchema().optional(),
+      horizontalOrigin: HorizontalOriginZodSchema().optional(),
+      verticalOrigin: VerticalOriginZodSchema().optional(),
+      heightReference: HeightReferenceZodSchema().optional(),
+      fillColor: ColorZodSchema().optional(),
+      outlineColor: ColorZodSchema().optional(),
+      outlineWidth: z.number().optional(),
+      translucencyByDistance: NearFarScalarZodSchema().optional(),
+      pixelOffsetScaleByDistance: NearFarScalarZodSchema().optional(),
+      scaleByDistance: NearFarScalarZodSchema().optional(),
+      distanceDisplayCondition: DistanceDisplayConditionZodSchema().optional(),
+      disableDepthTestDistance: z.number().optional(),
+    }),
   });
+}
 
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(LabelGraphics);
+export type LabelGraphicsJSON = z.infer<ReturnType<typeof LabelGraphicsZodSchema>>;
 
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: LabelGraphics, time?: JulianDate): LabelGraphicsJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
+/**
+ * Convert `Cesium.LabelGraphics` instance to JSON
+ */
+export function LabelGraphicsToJSON(instance?: LabelGraphics, time?: JulianDate): LabelGraphicsJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(LabelGraphics).parse(instance);
+  return {
+    parser: 'LabelGraphics',
+    value: {
       show: toPropertyValue(instance.show, time),
       text: toPropertyValue(instance.text, time),
       font: toPropertyValue(instance.font, time),
-      style: LabelStyleParse.toJSON(toPropertyValue(instance.style, time)),
+      style: LabelStyleToJSON(toPropertyValue(instance.style, time)),
       scale: toPropertyValue(instance.scale, time),
       showBackground: toPropertyValue(instance.showBackground, time),
-      backgroundColor: ColorParse.toJSON(toPropertyValue(instance.backgroundColor, time)),
-      backgroundPadding: Cartesian2Parse.toJSON(toPropertyValue(instance.backgroundPadding, time)),
-      pixelOffset: Cartesian2Parse.toJSON(toPropertyValue(instance.pixelOffset, time)),
-      eyeOffset: Cartesian3Parse.toJSON(toPropertyValue(instance.eyeOffset, time)),
-      horizontalOrigin: HorizontalOriginParse.toJSON(toPropertyValue(instance.horizontalOrigin, time)),
-      verticalOrigin: VerticalOriginParse.toJSON(toPropertyValue(instance.verticalOrigin, time)),
-      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
-      fillColor: ColorParse.toJSON(toPropertyValue(instance.fillColor, time)),
-      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      backgroundColor: ColorToJSON(toPropertyValue(instance.backgroundColor, time)),
+      backgroundPadding: Cartesian2ToJSON(toPropertyValue(instance.backgroundPadding, time)),
+      pixelOffset: Cartesian2ToJSON(toPropertyValue(instance.pixelOffset, time)),
+      eyeOffset: Cartesian3ToJSON(toPropertyValue(instance.eyeOffset, time)),
+      horizontalOrigin: HorizontalOriginToJSON(toPropertyValue(instance.horizontalOrigin, time)),
+      verticalOrigin: VerticalOriginToJSON(toPropertyValue(instance.verticalOrigin, time)),
+      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
+      fillColor: ColorToJSON(toPropertyValue(instance.fillColor, time)),
+      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      translucencyByDistance: NearFarScalarParse.toJSON(toPropertyValue(instance.translucencyByDistance, time)),
-      pixelOffsetScaleByDistance: NearFarScalarParse.toJSON(toPropertyValue(instance.pixelOffsetScaleByDistance, time)),
-      scaleByDistance: NearFarScalarParse.toJSON(toPropertyValue(instance.scaleByDistance, time)),
-      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+      translucencyByDistance: NearFarScalarToJSON(toPropertyValue(instance.translucencyByDistance, time)),
+      pixelOffsetScaleByDistance: NearFarScalarToJSON(toPropertyValue(instance.pixelOffsetScaleByDistance, time)),
+      scaleByDistance: NearFarScalarToJSON(toPropertyValue(instance.scaleByDistance, time)),
+      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
       disableDepthTestDistance: toPropertyValue(instance.disableDepthTestDistance, time),
-    };
-  }
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: LabelGraphicsJSON, result?: LabelGraphics): LabelGraphics | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new LabelGraphics({
-      show: json.show ?? undefined,
-      text: json.text ?? undefined,
-      font: json.font ?? undefined,
-      style: LabelStyleParse.fromJSON(json?.style),
-      scale: json.scale ?? undefined,
-      showBackground: json.showBackground ?? undefined,
-      backgroundColor: ColorParse.fromJSON(json?.backgroundColor),
-      backgroundPadding: Cartesian2Parse.fromJSON(json?.backgroundPadding),
-      pixelOffset: Cartesian2Parse.fromJSON(json?.pixelOffset),
-      eyeOffset: Cartesian3Parse.fromJSON(json?.eyeOffset),
-      horizontalOrigin: HorizontalOriginParse.fromJSON(json?.horizontalOrigin),
-      verticalOrigin: VerticalOriginParse.fromJSON(json?.verticalOrigin),
-      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
-      fillColor: ColorParse.fromJSON(json?.fillColor),
-      outlineColor: ColorParse.fromJSON(json?.outlineColor),
-      outlineWidth: json.outlineWidth ?? undefined,
-      translucencyByDistance: NearFarScalarParse.fromJSON(json?.translucencyByDistance),
-      pixelOffsetScaleByDistance: NearFarScalarParse.fromJSON(json?.pixelOffsetScaleByDistance),
-      scaleByDistance: NearFarScalarParse.fromJSON(json?.scaleByDistance),
-      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
-      disableDepthTestDistance: json.disableDepthTestDistance ?? undefined,
-    });
-    return result ? instance.clone(result) : instance;
+/**
+ * Convert JSON to `Cesium.LabelGraphics` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function LabelGraphicsFromJSON(json?: LabelGraphicsJSON, result?: LabelGraphics): LabelGraphics | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = LabelGraphicsZodSchema().parse(result);
+  const instance = new LabelGraphics({
+    show: json.value.show,
+    text: json.value.text,
+    font: json.value.font,
+    style: LabelStyleFromJSON(json.value.style),
+    scale: json.value.scale,
+    showBackground: json.value.showBackground,
+    backgroundColor: ColorFromJSON(json.value.backgroundColor),
+    backgroundPadding: Cartesian2FromJSON(json.value.backgroundPadding),
+    pixelOffset: Cartesian2FromJSON(json.value.pixelOffset),
+    eyeOffset: Cartesian3FromJSON(json.value.eyeOffset),
+    horizontalOrigin: HorizontalOriginFromJSON(json.value.horizontalOrigin),
+    verticalOrigin: VerticalOriginFromJSON(json.value.verticalOrigin),
+    heightReference: HeightReferenceFromJSON(json.value.heightReference),
+    fillColor: ColorFromJSON(json.value.fillColor),
+    outlineColor: ColorFromJSON(json.value.outlineColor),
+    outlineWidth: json.value.outlineWidth,
+    translucencyByDistance: NearFarScalarFromJSON(json.value.translucencyByDistance),
+    pixelOffsetScaleByDistance: NearFarScalarFromJSON(json.value.pixelOffsetScaleByDistance),
+    scaleByDistance: NearFarScalarFromJSON(json.value.scaleByDistance),
+    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+    disableDepthTestDistance: json.value.disableDepthTestDistance,
+  });
+  return result ? instance.clone(result) : instance;
 }

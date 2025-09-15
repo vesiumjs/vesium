@@ -1,44 +1,39 @@
 import { ColorBlendMode } from 'cesium';
-
 import { z } from 'zod';
 
 const strings = ['HIGHLIGHT', 'REPLACE', 'MIX'] as const;
 
-export type ColorBlendModeJSON = z.infer<typeof ColorBlendModeParse.JsonSchema>;
+/**
+ * `Cesium.ColorBlendMode` JSON ZodSchema
+ */
+export function ColorBlendModeZodSchema() {
+  return z.object({
+    parser: z.literal('ColorBlendMode'),
+    value: z.enum(strings),
+  });
+}
+
+export type ColorBlendModeJSON = z.infer<ReturnType<typeof ColorBlendModeZodSchema>>;
 
 /**
- * Serialize a `ColorBlendMode` instance to JSON and deserialize from JSON
+ * Convert `Cesium.ColorBlendMode` instance to JSON
  */
-export class ColorBlendModeParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.enum(strings);
-
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.enum(ColorBlendMode);
-
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: ColorBlendMode): ColorBlendModeJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return Object.keys(ColorBlendMode).find((key: any) => Reflect.get(ColorBlendMode, key) === instance) as any;
+export function ColorBlendModeToJSON(instance?: ColorBlendMode): ColorBlendModeJSON | undefined {
+  if (!instance) {
+    return undefined;
   }
+  instance = z.enum(ColorBlendMode).parse(instance);
+  return {
+    parser: 'ColorBlendMode',
+    value: Object.keys(ColorBlendMode).find((key: any) => Reflect.get(ColorBlendMode, key) === instance) as any,
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   */
-  static fromJSON(json?: ColorBlendModeJSON): ColorBlendMode | undefined {
-    if (json) {
-      return ColorBlendMode[json];
-    }
+/**
+ * Convert JSON to `Cesium.ColorBlendMode` instance
+ */
+export function ColorBlendModeFromJSON(json?: ColorBlendModeJSON): ColorBlendMode | undefined {
+  if (json) {
+    return ColorBlendMode[json.value];
   }
 }

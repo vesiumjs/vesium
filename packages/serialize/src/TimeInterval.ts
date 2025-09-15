@@ -1,65 +1,61 @@
 import { TimeInterval } from 'cesium';
 import { z } from 'zod';
-import { JulianDateParse } from './JulianDate';
-
-export type TimeIntervalJSON = z.infer<typeof TimeIntervalParse.JsonSchema>;
+import { JulianDateFromJSON, JulianDateToJSON, JulianDateZodSchema } from './JulianDate';
 
 /**
- * Serialize a `TimeInterval` instance to JSON and deserialize from JSON
+ * `Cesium.TimeInterval` JSON ZodSchema
  */
-export class TimeIntervalParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    start: JulianDateParse.JsonSchema.optional(),
-    stop: JulianDateParse.JsonSchema.optional(),
-    isStartIncluded: z.boolean().optional(),
-    isStopIncluded: z.boolean().optional(),
-    data: z.any().optional(),
+export function TimeIntervalZodSchema() {
+  return z.object({
+    parser: z.literal('TimeInterval'),
+    value: z.object({
+      start: JulianDateZodSchema().optional(),
+      stop: JulianDateZodSchema().optional(),
+      isStartIncluded: z.boolean().optional(),
+      isStopIncluded: z.boolean().optional(),
+      data: z.any().optional(),
+    }),
   });
+}
 
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(TimeInterval);
+export type TimeIntervalJSON = z.infer<ReturnType<typeof TimeIntervalZodSchema>>;
 
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: TimeInterval): TimeIntervalJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
-      start: JulianDateParse.toJSON(instance?.start),
-      stop: JulianDateParse.toJSON(instance?.stop),
+/**
+ * Convert `Cesium.TimeInterval` instance to JSON
+ */
+export function TimeIntervalToJSON(instance?: TimeInterval): TimeIntervalJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(TimeInterval).parse(instance);
+  return {
+    parser: 'TimeInterval',
+    value: {
+      start: JulianDateToJSON(instance.start),
+      stop: JulianDateToJSON(instance.stop),
       isStartIncluded: instance.isStartIncluded,
       isStopIncluded: instance.isStopIncluded,
       data: instance.data,
-    };
-  }
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: TimeIntervalJSON, result?: TimeInterval): TimeInterval | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new TimeInterval({
-      start: JulianDateParse.fromJSON(json?.start),
-      stop: JulianDateParse.fromJSON(json?.stop),
-      isStartIncluded: json.isStartIncluded ?? undefined,
-      isStopIncluded: json.isStopIncluded ?? undefined,
-      data: json.data ?? undefined,
-    });
-    return result ? instance.clone(result) : instance;
+/**
+ * Convert JSON to `Cesium.TimeInterval` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function TimeIntervalFromJSON(json?: TimeIntervalJSON, result?: TimeInterval): TimeInterval | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = TimeIntervalZodSchema().parse(result);
+  const instance = new TimeInterval({
+    start: JulianDateFromJSON(json.value.start),
+    stop: JulianDateFromJSON(json.value.stop),
+    isStartIncluded: json.value.isStartIncluded,
+    isStopIncluded: json.value.isStopIncluded,
+    data: json.value.data,
+  });
+  return result ? instance.clone(result) : instance;
 }

@@ -1,89 +1,83 @@
 import type { JulianDate } from 'cesium';
-
 import { BoxGraphics } from 'cesium';
 import { toPropertyValue } from 'vesium';
 import { z } from 'zod';
-import { Cartesian3Parse } from './Cartesian3';
-import { ColorParse } from './Color';
-import { DistanceDisplayConditionParse } from './DistanceDisplayCondition';
-import { HeightReferenceParse } from './HeightReference';
-import { MaterialPropertyParse } from './MaterialProperty';
-
-import { ShadowModeParse } from './ShadowMode';
-
-export type BoxGraphicsJSON = z.infer<typeof BoxGraphicsParse.JsonSchema>;
+import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
+import { ColorFromJSON, ColorToJSON, ColorZodSchema } from './Color';
+import { DistanceDisplayConditionFromJSON, DistanceDisplayConditionToJSON, DistanceDisplayConditionZodSchema } from './DistanceDisplayCondition';
+import { HeightReferenceFromJSON, HeightReferenceToJSON, HeightReferenceZodSchema } from './HeightReference';
+import { MaterialPropertyFromJSON, MaterialPropertyToJSON, MaterialPropertyZodSchema } from './MaterialProperty';
+import { ShadowModeFromJSON, ShadowModeToJSON, ShadowModeZodSchema } from './ShadowMode';
 
 /**
- * Serialize a `BoxGraphics` instance to JSON and deserialize from JSON
+ * `Cesium.BoxGraphics` JSON ZodSchema
  */
-export class BoxGraphicsParse {
-  private constructor() {}
-
-  /**
-   * zod schema for validating JSON data
-   */
-  static readonly JsonSchema = z.object({
-    show: z.boolean().optional(),
-    dimensions: Cartesian3Parse.JsonSchema.optional(),
-    heightReference: HeightReferenceParse.JsonSchema.optional(),
-    fill: z.boolean().optional(),
-    material: MaterialPropertyParse.JsonSchema.optional(),
-    outline: z.boolean().optional(),
-    outlineColor: ColorParse.JsonSchema.optional(),
-    outlineWidth: z.number().optional(),
-    shadows: ShadowModeParse.JsonSchema.optional(),
-    distanceDisplayCondition: DistanceDisplayConditionParse.JsonSchema.optional(),
+export function BoxGraphicsZodSchema() {
+  return z.object({
+    parser: z.literal('BoxGraphics'),
+    value: z.object({
+      show: z.boolean().optional(),
+      dimensions: Cartesian3ZodSchema().optional(),
+      heightReference: HeightReferenceZodSchema().optional(),
+      fill: z.boolean().optional(),
+      material: MaterialPropertyZodSchema().optional(),
+      outline: z.boolean().optional(),
+      outlineColor: ColorZodSchema().optional(),
+      outlineWidth: z.number().optional(),
+      shadows: ShadowModeZodSchema().optional(),
+      distanceDisplayCondition: DistanceDisplayConditionZodSchema().optional(),
+    }),
   });
+}
 
-  /**
-   * zod schema for validating instance data
-   */
-  static readonly InstanceSchema = z.instanceof(BoxGraphics);
+export type BoxGraphicsJSON = z.infer<ReturnType<typeof BoxGraphicsZodSchema>>;
 
-  /**
-   * Convert an instance to a JSON
-   */
-  static toJSON(instance?: BoxGraphics, time?: JulianDate): BoxGraphicsJSON | undefined {
-    if (!instance) {
-      return undefined;
-    }
-    instance = this.InstanceSchema.parse(instance);
-    return {
+/**
+ * Convert `Cesium.BoxGraphics` instance to JSON
+ */
+export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate): BoxGraphicsJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(BoxGraphics).parse(instance);
+  return {
+    parser: 'BoxGraphics',
+    value: {
       show: toPropertyValue(instance.show, time),
-      dimensions: Cartesian3Parse.toJSON(toPropertyValue(instance.dimensions, time)),
-      heightReference: HeightReferenceParse.toJSON(toPropertyValue(instance.heightReference, time)),
+      dimensions: Cartesian3ToJSON(toPropertyValue(instance.dimensions, time)),
+      heightReference: HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
       fill: toPropertyValue(instance.fill, time),
-      material: MaterialPropertyParse.toJSON(toPropertyValue(instance.material, time)),
+      material: MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
       outline: toPropertyValue(instance.outline, time),
-      outlineColor: ColorParse.toJSON(toPropertyValue(instance.outlineColor, time)),
+      outlineColor: ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: toPropertyValue(instance.outlineWidth, time),
-      shadows: ShadowModeParse.toJSON(toPropertyValue(instance.shadows, time)),
-      distanceDisplayCondition: DistanceDisplayConditionParse.toJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
-    };
-  }
+      shadows: ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
+      distanceDisplayCondition: DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
+    },
+  };
+}
 
-  /**
-   * Convert a JSON to an instance
-   * @param json - A JSON containing instance data
-   * @param result - Used to store the resulting instance. If not provided, a new instance will be created
-   */
-  static fromJSON(json?: BoxGraphicsJSON, result?: BoxGraphics): BoxGraphics | undefined {
-    if (!json) {
-      return undefined;
-    }
-    json = this.JsonSchema.parse(result);
-    const instance = new BoxGraphics({
-      show: json.show ?? undefined,
-      dimensions: Cartesian3Parse.fromJSON(json?.dimensions),
-      heightReference: HeightReferenceParse.fromJSON(json?.heightReference),
-      fill: json.fill ?? undefined,
-      material: MaterialPropertyParse.fromJSON(json?.material),
-      outline: json.outline ?? undefined,
-      outlineColor: ColorParse.fromJSON(json?.outlineColor) ?? undefined,
-      outlineWidth: json.outlineWidth ?? undefined,
-      shadows: ShadowModeParse.fromJSON(json?.shadows),
-      distanceDisplayCondition: DistanceDisplayConditionParse.fromJSON(json?.distanceDisplayCondition),
-    });
-    return result ? instance.clone(result) : instance;
+/**
+ * Convert JSON to `Cesium.BoxGraphics` instance
+ * @param json - A JSON containing instance data
+ * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ */
+export function BoxGraphicsFromJSON(json?: BoxGraphicsJSON, result?: BoxGraphics): BoxGraphics | undefined {
+  if (!json) {
+    return undefined;
   }
+  json = BoxGraphicsZodSchema().parse(result);
+  const instance = new BoxGraphics({
+    show: json.value.show,
+    dimensions: Cartesian3FromJSON(json.value.dimensions),
+    heightReference: HeightReferenceFromJSON(json.value.heightReference),
+    fill: json.value.fill,
+    material: MaterialPropertyFromJSON(json.value.material),
+    outline: json.value.outline,
+    outlineColor: ColorFromJSON(json.value.outlineColor),
+    outlineWidth: json.value.outlineWidth,
+    shadows: ShadowModeFromJSON(json.value.shadows),
+    distanceDisplayCondition: DistanceDisplayConditionFromJSON(json.value.distanceDisplayCondition),
+  });
+  return result ? instance.clone(result) : instance;
 }
