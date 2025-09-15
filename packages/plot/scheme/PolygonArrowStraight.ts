@@ -1,7 +1,5 @@
 import { arrowStraight } from '@vesium/geometry';
-
 import { CallbackProperty, Entity, PolygonHierarchy } from 'cesium';
-
 import { toCartesian3, toCoord } from 'vesium';
 import { control, moved } from '../skeleton';
 import { PlotScheme } from '../usePlot';

@@ -1,5 +1,4 @@
 import type { CoordArray } from 'vesium';
-
 import { getBaseLength, getThirdCoord, HALF_PI } from './helper';
 
 export interface FineArrowOptions {

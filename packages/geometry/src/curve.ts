@@ -1,5 +1,4 @@
 import type { CoordArray } from 'vesium';
-
 import { getCurveCoords } from './helper';
 /**
  * 标绘曲线算法

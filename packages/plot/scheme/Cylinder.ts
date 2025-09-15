@@ -4,7 +4,6 @@ import { CallbackProperty, Cartesian3, ConstantPositionProperty, Entity } from '
  * cylinder标绘配置
  */
 import { toProperty, toPropertyValue } from 'vesium';
-
 import { control, moved } from '../skeleton';
 import { PlotScheme } from '../usePlot';
 

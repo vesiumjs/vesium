@@ -1,6 +1,5 @@
 import type { ClassificationType, Scene, TerrainProvider } from 'cesium';
 import { Cartesian3 } from 'cesium';
-
 import { clampToHeightMostDetailedByTilesetOrTerrain } from './clampToGround';
 
 export interface LerpArrayOptions {

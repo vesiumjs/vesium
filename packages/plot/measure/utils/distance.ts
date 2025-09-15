@@ -1,6 +1,5 @@
 import type { Scene, TerrainProvider } from 'cesium';
 import { Cartesian3, ClassificationType } from 'cesium';
-
 import { lerpArray } from './lerpArray';
 
 /**

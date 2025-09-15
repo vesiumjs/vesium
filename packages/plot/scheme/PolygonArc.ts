@@ -1,8 +1,6 @@
 import { arc } from '@vesium/geometry';
 import { CallbackProperty, Entity, PolygonHierarchy } from 'cesium';
-
 import { toCartesian3, toCoord } from 'vesium';
-
 import { control, moved } from '../skeleton';
 /**
  * 弓形

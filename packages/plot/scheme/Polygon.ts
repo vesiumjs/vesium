@@ -1,5 +1,4 @@
 import { CallbackProperty, Entity, PolygonHierarchy } from 'cesium';
-
 import { control, interval, moved } from '../skeleton';
 /**
  * 基础Polygon标绘配置

@@ -1,5 +1,4 @@
 import type { CoordArray } from 'vesium';
-
 import { getArrowBodyCoords, getArrowHeadCoords } from './arrowAttackDirection';
 import { getBaseLength, getQBSplineCoords, getThirdCoord, isClockWise, mathDistance, mid } from './helper';
 

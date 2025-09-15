@@ -1,6 +1,5 @@
 import * as turf from '@turf/turf';
 import { CallbackProperty, Entity, PolygonHierarchy } from 'cesium';
-
 import { toCartesian3, toCoord } from 'vesium';
 import { control, intervalNonclosed, moved } from '../skeleton';
 /**

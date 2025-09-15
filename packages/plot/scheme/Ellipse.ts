@@ -2,7 +2,6 @@
  * ellipse标绘配置 圆形扩散波
  */
 import { CallbackProperty, Cartesian3, ConstantPositionProperty, Entity } from 'cesium';
-
 import { control, moved } from '../skeleton';
 import { PlotScheme } from '../usePlot';
 

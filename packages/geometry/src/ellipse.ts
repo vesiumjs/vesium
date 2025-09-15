@@ -1,5 +1,4 @@
 import type { CoordArray } from 'vesium';
-
 import { FITTING_COUNT, mid } from './helper';
 
 /**

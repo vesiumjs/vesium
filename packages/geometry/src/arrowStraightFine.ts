@@ -1,5 +1,4 @@
 import type { CoordArray } from 'vesium';
-
 import { getThirdCoord, mathDistance } from './helper';
 
 /**

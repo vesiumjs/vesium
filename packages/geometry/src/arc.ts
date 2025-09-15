@@ -1,5 +1,4 @@
 import type { CoordArray } from 'vesium';
-
 import { getArcCoords, getAzimuth, getCircleCenterOfThreeCoords, isClockWise, mathDistance } from './helper';
 
 /**

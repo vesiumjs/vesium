@@ -1,5 +1,4 @@
 import { CallbackProperty, Entity, Rectangle } from 'cesium';
-
 import { control, moved } from '../skeleton';
 /**
  * rectangle

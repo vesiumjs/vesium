@@ -1,5 +1,4 @@
 import type { Event, JulianDate, MaterialProperty, TextureMagnificationFilter, TextureMinificationFilter } from 'cesium';
-
 import { Material } from 'cesium';
 
 /**

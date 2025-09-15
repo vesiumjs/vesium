@@ -2,7 +2,6 @@
  * polyline
  */
 import { CallbackProperty, Color, Entity } from 'cesium';
-
 import { control, intervalNonclosed, moved } from '../skeleton';
 import { PlotScheme } from '../usePlot';
 

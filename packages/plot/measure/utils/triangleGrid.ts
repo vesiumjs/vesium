@@ -1,6 +1,5 @@
 import type { Scene, TerrainProvider } from 'cesium';
 import { Cartesian3, ClassificationType, PerInstanceColorAppearance, PolygonGeometry, Rectangle } from 'cesium';
-
 import { clampToHeightMostDetailedByTilesetOrTerrain } from './clampToGround';
 
 /**

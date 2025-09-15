@@ -1,6 +1,5 @@
 import type { Scene, TerrainProvider } from 'cesium';
 import { Cartesian3, ClassificationType } from 'cesium';
-
 import { tesselate } from './tesselate';
 import { triangleGrid } from './triangleGrid';
 

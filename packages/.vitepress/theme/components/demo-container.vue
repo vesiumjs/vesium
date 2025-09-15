@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { AsyncComponentLoader } from 'vue';
 import { refAutoReset, useClipboard, useFullscreen } from '@vueuse/core';
-
 import { defineAsyncComponent, ref, shallowRef } from 'vue';
 
 const props = withDefaults(defineProps<{
