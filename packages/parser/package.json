@@ -1,5 +1,5 @@
 {
-  "name": "@vesium/serialize",
+  "name": "@vesium/parser",
   "type": "module",
   "version": "1.0.1-beta.52",
   "description": "Vue component and composition-api library for Cesium.",
