@@ -56,7 +56,7 @@ export function PathGraphicsFromJSON(json?: PathGraphicsJSON, result?: PathGraph
   if (!json) {
     return undefined;
   }
-  json = PathGraphicsZodSchema().parse(result);
+  json = PathGraphicsZodSchema().parse(json);
   const instance = new PathGraphics({
     show: json.value.show,
     leadTime: json.value.leadTime,

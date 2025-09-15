@@ -36,7 +36,7 @@ export function JulianDateFromJSON(json?: JulianDateJSON, result?: JulianDate): 
   if (!json) {
     return undefined;
   }
-  json = JulianDateZodSchema().parse(result);
+  json = JulianDateZodSchema().parse(json);
   const instance = JulianDate.fromIso8601(json.value);
   return result ? instance.clone(result) : instance;
 }

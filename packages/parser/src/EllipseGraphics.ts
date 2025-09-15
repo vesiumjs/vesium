@@ -86,7 +86,7 @@ export function EllipseGraphicsFromJSON(json?: EllipseGraphicsJSON, result?: Ell
   if (!json) {
     return undefined;
   }
-  json = EllipseGraphicsZodSchema().parse(result);
+  json = EllipseGraphicsZodSchema().parse(json);
   const instance = new EllipseGraphics({
     show: json.value.show,
     semiMajorAxis: json.value.semiMajorAxis,

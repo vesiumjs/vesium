@@ -73,7 +73,7 @@ export function CylinderGraphicsFromJSON(json?: CylinderGraphicsJSON, result?: C
   if (!json) {
     return undefined;
   }
-  json = CylinderGraphicsZodSchema().parse(result);
+  json = CylinderGraphicsZodSchema().parse(json);
   const instance = new CylinderGraphics({
     show: json.value.show,
     length: json.value.length,

@@ -43,7 +43,7 @@ export function PlaneFromJSON(json?: PlaneJSON, result?: Plane): Plane | undefin
   if (!json) {
     return undefined;
   }
-  json = PlaneZodSchema().parse(result);
+  json = PlaneZodSchema().parse(json);
   const instance = new Plane(
     Cartesian3FromJSON(json.value.normal)!,
     json.value.distance,

@@ -42,7 +42,7 @@ export function ConstantPositionPropertyFromJSON(json?: ConstantPositionProperty
   if (!json) {
     return undefined;
   }
-  json = ConstantPositionPropertyZodSchema().parse(result);
+  json = ConstantPositionPropertyZodSchema().parse(json);
   const instance = new ConstantPositionProperty(Cartesian3FromJSON({ parser: 'Cartesian3', value: json.value }));
   result && instance.setValue(result.getValue());
   return instance;

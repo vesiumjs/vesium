@@ -46,7 +46,7 @@ export function Cesium3DTilesetGraphicsFromJSON(json?: Cesium3DTilesetGraphicsJS
   if (!json) {
     return undefined;
   }
-  json = Cesium3DTilesetGraphicsZodSchema().parse(result);
+  json = Cesium3DTilesetGraphicsZodSchema().parse(json);
   const instance = new Cesium3DTilesetGraphics({
     show: json.value.show,
     uri: json.value.uri,

@@ -67,7 +67,7 @@ export function PointGraphicsFromJSON(json?: PointGraphicsJSON, result?: PointGr
   if (!json) {
     return undefined;
   }
-  json = PointGraphicsZodSchema().parse(result);
+  json = PointGraphicsZodSchema().parse(json);
   const instance = new PointGraphics({
     show: json.value.show,
     pixelSize: json.value.pixelSize,

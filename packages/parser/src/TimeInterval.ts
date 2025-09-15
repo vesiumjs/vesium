@@ -49,7 +49,7 @@ export function TimeIntervalFromJSON(json?: TimeIntervalJSON, result?: TimeInter
   if (!json) {
     return undefined;
   }
-  json = TimeIntervalZodSchema().parse(result);
+  json = TimeIntervalZodSchema().parse(json);
   const instance = new TimeInterval({
     start: JulianDateFromJSON(json.value.start),
     stop: JulianDateFromJSON(json.value.stop),

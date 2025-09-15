@@ -46,7 +46,7 @@ export function PropertyBagFromJSON(json?: PropertyBagJSON, result?: PropertyBag
   if (!json) {
     return undefined;
   }
-  json = PropertyBagZodSchema().parse(result);
+  json = PropertyBagZodSchema().parse(json);
   if (result) {
     result.propertyNames.forEach(key => result.removeProperty(key));
   }

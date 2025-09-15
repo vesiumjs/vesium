@@ -36,7 +36,7 @@ export function Matrix4FromJSON(json?: Matrix4JSON, result?: Matrix4): Matrix4 |
   if (!json) {
     return undefined;
   }
-  json = Matrix4ZodSchema().parse(result);
+  json = Matrix4ZodSchema().parse(json);
   const instance = new Matrix4(...json.value);
   return result ? instance.clone(result) : instance;
 }

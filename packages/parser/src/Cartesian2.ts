@@ -42,7 +42,7 @@ export function Cartesian2FromJSON(json?: Cartesian2JSON, result?: Cartesian2): 
   if (!json) {
     return undefined;
   }
-  json = Cartesian2ZodSchema().parse(result);
+  json = Cartesian2ZodSchema().parse(json);
   const instance = new Cartesian2(
     json.value.x,
     json.value.y,

@@ -42,7 +42,7 @@ export function DistanceDisplayConditionFromJSON(json?: DistanceDisplayCondition
   if (!json) {
     return undefined;
   }
-  json = DistanceDisplayConditionZodSchema().parse(result);
+  json = DistanceDisplayConditionZodSchema().parse(json);
   const instance = new DistanceDisplayCondition(
     json.value.near,
     json.value.far,

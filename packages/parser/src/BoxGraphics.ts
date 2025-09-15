@@ -66,7 +66,7 @@ export function BoxGraphicsFromJSON(json?: BoxGraphicsJSON, result?: BoxGraphics
   if (!json) {
     return undefined;
   }
-  json = BoxGraphicsZodSchema().parse(result);
+  json = BoxGraphicsZodSchema().parse(json);
   const instance = new BoxGraphics({
     show: json.value.show,
     dimensions: Cartesian3FromJSON(json.value.dimensions),

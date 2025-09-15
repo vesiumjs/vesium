@@ -91,7 +91,7 @@ export function LabelGraphicsFromJSON(json?: LabelGraphicsJSON, result?: LabelGr
   if (!json) {
     return undefined;
   }
-  json = LabelGraphicsZodSchema().parse(result);
+  json = LabelGraphicsZodSchema().parse(json);
   const instance = new LabelGraphics({
     show: json.value.show,
     text: json.value.text,

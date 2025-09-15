@@ -53,7 +53,7 @@ export function ClippingPlaneCollectionFromJSON(json?: ClippingPlaneCollectionJS
   if (!json) {
     return undefined;
   }
-  json = ClippingPlaneCollectionZodSchema().parse(result);
+  json = ClippingPlaneCollectionZodSchema().parse(json);
   const planes = json.value.planes.map(item => ClippingPlaneFromJSON(item)!);
   const instance = new ClippingPlaneCollection({
     planes: json.value.planes.map(item => ClippingPlaneFromJSON(item)!),

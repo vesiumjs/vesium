@@ -42,7 +42,7 @@ export function TimeIntervalCollectionFromJSON(json?: TimeIntervalCollectionJSON
   if (!json) {
     return undefined;
   }
-  json = TimeIntervalCollectionZodSchema().parse(result);
+  json = TimeIntervalCollectionZodSchema().parse(json);
   const intervals = json.value.intervals.map(item => TimeIntervalFromJSON(item)!);
   if (result) {
     result.removeAll();

@@ -83,7 +83,7 @@ export function RectangleGraphicsFromJSON(json?: RectangleGraphicsJSON, result?:
   if (!json) {
     return undefined;
   }
-  json = RectangleGraphicsZodSchema().parse(result);
+  json = RectangleGraphicsZodSchema().parse(json);
   const instance = new RectangleGraphics({
     show: json.value.show,
     coordinates: RectangleFromJSON(json.value.coordinates),

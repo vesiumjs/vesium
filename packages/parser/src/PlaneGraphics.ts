@@ -66,7 +66,7 @@ export function PlaneGraphicsFromJSON(json?: PlaneGraphicsJSON, result?: PlaneGr
   if (!json) {
     return undefined;
   }
-  json = PlaneGraphicsZodSchema().parse(result);
+  json = PlaneGraphicsZodSchema().parse(json);
   const instance = new PlaneGraphics({
     show: json.value.show,
     plane: PlaneFromJSON(json.value.plane),

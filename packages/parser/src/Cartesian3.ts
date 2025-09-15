@@ -44,7 +44,7 @@ export function Cartesian3FromJSON(json?: Cartesian3JSON, result?: Cartesian3): 
   if (!json) {
     return undefined;
   }
-  json = Cartesian3ZodSchema().parse(result);
+  json = Cartesian3ZodSchema().parse(json);
   const instance = new Cartesian3(
     json.value.x,
     json.value.y,

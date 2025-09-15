@@ -92,7 +92,7 @@ export function BillboardGraphicsFromJSON(json?: BillboardGraphicsJSON, result?:
   if (!json) {
     return undefined;
   }
-  json = BillboardGraphicsZodSchema().parse(result);
+  json = BillboardGraphicsZodSchema().parse(json);
   const instance = new BillboardGraphics({
     show: json.value.show,
     image: json.value.image,

@@ -46,7 +46,7 @@ export function NearFarScalarFromJSON(json?: NearFarScalarJSON, result?: NearFar
   if (!json) {
     return undefined;
   }
-  json = NearFarScalarZodSchema().parse(result);
+  json = NearFarScalarZodSchema().parse(json);
   const instance = new NearFarScalar(
     json.value.near,
     json.value.nearValue,

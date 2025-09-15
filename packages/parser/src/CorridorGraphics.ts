@@ -84,7 +84,7 @@ export function CorridorGraphicsFromJSON(json?: CorridorGraphicsJSON, result?: C
   if (!json) {
     return undefined;
   }
-  json = CorridorGraphicsZodSchema().parse(result);
+  json = CorridorGraphicsZodSchema().parse(json);
   const instance = new CorridorGraphics({
     show: json.value.show,
     positions: json.value.positions?.map(item => Cartesian3FromJSON(item)!),

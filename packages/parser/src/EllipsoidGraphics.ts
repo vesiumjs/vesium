@@ -82,7 +82,7 @@ export function EllipsoidGraphicsFromJSON(json?: EllipsoidGraphicsJSON, result?:
   if (!json) {
     return undefined;
   }
-  json = EllipsoidGraphicsZodSchema().parse(result);
+  json = EllipsoidGraphicsZodSchema().parse(json);
   const instance = new EllipsoidGraphics({
     show: json.value.show,
     radii: Cartesian3FromJSON(json.value.radii),

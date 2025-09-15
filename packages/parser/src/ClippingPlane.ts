@@ -43,7 +43,7 @@ export function ClippingPlaneFromJSON(json?: ClippingPlaneJSON, result?: Clippin
   if (!json) {
     return undefined;
   }
-  json = ClippingPlaneZodSchema().parse(result);
+  json = ClippingPlaneZodSchema().parse(json);
   const instance = new ClippingPlane(
     Cartesian3FromJSON(json.value.normal)!,
     json.value.distance,

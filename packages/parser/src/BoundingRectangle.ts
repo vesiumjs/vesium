@@ -46,7 +46,7 @@ export function BoundingRectangleFromJSON(json?: BoundingRectangleJSON, result?:
   if (!json) {
     return undefined;
   }
-  json = BoundingRectangleZodSchema().parse(result);
+  json = BoundingRectangleZodSchema().parse(json);
   const instance = new BoundingRectangle(
     json.value.x,
     json.value.y,

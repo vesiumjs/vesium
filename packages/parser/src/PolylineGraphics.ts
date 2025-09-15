@@ -70,7 +70,7 @@ export function PolylineGraphicsFromJSON(json?: PolylineGraphicsJSON, result?: P
   if (!json) {
     return undefined;
   }
-  json = PolylineGraphicsZodSchema().parse(result);
+  json = PolylineGraphicsZodSchema().parse(json);
   const instance = new PolylineGraphics({
     show: json.value.show,
     positions: json.value.positions?.map(item => Cartesian3FromJSON(item)!),

@@ -46,7 +46,7 @@ export function RectangleFromJSON(json?: RectangleJSON, result?: Rectangle): Rec
   if (!json) {
     return undefined;
   }
-  json = RectangleZodSchema().parse(result);
+  json = RectangleZodSchema().parse(json);
   const instance = new Rectangle(
     json.value.west,
     json.value.south,

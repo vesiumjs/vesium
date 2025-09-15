@@ -92,7 +92,7 @@ export function PolygonGraphicsFromJSON(json?: PolygonGraphicsJSON, result?: Pol
   if (!json) {
     return undefined;
   }
-  json = PolygonGraphicsZodSchema().parse(result);
+  json = PolygonGraphicsZodSchema().parse(json);
   const instance = new PolygonGraphics({
     show: json.value.show,
     hierarchy: PolygonHierarchyFromJSON(json.value.hierarchy),

@@ -69,7 +69,7 @@ export function WallGraphicsFromJSON(json?: WallGraphicsJSON, result?: WallGraph
   if (!json) {
     return undefined;
   }
-  json = WallGraphicsZodSchema().parse(result);
+  json = WallGraphicsZodSchema().parse(json);
   const instance = new WallGraphics({
     show: json.value.show,
     positions: json.value.positions?.map(item => Cartesian3FromJSON(item)!),

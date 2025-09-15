@@ -48,7 +48,7 @@ export function PolygonHierarchyFromJSON(json?: PolygonHierarchyJSON, result?: P
   if (!json) {
     return undefined;
   }
-  json = PolygonHierarchyZodSchema().parse(result);
+  json = PolygonHierarchyZodSchema().parse(json);
   const instance = new PolygonHierarchy(
     json.value.positions?.map(item => Cartesian3FromJSON(item)!),
     json.value.holes?.map(item => PolygonHierarchyFromJSON(item)!),

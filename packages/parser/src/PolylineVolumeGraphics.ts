@@ -71,7 +71,7 @@ export function PolylineVolumeGraphicsFromJSON(json?: PolylineVolumeGraphicsJSON
   if (!json) {
     return undefined;
   }
-  json = PolylineVolumeGraphicsZodSchema().parse(result);
+  json = PolylineVolumeGraphicsZodSchema().parse(json);
   const instance = new PolylineVolumeGraphics({
     show: json.value.show,
     positions: json.value.positions?.map(item => Cartesian3FromJSON(item)!),

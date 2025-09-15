@@ -46,7 +46,7 @@ export function ColorFromJSON(json?: ColorJSON, result?: Color): Color | undefin
   if (!json) {
     return undefined;
   }
-  json = ColorZodSchema().parse(result);
+  json = ColorZodSchema().parse(json);
   const instance = new Color(
     json.value.red,
     json.value.green,

@@ -94,7 +94,7 @@ export function ModelGraphicsFromJSON(json?: ModelGraphicsJSON, result?: ModelGr
   if (!json) {
     return undefined;
   }
-  json = ModelGraphicsZodSchema().parse(result);
+  json = ModelGraphicsZodSchema().parse(json);
   const instance = new ModelGraphics({
     show: json.value.show,
     uri: json.value.uri,

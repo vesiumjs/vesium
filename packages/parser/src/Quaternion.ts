@@ -46,7 +46,7 @@ export function QuaternionFromJSON(json?: QuaternionJSON, result?: Quaternion): 
   if (!json) {
     return undefined;
   }
-  json = QuaternionZodSchema().parse(result);
+  json = QuaternionZodSchema().parse(json);
   const instance = new Quaternion(
     json.value.x,
     json.value.y,

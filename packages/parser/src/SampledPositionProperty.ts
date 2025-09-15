@@ -55,7 +55,7 @@ export function SampledPositionPropertyFromJSON(json?: SampledPositionPropertyJS
   if (!json) {
     return undefined;
   }
-  json = SampledPositionPropertyZodSchema().parse(result);
+  json = SampledPositionPropertyZodSchema().parse(json);
 
   const instance = new SampledPositionProperty(
     ReferenceFrameFromJSON(json.value.referenceFrame),
