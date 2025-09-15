@@ -26,7 +26,10 @@ export function TimeIntervalCollectionToJSON(instance?: TimeIntervalCollection):
   instance = z.instanceof(TimeIntervalCollection).parse(instance);
   const intervals = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
   return {
-    intervals: intervals.map(item => TimeIntervalToJSON(item)!),
+    parser: 'TimeIntervalCollection',
+    value: {
+      intervals: intervals.map(item => TimeIntervalToJSON(item)!),
+    },
   };
 }
 

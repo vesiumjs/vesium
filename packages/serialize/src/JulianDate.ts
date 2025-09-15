@@ -4,7 +4,12 @@ import { z } from 'zod';
 /**
  * `Cesium.JulianDate` JSON ZodSchema
  */
-export const JulianDateZodSchema = () => z.string();
+export function JulianDateZodSchema() {
+  return z.object({
+    parser: z.literal('JulianDate'),
+    value: z.string(),
+  });
+}
 
 export type JulianDateJSON = z.infer<ReturnType<typeof JulianDateZodSchema>>;
 
@@ -16,7 +21,10 @@ export function JulianDateToJSON(instance?: JulianDate): JulianDateJSON | undefi
     return undefined;
   }
   instance = z.instanceof(JulianDate).parse(instance);
-  return instance.toString();
+  return {
+    parser: 'JulianDate',
+    value: JulianDate.toIso8601(instance),
+  };
 }
 
 /**
@@ -29,6 +37,6 @@ export function JulianDateFromJSON(json?: JulianDateJSON, result?: JulianDate): 
     return undefined;
   }
   json = JulianDateZodSchema().parse(result);
-  const instance = JulianDate.fromIso8601(json);
+  const instance = JulianDate.fromIso8601(json.value);
   return result ? instance.clone(result) : instance;
 }

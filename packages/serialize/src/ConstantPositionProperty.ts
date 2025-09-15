@@ -14,7 +14,7 @@ export function ConstantPositionPropertyZodSchema() {
       x: z.number().optional(),
       y: z.number().optional(),
       z: z.number().optional(),
-    }),
+    }).optional(),
   });
 }
 
@@ -27,7 +27,10 @@ export function ConstantPositionPropertyToJSON(instance?: ConstantPositionProper
   if (!notNullish(instance)) {
     return;
   }
-  return Cartesian3ToJSON(instance.getValue(time));
+  return {
+    parser: 'ConstantPositionProperty',
+    value: Cartesian3ToJSON(instance.getValue(time))?.value,
+  };
 }
 
 /**
@@ -40,7 +43,7 @@ export function ConstantPositionPropertyFromJSON(json?: ConstantPositionProperty
     return undefined;
   }
   json = ConstantPositionPropertyZodSchema().parse(result);
-  const instance = new ConstantPositionProperty(Cartesian3FromJSON(json));
+  const instance = new ConstantPositionProperty(Cartesian3FromJSON({ parser: 'Cartesian3', value: json.value }));
   result && instance.setValue(result.getValue());
   return instance;
 }

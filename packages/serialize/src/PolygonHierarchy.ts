@@ -1,23 +1,27 @@
-import type { Cartesian3JSON } from './Cartesian3';
 import { PolygonHierarchy } from 'cesium';
 import { z } from 'zod';
 import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
 
-export interface PolygonHierarchyJSON {
-  positions: Cartesian3JSON[];
-  holes: PolygonHierarchyJSON[];
-}
+export type PolygonHierarchyJSON = z.infer<ReturnType<typeof PolygonHierarchyZodSchema>>;
 
 /**
  * `Cesium.PolygonHierarchy` JSON ZodSchema
  */
-export const PolygonHierarchyZodSchema: any = z.lazy(() => {
+export function PolygonHierarchyZodSchema(): z.ZodObject<{
+  parser: z.ZodLiteral<'PolygonHierarchy'>;
+  value: z.ZodObject<{
+    positions: z.ZodArray<ReturnType<typeof Cartesian3ZodSchema>>;
+    holes: z.ZodLazy<z.ZodOptional<z.ZodArray<ReturnType<typeof PolygonHierarchyZodSchema>>>>;
+  }>;
+}> {
   return z.object({
-    positions: z.array(Cartesian3ZodSchema()),
-    holes: z.array(PolygonHierarchyZodSchema),
+    parser: z.literal('PolygonHierarchy'),
+    value: z.object({
+      positions: z.array(Cartesian3ZodSchema()),
+      holes: z.lazy(() => z.array(PolygonHierarchyZodSchema()).optional()),
+    }),
   });
-});
-
+}
 /**
  * Convert `Cesium.PolygonHierarchy` instance to JSON
  */
@@ -29,8 +33,8 @@ export function PolygonHierarchyToJSON(instance?: PolygonHierarchy): PolygonHier
   return {
     parser: 'PolygonHierarchy',
     value: {
-      positions: instance.positions.map((item: any) => Cartesian3ToJSON(item)!),
-      holes: instance.holes.map((item: any) => PolygonHierarchyToJSON(item)!),
+      positions: instance.positions.map(item => Cartesian3ToJSON(item)!),
+      holes: instance.holes.map(item => PolygonHierarchyToJSON(item)!),
     },
   };
 }
@@ -46,8 +50,8 @@ export function PolygonHierarchyFromJSON(json?: PolygonHierarchyJSON, result?: P
   }
   json = PolygonHierarchyZodSchema().parse(result);
   const instance = new PolygonHierarchy(
-    json!.positions?.map(item => Cartesian3FromJSON(item)!),
-    json!.holes?.map(item => PolygonHierarchyFromJSON(item)!),
+    json.value.positions?.map(item => Cartesian3FromJSON(item)!),
+    json.value.holes?.map(item => PolygonHierarchyFromJSON(item)!),
   );
   if (!result) {
     return instance;

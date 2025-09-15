@@ -36,10 +36,13 @@ export function SampledPositionPropertyToJSON(instance?: SampledPositionProperty
   const values: Cartesian3[] = property._values;
 
   return {
-    referenceFrame: ReferenceFrameToJSON(instance.referenceFrame),
-    numberOfDerivatives: instance.numberOfDerivatives,
-    times: times.map(item => JulianDateToJSON(item)!),
-    values: values.map(item => Cartesian3ToJSON(item)!),
+    parser: 'SampledPositionProperty',
+    value: {
+      referenceFrame: ReferenceFrameToJSON(instance.referenceFrame),
+      numberOfDerivatives: instance.numberOfDerivatives,
+      times: times.map(item => JulianDateToJSON(item)!),
+      values: values.map(item => Cartesian3ToJSON(item)!),
+    },
   };
 }
 

@@ -33,12 +33,15 @@ export function ClippingPlaneCollectionToJSON(instance?: ClippingPlaneCollection
   instance = z.instanceof(ClippingPlaneCollection).parse(instance);
   const planes = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
   return {
-    planes: planes.map(item => ClippingPlaneToJSON(item)!),
-    enabled: instance.enabled,
-    modelMatrix: Matrix4ToJSON(instance.modelMatrix)!,
-    unionClippingRegions: instance.unionClippingRegions,
-    edgeColor: ColorToJSON(instance.edgeColor)!,
-    edgeWidth: instance.edgeWidth,
+    parser: 'ClippingPlaneCollection',
+    value: {
+      planes: planes.map(item => ClippingPlaneToJSON(item)!),
+      enabled: instance.enabled,
+      modelMatrix: Matrix4ToJSON(instance.modelMatrix)!,
+      unionClippingRegions: instance.unionClippingRegions,
+      edgeColor: ColorToJSON(instance.edgeColor)!,
+      edgeWidth: instance.edgeWidth,
+    },
   };
 }
 

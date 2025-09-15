@@ -1,12 +1,8 @@
-import type { ConstantPositionProperty, JulianDate, PositionProperty, SampledPositionProperty } from 'cesium';
+import type { JulianDate, PositionProperty } from 'cesium';
+import { ConstantPositionProperty, SampledPositionProperty } from 'cesium';
 import { z } from 'zod';
-import { ConstantPositionPropertyFromJSON, ConstantPositionPropertyInstanceSchema, ConstantPositionPropertyToJSON, ConstantPositionPropertyZodSchema } from './ConstantPositionProperty';
-import { SampledPositionPropertyFromJSON, SampledPositionPropertyInstanceSchema, SampledPositionPropertyToJSON, SampledPositionPropertyZodSchema } from './SampledPositionProperty';
-
-export interface PositionPropertyJSON {
-  type: 'ConstantPositionProperty' | 'SampledPositionProperty';
-  content: any;
-}
+import { ConstantPositionPropertyFromJSON, ConstantPositionPropertyToJSON, ConstantPositionPropertyZodSchema } from './ConstantPositionProperty';
+import { SampledPositionPropertyFromJSON, SampledPositionPropertyToJSON, SampledPositionPropertyZodSchema } from './SampledPositionProperty';
 
 /**
  * `Cesium.PositionProperty` JSON ZodSchema
@@ -14,31 +10,26 @@ export interface PositionPropertyJSON {
 export function PositionPropertyZodSchema() {
   return z.object({
     parser: z.literal('PositionProperty'),
-    value: z.object({
-      type: z.enum(['ConstantPositionProperty', 'SampledPositionProperty'] as const),
-      content: z.union([ConstantPositionPropertyZodSchema, SampledPositionPropertyZodSchema]),
-    }),
+    value: z.union([ConstantPositionPropertyZodSchema(), SampledPositionPropertyZodSchema()]).optional(),
   });
 }
 
-export const PositionPropertyInstanceSchema = () => z.union([ConstantPositionPropertyInstanceSchema, SampledPositionPropertyInstanceSchema]);
+export type PositionPropertyJSON = z.infer<ReturnType<typeof PositionPropertyZodSchema>>;
 
 /**
  * Convert `Cesium.PositionProperty` instance to JSON
  */
 export function PositionPropertyToJSON(instance?: PositionProperty, time?: JulianDate): PositionPropertyJSON | undefined {
-  if (ConstantPositionPropertyInstanceSchema.safeParse(instance)) {
-    return {
-      type: 'ConstantPositionProperty',
-      content: ConstantPositionPropertyToJSON(instance as ConstantPositionProperty, time),
-    };
+  let value: any;
+  if (z.instanceof(ConstantPositionProperty).parse(instance)) {
+    value = ConstantPositionPropertyToJSON(instance as ConstantPositionProperty, time);
   }
-
-  if (SampledPositionPropertyInstanceSchema.safeParse(instance)) {
-    return {
-      type: 'SampledPositionProperty',
-      content: SampledPositionPropertyToJSON(instance as SampledPositionProperty),
-    };
+  if (z.instanceof(SampledPositionProperty).parse(instance)) {
+    value = SampledPositionPropertyToJSON(instance as SampledPositionProperty);
+  };
+  return {
+    parser: 'PositionProperty',
+    value,
   };
 }
 
@@ -51,10 +42,12 @@ export function PositionPropertyFromJSON(json?: PositionPropertyJSON, result?: P
   if (!json) {
     return;
   }
-  if (json.value.type === 'ConstantPositionProperty') {
-    return ConstantPositionPropertyFromJSON(json.value.content, result as ConstantPositionProperty);
+  json = PositionPropertyZodSchema().parse(json);
+
+  if (json.value.parser === 'ConstantPositionProperty') {
+    return ConstantPositionPropertyFromJSON(json.value, result as ConstantPositionProperty);
   }
-  if (json.value.type === 'SampledPositionProperty') {
-    return SampledPositionPropertyFromJSON(json.value.content, result as SampledPositionProperty);
+  if (json.value.parser === 'SampledPositionProperty') {
+    return SampledPositionPropertyFromJSON(json.value, result as SampledPositionProperty);
   }
 }

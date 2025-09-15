@@ -4,7 +4,12 @@ import { z } from 'zod';
 /**
  * `Cesium.Matrix4` JSON ZodSchema
  */
-export const Matrix4ZodSchema = () => z.array(z.number());
+export function Matrix4ZodSchema() {
+  return z.object({
+    parser: z.literal('Matrix4'),
+    value: z.array(z.number()),
+  });
+}
 
 export type Matrix4JSON = z.infer<ReturnType<typeof Matrix4ZodSchema>>;
 
@@ -16,7 +21,10 @@ export function Matrix4ToJSON(instance?: Matrix4): Matrix4JSON | undefined {
     return undefined;
   }
   instance = z.instanceof(Matrix4).parse(instance);
-  return Array.from(instance);
+  return {
+    parser: 'Matrix4',
+    value: Array.from(instance),
+  };
 }
 
 /**
@@ -29,6 +37,6 @@ export function Matrix4FromJSON(json?: Matrix4JSON, result?: Matrix4): Matrix4 |
     return undefined;
   }
   json = Matrix4ZodSchema().parse(result);
-  const instance = new Matrix4(...json);
+  const instance = new Matrix4(...json.value);
   return result ? instance.clone(result) : instance;
 }
