@@ -1,16 +1,28 @@
 import type { UserConfig } from 'tsdown/config';
+import fs from 'node:fs';
+
+import fastGlob from 'fast-glob';
 import { defineConfig } from 'tsdown/config';
 import Vue from 'unplugin-vue/rolldown';
 
-const iifeGlobals = {
+const glob = await fastGlob('./packages/*/package.json');
+
+const packageNames = glob.map(path => JSON.parse(fs.readFileSync(path, 'utf-8')).name);
+const internalIifeGlobals = packageNames.reduce((record, name) => {
+  record[name] = 'Vesium';
+  return record;
+}, {} as Record<string, string>);
+
+const iifeGlobals: Record<string, string> = {
   'vue': 'Vue',
   '@vueuse/core': 'VueUse',
   '@vueuse/shared': 'VueUse',
   'cesium': 'Cesium',
-  'vesium': 'Vesium',
   '@turf/turf': 'turf',
   'zod': 'z',
+  ...internalIifeGlobals,
 };
+console.log(iifeGlobals);
 
 const config: UserConfig = {
   entry: '*.ts',
@@ -34,8 +46,8 @@ const exts = {
   esm: 'mjs',
   cjs: 'cjs',
   iife: 'js',
+  umd: 'js',
 };
-
 export default defineConfig([
   {
     ...config,
