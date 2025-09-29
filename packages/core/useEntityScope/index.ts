@@ -10,7 +10,7 @@ export interface UseEntityScopeOptions {
    * The collection of Entity to be added
    * @default useViewer().value.entities
    */
-  collection?: MaybeRefOrGetter<EntityCollection>;
+  collection?: MaybeRefOrGetter<EntityCollection | undefined>;
 }
 
 export interface UseEntityScopeRetrun {
@@ -23,7 +23,7 @@ export interface UseEntityScopeRetrun {
   /**
    * Add SideEffect instance
    */
-  add: <T extends Entity>(entity: T) => T;
+  add: <T extends Entity>(entity: T) => T extends Promise<infer U> ? Promise<U> : T;
 
   /**
    * Remove specified SideEffect instance
@@ -67,7 +67,7 @@ export function useEntityScope(options: UseEntityScopeOptions = {}): UseEntitySc
     return !!collection.value?.remove(entity);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<false>(addFn, removeFn, []);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, []);
   return {
     scope,
     add,

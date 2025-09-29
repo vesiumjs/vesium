@@ -5,8 +5,29 @@ import { shallowReactive, shallowReadonly } from 'vue';
 
 export type EffcetRemovePredicate<T> = (instance: T) => boolean;
 
+export interface UseCollectionScopeOptions<
+  T,
+  AddArgs extends any[],
+  RemoveArgs extends any[] = [],
+  RemoveReturn = any,
+> {
+  /**
+   * add SideEffect function.  eg.`entites.add`
+   */
+  addEffect: (instance: T | Promise<T>, ...args: AddArgs) => T | Promise<T>;
+
+  /**
+   * Clean SideEffect function.  eg.`entities.remove`
+   */
+  removeEffect: (instance: T, ...args: RemoveArgs) => RemoveReturn;
+
+  /**
+   * The parameters to pass for `removeScope` triggered when the component is unmounted
+   */
+  removeScopeArgs?: RemoveArgs;
+}
+
 export interface UseCollectionScopeReturn<
-  isPromise extends boolean,
   T,
   AddArgs extends any[],
   RemoveArgs extends any[],
@@ -21,12 +42,12 @@ export interface UseCollectionScopeReturn<
   /**
    * Add SideEffect instance
    */
-  add: (i: T, ...args: AddArgs) => isPromise extends true ? Promise<T> : T;
+  add: <R extends T | Promise<T>>(instance: R, ...args: AddArgs) => R extends Promise<infer U> ? Promise<U> : T;
 
   /**
    * Remove specified SideEffect instance
    */
-  remove: (i: T, ...args: RemoveArgs) => RemoveReturn;
+  remove: (instance: T, ...args: RemoveArgs) => RemoveReturn;
 
   /**
    * Remove all SideEffect instance that meets the specified criteria
@@ -42,27 +63,20 @@ export interface UseCollectionScopeReturn<
 /**
  * Scope the SideEffects of Cesium-related `Collection` and automatically remove them when unmounted.
  * - note: This is a basic function that is intended to be called by other lower-level function
- * @param addFn - add SideEffect function.  eg.`entites.add`
- * @param removeFn - Clean SideEffect function.  eg.`entities.remove`
- * @param removeScopeArgs - The parameters to pass for `removeScope` triggered when the component is unmounted
- *
  * @returns Contains side effect addition and removal functions
  */
 export function useCollectionScope<
-  isPromise extends boolean,
-  T = any,
+  T,
   AddArgs extends any[] = any[],
   RemoveArgs extends any[] = any[],
   RemoveReturn = any,
 >(
-  addFn: (i: T, ...args: AddArgs) => isPromise extends true ? Promise<T> : T,
-  removeFn: (i: T, ...args: RemoveArgs) => RemoveReturn,
-  removeScopeArgs: RemoveArgs,
-): UseCollectionScopeReturn<isPromise, T, AddArgs, RemoveArgs, RemoveReturn> {
+  options: UseCollectionScopeOptions<T, AddArgs, RemoveArgs, RemoveReturn>,
+): UseCollectionScopeReturn<T, AddArgs, RemoveArgs, RemoveReturn> {
+  const { addEffect, removeEffect, removeScopeArgs } = options;
   const scope = shallowReactive(new Set<T>());
-
-  const add: any = (instance: T, ...args: AddArgs) => {
-    const result = addFn(instance, ...args);
+  const add: typeof addEffect = (instance, ...args) => {
+    const result = addEffect(instance, ...args);
     // 可能为promise 如dataSource
     if (isPromise(result)) {
       return new Promise<T>((resolve, reject) => {
@@ -78,9 +92,9 @@ export function useCollectionScope<
     }
   };
 
-  const remove = (instance: T, ...args: RemoveArgs) => {
+  const remove: typeof removeEffect = (instance, ...args) => {
     scope.delete(instance);
-    return removeFn(instance, ...args);
+    return removeEffect(instance, ...args);
   };
 
   const removeWhere = (predicate: EffcetRemovePredicate<T>, ...args: RemoveArgs) => {
@@ -101,7 +115,7 @@ export function useCollectionScope<
 
   return {
     scope: shallowReadonly(scope),
-    add,
+    add: add as any,
     remove,
     removeWhere,
     removeScope,

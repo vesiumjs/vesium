@@ -11,7 +11,7 @@ export interface UseDataSourceScopeOptions {
    * The collection of DataSource to be added
    * @default useViewer().value.dataSources
    */
-  collection?: MaybeRefOrGetter<DataSourceCollection>;
+  collection?: MaybeRefOrGetter<DataSourceCollection | undefined>;
 
   /**
    * The second parameter passed to the `remove` function
@@ -31,7 +31,7 @@ export interface UseDataSourceScopeRetrun {
   /**
    * Add SideEffect instance
    */
-  add: <T extends CesiumDataSource>(dataSource: T) => Promise<T>;
+  add: <T extends CesiumDataSource>(dataSource: T) => T extends Promise<infer U> ? Promise<U> : T;
 
   /**
    * Remove specified SideEffect instance
@@ -60,18 +60,18 @@ export function useDataSourceScope(options: UseDataSourceScopeOptions = {}): Use
     return toValue(_collection) ?? viewer.value?.dataSources;
   });
 
-  const addFn = <T extends CesiumDataSource>(dataSource: T): Promise<T> => {
+  const addFn = <T extends CesiumDataSource>(dataSource: T | Promise<T>) => {
     if (!collection.value) {
       throw new Error('collection is not defined');
     }
-    return collection.value.add(dataSource) as Promise<T>;
+    return collection.value.add(dataSource);
   };
 
   const removeFn = (dataSource: CesiumDataSource, destroy?: boolean) => {
     return !!collection.value?.remove(dataSource, destroy);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<true>(addFn, removeFn, [destroyOnRemove]);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, [destroyOnRemove]);
   return {
     scope,
     add,

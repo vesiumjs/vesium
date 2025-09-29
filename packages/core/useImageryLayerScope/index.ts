@@ -10,7 +10,7 @@ export interface UseImageryLayerScopeOptions {
    * The collection of ImageryLayer to be added
    * @default useViewer().value.imageryLayers
    */
-  collection?: MaybeRefOrGetter<ImageryLayerCollection>;
+  collection?: MaybeRefOrGetter<ImageryLayerCollection | undefined>;
 
   /**
    * The second parameter passed to the `remove` function
@@ -30,7 +30,7 @@ export interface UseImageryLayerScopeRetrun {
   /**
    * Add SideEffect instance
    */
-  add: <T extends ImageryLayer>(imageryLayer: T) => T;
+  add: <T extends ImageryLayer>(imageryLayer: T) => T extends Promise<infer U> ? Promise<U> : T;
 
   /**
    * Remove specified SideEffect instance
@@ -72,7 +72,7 @@ export function useImageryLayerScope(options: UseImageryLayerScopeOptions = {}):
     return !!collection.value?.remove(imageryLayer, destroy);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<false>(addFn, removeFn, [destroyOnRemove]);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, [destroyOnRemove]);
   return {
     scope,
     add,

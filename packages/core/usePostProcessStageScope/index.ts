@@ -1,6 +1,6 @@
-import type { PostProcessStage, PostProcessStageCollection } from 'cesium';
-import type { MaybeRefOrGetter, ShallowReactive } from 'vue';
-import type { EffcetRemovePredicate } from '../useCollectionScope';
+import type { PostProcessStage, PostProcessStageCollection, PostProcessStageComposite } from 'cesium';
+import type { MaybeRefOrGetter } from 'vue';
+import { isPromise } from '@vesium/shared';
 import { computed, toValue } from 'vue';
 import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
@@ -10,42 +10,14 @@ export interface UsePostProcessStageScopeOptions {
    * The collection of PostProcessStage to be added
    * @default useViewer().value.postProcessStages
    */
-  collection?: MaybeRefOrGetter<PostProcessStageCollection>;
-}
-
-export interface UsePostProcessStageScopeRetrun {
-  /**
-   * A `Set` for storing SideEffect instance,
-   * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
-   */
-  scope: Readonly<ShallowReactive<Set<PostProcessStage>>>;
-
-  /**
-   * Add SideEffect instance
-   */
-  add: <T extends PostProcessStage>(postProcessStage: T) => T;
-
-  /**
-   * Remove specified SideEffect instance
-   */
-  remove: (postProcessStage: PostProcessStage, destroy?: boolean) => boolean;
-
-  /**
-   * Remove all SideEffect instance that meets the specified criteria
-   */
-  removeWhere: (predicate: EffcetRemovePredicate<PostProcessStage>, destroy?: boolean) => void;
-
-  /**
-   * Remove all SideEffect instance within current scope
-   */
-  removeScope: (destroy?: boolean) => void;
+  collection?: MaybeRefOrGetter<PostProcessStageCollection | undefined>;
 }
 
 /**
  * Make `add` and `remove` operations of `PostProcessStageCollection` scoped,
  * automatically remove `PostProcessStage` instance when component is unmounted.
  */
-export function usePostProcessStageScope(options: UsePostProcessStageScopeOptions = {}): UsePostProcessStageScopeRetrun {
+export function usePostProcessStageScope(options: UsePostProcessStageScopeOptions = {}) {
   const { collection: _collection } = options;
   const viewer = useViewer();
 
@@ -53,23 +25,30 @@ export function usePostProcessStageScope(options: UsePostProcessStageScopeOption
     return toValue(_collection) ?? viewer.value?.postProcessStages;
   });
 
-  const addFn = <T extends PostProcessStage>(postProcessStage: T): T => {
-    if (!collection.value) {
-      throw new Error('collection is not defined');
-    }
-    return collection.value.add(postProcessStage) as T;
-  };
-
-  const removeFn = (postProcessStage: PostProcessStage) => {
-    return !!collection.value?.remove(postProcessStage);
-  };
-
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<false>(addFn, removeFn, []);
-  return {
-    scope,
-    add,
-    remove,
-    removeWhere,
-    removeScope,
-  };
+  return useCollectionScope<PostProcessStage | PostProcessStageComposite>({
+    addEffect(instance) {
+      if (!collection.value) {
+        throw new Error('collection is not defined');
+      }
+      if (isPromise(instance)) {
+        return new Promise<PostProcessStage | PostProcessStageComposite>((resolve, reject) => {
+          instance
+            .then((instance) => {
+              collection.value.add(instance);
+              resolve(instance);
+            })
+            .catch(error => reject(error));
+        });
+      }
+      else {
+        return collection.value.add(instance);
+      }
+    },
+    removeEffect(instance, ...args) {
+      // @ts-expect-error 'remove' method
+      return !!collection.value?.remove(instance, ...args as any[]);
+    },
+    removeScopeArgs: [],
+  },
+  );
 }
