@@ -1,6 +1,6 @@
 import type { ImageryLayer, ImageryLayerCollection } from 'cesium';
-import type { MaybeRefOrGetter, ShallowReactive } from 'vue';
-import type { EffcetRemovePredicate } from '../useCollectionScope';
+import type { MaybeRefOrGetter } from 'vue';
+import { isPromise } from '@vesium/shared';
 import { computed, toValue } from 'vue';
 import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
@@ -20,39 +20,11 @@ export interface UseImageryLayerScopeOptions {
   destroyOnRemove?: boolean;
 }
 
-export interface UseImageryLayerScopeRetrun {
-  /**
-   * A `Set` for storing SideEffect instance,
-   * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
-   */
-  scope: Readonly<ShallowReactive<Set<ImageryLayer>>>;
-
-  /**
-   * Add SideEffect instance
-   */
-  add: <T extends ImageryLayer>(imageryLayer: T) => T extends Promise<infer U> ? Promise<U> : T;
-
-  /**
-   * Remove specified SideEffect instance
-   */
-  remove: (imageryLayer: ImageryLayer, destroy?: boolean) => boolean;
-
-  /**
-   * Remove all SideEffect instance that meets the specified criteria
-   */
-  removeWhere: (predicate: EffcetRemovePredicate<ImageryLayer>, destroy?: boolean) => void;
-
-  /**
-   * Remove all SideEffect instance within current scope
-   */
-  removeScope: (destroy?: boolean) => void;
-}
-
 /**
  * Make `add` and `remove` operations of `ImageryLayerCollection` scoped,
  * automatically remove `ImageryLayer` instance when component is unmounted.
  */
-export function useImageryLayerScope(options: UseImageryLayerScopeOptions = {}): UseImageryLayerScopeRetrun {
+export function useImageryLayerScope(options: UseImageryLayerScopeOptions = {}) {
   const { collection: _collection, destroyOnRemove } = options;
   const viewer = useViewer();
 
@@ -60,24 +32,28 @@ export function useImageryLayerScope(options: UseImageryLayerScopeOptions = {}):
     return toValue(_collection) ?? viewer.value?.imageryLayers;
   });
 
-  const addFn = <T extends ImageryLayer>(imageryLayer: T, index?: number): T => {
-    if (!collection.value) {
-      throw new Error('collection is not defined');
-    }
-    collection.value.add(imageryLayer, index);
-    return imageryLayer;
-  };
+  return useCollectionScope<ImageryLayer>({
+    addEffect(instance, index?: number) {
+      if (!collection.value) {
+        throw new Error('collection is not defined');
+      }
 
-  const removeFn = (imageryLayer: ImageryLayer, destroy?: boolean) => {
-    return !!collection.value?.remove(imageryLayer, destroy);
-  };
-
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, [destroyOnRemove]);
-  return {
-    scope,
-    add,
-    remove,
-    removeWhere,
-    removeScope,
-  };
+      if (isPromise(instance)) {
+        return new Promise<ImageryLayer>((resolve, reject) => {
+          instance.then((i) => {
+            collection.value.add(i, index);
+            resolve(i);
+          }).catch(error => reject(error));
+        });
+      }
+      else {
+        collection.value.add(instance, index);
+        return instance;
+      }
+    },
+    removeEffect(instance, destroy) {
+      return !!collection.value?.remove(instance, destroy);
+    },
+    removeScopeArgs: [destroyOnRemove],
+  });
 }

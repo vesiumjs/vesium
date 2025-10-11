@@ -75,12 +75,12 @@ export function useCollectionScope<
 ): UseCollectionScopeReturn<T, AddArgs, RemoveArgs, RemoveReturn> {
   const { addEffect, removeEffect, removeScopeArgs } = options;
   const scope = shallowReactive(new Set<T>());
-  const add: typeof addEffect = (instance, ...args) => {
+  const add = (instance: any, ...args: any) => {
     const result = addEffect(instance, ...args);
     // 可能为promise 如dataSource
     if (isPromise(result)) {
-      return new Promise<T>((resolve, reject) => {
-        result.then((i) => {
+      return new Promise((resolve, reject) => {
+        result.then((i: any) => {
           scope.add(i);
           resolve(i);
         }).catch(error => reject(error));

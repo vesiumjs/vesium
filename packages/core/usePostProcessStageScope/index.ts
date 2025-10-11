@@ -49,6 +49,5 @@ export function usePostProcessStageScope(options: UsePostProcessStageScopeOption
       return !!collection.value?.remove(instance, ...args as any[]);
     },
     removeScopeArgs: [],
-  },
-  );
+  });
 }
