@@ -21,7 +21,6 @@
     "esModuleInterop": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
-
   },
   "include": ["packages/**/*.ts"]
 }
