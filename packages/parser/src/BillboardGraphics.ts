@@ -58,7 +58,7 @@ export function BillboardGraphicsToJSON(instance?: BillboardGraphics, time?: Jul
   return {
     parser: 'BillboardGraphics',
     value: {
-      show: omit?.includes('show') ? undefined : omit.includes('show') ? undefined : toPropertyValue(instance.show, time),
+      show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
       image: omit?.includes('image') ? undefined : toPropertyValue(instance.image, time),
       scale: omit?.includes('scale') ? undefined : toPropertyValue(instance.scale, time),
       pixelOffset: omit?.includes('pixelOffset') ? undefined : Cartesian2ToJSON(toPropertyValue(instance.pixelOffset, time)),
@@ -94,7 +94,7 @@ export function BillboardGraphicsFromJSON(json?: BillboardGraphicsJSON, result?:
   }
   json = BillboardGraphicsZodSchema().parse(json);
   const instance = new BillboardGraphics({
-    show: omit?.includes('show') ? undefined : omit?.includes('show') ? undefined : json.value.show,
+    show: omit?.includes('show') ? undefined : json.value.show,
     image: omit?.includes('image') ? undefined : json.value.image,
     scale: omit?.includes('scale') ? undefined : json.value.scale,
     pixelOffset: omit?.includes('pixelOffset') ? undefined : Cartesian2FromJSON(json.value.pixelOffset),

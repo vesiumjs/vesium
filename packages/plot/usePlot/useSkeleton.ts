@@ -65,12 +65,11 @@ export function useSkeleton(
             action: getPointAction(entity),
           });
 
-          const merge = new PlotSkeletonEntity(options ?? {});
+          const merge: any = new PlotSkeletonEntity(options ?? {});
           if (entity) {
-            merge.propertyNames.forEach((key) => {
+            merge.propertyNames.forEach((key: string) => {
               if (key !== 'id') {
-                // @ts-expect-error ignore
-                entity[key] = merge[key];
+                (entity as any)[key] = merge[key];
               }
             });
           }

@@ -25,7 +25,7 @@ export function rectinclined2(coords: CoordArray[]): CoordArray[] {
  * @param {*} p2
  * @param {*} p3
  */
-export function calculateFourthCoord(p1, p2, p3): CoordArray {
+export function calculateFourthCoord(p1: CoordArray, p2: CoordArray, p3: CoordArray): CoordArray {
   const x = p1[0] + p3[0] - p2[0];
   const y = p1[1] + p3[1] - p2[1];
   return [x, y];
@@ -37,7 +37,7 @@ export function calculateFourthCoord(p1, p2, p3): CoordArray {
  * @param {*} p2
  * @param {*} p3
  */
-export function calculateIntersectionCoord(p1, p2, p3): CoordArray {
+export function calculateIntersectionCoord(p1: CoordArray, p2: CoordArray, p3: CoordArray): CoordArray {
   const v = {
     x: p2[0] - p1[0],
     y: p2[1] - p1[1],

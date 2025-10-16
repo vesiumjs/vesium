@@ -27,7 +27,7 @@ export function rectinclined1(coords: CoordArray[]): CoordArray[] {
  * @param {*} p2
  * @param {*} p3
  */
-export function calculatePerpendicularDistance(p1, p2, p3) {
+export function calculatePerpendicularDistance(p1: CoordArray, p2: CoordArray, p3: CoordArray) {
   // 计算向量V的分量
   const vx = p2[0] - p1[0];
   const vy = p2[1] - p1[1];
@@ -53,7 +53,7 @@ export function calculatePerpendicularDistance(p1, p2, p3) {
  * @param {*} p2
  * @param {*} p3
  */
-export function calculatePositionRelativeToLine(p1, p2, p3) {
+export function calculatePositionRelativeToLine(p1: CoordArray, p2: CoordArray, p3: CoordArray) {
   const v1 = {
     x: p2[0] - p1[0],
     y: p2[1] - p1[1],
@@ -76,7 +76,7 @@ export function calculatePositionRelativeToLine(p1, p2, p3) {
  * @param {*} p2
  * @param {*} p3
  */
-export function calculateFourthCoord(p1, p2, p3): CoordArray {
+export function calculateFourthCoord(p1: CoordArray, p2: CoordArray, p3: CoordArray): CoordArray {
   const x = p1[0] + p3[0] - p2[0];
   const y = p1[1] + p3[1] - p2[1];
   return [x, y];
@@ -88,7 +88,7 @@ export function calculateFourthCoord(p1, p2, p3): CoordArray {
  * @param {*} p2
  * @param {*} d
  */
-export function calculatePerpendicularCoord(p1, p2, d): CoordArray {
+export function calculatePerpendicularCoord(p1: CoordArray, p2: CoordArray, d: number): CoordArray {
   // 计算p1p2的斜率
   const m = (p2[1] - p1[1]) / (p2[0] - p1[0]);
 
