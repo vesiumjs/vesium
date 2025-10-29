@@ -34,7 +34,7 @@ export interface UsePrimitiveOptions {
  */
 export function usePrimitive<T = any>(
   primitive?: MaybeRefOrAsyncGetter<T | undefined>,
-  options?: UsePrimitiveOptions
+  options?: UsePrimitiveOptions,
 ): ComputedRef<T | undefined>;
 
 /**
@@ -44,7 +44,7 @@ export function usePrimitive<T = any>(
  */
 export function usePrimitive<T = any>(
   primitives?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,
-  options?: UsePrimitiveOptions
+  options?: UsePrimitiveOptions,
 ): ComputedRef<T[] | undefined>;
 
 export function usePrimitive<T extends Primitive>(

@@ -32,7 +32,7 @@ export type SampledPlotInterpolationAlgorithm<D = any> = (
   time: JulianDate,
   previous: SampledPlotPackable<D>,
   next: SampledPlotPackable<D>,
-  proportion: number
+  proportion: number,
 ) => SampledPlotPackable;
 
 /**

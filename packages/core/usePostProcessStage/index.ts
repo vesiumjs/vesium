@@ -33,7 +33,7 @@ export interface UsePostProcessStageOptions {
  */
 export function usePostProcessStage<T extends PostProcessStage = PostProcessStage>(
   stage?: MaybeRefOrAsyncGetter<T | undefined>,
-  options?: UsePostProcessStageOptions
+  options?: UsePostProcessStageOptions,
 ): ComputedRef<T | undefined>;
 
 /**
@@ -43,7 +43,7 @@ export function usePostProcessStage<T extends PostProcessStage = PostProcessStag
  */
 export function usePostProcessStage<T extends PostProcessStage = PostProcessStage>(
   stages?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,
-  options?: UsePostProcessStageOptions
+  options?: UsePostProcessStageOptions,
 ): ComputedRef<T[] | undefined>;
 
 export function usePostProcessStage<T extends PostProcessStage>(

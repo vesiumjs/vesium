@@ -49,7 +49,7 @@ export interface UseDataSourceOptions {
  */
 export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
   dataSource?: MaybeRefOrAsyncGetter<T | undefined>,
-  options?: UseDataSourceOptions
+  options?: UseDataSourceOptions,
 ): ComputedRef<T | undefined>;
 
 /**
@@ -66,7 +66,7 @@ export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
  */
 export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
   dataSources?: MaybeRefOrAsyncGetter<T[] | undefined>,
-  options?: UseDataSourceOptions
+  options?: UseDataSourceOptions,
 ): ComputedRef<T[] | undefined>;
 
 export function useDataSource<T extends CesiumDataSource>(

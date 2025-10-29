@@ -41,7 +41,7 @@ export interface UseImageryLayerOptions {
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
   layer?: MaybeRefOrAsyncGetter<T | undefined>,
-  options?: UseImageryLayerOptions
+  options?: UseImageryLayerOptions,
 ): ComputedRef<T | undefined>;
 
 /**
@@ -51,7 +51,7 @@ export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
   layers?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,
-  options?: UseImageryLayerOptions
+  options?: UseImageryLayerOptions,
 ): ComputedRef<T[] | undefined>;
 
 export function useImageryLayer<T extends ImageryLayer>(

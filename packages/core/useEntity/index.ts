@@ -33,7 +33,7 @@ export interface UseEntityOptions {
  */
 export function useEntity<T extends Entity = Entity>(
   entity?: MaybeRefOrAsyncGetter<T | undefined>,
-  options?: UseEntityOptions
+  options?: UseEntityOptions,
 ): ComputedRef<T | undefined>;
 
 /**
@@ -43,7 +43,7 @@ export function useEntity<T extends Entity = Entity>(
  */
 export function useEntity<T extends Entity = Entity>(
   entities?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,
-  options?: UseEntityOptions
+  options?: UseEntityOptions,
 ): ComputedRef<T[] | undefined>;
 
 export function useEntity<T extends Entity>(
