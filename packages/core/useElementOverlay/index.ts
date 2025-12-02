@@ -1,7 +1,7 @@
 import type { CommonCoord } from '@vesium/shared';
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { cartesianToCanvasCoord, toCartesian3 } from '@vesium/shared';
+import { cartesianToCanvasCoord, toCartesian3, toCartographic } from '@vesium/shared';
 import { useElementBounding } from '@vueuse/core';
 import { Cartesian2 } from 'cesium';
 import { computed, shallowRef, toValue, watchEffect } from 'vue';
@@ -39,6 +39,11 @@ export interface UseElementOverlayOptions {
    * @default true
    */
   applyStyle?: MaybeRefOrGetter<boolean>;
+
+  /**
+   * The position will be clamped to the ground
+   */
+  clampToGround?: MaybeRefOrGetter<boolean>;
 }
 
 export interface UseElementOverlayRetrun {
@@ -70,12 +75,24 @@ export function useElementOverlay(
     referenceWindow,
     horizontal = 'center',
     vertical = 'bottom',
+    clampToGround,
     offset = { x: 0, y: 0 },
   } = options;
 
-  const cartesian3 = computed(() => toCartesian3(toValue(position)));
-
   const viewer = useViewer();
+
+  const cartesian3 = computed(() => {
+    if (!toValue(clampToGround)) {
+      return toCartesian3(toValue(position));
+    }
+    else {
+      const cartographic = toCartographic(toValue(position));
+      const height = viewer.value?.scene.globe.getHeight(cartographic) || 0;
+      cartographic.height = +height.toFixed(2);
+      return toCartesian3(cartographic);
+    }
+  });
+
   const coord = shallowRef<Cartesian2>();
 
   useCesiumEventListener(
