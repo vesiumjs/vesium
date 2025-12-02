@@ -3,13 +3,13 @@ packages:
 
 catalogs:
   deps:
-    '@turf/turf': ^7.2.0
+    '@turf/turf': ^7.3.1
     '@types/geojson': ^7946.0.16
-    '@unocss/reset': ^66.5.4
-    '@vueuse/core': ^14.0.0
-    '@vueuse/shared': ^14.0.0
-    cesium: ^1.134.1
-    pinia: ^3.0.3
-    vue: ^3.5.22
+    '@unocss/reset': ^66.5.9
+    '@vueuse/core': ^14.1.0
+    '@vueuse/shared': ^14.1.0
+    cesium: ^1.136.0
+    pinia: ^3.0.4
+    vue: ^3.5.25
     vue-router: ^4.6.3
-    zod: ^4.1.12
+    zod: ^4.1.13
