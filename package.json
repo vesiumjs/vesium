@@ -60,7 +60,6 @@
     "@types/markdown-it-container": "^2.0.10",
     "@types/node": "^22.19.1",
     "@unocss/eslint-plugin": "^66.5.10",
-    "@vite-pwa/vitepress": "^1.1.0",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
@@ -98,9 +97,8 @@
     "unplugin-vue-components": "^30.0.0",
     "vite": "^7.2.6",
     "vite-plugin-dts": "^4.5.4",
-    "vite-plugin-pwa": "^1.2.0",
     "vite-plugin-vue-devtools": "^8.0.5",
-    "vitepress": "^2.0.0-alpha.15",
+    "vitepress": "2.0.0-alpha.15",
     "vitest": "^4.0.15",
     "vue-tsc": "^3.1.5"
   }
