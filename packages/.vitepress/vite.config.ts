@@ -5,12 +5,10 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 import VueDevTools from 'vite-plugin-vue-devtools';
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
   return {
     plugins: [
-      UnpluginCesium({
-        copyStaticFiles: mode === 'development',
-      }),
+      UnpluginCesium(),
       VueDevTools(),
       UnoCSS(),
       Components({
