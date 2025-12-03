@@ -19,12 +19,5 @@ export default defineConfig(() => {
     ],
     server: { port: 9574 },
     publicDir: '.vitepress/public',
-    build: {
-      rollupOptions: {
-        external: [
-          'cesium',
-        ],
-      },
-    },
   };
 });
