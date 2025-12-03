@@ -19,6 +19,9 @@
     "hooks",
     "composition-api"
   ],
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
     "docs:dev": "vitepress dev packages --host",
     "docs:build": "npm run build:types && vitepress build packages",
