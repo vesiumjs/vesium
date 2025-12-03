@@ -1,27 +1,12 @@
 import { fileURLToPath, URL } from 'node:url';
-import { getPackageInfoSync } from 'local-pkg';
 import { defineConfig } from 'vitepress';
 import { badgeTransform } from './plugins/badge';
 import { markdownDemoContainer } from './plugins/demoContainer';
 import { markdownDtsContainer } from './plugins/dtsContainer';
 import { generateSidebar } from './utils/generateSidebar';
 
-const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
-
-let transformHtml = `
-<script> window.CESIUM_BASE_URL="https://cdn.jsdmirror.com/npm/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
-<script type="importmap">${
-  JSON.stringify(
-    {
-      imports: {
-        cesium: `https://cdn.jsdmirror.com/npm/cesium@${CESIUM_VERSION}/Source/Cesium.min.js`,
-      },
-    },
-  )
-}</script>`;
-
 // baidu统计
-transformHtml += `<script>
+const transformHtml = `<script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
