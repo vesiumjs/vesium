@@ -64,8 +64,11 @@ export function MaterialPropertyToJSON(instance?: MaterialProperty): MaterialPro
   const program = [..._programs.values()].find(item => item.predicate(instance));
   if (program) {
     return {
-      name: program.programName,
-      content: program.toJSON(instance),
+      parser: 'MaterialProperty',
+      value: {
+        name: program.programName,
+        content: program.toJSON(instance),
+      },
     };
   };
 }
