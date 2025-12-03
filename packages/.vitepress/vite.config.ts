@@ -5,10 +5,12 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 import VueDevTools from 'vite-plugin-vue-devtools';
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
   return {
     plugins: [
-      UnpluginCesium(),
+      UnpluginCesium({
+        copyStaticFiles: mode === 'development',
+      }),
       VueDevTools(),
       UnoCSS(),
       Components({
@@ -19,5 +21,12 @@ export default defineConfig(() => {
     ],
     server: { port: 9574 },
     publicDir: '.vitepress/public',
+    build: {
+      rollupOptions: {
+        external: [
+          'cesium',
+        ],
+      },
+    },
   };
 });
