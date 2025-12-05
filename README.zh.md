@@ -25,7 +25,7 @@
 
 ## 文档
 
-要查看文档，请访问 <a href="https://vesium.geovue.org" target="__blank">vesium.js.org</a>
+要查看文档，请访问 <a href="https://vesium.js.org" target="__blank">vesium.js.org</a>
 
 ## 特性
 
