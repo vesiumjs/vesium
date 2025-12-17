@@ -82,11 +82,15 @@ export function useElementOverlay(
   const viewer = useViewer();
 
   const cartesian3 = computed(() => {
-    if (!toValue(clampToGround)) {
-      return toCartesian3(toValue(position));
+    const positionValue = toValue(position);
+    if (!positionValue) {
+      return undefined;
+    }
+    else if (!toValue(clampToGround)) {
+      return toCartesian3(positionValue);
     }
     else {
-      const cartographic = toCartographic(toValue(position));
+      const cartographic = toCartographic(toValue(positionValue));
       const height = viewer.value?.scene.globe.getHeight(cartographic) || 0;
       cartographic.height = +height.toFixed(2);
       return toCartesian3(cartographic);
