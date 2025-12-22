@@ -30,7 +30,9 @@ if (inBrowser) {
   watchImmediate([pixelRatio, viewer], ([pixelRatio, viewer]) => {
     if (viewer) {
       viewer.scene.postProcessStages.fxaa.enabled = true;
-      viewer.resolutionScale = pixelRatio;
+      // For high-resolution devices, reduce the value appropriately
+      // to improve the performance of the home page of low-power devices
+      viewer.resolutionScale = pixelRatio >= 2 ? pixelRatio / 1.5 : pixelRatio;
       viewer.resize();
     }
   });
