@@ -40,6 +40,10 @@ export default defineConfig({
   title: 'Vesium',
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }],
+    // no cache html
+    ['meta', { 'http-equiv': 'Cache-Control', 'content': 'no-cache, no-store, must-revalidate' }],
+    ['meta', { 'http-equiv': 'Pragma', 'content': 'no-cache' }],
+    ['meta', { 'http-equiv': 'Expires', 'content': '0' }],
   ],
   rewrites: {
     '(.*).en.md': '(.*).md',
