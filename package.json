@@ -93,7 +93,6 @@
     "unplugin-vue": "catalog:",
     "unplugin-vue-components": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-dts": "catalog:",
     "vite-plugin-vue-devtools": "catalog:",
     "vitepress": "catalog:",
     "vitest": "catalog:",
