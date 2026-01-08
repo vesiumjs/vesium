@@ -122,7 +122,7 @@ function openGithub() {
   </div>
 </template>
 
-<style lang="scss">
+<style>
   .preview-code-area {
   z-index: 1;
   position: relative;

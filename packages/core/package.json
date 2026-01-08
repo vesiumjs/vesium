@@ -42,11 +42,11 @@
     }
   },
   "dependencies": {
-    "@types/geojson": "catalog:deps",
+    "@types/geojson": "catalog:",
     "@vesium/shared": "workspace:*",
-    "@vueuse/core": "catalog:deps",
-    "@vueuse/shared": "catalog:deps",
-    "cesium": "catalog:deps",
-    "vue": "catalog:deps"
+    "@vueuse/core": "catalog:",
+    "@vueuse/shared": "catalog:",
+    "cesium": "catalog:",
+    "vue": "catalog:"
   }
 }

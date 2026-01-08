@@ -42,8 +42,8 @@
     }
   },
   "dependencies": {
-    "@turf/turf": "catalog:deps",
+    "@turf/turf": "catalog:",
     "@vesium/shared": "workspace:*",
-    "cesium": "catalog:deps"
+    "cesium": "catalog:"
   }
 }

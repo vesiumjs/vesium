@@ -42,10 +42,10 @@
     }
   },
   "dependencies": {
-    "@vueuse/core": "catalog:deps",
-    "cesium": "catalog:deps",
+    "@vueuse/core": "catalog:",
+    "cesium": "catalog:",
     "vesium": "workspace:*",
-    "vue": "catalog:deps",
-    "zod": "catalog:deps"
+    "vue": "catalog:",
+    "zod": "catalog:"
   }
 }

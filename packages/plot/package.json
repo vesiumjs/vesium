@@ -42,11 +42,11 @@
     }
   },
   "dependencies": {
-    "@turf/turf": "catalog:deps",
+    "@turf/turf": "catalog:",
     "@vesium/geometry": "workspace:*",
-    "@vueuse/core": "catalog:deps",
-    "cesium": "catalog:deps",
+    "@vueuse/core": "catalog:",
+    "cesium": "catalog:",
     "vesium": "workspace:*",
-    "vue": "catalog:deps"
+    "vue": "catalog:"
   }
 }

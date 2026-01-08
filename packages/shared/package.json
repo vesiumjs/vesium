@@ -42,7 +42,7 @@
     }
   },
   "dependencies": {
-    "@types/geojson": "catalog:deps",
-    "cesium": "catalog:deps"
+    "@types/geojson": "catalog:",
+    "cesium": "catalog:"
   }
 }
