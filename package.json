@@ -39,14 +39,14 @@
     "publish:ci": "tsx ./scripts/publish"
   },
   "dependencies": {
-    "@unocss/reset": "catalog:deps",
+    "@unocss/reset": "catalog:",
     "@vesium/plot": "workspace:*",
-    "@vueuse/core": "catalog:deps",
-    "cesium": "catalog:deps",
-    "pinia": "catalog:deps",
+    "@vueuse/core": "catalog:",
+    "cesium": "catalog:",
+    "pinia": "catalog:",
     "vesium": "workspace:*",
-    "vue": "catalog:deps",
-    "vue-router": "catalog:deps"
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
@@ -81,7 +81,6 @@
     "stylelint-config-recess-order": "catalog:",
     "stylelint-config-recommended-vue": "catalog:",
     "stylelint-config-standard": "catalog:",
-    "stylelint-config-standard-scss": "catalog:",
     "svgo": "catalog:",
     "taze": "catalog:",
     "tsdown": "catalog:",
