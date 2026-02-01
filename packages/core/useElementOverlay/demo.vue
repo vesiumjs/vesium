@@ -7,7 +7,9 @@ const viewer = useViewer();
 const position = shallowRef(Cesium.Cartesian3.fromDegrees(100.04215139520794, 31.320830427363237, 0));
 
 watchEffect(async () => {
-  viewer.value.scene.terrainProvider = await Cesium.createWorldTerrainAsync();
+  if (viewer.value?.scene) {
+    viewer.value.scene.terrainProvider = await Cesium.createWorldTerrainAsync();
+  }
 });
 
 useEntity(new Cesium.Entity({
@@ -37,7 +39,7 @@ const { x, y, style } = useElementOverlay(elRef, position, {
   <teleport v-if="viewer" :to="viewer?.container">
     <div ref="elRef" class="position-absolute bg-#000/50 p-20px text-#fff">
       <h4>useElementOverlay</h4>
-      <pre>{{ JSON.stringify({ x: x.toFixed(2), y: y.toFixed(2), style }, undefined, 2) }}</pre>
+      <pre>{{ JSON.stringify({ x, y, style }, undefined, 2) }}</pre>
     </div>
   </teleport>
 </template>

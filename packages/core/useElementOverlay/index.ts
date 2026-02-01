@@ -2,7 +2,7 @@ import type { CommonCoord } from '@vesium/shared';
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
 import { cartesianToCanvasCoord, toCartesian3 } from '@vesium/shared';
-import { useElementBounding } from '@vueuse/core';
+import { unrefElement, useElementBounding, useElementSize } from '@vueuse/core';
 import { Cartesian2 } from 'cesium';
 import { computed, shallowRef, toValue, watchEffect } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
@@ -61,7 +61,7 @@ export interface UseElementOverlayRetrun {
   /**
    * Calculation `css` of the target element
    */
-  style: ComputedRef<{ left: string; top: string }>;
+  style: ComputedRef<string | undefined>;
 }
 
 /**
@@ -113,26 +113,26 @@ export function useElementOverlay(
   );
 
   const canvasBounding = useElementBounding(() => viewer.value?.canvas.parentElement);
-  const targetBounding = useElementBounding(target);
+  const targetSize = useElementSize(target, undefined, { box: 'border-box' });
 
   const finalOffset = computed(() => {
     const _offset = toValue(offset);
     let x = _offset?.x ?? 0;
     const _horizontal = toValue(horizontal);
     if (_horizontal === 'center') {
-      x -= targetBounding.width.value / 2;
+      x -= targetSize.width.value / 2;
     }
     else if (_horizontal === 'right') {
-      x -= targetBounding.width.value;
+      x -= targetSize.width.value;
     }
 
     let y = _offset?.y ?? 0;
     const _vertical = toValue(vertical);
     if (_vertical === 'center') {
-      y -= targetBounding.height.value / 2;
+      y -= targetSize.height.value / 2;
     }
     else if (_vertical === 'bottom') {
-      y -= targetBounding.height.value;
+      y -= targetSize.height.value;
     }
 
     return {
@@ -141,32 +141,36 @@ export function useElementOverlay(
     };
   });
 
-  const location = computed(() => {
-    const data = {
-      x: coord.value?.x ?? 0,
-      y: coord.value?.y ?? 0,
-    };
+  const x = computed(() => {
+    let v = coord.value?.x ?? 0;
     if (toValue(referenceWindow)) {
-      data.x += canvasBounding.x.value;
-      data.y += canvasBounding.y.value;
+      v += canvasBounding.x.value;
     }
-    return {
-      x: finalOffset.value.x + data.x,
-      y: finalOffset.value.y + data.y,
-    };
+    return +(v + finalOffset.value.x).toFixed(1);
   });
 
-  const x = computed(() => location.value.x);
-  const y = computed(() => location.value.y);
+  const y = computed(() => {
+    let v = coord.value?.y ?? 0;
+    if (toValue(referenceWindow)) {
+      v += canvasBounding.y.value;
+    }
+    return +(v + finalOffset.value.y).toFixed(1);
+  });
 
-  const style = computed(() => ({ left: `${x.value?.toFixed(2)}px`, top: `${y.value?.toFixed(2)}px` }));
+  const style = computed(() => `left:${x.value}px;top:${y.value}px;`);
 
   watchEffect(() => {
-    const element = toValue(target) as HTMLElement;
-    if (element && toValue(options.applyStyle ?? true)) {
-      element.style?.setProperty?.('left', style.value.left);
-      element.style?.setProperty?.('top', style.value.top);
+    const applyStyle = toValue(options.applyStyle ?? true);
+    if (!applyStyle) {
+      return;
     }
+    const element = unrefElement(target);
+    if (element && applyStyle) {
+      element.style?.setProperty?.('left', `${x.value}px`);
+      element.style?.setProperty?.('top', `${y.value}px`);
+    }
+  }, {
+    flush: 'post',
   });
 
   return {
