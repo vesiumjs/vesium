@@ -1,7 +1,7 @@
 {
   "name": "@vesium/shared",
   "type": "module",
-  "version": "1.0.1-beta.60",
+  "version": "1.0.1-beta.61",
   "description": "Vue component and composition-api library for Cesium.",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",
