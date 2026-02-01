@@ -1,7 +1,7 @@
 import type { CommonCoord } from '@vesium/shared';
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { cartesianToCanvasCoord, toCartesian3, toCartographic } from '@vesium/shared';
+import { cartesianToCanvasCoord, throttle, toCartesian3 } from '@vesium/shared';
 import { useElementBounding } from '@vueuse/core';
 import { Cartesian2 } from 'cesium';
 import { computed, shallowRef, toValue, watchEffect } from 'vue';
@@ -42,8 +42,12 @@ export interface UseElementOverlayOptions {
 
   /**
    * The position will be clamped to the ground
+   *
+   * true: Clamp to the ground and more detailed.
+   *
+   * 'simple': Only calculate ground height, excluding factors such as 3D tileset.
    */
-  clampToGround?: MaybeRefOrGetter<boolean>;
+  clampToGround?: MaybeRefOrGetter<boolean | 'simple'>;
 }
 
 export interface UseElementOverlayRetrun {
@@ -86,37 +90,36 @@ export function useElementOverlay(
     if (!positionValue) {
       return undefined;
     }
-    else if (!toValue(clampToGround)) {
-      return toCartesian3(positionValue);
-    }
-    else {
-      const cartographic = toCartographic(toValue(positionValue));
-      const height = viewer.value?.scene.globe.getHeight(cartographic) || 0;
-      cartographic.height = +height.toFixed(2);
-      return toCartesian3(cartographic);
-    }
+    return toCartesian3(positionValue);
   });
 
   const coord = shallowRef<Cartesian2>();
 
   useCesiumEventListener(
     () => viewer.value?.scene.postRender,
-    () => {
-      if (!viewer.value?.scene) {
+    throttle(async () => {
+      const scene = viewer.value?.scene;
+      if (!scene || !cartesian3.value) {
+        coord.value = undefined;
         return;
       }
-      if (!cartesian3.value) {
-        coord.value = undefined;
+
+      const _clampToGround = toValue(clampToGround);
+      let finalPosition = cartesian3.value;
+      if (_clampToGround === 'simple') {
+        finalPosition = scene.clampToHeight(finalPosition);
       }
-      else {
-        const result = cartesianToCanvasCoord(cartesian3.value, viewer.value.scene);
-        if (result) {
-          result.x = +result.x.toFixed(2);
-          result.y = +result.y.toFixed(2);
-          coord.value = !Cartesian2.equals(result, coord.value) ? result : coord.value;
-        }
+      else if (_clampToGround) {
+        const [result] = await scene.clampToHeightMostDetailed([finalPosition]);
+        finalPosition = result;
       }
-    },
+      const result = cartesianToCanvasCoord(finalPosition, scene);
+      if (result) {
+        result.x = +result.x.toFixed(2);
+        result.y = +result.y.toFixed(2);
+        coord.value = !Cartesian2.equals(result, coord.value) ? result : coord.value;
+      }
+    }, 8),
   );
 
   const canvasBounding = useElementBounding(() => viewer.value?.canvas.parentElement);
