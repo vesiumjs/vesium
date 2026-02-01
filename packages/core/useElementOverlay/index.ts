@@ -110,7 +110,11 @@ export function useElementOverlay(
       }
       else {
         const result = cartesianToCanvasCoord(cartesian3.value, viewer.value.scene);
-        coord.value = !Cartesian2.equals(result, coord.value) ? result : coord.value;
+        if (result) {
+          result.x = +result.x.toFixed(2);
+          result.y = +result.y.toFixed(2);
+          coord.value = !Cartesian2.equals(result, coord.value) ? result : coord.value;
+        }
       }
     },
   );
