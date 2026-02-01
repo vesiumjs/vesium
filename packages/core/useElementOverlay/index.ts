@@ -96,7 +96,7 @@ export function useElementOverlay(
   const coord = shallowRef<Cartesian2>();
 
   useCesiumEventListener(
-    () => viewer.value?.scene.postRender,
+    () => viewer.value?.scene.postUpdate,
     throttle(async () => {
       const scene = viewer.value?.scene;
       if (!scene || !cartesian3.value) {
@@ -113,10 +113,13 @@ export function useElementOverlay(
         const [result] = await scene.clampToHeightMostDetailed([finalPosition]);
         finalPosition = result;
       }
+      if (!finalPosition) {
+        finalPosition = cartesian3.value;
+      }
       const result = cartesianToCanvasCoord(finalPosition, scene);
       if (result) {
-        result.x = +result.x.toFixed(2);
-        result.y = +result.y.toFixed(2);
+        result.x = +result.x.toFixed(1);
+        result.y = +result.y.toFixed(1);
         coord.value = !Cartesian2.equals(result, coord.value) ? result : coord.value;
       }
     }, 8),

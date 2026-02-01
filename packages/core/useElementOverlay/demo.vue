@@ -6,6 +6,10 @@ import { shallowRef, watchEffect } from 'vue';
 const viewer = useViewer();
 const position = shallowRef(Cesium.Cartesian3.fromDegrees(113.4413435972336, 22.069678948462606, 0));
 
+watchEffect(async () => {
+  viewer.value.scene.terrainProvider = await Cesium.createWorldTerrainAsync();
+});
+
 useEntity(new Cesium.Entity({
   position: position.value,
   point: {
