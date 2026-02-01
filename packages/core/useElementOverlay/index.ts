@@ -1,7 +1,7 @@
 import type { CommonCoord } from '@vesium/shared';
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { cartesianToCanvasCoord, throttle, toCartesian3 } from '@vesium/shared';
+import { cartesianToCanvasCoord, toCartesian3 } from '@vesium/shared';
 import { useElementBounding } from '@vueuse/core';
 import { Cartesian2 } from 'cesium';
 import { computed, shallowRef, toValue, watchEffect } from 'vue';
@@ -43,11 +43,8 @@ export interface UseElementOverlayOptions {
   /**
    * The position will be clamped to the ground
    *
-   * true: Clamp to the ground and more detailed.
-   *
-   * 'simple': Only calculate ground height, excluding factors such as 3D tileset.
    */
-  clampToGround?: MaybeRefOrGetter<boolean | 'simple'>;
+  clampToGround?: MaybeRefOrGetter<boolean>;
 }
 
 export interface UseElementOverlayRetrun {
@@ -97,32 +94,22 @@ export function useElementOverlay(
 
   useCesiumEventListener(
     () => viewer.value?.scene.postUpdate,
-    throttle(async () => {
+    () => {
       const scene = viewer.value?.scene;
       if (!scene || !cartesian3.value) {
         coord.value = undefined;
         return;
       }
 
-      const _clampToGround = toValue(clampToGround);
-      let finalPosition = cartesian3.value;
-      if (_clampToGround === 'simple') {
-        finalPosition = scene.clampToHeight(finalPosition);
-      }
-      else if (_clampToGround) {
-        const [result] = await scene.clampToHeightMostDetailed([finalPosition]);
-        finalPosition = result;
-      }
-      if (!finalPosition) {
-        finalPosition = cartesian3.value;
-      }
+      let finalPosition = toValue(clampToGround) ? scene.clampToHeight(cartesian3.value) : cartesian3.value;
+      finalPosition ??= cartesian3.value;
       const result = cartesianToCanvasCoord(finalPosition, scene);
       if (result) {
         result.x = +result.x.toFixed(1);
         result.y = +result.y.toFixed(1);
         coord.value = !Cartesian2.equals(result, coord.value) ? result : coord.value;
       }
-    }, 8),
+    },
   );
 
   const canvasBounding = useElementBounding(() => viewer.value?.canvas.parentElement);

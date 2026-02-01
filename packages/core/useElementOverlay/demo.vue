@@ -4,7 +4,7 @@ import { useElementOverlay, useEntity, useViewer } from 'vesium';
 import { shallowRef, watchEffect } from 'vue';
 
 const viewer = useViewer();
-const position = shallowRef(Cesium.Cartesian3.fromDegrees(113.4413435972336, 22.069678948462606, 0));
+const position = shallowRef(Cesium.Cartesian3.fromDegrees(100.04215139520794, 31.320830427363237, 0));
 
 watchEffect(async () => {
   viewer.value.scene.terrainProvider = await Cesium.createWorldTerrainAsync();
@@ -15,12 +15,13 @@ useEntity(new Cesium.Entity({
   point: {
     pixelSize: 10,
     color: Cesium.Color.YELLOW,
+    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
   },
 }));
 
 watchEffect(() => {
   viewer.value?.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(113.4413435972336, 22.069678948462606, 100000),
+    destination: Cesium.Cartesian3.fromDegrees(100.04215139520794, 31.320830427363237, 100000),
   });
 });
 
