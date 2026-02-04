@@ -31,7 +31,14 @@ export interface UseImageryLayerOptions {
    *
    * `imageryLayers.remove(layer,destroyOnRemove)`
    */
-  destroyOnRemove?: MaybeRefOrGetter<boolean>;
+  destroyOnRemove?: MaybeRefOrGetter<boolean | undefined>;
+
+  /**
+   * The second parameter passed to the `add` function
+   *
+   * `imageryLayers.add(layer,index)`
+   */
+  index?: MaybeRefOrGetter<number | undefined>;
 }
 
 /**
@@ -63,6 +70,7 @@ export function useImageryLayer<T extends ImageryLayer>(
     collection,
     isActive = true,
     evaluating,
+    index,
   } = options;
 
   const result = computedAsync(
@@ -80,6 +88,7 @@ export function useImageryLayer<T extends ImageryLayer>(
     if (_isActive) {
       const list = Array.isArray(result.value) ? [...result.value] : [result.value];
       const _collection = collection ?? viewer.value?.imageryLayers;
+      const _index = toValue(index);
       if (collection?.isDestroyed()) {
         return;
       }
@@ -92,7 +101,7 @@ export function useImageryLayer<T extends ImageryLayer>(
           console.warn('ImageryLayer is destroyed');
           return;
         }
-        _collection?.add(item);
+        _collection?.add(item, _index);
       });
       onCleanup(() => {
         const destroy = toValue(destroyOnRemove);
