@@ -8,61 +8,61 @@ packages:
 overrides:
   chokidar: ^5.0.0
 catalog:
-  '@antfu/eslint-config': ^6.7.3
+  '@antfu/eslint-config': ^7.2.0
   '@iconify-json/svg-spinners': ^1.2.4
   '@iconify-json/tabler': ^1.2.26
   '@iconify/utils': ^3.1.0
   '@tsconfig/node22': ^22.0.5
-  '@turf/turf': ^7.3.1
+  '@turf/turf': ^7.3.3
   '@types/geojson': ^7946.0.16
   '@types/jsdom': ^27.0.0
   '@types/markdown-it': ^14.1.2
-  '@types/markdown-it-container': ^2.0.11
-  '@types/node': ^25.0.3
-  '@unocss/eslint-plugin': ^66.5.12
-  '@unocss/reset': ^66.5.12
-  '@vitejs/plugin-vue': ^6.0.3
+  '@types/markdown-it-container': ^4.0.0
+  '@types/node': ^25.2.0
+  '@unocss/eslint-plugin': ^66.6.0
+  '@unocss/reset': ^66.6.0
+  '@vitejs/plugin-vue': ^6.0.4
   '@vue/test-utils': ^2.4.6
   '@vue/tsconfig': ^0.8.1
-  '@vueuse/core': ^14.1.0
-  '@vueuse/shared': ^14.1.0
-  bumpp: ^10.3.2
-  cesium: ^1.137.0
-  cypress: ^15.8.2
+  '@vueuse/core': ^14.2.0
+  '@vueuse/shared': ^14.2.0
+  bumpp: ^10.4.0
+  cesium: ^1.138.0
+  cypress: ^15.10.0
   eslint: ^9.39.2
-  eslint-plugin-format: ^1.2.0
+  eslint-plugin-format: ^1.3.1
   fast-glob: ^3.3.3
   gray-matter: ^4.0.3
-  jsdom: ^27.4.0
-  lightningcss: ^1.30.2
+  jsdom: ^28.0.0
+  lightningcss: ^1.31.1
   local-pkg: ^1.1.2
   magic-string: ^0.30.21
   markdown-it: ^14.1.0
   markdown-it-container: ^4.0.0
   pinia: ^3.0.4
-  pnpm: ^10.27.0
-  sass: ^1.97.2
+  pnpm: ^10.28.2
+  sass: ^1.97.3
   start-server-and-test: ^2.1.3
-  stylelint: ^16.26.1
-  stylelint-config-recess-order: ^7.4.0
+  stylelint: ^17.1.1
+  stylelint-config-recess-order: ^7.6.0
   stylelint-config-recommended-vue: ^1.6.1
-  stylelint-config-standard: ^39.0.1
+  stylelint-config-standard: ^40.0.0
   svgo: ^4.0.0
   taze: ^19.9.2
-  tsdown: ^0.18.4
+  tsdown: ^0.20.1
   tsx: ^4.21.0
   typescript: ^5.9.3
-  unocss: ^66.5.12
-  unplugin-auto-import: ^20.3.0
+  unocss: ^66.6.0
+  unplugin-auto-import: ^21.0.0
   unplugin-cesium: ^3.1.0
-  unplugin-icons: ^22.5.0
-  unplugin-vue: ^7.1.0
-  unplugin-vue-components: ^30.0.0
+  unplugin-icons: ^23.0.1
+  unplugin-vue: ^7.1.1
+  unplugin-vue-components: ^31.0.0
   vite: ^7.3.1
   vite-plugin-vue-devtools: ^8.0.5
-  vitepress: ^2.0.0-alpha.15
-  vitest: ^4.0.16
-  vue: ^3.5.26
-  vue-router: ^4.6.4
-  vue-tsc: ^3.2.2
-  zod: ^4.3.5
+  vitepress: ^2.0.0-alpha.16
+  vitest: ^4.0.18
+  vue: ^3.5.27
+  vue-router: ^5.0.2
+  vue-tsc: ^3.2.4
+  zod: ^4.3.6
