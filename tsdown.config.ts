@@ -27,6 +27,7 @@ console.log(iifeGlobals);
 const config: UserConfig = {
   entry: '*.ts',
   workspace: true,
+  inlineOnly: false,
   format: ['es', 'cjs', 'iife'],
   sourcemap: true,
   tsconfig: 'tsconfig.build.json',
@@ -34,6 +35,11 @@ const config: UserConfig = {
     Vue(),
   ],
   globalName: 'Vesium',
+  inputOptions: {
+    checks: {
+      pluginTimings: false,
+    },
+  },
   outputOptions: {
     // When format is 'iife', allowing multiple libraries to use the same 'globalName'
     extend: true,
