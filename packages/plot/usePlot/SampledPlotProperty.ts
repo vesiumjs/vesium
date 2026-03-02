@@ -238,7 +238,7 @@ export class SampledPlotProperty<D = any> {
    * @param value 样本数据对象，包含时间、位置和导数信息
    */
   setSample(value: SampledPlotPackable<D>): void {
-    const time = value.time?.clone() ?? this._times[0]!.clone();
+    const time = value.time?.clone() ?? this._times[0]?.clone() ?? new JulianDate(0, 0);
     const positions = value.positions?.map(item => item.clone()) ?? [];
     const derivative = value.derivative;
     const index = this._times.findIndex(t => JulianDate.equals(time, t));
