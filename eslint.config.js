@@ -4,11 +4,8 @@ export default antfu({
   ignores: [
     '**/tests/core/**',
     '**/.agents/**',
-    '**/*.md',
   ],
-  formatters: {
-    markdown: false,
-  },
+  formatters: true,
   // https://github.com/antfu/eslint-config?tab=readme-ov-file#editor-specific-disables
   isInEditor: false,
   jsx: true,
