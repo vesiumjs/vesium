@@ -12,7 +12,7 @@ subText: 叠加实体
 :::
 
 ```ts
-import { useEntity } from 'vesium'
+import { useEntity } from 'vesium';
 
 // 加载单项实例
 const entity = useEntity(entityInstance);

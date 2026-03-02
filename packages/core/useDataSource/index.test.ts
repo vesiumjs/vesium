@@ -106,7 +106,7 @@ describe('useDataSource', () => {
 
   it('should handle ref of promise dataSource', async () => {
     const mockDs = new Cesium.CustomDataSource('promise-ref') as any;
-    const dataSourceRef = ref(Promise.resolve(mockDs));
+    const dataSourceRef = ref(Promise.resolve(mockDs)) as any;
 
     const TestComponent = defineComponent({
       setup() {

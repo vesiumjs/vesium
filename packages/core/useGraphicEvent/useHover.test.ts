@@ -1,7 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
-import { useHover } from './useHover';
-import { createViewer } from '../createViewer';
 import { mount } from '@vue/test-utils';
+import { describe, it, vi } from 'vitest';
+import { createViewer } from '../createViewer';
+import { useHover } from './useHover';
 
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
@@ -12,17 +12,18 @@ vi.mock('cesium', async (importOriginal) => {
       isDestroyed = () => false;
       destroy = vi.fn();
       camera = { changed: { addEventListener: vi.fn() } };
-      scene = { 
+      scene = {
         pick: vi.fn(),
-        camera: { changed: { addEventListener: vi.fn() } }
+        camera: { changed: { addEventListener: vi.fn() } },
       };
+
       constructor() {}
     },
     ScreenSpaceEventHandler: class {
       setInputAction = vi.fn();
       removeInputAction = vi.fn();
       destroy = vi.fn();
-    }
+    },
   };
 });
 
@@ -34,7 +35,7 @@ describe('useHover', () => {
         useHover(vi.fn());
         return {};
       },
-      template: '<div></div>'
+      template: '<div></div>',
     });
   });
 });

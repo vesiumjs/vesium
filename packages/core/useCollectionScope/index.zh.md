@@ -15,14 +15,14 @@ tip: 内部
 ## Usage
 
 ```ts
-import { useCollectionScope } from 'vesium'
+import { useCollectionScope } from 'vesium';
 
 const { add, remove, scope } = useCollectionScope({
-  addEffect: (instance) => viewer.entities.add(instance),
-  removeEffect: (instance) => viewer.entities.remove(instance)
-})
+  addEffect: instance => viewer.entities.add(instance),
+  removeEffect: instance => viewer.entities.remove(instance)
+});
 
-const entity = add({ id: 'test' })
+const entity = add({ id: 'test' });
 // 当组件卸载时，entity 会自动从 viewer.entities 中移除
 ```
 

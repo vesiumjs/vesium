@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from 'vitest';
-import { useGraphicEvent } from '../index';
-import { createViewer } from '../createViewer';
 import { mount } from '@vue/test-utils';
+import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
+import { createViewer } from '../createViewer';
+import { useGraphicEvent } from '../index';
 
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
@@ -14,19 +14,20 @@ vi.mock('cesium', async (importOriginal) => {
       isDestroyed = () => false;
       destroy = vi.fn();
       camera = { changed: { addEventListener: vi.fn() } };
-      scene = { 
+      scene = {
         preRender: { addEventListener: vi.fn() },
         postRender: { addEventListener: vi.fn() },
         screenSpaceCameraController: {},
-        camera: { changed: { addEventListener: vi.fn() } }
+        camera: { changed: { addEventListener: vi.fn() } },
       };
+
       constructor() {}
     },
     ScreenSpaceEventHandler: class {
       setInputAction = vi.fn();
       removeInputAction = vi.fn();
       destroy = vi.fn();
-    }
+    },
   };
 });
 
@@ -35,24 +36,24 @@ describe('useGraphicEvent', () => {
     const TestComponent = defineComponent({
       setup() {
         createViewer(document.createElement('div'));
-        const { add, remove } = useGraphicEvent();
+        const { add } = useGraphicEvent();
         const listener = vi.fn();
         const graphic = { id: 'test' };
-        
+
         const stop = add(graphic, 'LEFT_CLICK', listener);
         expect(typeof stop).toBe('function');
-        
+
         stop();
         return {};
       },
-      render() { return h('div'); }
+      render() { return h('div'); },
     });
 
     mount(TestComponent);
   });
 
   it('should handle global events', () => {
-     mount({
+    mount({
       setup() {
         createViewer(document.createElement('div'));
         const { add, clear } = useGraphicEvent();
@@ -61,7 +62,7 @@ describe('useGraphicEvent', () => {
         clear('global', 'all');
         return {};
       },
-      template: '<div></div>'
+      template: '<div></div>',
     });
   });
 });

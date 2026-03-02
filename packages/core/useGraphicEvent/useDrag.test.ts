@@ -1,8 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
-import { useDrag } from './useDrag';
-import { createViewer } from '../createViewer';
 import { mount } from '@vue/test-utils';
-import { defineComponent, h } from 'vue';
+import { describe, expect, it, vi } from 'vitest';
+import { createViewer } from '../createViewer';
+import { useDrag } from './useDrag';
 
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
@@ -13,18 +12,19 @@ vi.mock('cesium', async (importOriginal) => {
       isDestroyed = () => false;
       destroy = vi.fn();
       camera = { changed: { addEventListener: vi.fn() } };
-      scene = { 
+      scene = {
         pick: vi.fn(),
         screenSpaceCameraController: { enableRotate: true },
-        camera: { changed: { addEventListener: vi.fn() } }
+        camera: { changed: { addEventListener: vi.fn() } },
       };
+
       constructor() {}
     },
     ScreenSpaceEventHandler: class {
       setInputAction = vi.fn();
       removeInputAction = vi.fn();
       destroy = vi.fn();
-    }
+    },
   };
 });
 
@@ -37,7 +37,7 @@ describe('useDrag', () => {
         expect(typeof stop).toBe('function');
         return {};
       },
-      template: '<div></div>'
+      template: '<div></div>',
     });
   });
 });

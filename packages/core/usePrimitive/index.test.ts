@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils';
-import * as Cesium from 'cesium';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
 import { createViewer } from '../createViewer';

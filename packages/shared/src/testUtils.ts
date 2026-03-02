@@ -1,6 +1,22 @@
 import { vi } from 'vitest';
 
-export function createMockViewer() {
+export interface MockViewer {
+  entities: {
+    add: any;
+    remove: any;
+    isDestroyed: any;
+  };
+  dataSources: {
+    add: any;
+    remove: any;
+    isDestroyed: any;
+  };
+  destroy: any;
+  isDestroyed: any;
+  canvas: HTMLCanvasElement;
+}
+
+export function createMockViewer(): MockViewer {
   const mockEntities = {
     add: vi.fn(e => e),
     remove: vi.fn(),

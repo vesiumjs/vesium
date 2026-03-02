@@ -12,7 +12,7 @@ subText: 叠加图层
 :::
 
 ```ts
-import { useImageryLayer } from 'vesium'
+import { useImageryLayer } from 'vesium';
 
 // 加载基础实例
 const layer = useImageryLayer(singleLayer);

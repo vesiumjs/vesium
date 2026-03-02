@@ -36,7 +36,8 @@
     "release": "bumpp -r",
     "==========[CI/CD]===========": "",
     "build:ci": "tsdown",
-    "publish:ci": "tsx ./scripts/publish"
+    "publish:ci": "tsx ./scripts/publish",
+    "prepare": "husky"
   },
   "dependencies": {
     "@unocss/reset": "catalog:",
@@ -60,7 +61,7 @@
     "@types/node": "catalog:",
     "@unocss/eslint-plugin": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/coverage-v8": "catalog:",
     "@vue/test-utils": "catalog:",
     "@vue/tsconfig": "catalog:",
     "bumpp": "catalog:",
@@ -69,8 +70,10 @@
     "eslint-plugin-format": "catalog:",
     "fast-glob": "catalog:",
     "gray-matter": "catalog:",
+    "husky": "catalog:",
     "jsdom": "catalog:",
     "lightningcss": "catalog:",
+    "lint-staged": "catalog:",
     "local-pkg": "catalog:",
     "magic-string": "catalog:",
     "markdown-it": "catalog:",
@@ -98,5 +101,10 @@
     "vitepress": "catalog:",
     "vitest": "catalog:",
     "vue-tsc": "catalog:"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix"
+    ]
   }
 }

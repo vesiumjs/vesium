@@ -12,7 +12,7 @@ subText: 叠加数据源
 :::
 
 ```ts
-import { useDataSource } from 'vesium'
+import { useDataSource } from 'vesium';
 
 // 加载基础实例
 const dataSource = useDataSource(someDataSource);

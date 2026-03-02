@@ -15,14 +15,14 @@ This is a basic function that is intended to be called by other lower-level func
 ## Usage
 
 ```ts
-import { useCollectionScope } from 'vesium'
+import { useCollectionScope } from 'vesium';
 
 const { add, remove, scope } = useCollectionScope({
-  addEffect: (instance) => viewer.entities.add(instance),
-  removeEffect: (instance) => viewer.entities.remove(instance)
-})
+  addEffect: instance => viewer.entities.add(instance),
+  removeEffect: instance => viewer.entities.remove(instance)
+});
 
-const entity = add({ id: 'test' })
+const entity = add({ id: 'test' });
 // When the component is unmounted, the entity is automatically removed from viewer.entities
 ```
 
