@@ -60,6 +60,7 @@
     "@types/node": "catalog:",
     "@unocss/eslint-plugin": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
+    "@vitest/coverage-v8": "^4.0.18",
     "@vue/test-utils": "catalog:",
     "@vue/tsconfig": "catalog:",
     "bumpp": "catalog:",

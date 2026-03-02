@@ -16,7 +16,8 @@ The project uses `pnpm` as the package manager.
   - Run all tests: `pnpm test:unit`
   - Run a single test file: `pnpm vitest <path-to-file>`
   - Run tests in UI mode: `pnpm vitest --ui`
-  - _Note: Use `@vue/test-utils` and mock Cesium classes via `vi.mock` for core hook testing._
+  - _Note: Use `@vue/test-utils` and mock Cesium classes via `vi.mock` or `setupCesiumMocks` from `@vesium/shared` for core hook testing._
+  - _Important: Many core hooks (e.g., `useEntity`, `useDataSource`) support async parameters (Getters or Promises). When testing these, ensure to wait for `computedAsync` resolution using `setTimeout` or `await nextTick()` as needed._
 - **E2E Tests:**
   - Run E2E tests: `pnpm test:e2e`
   - Open Cypress for E2E: `pnpm test:e2e:dev`
