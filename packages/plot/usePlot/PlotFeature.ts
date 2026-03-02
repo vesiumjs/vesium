@@ -56,12 +56,15 @@ export class PlotFeature {
     this._scheme = PlotScheme.resolve(options.scheme);
 
     this._definitionChanged = new Event();
-    this._defining = true;
     this._disabled = disabled;
     this._sampled = sampled instanceof SampledPlotProperty ? sampled : new SampledPlotProperty(sampled);
     this._sampled.definitionChanged.addEventListener(property => this._definitionChanged.raiseEvent(this, 'sampled', property, property), this);
 
+    const packable = this._sampled.getValue();
+    this._defining = !(packable.positions && packable.positions.length > 0);
+
     const init = this._scheme.initRender?.() ?? {};
+
     this._entities = [...init.entities ?? []];
     this._primitives = [...init.primitives ?? []];
     this._groundPrimitives = [...init.groundPrimitives ?? []];
@@ -129,8 +132,11 @@ export class PlotFeature {
     return this._disabled;
   }
 
-  set disabled(value: string) {
-    this.disabled = value;
+  set disabled(value: boolean) {
+    if (this._disabled !== value) {
+      this._definitionChanged.raiseEvent(this, 'disabled', value, this._disabled);
+      this._disabled = value;
+    }
   }
 
   /**
