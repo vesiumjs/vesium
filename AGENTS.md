@@ -16,7 +16,7 @@ The project uses `pnpm` as the package manager.
   - Run all tests: `pnpm test:unit`
   - Run a single test file: `pnpm vitest <path-to-file>`
   - Run tests in UI mode: `pnpm vitest --ui`
-  - _Note: Ensure `vitest.config.ts` is properly configured as it might be empty or commented out._
+  - _Note: Use `@vue/test-utils` and mock Cesium classes via `vi.mock` for core hook testing._
 - **E2E Tests:**
   - Run E2E tests: `pnpm test:e2e`
   - Open Cypress for E2E: `pnpm test:e2e:dev`
@@ -31,16 +31,17 @@ The project uses `pnpm` as the package manager.
 - **Framework:** Vue 3 with Composition API.
 - **Language:** TypeScript is mandatory. Use strict typing.
 - **Cesium Integration:** Follow Cesium's lifecycle and memory management practices. Use `useViewer` to access the Cesium Viewer instance.
+- **Reactivity:** Cesium objects (Viewer, Entity, Primitive) MUST be wrapped in `ShallowRef` to avoid performance degradation from Vue's deep reactivity.
 
 ### 2. Imports
 
-- Use clean imports. Group them: external libraries first, then internal packages/modules.
-- Internal workspace packages are referenced via `@vesium/*` (e.g., `@vesium/shared`).
-- Prefer named exports over default exports for better tree-shaking and discoverability.
+- Use clean imports. Group them: external libraries first, then internal packages.
+- Internal workspace packages are referenced via `@vesium/*` (e.g., `@vesium/shared`, `@vesium/geometry`).
+- Prefer named exports over default exports for better tree-shaking.
 
 ### 3. Formatting & Naming
 
-- **Formatting:** Handled by ESLint with `@antfu/eslint-config`. Semicolons are enabled (`semi: true`).
+- **Formatting:** Handled by ESLint with `@antfu/eslint-config`. Semicolons are REQUIRED (`semi: true`).
 - **Naming:**
   - Composition functions (hooks): Start with `use` (e.g., `useViewer`, `useEntity`).
   - Components: PascalCase (e.g., `MyComponent.vue`).
@@ -51,8 +52,8 @@ The project uses `pnpm` as the package manager.
 ### 4. Types
 
 - Use `interface` for object shapes and `type` for unions or aliases.
-- Leverage Vue's `Ref` and `ShallowRef` appropriately. Cesium objects (like `Viewer`, `Entity`) should often be wrapped in `ShallowRef` to avoid deep reactivity overhead.
-- Explicitly define return types for public functions.
+- Leverage Vue's `Ref` and `ShallowRef` appropriately.
+- Explicitly define return types for public functions and hooks.
 - Common types are defined in `@vesium/shared/src/types.ts` (e.g., `Nullable`, `CommonCoord`).
 
 ### 5. Error Handling
@@ -64,14 +65,22 @@ The project uses `pnpm` as the package manager.
 
 ### 6. File Structure
 
-- **Packages:** Logic is split into `packages/core`, `packages/shared`, `packages/plot`, etc.
+- **Packages:** Logic is split into `packages/core`, `packages/shared`, `packages/plot`, `packages/geometry`.
+- **Tests:** Place unit tests in the same directory as the source file, named `index.test.ts` (especially for `packages/core`).
 - **Demos:** Each hook/component usually has a `demo.vue` and documentation in `index.en.md` / `index.zh.md` within its directory.
 - **Monorepo:** Managed by `pnpm-workspace.yaml`.
 
-## 🤖 AI Context
+## 🤖 AI Context & Project Status
 
-- This repository follows `@antfu`'s linting style with semicolons.
-- Always check `package.json` in the root and sub-packages for script definitions.
-- When adding new features, provide both English and Chinese documentation if possible.
-- **Integrity Note:** Be aware that `tests/core` might contain a redundant project mirror that should be ignored or cleaned up.
-- **TS Compatibility:** Ensure `compilerOptions.lib` includes `ES2022` or later to support `at()` and `replaceAll()`.
+- **Linting:** ESLint is configured to ignore `.agents/` (skill docs) and Markdown formatting.
+- **TS Compatibility:** Project target is `ES2022`. Ensure support for `at()`, `replaceAll()`, etc.
+- **Test Strategy:** We use `vitest`. When testing core hooks, use the `mount()` pattern from `@vue/test-utils` to provide the proper `Viewer` context.
+- **Plotting Module:** The `PlotFeature` constructor automatically determines the `defining` state based on whether initial positions are provided (restoring scene).
+- **Integrity Note:** Always run `pnpm type-check` after modifying shared types or core logic.
+
+## 📦 Core Packages
+
+- `@vesium/core`: Core Vue hooks for Cesium lifecycle.
+- `@vesium/shared`: Universal utility functions and type definitions.
+- `@vesium/geometry`: Specialized geometry and coordinate calculations.
+- `@vesium/plot`: Plotting and measurement tools (Arrows, Distance, Area).
