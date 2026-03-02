@@ -4,7 +4,7 @@ subText: 叠加实体
 
 # useEntity
 
-用于响应式加载`Entity`，当数据变化时自动销毁或重载entity实例
+用于响应式加载 Cesium `Entity`。当数据发生变化或组件卸载时，它会自动移除并重载 entity 实例。
 
 ## Usage
 
@@ -12,20 +12,22 @@ subText: 叠加实体
 :::
 
 ```ts
-// overLoad1:加载单项实例
-const entity = useEntity(entity);
+import { useEntity } from 'vesium'
 
-// overLoad2:加载数组实例
+// 加载单项实例
+const entity = useEntity(entityInstance);
+
+// 加载数组实例
 const entities = useEntity([entity1, entity2]);
 
 const isActive = ref(true);
 const isLoading = ref(true);
 
-// 配置项
-const entity = useEntity(entity, {
-  collection,
-  isActive,
-  evaluating: isLoading
+// 使用配置项
+const activeEntities = useEntity(entities, {
+  collection: viewer.entities, // 目标实体集合，默认使用 useViewer().entities
+  isActive, // 是否激活（控制实体是否添加到集合）
+  evaluating: isLoading // 加载状态引用
 });
 ```
 

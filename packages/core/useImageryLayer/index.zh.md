@@ -4,7 +4,7 @@ subText: 叠加图层
 
 # useImageryLayer
 
-用于响应式加载`ImageryLayer`，当数据变化时自动销毁或重载imageryLayer实例
+用于响应式加载 Cesium `ImageryLayer`。当数据发生变化或组件卸载时，它会自动从集合中移除并销毁图层。
 
 ## Usage
 
@@ -12,23 +12,25 @@ subText: 叠加图层
 :::
 
 ```ts
-// 加载基础实例
-const images = useImageryLayer(layer);
+import { useImageryLayer } from 'vesium'
 
-// 加载异步实例
-const dataSource = useImageryLayer(async () => await getLayer());
+// 加载基础实例
+const layer = useImageryLayer(singleLayer);
+
+// 异步加载
+const asyncLayer = useImageryLayer(async () => await getLayer());
 
 // 加载数组
-const dataSources = useImageryLayer([layer1, layer2]);
+const layers = useImageryLayer([layer1, layer2]);
 
 const isLoading = ref(true);
 
-// 配置项
-const dataSource = useImageryLayer(layer, {
-  collection,
-  isActive,
-  evaluating: isLoading,
-  destroyOnRemove: false,
+// 使用配置项
+const activeLayers = useImageryLayer(layers, {
+  collection: viewer.imageryLayers, // 目标图层集合，默认使用 useViewer().scene.imageryLayers
+  isActive: true, // 是否激活（控制图层是否添加到集合）
+  evaluating: isLoading, // 加载状态引用
+  destroyOnRemove: true, // 当图层移除时是否自动销毁，默认 true
 });
 ```
 

@@ -1,6 +1,6 @@
 # Vesium Agent Guidelines
 
-请根据开发者提问的语言，决定交流时使用的语言。
+根据开发者提问的语言，决定交流时使用的语言(包括思考内容)。
 
 This document provides essential information for AI agents operating in the Vesium repository. Vesium is a Vue component and composition-api library for Cesium.
 
