@@ -6,10 +6,11 @@ import { ref, watchPostEffect } from 'vue';
 const isActive = ref(true);
 
 const imageryLayer = useImageryLayer(
-  new Cesium.ImageryLayer(new Cesium.GridImageryProvider({})),
+  async () => new Cesium.ImageryLayer(new Cesium.GridImageryProvider({})),
   {
     isActive,
     destroyOnRemove: false,
+    index: 9999,
   },
 );
 
