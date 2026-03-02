@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/vesiumjs/vesium/raw/main/assets/logo.svg" align="center" width="15%" />
+<img src="https://github.com/vesiumjs/vesium/raw/main/assets/logo.svg" align="center" width="15%" alt="Vesium Logo" />
 </p>
 
 <h1 align="center">

@@ -15,7 +15,9 @@ If `useViewer` and `createViewer` are used in the same component:
 - `useViewer` will prioritize using the `Viewer` instance created by `createViewer` in the current component.
   :::
 
-#### Inject and Retrieve in the Same Component
+## Examples
+
+### Inject and Retrieve in the Same Component
 
 ```ts
 createViewer(/** options */);
@@ -24,7 +26,7 @@ createViewer(/** options */);
 const viewer = useViewer();
 ```
 
-#### Inject and Retrieve in Descendant Components
+### Inject and Retrieve in Descendant Components
 
 ```vue
 // parent.vue

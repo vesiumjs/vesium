@@ -16,7 +16,9 @@ subText: 获取实例
 - `useViewer` 会优先使用当前组件 `createViewer` 创建的实例。
   :::
 
-#### 同一组件注入并获取
+## Examples
+
+### 同一组件注入并获取
 
 ```ts
 createViewer(/** options */);
@@ -25,7 +27,7 @@ createViewer(/** options */);
 const viewer = useViewer();
 ```
 
-#### 注入后，子孙组件获取
+### 注入后，子孙组件获取
 
 ```vue
 // parent.vue
