@@ -94,20 +94,21 @@ export function useSkeleton(
       if (pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as PlotSkeletonEntity;
 
-        const plot = entity.plot as PlotFeature;
+        const feature = entity.plot as PlotFeature;
         // 仅在非定义态时才可拖拽
-        if (plot.defining) {
+        if (feature.defining) {
           return;
         }
         activeEntity.value = entity;
         const skeleton = entity.skeleton as PlotSkeleton;
         const index = entity.index as number;
-        const packable = plot.sampled.getValue(getCurrentTime());
+        const packable = feature.sampled.getValue(getCurrentTime());
         skeleton.onDrag?.({
           viewer: viewer.value!,
-          sampled: plot.sampled,
+          feature,
+          sampled: feature.sampled,
           packable,
-          active: current.value === plot,
+          active: current.value === feature,
           index,
           event,
           dragging,
@@ -138,14 +139,15 @@ export function useSkeleton(
   onKeyStroke((keyEvent) => {
     if (activeEntity.value) {
       const entity = activeEntity.value;
-      const plot = entity.plot as PlotFeature;
+      const feature = entity.plot as PlotFeature;
       const skeleton = entity.skeleton as PlotSkeleton;
       const index = entity.index as number;
-      const packable = plot.sampled.getValue(getCurrentTime());
+      const packable = feature.sampled.getValue(getCurrentTime());
 
       skeleton.onKeyPressed?.({
         viewer: viewer.value!,
-        sampled: plot.sampled,
+        feature,
+        sampled: feature.sampled,
         packable,
         index,
         keyEvent,
@@ -171,17 +173,18 @@ export function useSkeleton(
       if (pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as PlotSkeletonEntity;
         activeEntity.value = entity;
-        const plot = entity.plot as PlotFeature;
+        const feature = entity.plot as PlotFeature;
         const skeleton = entity.skeleton as PlotSkeleton;
         const index = entity.index as number;
-        const packable = plot.sampled.getValue(getCurrentTime());
+        const packable = feature.sampled.getValue(getCurrentTime());
 
         skeleton.onLeftClick?.({
           viewer: viewer.value!,
-          sampled: plot.sampled,
+          feature,
+          sampled: feature.sampled,
           packable: packable!,
-          active: current.value === plot,
-          defining: plot.defining,
+          active: current.value === feature,
+          defining: feature.defining,
           index,
           event,
         });

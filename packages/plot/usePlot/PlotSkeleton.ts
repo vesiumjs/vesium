@@ -22,6 +22,11 @@ export interface OnSkeletonClickOptions {
   viewer: Viewer;
 
   /**
+   * 所属标绘
+   */
+  feature: PlotFeature;
+
+  /**
    * 当前标绘属性数据
    */
   sampled: SampledPlotProperty;
@@ -54,6 +59,11 @@ export interface OnSkeletonClickOptions {
 
 export interface OnSkeletonDragOptions {
   viewer: Viewer;
+
+  /**
+   * 所属标绘
+   */
+  feature: PlotFeature;
 
   /***
    * 当前标绘属性数据
@@ -93,6 +103,11 @@ export interface OnSkeletonDragOptions {
 
 export interface OnKeyPressedOptions {
   viewer: Viewer;
+
+  /**
+   * 所属标绘
+   */
+  feature: PlotFeature;
 
   /**
    * 当前标绘属性数据
