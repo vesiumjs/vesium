@@ -23,7 +23,7 @@ export function useRender(
   const groundPrimitiveCollection = usePrimitive(new PrimitiveCollection(), { collection: 'ground' });
   const dataSource = useDataSource(new CustomDataSource());
 
-  const entityScope = useEntityScope({ collection: () => dataSource.value!.entities! });
+  const entityScope = useEntityScope({ collection: () => dataSource.value?.entities });
   const primitiveScope = usePrimitiveScope({ collection: () => primitiveCollection.value! });
   const groundPrimitiveScope = usePrimitiveScope({ collection: () => groundPrimitiveCollection.value! });
 
