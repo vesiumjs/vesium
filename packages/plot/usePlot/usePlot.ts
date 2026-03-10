@@ -3,7 +3,7 @@ import type { PlotFeatureConstructorOptions } from './PlotFeature';
 import type { SampledPlotPackable } from './SampledPlotProperty';
 import { JulianDate, ScreenSpaceEventType } from 'cesium';
 import { pickHitGraphic, useCesiumEventListener, useScreenSpaceEventHandler, useViewer } from 'vesium';
-import { computed, shallowReactive, shallowRef, watch } from 'vue';
+import { computed, nextTick, shallowReactive, shallowRef } from 'vue';
 import { PlotFeature } from './PlotFeature';
 import { useRender } from './useRender';
 import { useSampled } from './useSampled';
@@ -77,37 +77,52 @@ export function usePlot(options?: UsePlotOptions) {
     current.value = plots.value.find(plot => pickHitGraphic(pick, [...plot.entities, ...plot.primitives, ...plot.groundPrimitives]));
   });
 
-  let operateResolve: ((plot: PlotFeature) => void) | undefined;
+  let operateResolve: (() => void) | undefined;
   let operateReject: (() => void) | undefined;
-
-  // 当前激活的标绘发生变动时，上一个标绘取消激活。若上一标绘仍处于定义态时，应立即强制完成，若无法完成则删除。
-  watch(current, (plot, previous) => {
-    if (previous) {
-      if (previous.defining) {
-        const packable = previous.sampled.getValue(getCurrentTime());
-        const completed = previous.scheme.allowManualComplete?.(packable);
-        if (completed) {
-          PlotFeature.setDefining(previous, false);
-          operateResolve?.(previous);
-        }
-        else {
-          collection.delete(previous);
-        }
-      }
+  useCesiumEventListener(() => current.value?.definitionChanged, (_, key, value) => {
+    if (key === 'defining' && !value) {
+      operateResolve?.();
     }
   });
 
   const operate: UsePlotOperate = async (plot) => {
-    return new Promise((resolve, reject) => {
-      operateResolve = resolve;
-      operateReject = reject;
-      const _plot = plot instanceof PlotFeature ? plot : new PlotFeature(plot);
+    await nextTick();
 
+    // 当前激活的标绘发生变动时，上一个标绘取消激活。若上一标绘仍处于定义态时，应立即强制完成，若无法完成则删除。
+    const previous = current.value;
+    if (previous?.defining) {
+      const packable = previous.sampled.getValue(getCurrentTime());
+      const completed = previous.scheme.allowManualComplete?.(packable);
+      if (completed) {
+        PlotFeature.setDefining(previous, false);
+        operateResolve?.();
+      }
+      else {
+        collection.delete(previous);
+        operateReject?.();
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      const _plot = plot instanceof PlotFeature ? plot : new PlotFeature(plot);
       if (!collection.has(_plot)) {
         collection.add(_plot);
       }
+      operateResolve = () => {
+        operateResolve = undefined;
+        operateReject = undefined;
+        resolve(_plot);
+      };
+      operateReject = () => {
+        operateResolve = undefined;
+        operateReject = undefined;
+        reject(new Error('plot is not completed', { cause: _plot }));
+      };
       current.value = _plot;
-      return resolve(_plot);
+      // 新增的标绘若不是定义态，则属于带有初始化点位的标绘（标绘恢复场景），此时需要立即更新一次
+      if (!_plot.defining) {
+        operateResolve?.();
+      }
     });
   };
 
