@@ -101,6 +101,8 @@ export function useRender(
 
   watch(current, (plot, previous) => {
     previous && update(previous);
+    // 新增的标绘若不是定义态，则属于带有初始化点位的标绘（标绘恢复场景），此时需要立即更新一次
+    plot && !plot.defining && update(plot);
   });
 
   useCesiumEventListener(
