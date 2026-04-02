@@ -1,6 +1,9 @@
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders';
 import * as svgo from 'svgo';
 
+const COLOR_RE = /#[\da-f]{3,8}/gi;
+const SVG_TAG_RE = /^<svg /;
+
 export interface SvgTransformOptions {
   /**
    * 若图标为多色图标，是否启用多css颜色变量注入
@@ -34,20 +37,25 @@ export function svgTransform(svg: string, options?: SvgTransformOptions): string
       'convertStyleToAttrs',
     ],
   }).data;
-  let colors: string[] = svg.match(/((#\w{3,8}))/g) ?? [];
-  colors = colors.map(e => e.toLocaleUpperCase());
-  colors = [...new Set(colors)];
+  const colors = [...new Set((svg.match(COLOR_RE) ?? []).map(color => color.toUpperCase()))];
   if (colors.length <= 1) {
-    svg = svg.replace(colors[0], 'currentColor');
-    svg = svg.replace(/^<svg /, '<svg fill="currentColor" ');
+    const color = colors[0];
+    if (color) {
+      svg = svg.replace(color, 'currentColor');
+    }
+    svg = svg.replace(SVG_TAG_RE, '<svg fill="currentColor" ');
   }
 
   if (multiColor && colors.length > 1) {
-    colors = colors.sort(); // 进行排序，确保接近一致的不同svg之间的变量索引注入保持一致的
-    colors.forEach((color, index) => {
-      svg = svg.replaceAll(new RegExp(`(${color})(\\W)`, 'gi'), ($0, $1, $2) => {
-        return `var(--icon-${varPrefix}-color-${index},${color})${$2}`;
-      });
+    // 进行排序，确保接近一致的不同svg之间的变量索引注入保持一致
+    const colorIndexes = new Map([...colors].sort().map((color, index) => [color, index] as const));
+    svg = svg.replace(COLOR_RE, (match) => {
+      const color = match.toUpperCase();
+      const index = colorIndexes.get(color);
+      if (index === undefined) {
+        return match;
+      }
+      return `var(--icon-${varPrefix}-color-${index},${match})`;
     });
   }
   return svg;

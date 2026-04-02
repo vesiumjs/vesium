@@ -7,6 +7,11 @@ import matter from 'gray-matter';
 import { createFilter, normalizePath } from 'vite';
 import { VITEPRESS_PACKAGE_PATH } from '../path';
 
+const MARKDOWN_EXT_RE = /\.md$/;
+const GENERIC_EXT_RE = /(\.(\w|-)*)$/;
+const INDEX_SUFFIX_RE = /(\/?index)+$/;
+const PARENT_PATH_RE = /\/.+$/;
+
 export interface GenerateSidebarOptions {
   base: string;
   include?: FilterPattern;
@@ -56,9 +61,9 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
 
     // 生成链接、文本和其他属性
     const link = filePath
-      .replace(/\.md$/, '')
-      .replace(/(\.(\w|-)*)$/, '')
-      .replace(/(\/?index)+$/, '');
+      .replace(MARKDOWN_EXT_RE, '')
+      .replace(GENERIC_EXT_RE, '')
+      .replace(INDEX_SUFFIX_RE, '');
     let text = m.data.text || link.split('/').pop();
     m.data?.tip && (text += `<Badge type="tip" text="${m.data.tip}" />`);
     m.data?.subText && (text += `<span class="sub-text">${m.data.subText}</span>`);
@@ -66,7 +71,7 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
       file,
       text,
       link: `${link}/`,
-      parent: link.includes('/') ? link.replace(/\/.+$/, '') : undefined,
+      parent: link.includes('/') ? link.replace(PARENT_PATH_RE, '') : undefined,
       isRoot: !link.includes('/'),
       sort: (m.data?.sort ?? Number.MAX_SAFE_INTEGER),
     };
@@ -85,7 +90,7 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
       const link = parentNodes.join('/');
       const item: TreeItem = {
         text: link.split('/').pop(),
-        parent: link.includes('/') ? link.replace(/\/.+$/, '') : undefined,
+        parent: link.includes('/') ? link.replace(PARENT_PATH_RE, '') : undefined,
         isRoot: !link.includes('/'),
         sort: Number.MAX_SAFE_INTEGER,
         link,

@@ -1,16 +1,17 @@
 import type { MarkdownRenderer } from 'vitepress';
 
+const TAG_RE = /^\^\(([^)]*)\)/;
+
 export function badgeTransform(md: MarkdownRenderer): void {
   md.inline.ruler.before('emphasis', 'badge', (state, silent) => {
-    const tagRegExp = /^\^\(([^)]*)\)/;
     const str = state.src.slice(state.pos, state.posMax);
 
-    if (!tagRegExp.test(str))
+    if (!TAG_RE.test(str))
       return false;
     if (silent)
       return true;
 
-    const result = str.match(tagRegExp);
+    const result = str.match(TAG_RE);
 
     if (!result)
       return false;

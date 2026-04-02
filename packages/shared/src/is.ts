@@ -1,6 +1,8 @@
 import type { AnyFn } from './types';
 
 const toString = Object.prototype.toString;
+// eslint-disable-next-line regexp/no-unused-capturing-group, regexp/no-super-linear-backtracking
+const BASE64_RE = /^\s*data:([a-z]+\/[\d+.a-z-]+(;[a-z]+=[\da-z-]+)?)?(;base64)?,([\s\w!$%&'()*+,./:;=?@~-]*?)\s*$/i;
 
 export function isDef<T = any>(val?: T): val is T {
   return typeof val !== 'undefined';
@@ -41,9 +43,7 @@ export function isElement<T extends Element>(val: any): val is T {
 export const isArray = Array.isArray;
 
 export function isBase64(val: string): boolean {
-  // eslint-disable-next-line regexp/no-unused-capturing-group, regexp/no-super-linear-backtracking
-  const reg = /^\s*data:([a-z]+\/[\d+.a-z-]+(;[a-z-]+=[\da-z-]+)?)?(;base64)?,([\s\w!$%&'()*+,./:;=?@~-]*?)\s*$/i;
-  return reg.test(val);
+  return BASE64_RE.test(val);
 }
 
 export function assertError(condition: boolean, error: any) {

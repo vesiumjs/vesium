@@ -7,6 +7,8 @@ import { markdownDtsContainer } from './plugins/dtsContainer';
 import { generateSidebar } from './utils/generateSidebar';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
+const MD_EXT_RE = /\.md$/;
+const ZH_PREFIX_RE = /^zh\//;
 
 let transformHtml = `
 <script> window.CESIUM_BASE_URL="https://cdn.jsdmirror.com/npm/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
@@ -80,7 +82,7 @@ export default defineConfig({
         editLink: {
           text: 'Suggest changes to this page',
           pattern: (payload) => {
-            return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace(/\.md$/, '.en.md')}`;
+            return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace(MD_EXT_RE, '.en.md')}`;
           },
         },
       },
@@ -124,7 +126,7 @@ export default defineConfig({
         editLink: {
           text: '对此页面提出建议或帮助改进',
           pattern: (payload) => {
-            return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace('zh', '').replace(/\.md$/, '.zh.md')}`;
+            return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace(ZH_PREFIX_RE, '').replace(MD_EXT_RE, '.zh.md')}`;
           },
         },
 

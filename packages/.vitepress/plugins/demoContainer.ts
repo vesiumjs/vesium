@@ -6,20 +6,21 @@ import process from 'node:process';
 import mdContainer from 'markdown-it-container';
 
 // eslint-disable-next-line regexp/no-super-linear-backtracking
-const demoRE = /^demo\s*(.*)$/;
+const DEMO_RE = /^demo\s*(.*)$/;
+const SRC_RE = /src=['"](.*?)['"]/;
 
 export function markdownDemoContainer(md: MarkdownIt) {
   mdContainer(md, 'demo', {
     validate(params) {
-      return !!params.trim().match(demoRE);
+      return !!params.trim().match(DEMO_RE);
     },
     render(tokens: any, idx: any, options: any, env: MarkdownEnv) {
       const opening = tokens[idx].nesting === 1;
 
       if (opening) {
-        const props: string = tokens[idx].info.trim().match(demoRE)?.[1];
+        const props = tokens[idx].info.trim().match(DEMO_RE)?.[1] ?? '';
 
-        const src = props.trim().match(/src=['"](.*?)['"]/)?.[1];
+        const src = props.trim().match(SRC_RE)?.[1];
         if (!src) {
           throw new Error(`demo src is not found in ${env.realPath}`);
         }

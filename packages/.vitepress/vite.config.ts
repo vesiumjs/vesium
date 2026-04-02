@@ -5,6 +5,8 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 import VueDevTools from 'vite-plugin-vue-devtools';
 
+const COMPONENT_INCLUDE_RE = [/\.vue$/, /\.vue\?vue/, /\.md$/];
+
 export default defineConfig(({ mode }) => {
   return {
     plugins: [
@@ -15,7 +17,7 @@ export default defineConfig(({ mode }) => {
       UnoCSS(),
       Components({
         dirs: fileURLToPath(new URL('./theme/components', import.meta.url)),
-        include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+        include: COMPONENT_INCLUDE_RE,
         dts: fileURLToPath(new URL('./components.d.ts', import.meta.url)),
       }),
     ],
