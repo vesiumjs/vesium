@@ -30,8 +30,11 @@ export function markdownDemoContainer(md: MarkdownIt) {
         const demoRealPath = path.resolve(env.realPath!, '../', src);
         const demoRelativePath = path.relative(process.cwd(), demoRealPath);
         const code = fs.readFileSync(demoRealPath, 'utf-8').toString();
-        const codeHtml = md.render(`\`\`\`${path.extname(demoRealPath).slice(1)}\n${code}\n\`\`\``);
+        const lang = path.extname(demoRealPath).slice(1) || 'txt';
         const demoImport = escapeHtml(JSON.stringify(src));
+        const highlightedCode = md.options.highlight
+          ? md.options.highlight(code, lang, '')
+          : escapeHtml(code);
 
         return `
 <demo-container
@@ -39,8 +42,8 @@ ${attributes ? `${attributes}\n` : ''}
 :async-demo="() => import(${demoImport})"
 path="${escapeHtml(demoRelativePath)}"
 code="${escapeHtml(encodeURIComponent(code))}"
-code-html="${escapeHtml(encodeURIComponent(codeHtml))}"
 >
+<div class="language-${escapeHtml(lang)}"><button title="Copy Code" class="copy"></button><span class="lang">${escapeHtml(lang)}</span>${highlightedCode}</div>
 `;
       }
       else {

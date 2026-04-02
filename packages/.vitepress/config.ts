@@ -1,3 +1,4 @@
+import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 import { getPackageInfoSync } from 'local-pkg';
 import { defineConfig } from 'vitepress';
@@ -7,6 +8,7 @@ import { markdownDtsContainer } from './plugins/dtsContainer';
 import { generateSidebar } from './utils/generateSidebar';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 let transformHtml = `
 <script> window.CESIUM_BASE_URL="https://cdn.jsdmirror.com/npm/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
@@ -21,7 +23,8 @@ let transformHtml = `
 }</script>`;
 
 // baidu统计
-transformHtml += `<script>
+if (IS_PRODUCTION) {
+  transformHtml += `<script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -31,6 +34,7 @@ var _hmt = _hmt || [];
 })();
 </script>
 `;
+}
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({

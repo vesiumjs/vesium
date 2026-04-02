@@ -11,6 +11,7 @@ import { escapeHtml } from './html';
 const MARKDOWN_EXT_RE = /\.md$/;
 const GENERIC_EXT_RE = /(\.(\w|-)*)$/;
 const INDEX_SUFFIX_RE = /(\/?index)+$/;
+const TRAILING_SLASH_RE = /\/$/;
 
 export interface GenerateSidebarOptions {
   base: string;
@@ -22,6 +23,7 @@ export interface GenerateSidebarOptions {
 interface TreeItem {
   isRoot?: boolean;
   file?: string;
+  isGroup?: boolean;
   text?: string;
   link: string;
   parent?: string;
@@ -40,6 +42,7 @@ function mergeTreeItem(current: TreeItem, next: TreeItem): TreeItem {
       ...next,
       parent: next.parent ?? current.parent,
       isRoot: next.isRoot ?? current.isRoot,
+      isGroup: next.isGroup ?? current.isGroup,
     };
   }
 
@@ -48,7 +51,45 @@ function mergeTreeItem(current: TreeItem, next: TreeItem): TreeItem {
     text: current.text ?? next.text,
     parent: current.parent ?? next.parent,
     isRoot: current.isRoot ?? next.isRoot,
+    isGroup: current.isGroup ?? next.isGroup,
     sort: Math.min(current.sort, next.sort),
+  };
+}
+
+function ensureTreeItem(flatList: TreeItem[], next: TreeItem) {
+  const exist = flatList.find(item => item.link === next.link);
+  if (exist) {
+    Object.assign(exist, mergeTreeItem(exist, next));
+    return;
+  }
+
+  flatList.push(next);
+}
+
+function toSidebarItem(
+  flatList: TreeItem[],
+  item: TreeItem,
+  base: string,
+): (DefaultTheme.SidebarItem & { isRoot?: boolean; sort: number }) | null {
+  const itemLink = item.link.replace(TRAILING_SLASH_RE, '');
+  const children = flatList
+    .filter(e => e.parent === itemLink)
+    .map(child => toSidebarItem(flatList, child, base))
+    .filter((child): child is DefaultTheme.SidebarItem & { isRoot?: boolean; sort: number } => child !== null);
+
+  if (!item.file && children.length === 0) {
+    return null;
+  }
+
+  return {
+    base: item.isRoot ? base : undefined,
+    text: item.text || 'index',
+    link: item.file ? item.link : undefined,
+    items: children.length > 0 ? children : undefined,
+    // Keep every group expanded by default so the sidebar reads as a directory tree.
+    collapsed: children.length > 0 ? false : undefined,
+    isRoot: item.isRoot,
+    sort: item.sort,
   };
 }
 
@@ -93,19 +134,14 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
     m.data?.subText && (text += `<span class="sub-text">${escapeHtml(String(m.data.subText))}</span>`);
     const item: TreeItem = {
       file,
+      isGroup: false,
       text,
       link: `${link}/`,
       parent: getParentLink(link),
       isRoot: !link.includes('/'),
       sort: (m.data?.sort ?? Number.MAX_SAFE_INTEGER),
     };
-    const exist = flatList.find(f => f.link === link);
-    if (exist) {
-      Object.assign(exist, mergeTreeItem(exist, item));
-    }
-    else {
-      flatList.push(item);
-    }
+    ensureTreeItem(flatList, item);
 
     // 处理父节点
     const parentNodes = link.split('/');
@@ -114,18 +150,13 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
       const link = parentNodes.join('/');
       const item: TreeItem = {
         text: link.split('/').pop(),
+        isGroup: true,
         parent: getParentLink(link),
         isRoot: !link.includes('/'),
         sort: Number.MAX_SAFE_INTEGER,
         link,
       };
-      const exist = flatList.find(item => item.link === link);
-      if (exist) {
-        Object.assign(exist, mergeTreeItem(exist, item));
-      }
-      else {
-        flatList.push(item);
-      }
+      ensureTreeItem(flatList, item);
       parentNodes.pop();
     }
   });
@@ -134,18 +165,8 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
   flatList = flatList.sort((a, b) => a.sort - b.sort);
 
   // 生成侧边栏
-  const sidebars: (DefaultTheme.SidebarItem & { isRoot?: boolean; sort: number })[] = flatList.map((item) => {
-    const items = flatList.filter(e => e.parent === item.link);
-    return {
-      base: item.isRoot ? base : undefined,
-      text: item.text || 'index',
-      link: item.file ? item.link : undefined,
-      items: items.length ? items : undefined,
-      // Keep every group expanded by default so the sidebar reads as a directory tree.
-      collapsed: items.length ? false : undefined,
-      isRoot: item.isRoot,
-      sort: item.sort,
-    };
-  });
+  const sidebars = flatList
+    .map(item => toSidebarItem(flatList, item, base))
+    .filter((item): item is DefaultTheme.SidebarItem & { isRoot?: boolean; sort: number } => item !== null);
   return sidebars.filter(item => item.isRoot);
 }

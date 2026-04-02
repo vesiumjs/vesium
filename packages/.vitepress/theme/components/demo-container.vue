@@ -26,11 +26,6 @@ const props = withDefaults(defineProps<{
    * - note: it's automatically generated
    */
   code: string;
-  /**
-   * highlighted code html
-   * - note: it's automatically generated
-   */
-  codeHtml: string;
 }>(), {
   cesium: true,
 });
@@ -122,8 +117,9 @@ function openGithub() {
       :class="{
         'preview-code-area--active': sourceVisible,
       }"
-      v-html="decodeURIComponent(props.codeHtml)"
-    />
+    >
+      <slot />
+    </div>
   </div>
 </template>
 
