@@ -5,12 +5,7 @@ import { defineAsyncComponent, ref, shallowRef } from 'vue';
 
 const props = withDefaults(defineProps<{
   /**
-   * Relative path to demo file
-   */
-  src: string;
-
-  /**
-   * use cesium container
+   * Use Cesium container
    * @default true
    */
   cesium?: boolean;
@@ -22,10 +17,10 @@ const props = withDefaults(defineProps<{
   path: string;
 
   /**
-   * demo's asynchronous component loading function
+   * Demo's asynchronous component loading function
    * - note: it's automatically generated
    */
-  aysncDemo: AsyncComponentLoader;
+  asyncDemo: AsyncComponentLoader;
   /**
    * content to demo file
    * - note: it's automatically generated
@@ -50,10 +45,10 @@ const { copy, copied } = useClipboard({
 });
 const sourceVisible = ref(false);
 
-const demo = defineAsyncComponent(props.aysncDemo);
+const demo = defineAsyncComponent(props.asyncDemo);
 
 function openGithub() {
-  window.open(`https://github.com/vesiumjs/vesium/blob/main/${props.path}`);
+  window.open(`https://github.com/vesiumjs/vesium/blob/main/${props.path}`, '_blank', 'noopener,noreferrer');
 }
 </script>
 
@@ -91,23 +86,33 @@ function openGithub() {
       children:mx="8px"
     >
       <button
+        type="button"
         class="i-tabler:arrows-maximize"
+        aria-label="Toggle fullscreen"
         @click="toggle"
       />
       <button
+        type="button"
         class="i-tabler:reload"
+        aria-label="Reload demo"
         @click="reset = false"
       />
       <button
+        type="button"
         class="i-tabler:brand-github"
+        aria-label="Open source on GitHub"
         @click="openGithub"
       />
       <button
+        type="button"
         :class="{ 'i-tabler:copy': !copied, 'i-tabler:check': copied }"
+        aria-label="Copy source"
         @click="copy()"
       />
       <button
+        type="button"
         class="i-tabler:code"
+        aria-label="Toggle source code"
         @click="sourceVisible = !sourceVisible"
       />
     </div>
@@ -126,13 +131,13 @@ function openGithub() {
   .preview-code-area {
   z-index: 1;
   position: relative;
-  transition: height 3s ease;
   overflow: hidden;
-  height: 0;
+  max-height: 0;
+  transition: max-height 0.3s ease;
 
   &.preview-code-area--active {
     border-top: 1px solid var(--vp-c-divider);
-    height: auto;
+    max-height: 2000px;
   }
 
   div[class*='language-'] {
@@ -155,7 +160,7 @@ function openGithub() {
     &:hover {
       background-color: var(--vp-c-brand-2);
     }
-    &:nth-last-child {
+    &:last-child {
       margin-right: 0.5em;
     }
   }

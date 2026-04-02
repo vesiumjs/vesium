@@ -1,4 +1,5 @@
 import type { MarkdownRenderer } from 'vitepress';
+import { escapeHtml } from '../utils/html';
 
 const TAG_RE = /^\^\(([^)]*)\)/;
 
@@ -25,7 +26,7 @@ export function badgeTransform(md: MarkdownRenderer): void {
     const tagClass = ['beta', 'deprecated', 'a11y', 'required'].includes(value)
       ? value
       : '';
-    token.content = `<span class="vp-tag ${tagClass}">${value}</span>`;
+    token.content = `<span class="vp-tag ${tagClass}">${escapeHtml(value)}</span>`;
     token.level = state.level;
     state.pos += result[0].length;
 

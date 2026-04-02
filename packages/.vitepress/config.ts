@@ -7,8 +7,6 @@ import { markdownDtsContainer } from './plugins/dtsContainer';
 import { generateSidebar } from './utils/generateSidebar';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
-const MD_EXT_RE = /\.md$/;
-const ZH_PREFIX_RE = /^zh\//;
 
 let transformHtml = `
 <script> window.CESIUM_BASE_URL="https://cdn.jsdmirror.com/npm/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
@@ -48,8 +46,8 @@ export default defineConfig({
     ['meta', { 'http-equiv': 'Expires', 'content': '0' }],
   ],
   rewrites: {
-    '(.*).en.md': '(.*).md',
-    '(.*).zh.md': 'zh/(.*).md',
+    '(.*)\\.en\\.md': '(.*)\\.md',
+    '(.*)\\.zh\\.md': 'zh/(.*)\\.md',
   },
   markdown: {
     config(md) {
@@ -82,7 +80,10 @@ export default defineConfig({
         editLink: {
           text: 'Suggest changes to this page',
           pattern: (payload) => {
-            return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace(MD_EXT_RE, '.en.md')}`;
+            const relativePath = payload.relativePath.endsWith('.md')
+              ? `${payload.relativePath.slice(0, -3)}.en.md`
+              : payload.relativePath;
+            return `https://github.com/vesiumjs/vesium/blob/main/packages/${relativePath}`;
           },
         },
       },
@@ -126,7 +127,12 @@ export default defineConfig({
         editLink: {
           text: '对此页面提出建议或帮助改进',
           pattern: (payload) => {
-            return `https://github.com/vesiumjs/vesium/blob/main/packages/${payload.relativePath.replace(ZH_PREFIX_RE, '').replace(MD_EXT_RE, '.zh.md')}`;
+            const relativePath = payload.relativePath.startsWith('zh/')
+              ? payload.relativePath.slice(3)
+              : payload.relativePath;
+            return `https://github.com/vesiumjs/vesium/blob/main/packages/${relativePath.endsWith('.md')
+              ? `${relativePath.slice(0, -3)}.zh.md`
+              : relativePath}`;
           },
         },
 

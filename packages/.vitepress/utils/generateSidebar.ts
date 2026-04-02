@@ -6,11 +6,11 @@ import FastGlob from 'fast-glob';
 import matter from 'gray-matter';
 import { createFilter, normalizePath } from 'vite';
 import { VITEPRESS_PACKAGE_PATH } from '../path';
+import { escapeHtml } from './html';
 
 const MARKDOWN_EXT_RE = /\.md$/;
 const GENERIC_EXT_RE = /(\.(\w|-)*)$/;
 const INDEX_SUFFIX_RE = /(\/?index)+$/;
-const PARENT_PATH_RE = /\/.+$/;
 
 export interface GenerateSidebarOptions {
   base: string;
@@ -26,6 +26,30 @@ interface TreeItem {
   link: string;
   parent?: string;
   sort: number;
+}
+
+function getParentLink(link: string): string | undefined {
+  const parentIndex = link.lastIndexOf('/');
+  return parentIndex === -1 ? undefined : link.slice(0, parentIndex);
+}
+
+function mergeTreeItem(current: TreeItem, next: TreeItem): TreeItem {
+  if (next.file) {
+    return {
+      ...current,
+      ...next,
+      parent: next.parent ?? current.parent,
+      isRoot: next.isRoot ?? current.isRoot,
+    };
+  }
+
+  return {
+    ...current,
+    text: current.text ?? next.text,
+    parent: current.parent ?? next.parent,
+    isRoot: current.isRoot ?? next.isRoot,
+    sort: Math.min(current.sort, next.sort),
+  };
 }
 
 export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.SidebarItem[] {
@@ -64,20 +88,20 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
       .replace(MARKDOWN_EXT_RE, '')
       .replace(GENERIC_EXT_RE, '')
       .replace(INDEX_SUFFIX_RE, '');
-    let text = m.data.text || link.split('/').pop();
-    m.data?.tip && (text += `<Badge type="tip" text="${m.data.tip}" />`);
-    m.data?.subText && (text += `<span class="sub-text">${m.data.subText}</span>`);
+    let text = escapeHtml(String(m.data.text || link.split('/').pop() || ''));
+    m.data?.tip && (text += `<Badge type="tip" text="${escapeHtml(String(m.data.tip))}" />`);
+    m.data?.subText && (text += `<span class="sub-text">${escapeHtml(String(m.data.subText))}</span>`);
     const item: TreeItem = {
       file,
       text,
       link: `${link}/`,
-      parent: link.includes('/') ? link.replace(PARENT_PATH_RE, '') : undefined,
+      parent: getParentLink(link),
       isRoot: !link.includes('/'),
       sort: (m.data?.sort ?? Number.MAX_SAFE_INTEGER),
     };
     const exist = flatList.find(f => f.link === link);
     if (exist) {
-      Object.assign(exist, item);
+      Object.assign(exist, mergeTreeItem(exist, item));
     }
     else {
       flatList.push(item);
@@ -90,14 +114,14 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
       const link = parentNodes.join('/');
       const item: TreeItem = {
         text: link.split('/').pop(),
-        parent: link.includes('/') ? link.replace(PARENT_PATH_RE, '') : undefined,
+        parent: getParentLink(link),
         isRoot: !link.includes('/'),
         sort: Number.MAX_SAFE_INTEGER,
         link,
       };
       const exist = flatList.find(item => item.link === link);
       if (exist) {
-        Object.assign(exist, item);
+        Object.assign(exist, mergeTreeItem(exist, item));
       }
       else {
         flatList.push(item);
@@ -117,6 +141,8 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
       text: item.text || 'index',
       link: item.file ? item.link : undefined,
       items: items.length ? items : undefined,
+      // Keep every group expanded by default so the sidebar reads as a directory tree.
+      collapsed: items.length ? false : undefined,
       isRoot: item.isRoot,
       sort: item.sort,
     };
