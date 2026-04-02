@@ -30,7 +30,16 @@ export interface UseScenePickOptions {
 
 }
 
-const pickCache = new WeakMap<Viewer, [Cartesian2, any]>();
+interface PickCacheEntry {
+  position: Cartesian2;
+  width: number | undefined;
+  height: number | undefined;
+  pick: any;
+}
+
+// Cache the most recent pick for the same viewer/position/size tuple so throttled cursor updates
+// do not keep calling scene.pick while the screen inputs are unchanged.
+const pickCache = new WeakMap<Viewer, PickCacheEntry>();
 
 /**
  * Uses the `scene.pick` function in Cesium's Scene object to perform screen point picking,
@@ -53,18 +62,31 @@ export function useScenePick(
   const pick = shallowRef<any | undefined>();
   watchEffect(() => {
     if (viewer.value && position.value && isActive.value) {
+      const widthValue = toValue(width);
+      const heightValue = toValue(height);
       const cache = pickCache.get(viewer.value);
-      if (cache && cache[0].equals(position.value)) {
-        pick.value = cache[1];
+      if (cache && cache.position.equals(position.value) && cache.width === widthValue && cache.height === heightValue) {
+        pick.value = cache.pick;
       }
       else {
-        pickCache.set(viewer.value, [position.value.clone(), pick.value]);
-        pick.value = viewer.value?.scene.pick(
+        const nextPick = viewer.value?.scene.pick(
           position.value,
-          toValue(width),
-          toValue(height),
+          widthValue,
+          heightValue,
         );
+        pick.value = nextPick;
+        pickCache.set(viewer.value, {
+          position: position.value.clone(),
+          width: widthValue,
+          height: heightValue,
+          pick: nextPick,
+        });
       }
+    }
+    else {
+      // Clear stale picks so consumers do not keep rendering a previous result after the input
+      // becomes inactive or the cursor position disappears.
+      pick.value = undefined;
     }
   });
   return pick;

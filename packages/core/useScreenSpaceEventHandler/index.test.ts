@@ -5,16 +5,18 @@ import { nextTick, ref } from 'vue';
 import { createViewer } from '../createViewer';
 import { useScreenSpaceEventHandler } from '../index';
 
+const mocks = vi.hoisted(() => ({
+  setInputAction: vi.fn(),
+  removeInputAction: vi.fn(),
+  destroy: vi.fn(),
+}));
+
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
-  const mockSetInputAction = vi.fn();
-  const mockRemoveInputAction = vi.fn();
-  const mockDestroy = vi.fn();
-
   class ScreenSpaceEventHandler {
-    setInputAction = mockSetInputAction;
-    removeInputAction = mockRemoveInputAction;
-    destroy = mockDestroy;
+    setInputAction = mocks.setInputAction;
+    removeInputAction = mocks.removeInputAction;
+    destroy = mocks.destroy;
     constructor(_canvas?: any) {}
   }
 
@@ -38,6 +40,7 @@ vi.mock('cesium', async (importOriginal) => {
 
 describe('useScreenSpaceEventHandler', () => {
   it('should set input action on handler', async () => {
+    mocks.setInputAction.mockClear();
     const action = vi.fn();
     const type = Cesium.ScreenSpaceEventType.LEFT_CLICK;
 
@@ -56,6 +59,7 @@ describe('useScreenSpaceEventHandler', () => {
   });
 
   it('should remove action on cleanup', async () => {
+    mocks.removeInputAction.mockClear();
     const action = vi.fn();
     const type = Cesium.ScreenSpaceEventType.LEFT_CLICK;
     const active = ref(true);
@@ -76,5 +80,24 @@ describe('useScreenSpaceEventHandler', () => {
     await nextTick();
     expect(handler.removeInputAction).toHaveBeenCalledWith(type, undefined);
     wrapper.unmount();
+  });
+
+  it('should destroy handler on unmount', async () => {
+    mocks.destroy.mockClear();
+    const action = vi.fn();
+    const type = Cesium.ScreenSpaceEventType.LEFT_CLICK;
+
+    const wrapper = mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        useScreenSpaceEventHandler(type, action);
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    wrapper.unmount();
+    expect(mocks.destroy).toHaveBeenCalled();
   });
 });

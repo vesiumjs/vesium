@@ -55,16 +55,19 @@ export function createViewer(...args: any) {
   }
 
   const canvas = computed(() => viewer.value?.canvas);
+  const body = typeof document !== 'undefined' ? document.body : undefined;
 
   // Watch for the canvas being removed from the DOM
-  useMutationObserver(document?.body, () => {
-    if (canvas.value && !document?.body.contains(canvas.value)) {
-      viewer.value = undefined;
-    }
-  }, {
-    childList: true,
-    subtree: true,
-  });
+  if (body) {
+    useMutationObserver(body, () => {
+      if (canvas.value && !body.contains(canvas.value)) {
+        viewer.value = undefined;
+      }
+    }, {
+      childList: true,
+      subtree: true,
+    });
+  }
 
   watchEffect((onCleanup) => {
     const [arg1, arg2] = args;
