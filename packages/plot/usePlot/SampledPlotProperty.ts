@@ -56,7 +56,7 @@ const defaultInterpolationAlgorithm: SampledPlotInterpolationAlgorithm = (time, 
     return {
       time,
       positions: next.positions?.map(item => item.clone()),
-      derivative: previous.derivative,
+      derivative: next.derivative,
     };
   }
 
@@ -66,6 +66,8 @@ const defaultInterpolationAlgorithm: SampledPlotInterpolationAlgorithm = (time, 
       const left = previous.positions?.[index];
       return !left ? right : Cartesian3.lerp(left, right, proportion, new Cartesian3());
     }),
+    // The derivative belongs to the leading sample for intermediate values and switches to the
+    // trailing sample only when we land exactly on the next key frame.
     derivative: previous.derivative,
   };
 };
@@ -86,7 +88,8 @@ export class SampledPlotProperty<D = any> {
     this.interpolationAlgorithm = options?.interpolationAlgorithm;
     this.strategy = options?.strategy ?? SampledPlotStrategy.NEAR;
     options?.packables?.forEach(packable => this.setSample(packable));
-    // 默认将初始化一项数据
+    // Seed the timeline with an empty sample so the property always has a deterministic base
+    // entry even before the caller provides real plotting data.
     if (!this._times.length) {
       this.setSample({
         time: new JulianDate(0, 0),
@@ -167,6 +170,10 @@ export class SampledPlotProperty<D = any> {
           const startMS = JulianDate.toDate(this._times[0]).getTime();
           const endMS = JulianDate.toDate(this._times[this._times.length - 1]).getTime();
           const duration = endMS - startMS;
+          if (duration === 0) {
+            time = this._times[0].clone();
+            break;
+          }
           const timeMS = JulianDate.toDate(time).getTime();
           const diff = (timeMS - startMS) % duration;
           const dete = new Date(startMS + diff);
@@ -176,16 +183,19 @@ export class SampledPlotProperty<D = any> {
       }
     }
 
-    const prevIndex = this._times.findIndex(t => JulianDate.lessThanOrEquals(time, t));
-    const nextIndex = Math.min(prevIndex, this._times.length - 1);
+    // Find the first sample that is at or after the requested time, then interpolate against the
+    // sample immediately before it. This keeps exact sample hits and interpolated samples aligned.
+    const nextIndex = this._times.findIndex(t => JulianDate.greaterThanOrEquals(t, time));
+    const prevIndex = nextIndex <= 0 ? 0 : nextIndex - 1;
+    const finalNextIndex = nextIndex === -1 ? this._times.length - 1 : nextIndex;
     const prevMs = JulianDate.toDate(this._times[prevIndex]).getTime();
-    const nextMs = JulianDate.toDate(this._times[nextIndex]).getTime();
+    const nextMs = JulianDate.toDate(this._times[finalNextIndex]).getTime();
     const ms = JulianDate.toDate(time).getTime();
 
     return {
       prevIndex,
-      nextIndex,
-      proportion: ((ms - prevMs) / (nextMs - prevMs)) || 0,
+      nextIndex: finalNextIndex,
+      proportion: finalNextIndex === prevIndex ? 0 : (((ms - prevMs) / (nextMs - prevMs)) || 0),
     };
   }
 

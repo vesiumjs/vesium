@@ -42,10 +42,16 @@ export interface LerpArrayOptions {
  */
 export async function lerpArray(options: LerpArrayOptions): Promise<Cartesian3[]> {
   const { start, end, count, scene, clampToGround, classificationType, terrainProvider } = options;
-  const result: Cartesian3[] = [];
+  if (count <= 0) {
+    throw new Error('options.count must > 0');
+  }
 
-  for (let i = 0; i < count; i++) {
-    const position = Cartesian3.lerp(start, end, 1 / count, new Cartesian3());
+  // `count` is the number of segments between start and end, so the returned array always
+  // includes both endpoints and count - 1 intermediate points.
+  const result: Cartesian3[] = [start.clone()];
+
+  for (let i = 1; i < count; i++) {
+    const position = Cartesian3.lerp(start, end, i / count, new Cartesian3());
     result.push(position);
   }
   result.push(end.clone());

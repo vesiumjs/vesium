@@ -72,12 +72,22 @@ export async function clampToHeightMostDetailedByTilesetOrTerrain(
   const [tilesetPositions, terrainPositions] = await Promise.all([tilesetPromise, terrainPromise]);
   const results: Cartesian3[] = [];
 
+  // Prefer 3D Tiles clamping when it succeeds, then fall back to terrain height, and finally keep
+  // the original point if both clamping paths fail for a position.
   positions.forEach((item, index) => {
-    const position
-      = tilesetPositions[index] || terrainPositions[index]
-        ? Ellipsoid.WGS84.cartographicToCartesian(terrainPositions[index])
-        : item.clone();
-    results.push(position);
+    const tilesetPosition = tilesetPositions[index];
+    if (tilesetPosition) {
+      results.push(tilesetPosition.clone());
+      return;
+    }
+
+    const terrainPosition = terrainPositions[index];
+    if (terrainPosition) {
+      results.push(Ellipsoid.WGS84.cartographicToCartesian(terrainPosition));
+      return;
+    }
+
+    results.push(item.clone());
   });
 
   return results;

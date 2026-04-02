@@ -25,7 +25,7 @@ import {
 
 const { operate } = usePlot();
 
-const otpions = [
+const options = [
   {
     label: 'Billboard',
     scheme: PlotSchemeBillboard,
@@ -111,7 +111,7 @@ const otpions = [
 
 <template>
   <div p="10px" flex="~ wrap" gap="4px">
-    <button v-for="item in otpions" :key="item.label" @click="operate({ scheme: item.scheme })">
+    <button v-for="item in options" :key="item.label" @click="operate({ scheme: item.scheme })">
       {{ item.label }}
     </button>
   </div>
