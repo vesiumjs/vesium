@@ -1,4 +1,4 @@
-export interface ArrayDiffRetrun<T> {
+export interface ArrayDiffReturn<T> {
   added: T[];
   removed: T[];
 }
@@ -9,7 +9,7 @@ export interface ArrayDiffRetrun<T> {
 export function arrayDiff<T>(
   list: T[],
   oldList: T[] | undefined,
-): ArrayDiffRetrun<T> {
+): ArrayDiffReturn<T> {
   const oldListSet = new Set(oldList);
   const added: T[] = list.filter(obj => !oldListSet.has(obj));
   const newListSet = new Set(list);

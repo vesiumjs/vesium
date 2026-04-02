@@ -44,7 +44,7 @@ export interface UseImageryLayerOptions {
 /**
  * Add `ImageryLayer` to the `ImageryLayerCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `ImageryLayer`.
  *
- * overLoaded1: Parameter supports passing in a single value.
+ * Overload 1: Parameter supports passing in a single value.
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
   layer?: MaybeRefOrAsyncGetter<T | undefined>,
@@ -54,7 +54,7 @@ export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
 /**
  * Add `ImageryLayer` to the `ImageryLayerCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `ImageryLayer`.
  *
- * overLoaded2: Parameter supports passing in an array.
+ * Overload 2: Parameter supports passing in an array.
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
   layers?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,

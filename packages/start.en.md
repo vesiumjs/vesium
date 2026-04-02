@@ -56,16 +56,16 @@ Below is a simple example demonstrating how to use Vesium in a Vue project:
 ```vue
 <script setup>
 import { createViewer, useCameraState } from 'vesium';
-import { ref, watch } from 'vue';
+import { shallowRef, watch } from 'vue';
 
 // Create container reference
-const cesiumContainer = shallowRef<HtmlElement>();
+const cesiumContainer = shallowRef<HTMLDivElement>();
 
 // Create a Cesium Viewer instance
 const viewer = createViewer(cesiumContainer);
 
 // Use camera control hook
-const { position, heading, pitch, roll } = useCameraState(viewer);
+const { position, heading, pitch, roll } = useCameraState();
 
 // Watch for camera position changes
 watch(position, (newPosition) => {

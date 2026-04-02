@@ -38,7 +38,7 @@ export interface UseDataSourceOptions {
 /**
  * Add `DataSource` to the `DataSourceCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `DataSource`.
  *
- * overload1: Parameter supports passing in a single value.
+ * Overload 1: Parameter supports passing in a single value.
  *
  * @param dataSource The `DataSource` to added
  * @param options additional options
@@ -55,7 +55,7 @@ export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
 /**
  * Add `DataSource` to the `DataSourceCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `DataSource`.
  *
- * overload1: Parameter supports passing in an array.
+ * Overload 2: Parameter supports passing in an array.
  *
  * @param dataSources The list of `DataSource` to added
  * @param options additional options

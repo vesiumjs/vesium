@@ -29,7 +29,7 @@ export interface UsePostProcessStageOptions {
 /**
  * Add `PostProcessStage` to the `PostProcessStageCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `PostProcessStage`.
  *
- * overLoaded1: Parameter supports passing in a single value.
+ * Overload 1: Parameter supports passing in a single value.
  */
 export function usePostProcessStage<T extends PostProcessStage = PostProcessStage>(
   stage?: MaybeRefOrAsyncGetter<T | undefined>,
@@ -39,7 +39,7 @@ export function usePostProcessStage<T extends PostProcessStage = PostProcessStag
 /**
  * Add `PostProcessStage` to the `PostProcessStageCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `PostProcessStage`.
  *
- * overLoaded2: Parameter supports passing in an array.
+ * Overload 2: Parameter supports passing in an array.
  */
 export function usePostProcessStage<T extends PostProcessStage = PostProcessStage>(
   stages?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,

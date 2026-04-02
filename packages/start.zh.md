@@ -57,16 +57,16 @@ pnpm add cesium @vueuse/core vesium
 ```vue
 <script setup>
 import { createViewer, useCameraState } from 'vesium';
-import { ref, watch } from 'vue';
+import { shallowRef, watch } from 'vue';
 
 // 创建容器引用
-const cesiumContainer = shallowRef<HtmlElement>();
+const cesiumContainer = shallowRef<HTMLDivElement>();
 
 // 创建 Cesium Viewer 实例
 const viewer = createViewer(cesiumContainer);
 
 // 使用相机控制钩子
-const { position, heading, pitch, roll } = useCameraState(viewer);
+const { position, heading, pitch, roll } = useCameraState();
 
 // 监听相机位置变化
 watch(position, (newPosition) => {

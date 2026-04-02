@@ -26,12 +26,12 @@ export type ScreenSpaceEvent<T extends ScreenSpaceEventType> = {
 
 export interface UseScreenSpaceEventHandlerOptions {
   /**
-   * Modifier key
+   * Modifier key forwarded to Cesium.
    */
   modifier?: MaybeRefOrGetter<KeyboardEventModifier | undefined>;
 
   /**
-   * Whether to active the event listener.
+   * Whether to activate the event listener without tearing down the composable.
    * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
@@ -53,7 +53,11 @@ export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
   const { modifier } = options;
   const viewer = useViewer();
   const isActive = toRef(options.isActive ?? true);
+  // Keep a strong reference to the latest handler so scope disposal can destroy it even if the
+  // computed ref has already been cleared by a viewer/canvas change.
+  let currentHandler: ScreenSpaceEventHandler | undefined;
 
+  // Recreate the handler whenever the canvas becomes available or changes.
   const handler = computed(() => {
     if (viewer.value?.cesiumWidget?.canvas) {
       return new ScreenSpaceEventHandler(viewer.value.cesiumWidget.canvas);
@@ -61,13 +65,15 @@ export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
   });
 
   const cleanup1 = watch(handler, (_value, previous) => {
-    viewer.value?.cesiumWidget && previous?.destroy();
+    previous?.destroy();
+    currentHandler = _value;
   });
 
   const cleanup2 = watchEffect((onCleanup) => {
     const typeValue = toValue(type);
     const modifierValue = toValue(modifier);
-    const handlerValue = toValue(handler)!;
+    const handlerValue = toValue(handler);
+    currentHandler = handlerValue;
     if (!handlerValue || !isActive.value || !inputAction) {
       return;
     }
@@ -80,6 +86,10 @@ export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
   const stop = () => {
     cleanup1();
     cleanup2();
+    // Destroy the active instance after stopping the watchers; the computed ref may already
+    // have been reset by the time stop() runs.
+    currentHandler?.destroy();
+    currentHandler = undefined;
   };
 
   tryOnScopeDispose(stop);

@@ -16,3 +16,5 @@ export * from './src/helper';
 export * from './src/lune';
 export * from './src/rectAngle';
 export * from './src/rectinclined1';
+export { calculateIntersectionCoord, rectinclined2 } from './src/rectinclined2';
+export * from './src/sector';

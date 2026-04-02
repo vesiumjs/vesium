@@ -6,7 +6,7 @@ import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'ces
 import { arrayDiff, canvasCoordToCartesian, useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventHandler, useViewer } from 'vesium';
 import { computed, nextTick, shallowRef, watch } from 'vue';
 
-export interface UseProductRetrun {
+export interface UseRenderReturn {
   primitives: ComputedRef<any[]>;
   entities: ComputedRef<Entity[]>;
   groundPrimitives: ComputedRef<any[]>;
@@ -16,7 +16,7 @@ export function useRender(
   plots: ComputedRef<PlotFeature[]>,
   current: ShallowRef<PlotFeature | undefined>,
   getCurrentTime: () => JulianDate,
-): UseProductRetrun {
+): UseRenderReturn {
   const viewer = useViewer();
 
   const primitiveCollection = usePrimitive(new PrimitiveCollection());
@@ -120,7 +120,7 @@ export function useRender(
 
   return {
     primitives: computed(() => Array.from(primitiveScope.scope)),
-    groundPrimitives: computed(() => Array.from(primitiveScope.scope)),
+    groundPrimitives: computed(() => Array.from(groundPrimitiveScope.scope)),
     entities: computed(() => Array.from(entityScope.scope)),
   };
 }

@@ -1,8 +1,8 @@
 import type { MaybeRefOrGetter, Ref } from 'vue';
 import { throttle } from '@vesium/shared';
-import { useElementSize, watchImmediate } from '@vueuse/core';
+import { useElementSize } from '@vueuse/core';
 import { Cartesian2, EllipsoidGeodesic } from 'cesium';
-import { computed, nextTick, readonly, ref, toValue } from 'vue';
+import { computed, nextTick, readonly, ref, toValue, watch } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
 
@@ -20,7 +20,7 @@ export interface UseScaleBarOptions {
   delay?: number;
 }
 
-export interface UseScaleBarRetrun {
+export interface UseScaleBarReturn {
   /**
    * The actual distance of a single pixel in the current canvas
    */
@@ -85,7 +85,7 @@ const distances = [
 /**
  * Reactive generation of scale bars
  */
-export function useScaleBar(options: UseScaleBarOptions = {}): UseScaleBarRetrun {
+export function useScaleBar(options: UseScaleBarOptions = {}): UseScaleBarReturn {
   const { maxPixel = 80, delay = 8 } = options;
   const maxPixelRef = computed(() => toValue(maxPixel));
 
@@ -120,7 +120,9 @@ export function useScaleBar(options: UseScaleBarOptions = {}): UseScaleBarRetrun
     pixelDistance.value = geodesic.surfaceDistance;
   };
 
-  watchImmediate(viewer, () => setPixelDistance());
+  watch([viewer, () => canvasSize.width.value, () => canvasSize.height.value], () => setPixelDistance(), {
+    immediate: true,
+  });
 
   useCesiumEventListener(
     () => viewer.value?.camera.changed,

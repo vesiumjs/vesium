@@ -12,7 +12,7 @@ export interface UseCollectionScopeOptions<
   RemoveReturn = any,
 > {
   /**
-   * add SideEffect function.  eg.`entites.add`
+   * add SideEffect function.  e.g. `entities.add`
    */
   addEffect: (instance: T | Promise<T>, ...args: AddArgs) => T | Promise<T>;
 

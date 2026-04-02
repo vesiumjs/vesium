@@ -1,4 +1,4 @@
-import type { ShallowRef } from 'vue';
+import type { ComputedRef, ShallowRef } from 'vue';
 import type { PlotFeatureConstructorOptions } from './PlotFeature';
 import type { SampledPlotPackable } from './SampledPlotProperty';
 import { JulianDate, ScreenSpaceEventType } from 'cesium';
@@ -10,30 +10,43 @@ import { useSampled } from './useSampled';
 import { useSkeleton } from './useSkeleton';
 
 export interface UsePlotOptions {
+  /**
+   * Shared timeline used by the plotting session.
+   */
   time?: ShallowRef<JulianDate | undefined>;
 }
 
 export type UsePlotOperate = (plot: PlotFeature | PlotFeatureConstructorOptions) => Promise<PlotFeature>;
 
-export interface UsePlotRetrun {
+export interface UsePlotReturn {
+  /**
+   * Reactive snapshot of every plot managed by the current session.
+   */
+  plots: ComputedRef<PlotFeature[]>;
 
+  /**
+   * Shared timeline used by the current plotting session.
+   */
   time: ShallowRef<JulianDate | undefined>;
 
-  data?: ShallowRef<PlotFeature[]>;
-
-  current?: ShallowRef<PlotFeature | undefined>;
   /**
-   * 触发标绘
+   * Start a new plot or resume an existing `PlotFeature`.
    */
   operate: UsePlotOperate;
 
   /**
-   * 强制终止当前进行中的标绘
+   * Remove a plot from the current session.
    */
-  cancel: VoidFunction;
+  remove: (plot: PlotFeature) => boolean;
+
+  /**
+   * Abort the current `operate()` call if one is pending.
+   * This can be `undefined` before a plot operation starts.
+   */
+  cancel: VoidFunction | undefined;
 }
 
-export function usePlot(options?: UsePlotOptions) {
+export function usePlot(options?: UsePlotOptions): UsePlotReturn {
   const time = options?.time || shallowRef<JulianDate>();
 
   const viewer = useViewer();
@@ -42,8 +55,11 @@ export function usePlot(options?: UsePlotOptions) {
     return time.value?.clone() || new JulianDate(0, 0);
   };
 
+  // Keep plots in a Set so feature identity is stable and re-adding the same instance does not
+  // create duplicates in the session state.
   const collection = shallowReactive(new Set<PlotFeature>());
   const plots = computed(() => Array.from(collection));
+  // The plot currently being defined or restored.
   const current = shallowRef<PlotFeature>();
   const packable = shallowRef<SampledPlotPackable>();
 

@@ -25,7 +25,7 @@ export interface UseCameraStateOptions {
   delay?: number;
 }
 
-export interface UseCameraStateRetrun {
+export interface UseCameraStateReturn {
   /**
    * The camera
    */
@@ -37,7 +37,7 @@ export interface UseCameraStateRetrun {
   position: ComputedRef<Cartesian3 | undefined>;
 
   /**
-   * The view direction of the camer
+   * The view direction of the camera
    */
   direction: ComputedRef<Cartesian3 | undefined>;
 
@@ -111,7 +111,7 @@ export interface UseCameraStateRetrun {
  * @param options options
  * @returns Reactive camera states
  */
-export function useCameraState(options: UseCameraStateOptions = {}): UseCameraStateRetrun {
+export function useCameraState(options: UseCameraStateOptions = {}): UseCameraStateReturn {
   let getCamera = options.camera;
   if (!getCamera) {
     const viewer = useViewer();
@@ -148,14 +148,14 @@ export function useCameraState(options: UseCameraStateOptions = {}): UseCameraSt
     positionCartographic: computed(() => changedSymbol.value ? camera.value?.positionCartographic?.clone() : undefined),
     positionWC: computed(() => changedSymbol.value ? camera.value?.positionWC?.clone() : undefined),
     directionWC: computed(() => changedSymbol.value ? camera.value?.directionWC?.clone() : undefined),
-    upWC: computed(() => changedSymbol.value ? camera.value?.directionWC?.clone() : undefined),
-    rightWC: computed(() => changedSymbol.value ? camera.value?.directionWC?.clone() : undefined),
+    upWC: computed(() => changedSymbol.value ? camera.value?.upWC?.clone() : undefined),
+    rightWC: computed(() => changedSymbol.value ? camera.value?.rightWC?.clone() : undefined),
     viewRectangle: computed(() => changedSymbol.value ? camera.value?.computeViewRectangle() : undefined),
     heading: computed(() => changedSymbol.value ? camera.value?.heading : undefined),
     pitch: computed(() => changedSymbol.value ? camera.value?.pitch : undefined),
     roll: computed(() => changedSymbol.value ? camera.value?.roll : undefined),
     level: computed(() =>
-      (changedSymbol.value && camera.value?.positionCartographic?.height)
+      (changedSymbol.value && camera.value?.positionCartographic?.height !== undefined)
         ? computeLevel(camera.value.positionCartographic.height)
         : undefined),
   };
@@ -170,5 +170,5 @@ const D = -40467.74;
  * Compute the camera level at a given height.
  */
 function computeLevel(height: number): number {
-  return D + (A - D) / (1 + (height! / C) ** B);
+  return D + (A - D) / (1 + (height / C) ** B);
 }

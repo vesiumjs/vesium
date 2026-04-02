@@ -29,7 +29,7 @@ export interface UseEntityOptions {
 /**
  * Add `Entity` to the `EntityCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Entity`.
  *
- * overLoaded1: Parameter supports passing in a single value.
+ * Overload 1: Parameter supports passing in a single value.
  */
 export function useEntity<T extends Entity = Entity>(
   entity?: MaybeRefOrAsyncGetter<T | undefined>,
@@ -39,7 +39,7 @@ export function useEntity<T extends Entity = Entity>(
 /**
  * Add `Entity` to the `EntityCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Entity`.
  *
- * overLoaded2: Parameter supports passing in an array.
+ * Overload 2: Parameter supports passing in an array.
  */
 export function useEntity<T extends Entity = Entity>(
   entities?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,

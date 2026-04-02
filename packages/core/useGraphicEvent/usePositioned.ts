@@ -5,7 +5,7 @@ import { useViewer } from '../useViewer';
 
 export type PositionedEventType = 'LEFT_DOWN' | 'LEFT_UP' | 'LEFT_CLICK' | 'LEFT_DOUBLE_CLICK' | 'RIGHT_DOWN' | 'RIGHT_UP' | 'RIGHT_CLICK' | 'MIDDLE_DOWN' | 'MIDDLE_UP' | 'MIDDLE_CLICK';
 
-type PositiondScreenSpaceEventType
+type PositionedScreenSpaceEventType
   = ScreenSpaceEventType.LEFT_DOWN
     | ScreenSpaceEventType.LEFT_UP
     | ScreenSpaceEventType.LEFT_CLICK
@@ -20,7 +20,7 @@ type PositiondScreenSpaceEventType
 /**
  * @internal
  */
-const EVENT_TYPE_RECORD: Record<PositionedEventType, PositiondScreenSpaceEventType> = {
+const EVENT_TYPE_RECORD: Record<PositionedEventType, PositionedScreenSpaceEventType> = {
   LEFT_DOWN: ScreenSpaceEventType.LEFT_DOWN,
   LEFT_UP: ScreenSpaceEventType.LEFT_UP,
   LEFT_CLICK: ScreenSpaceEventType.LEFT_CLICK,

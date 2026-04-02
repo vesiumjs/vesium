@@ -30,7 +30,7 @@ export interface UsePrimitiveOptions {
 /**
  * Add `Primitive` to the `PrimitiveCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Primitive`.
  *
- * overLoaded1: Parameter supports passing in a single value.
+ * Overload 1: Parameter supports passing in a single value.
  */
 export function usePrimitive<T = any>(
   primitive?: MaybeRefOrAsyncGetter<T | undefined>,
@@ -40,7 +40,7 @@ export function usePrimitive<T = any>(
 /**
  * Add `Primitive` to the `PrimitiveCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Primitive`.
  *
- * overLoaded2: Parameter supports passing in an array.
+ * Overload 2: Parameter supports passing in an array.
  */
 export function usePrimitive<T = any>(
   primitives?: MaybeRefOrAsyncGetter<Array<T | undefined> | undefined>,

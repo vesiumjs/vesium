@@ -47,7 +47,7 @@ export interface UseElementOverlayOptions {
   clampToGround?: MaybeRefOrGetter<boolean>;
 }
 
-export interface UseElementOverlayRetrun {
+export interface UseElementOverlayReturn {
   /**
    * Calculation result of the target element's horizontal direction
    */
@@ -65,13 +65,13 @@ export interface UseElementOverlayRetrun {
 }
 
 /**
- * Cesium HtmlElement Overlay
+ * Cesium HTMLElement Overlay
  */
 export function useElementOverlay(
   target?: MaybeComputedElementRef,
   position?: MaybeRefOrGetter<CommonCoord | undefined>,
   options: UseElementOverlayOptions = {},
-): UseElementOverlayRetrun {
+): UseElementOverlayReturn {
   const {
     referenceWindow,
     horizontal = 'center',

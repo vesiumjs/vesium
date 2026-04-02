@@ -3,7 +3,7 @@ import { schemeMeasureArea, schemeMeasureDistance, usePlot } from '@vesium/plot'
 
 const { operate } = usePlot();
 
-const otpions = [
+const options = [
   {
     label: 'area',
     scheme: schemeMeasureArea,
@@ -17,7 +17,7 @@ const otpions = [
 
 <template>
   <div p="10px">
-    <button v-for="item in otpions" :key="item.label" @click="operate({ scheme: item.scheme })">
+    <button v-for="item in options" :key="item.label" @click="operate({ scheme: item.scheme })">
       {{ item.label }}
     </button>
   </div>

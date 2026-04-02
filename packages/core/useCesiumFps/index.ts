@@ -12,7 +12,7 @@ export interface UseCesiumFpsOptions {
   delay?: number;
 }
 
-export interface UseCesiumFpsRetrun {
+export interface UseCesiumFpsReturn {
   /**
    * Inter-frame Interval (ms)
    */
@@ -29,7 +29,7 @@ export interface UseCesiumFpsRetrun {
  * @param options options
  * @returns Reactive fps states
  */
-export function useCesiumFps(options: UseCesiumFpsOptions = {}): UseCesiumFpsRetrun {
+export function useCesiumFps(options: UseCesiumFpsOptions = {}): UseCesiumFpsReturn {
   const { delay = 100 } = options;
 
   const viewer = useViewer();

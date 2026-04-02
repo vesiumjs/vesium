@@ -12,11 +12,11 @@ subText: 叠加图元
 :::
 
 ```ts
-// overLoad1:加载单项实例
+// 重载 1：加载单项实例
 const primitive = usePrimitive(primitive);
-const primitive = usePrimitive(new Cesiumn.Cesium3DTileset());
+const primitive = usePrimitive(new Cesium.Cesium3DTileset());
 
-// overLoad2:加载数组实例
+// 重载 2：加载数组实例
 const primitives = usePrimitive([primitive, primitive]);
 
 const isActive = ref(true);

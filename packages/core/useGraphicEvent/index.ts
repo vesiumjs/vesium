@@ -52,7 +52,7 @@ export interface AddGraphicEventOptions {
   dragCursor?: Nullable<string> | ((event: GraphicHoverEvent) => Nullable<string>);
 }
 
-export interface UseGraphicEventRetrun {
+export interface UseGraphicEventReturn {
   /**
    * Add a graphic event listener and return a function to remove it.
    * @param graphic - The graphic object, 'global' indicates the global graphic object.
@@ -81,7 +81,7 @@ export interface UseGraphicEventRetrun {
  * Handle graphic event listeners and cursor styles for Cesium graphics.
  * You don't need to overly worry about memory leaks from the function, as it automatically cleans up internally.
  */
-export function useGraphicEvent(): UseGraphicEventRetrun {
+export function useGraphicEvent(): UseGraphicEventReturn {
   const collection = new WeakMap<CesiumGraphic | GlobalGraphicSymbol, Map<GraphicEventType, Set<AnyFn>>>();
   const cursorCollection = new WeakMap<CesiumGraphic | GlobalGraphicSymbol, Map<GraphicEventType, Map<AnyFn, AnyFn>>>();
   const dragCursorCollection = new WeakMap<CesiumGraphic | GlobalGraphicSymbol, Map<GraphicEventType, Map<AnyFn, AnyFn>>>();
