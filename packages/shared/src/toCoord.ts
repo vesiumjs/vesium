@@ -59,13 +59,13 @@ export function toCoord<T extends 'Array' | 'Object' = 'Array', Alt extends bool
     height = cartographic.height;
   }
   else if (Array.isArray(position)) {
-    longitude = Math.toDegrees(position[0]);
-    latitude = Math.toDegrees(position[1]);
+    longitude = position[0];
+    latitude = position[1];
     height = position[2];
   }
   else {
-    longitude = (position.longitude);
-    latitude = (position.latitude);
+    longitude = position.longitude;
+    latitude = position.latitude;
     height = (position as any).height;
   }
 

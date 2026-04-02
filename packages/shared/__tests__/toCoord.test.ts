@@ -33,6 +33,11 @@ describe('toCoord', () => {
     expect(result![0]).toBeGreaterThan(0);
   });
 
+  it('should keep degree arrays unchanged', () => {
+    const result = toCoord([120.5, 30.5, 100], { alt: true });
+    expect(result).toEqual([120.5, 30.5, 100]);
+  });
+
   it('should convert Cartographic to object with alt', () => {
     const cartographic = new Cartographic(1, 0.5, 100);
     const result = toCoord(cartographic, { type: 'Object', alt: true });
