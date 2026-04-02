@@ -85,6 +85,7 @@
     "stylelint-config-recess-order": "catalog:",
     "stylelint-config-recommended-vue": "catalog:",
     "stylelint-config-standard": "catalog:",
+    "stylelint-config-standard-scss": "catalog:",
     "svgo": "catalog:",
     "taze": "catalog:",
     "tsdown": "catalog:",
@@ -103,8 +104,11 @@
     "vue-tsc": "catalog:"
   },
   "lint-staged": {
-    "*.{js,ts,vue}": [
-      "eslint --fix"
+    "**/*": [
+      "eslint --fix --no-warn-ignored"
+    ],
+    "**/*.{vue,css,scss,sass,less,styl}": [
+      "stylelint --fix --allow-empty-input"
     ]
   }
 }

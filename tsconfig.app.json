@@ -6,7 +6,6 @@
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
-    "baseUrl": ".",
     "paths": {
       "@vesium/*": ["./packages/*"],
       "vesium": ["./packages/core"]
