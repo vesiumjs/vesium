@@ -11,7 +11,7 @@ sort: 2
 ## 快速开始
 
 ```ts
-import { PlotScheme, control, interval, moved } from '@vesium/plot';
+import { control, interval, moved, PlotScheme } from '@vesium/plot';
 
 const scheme = new PlotScheme({
   type: 'Custom',

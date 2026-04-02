@@ -11,8 +11,8 @@ sort: 0
 ## 快速开始
 
 ```ts
-import { ref } from 'vue';
 import { createViewer, useViewer } from '@vesium/core';
+import { ref } from 'vue';
 
 const elRef = ref<HTMLElement>();
 createViewer(elRef);

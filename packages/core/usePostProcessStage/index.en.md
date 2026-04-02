@@ -9,9 +9,9 @@ Reactively add `PostProcessStage` instances to Cesium's post-process stage colle
 ## Usage
 
 ```ts
-import { ref } from 'vue';
 import { PostProcessStage } from 'cesium';
 import { usePostProcessStage } from 'vesium';
+import { ref } from 'vue';
 
 const enabled = ref(true);
 

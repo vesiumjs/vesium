@@ -62,12 +62,12 @@ export const schemeMeasureDistance = new PlotScheme({
         entities[index + 1]!.label!.text = new CallbackProperty(() => `${stage.toFixed(2)} m`, false);
       });
       if (stages.length > 1) {
-        entities[entities.length - 1]!.position = new CallbackPositionProperty(() => positions[positions.length - 1], false);
-        entities[entities.length - 1]!.label!.text = new CallbackProperty(() => `${count.toFixed(2)} m`, false);
+        entities.at(-1)!.position = new CallbackPositionProperty(() => positions.at(-1), false);
+        entities.at(-1)!.label!.text = new CallbackProperty(() => `${count.toFixed(2)} m`, false);
       }
       else {
-        entities[entities.length - 1]!.position = undefined;
-        entities[entities.length - 1]!.label!.text = undefined;
+        entities.at(-1)!.position = undefined;
+        entities.at(-1)!.label!.text = undefined;
       }
     });
 

@@ -11,8 +11,8 @@ The core package provides the viewer lifecycle, reactive Cesium collections, sce
 ## Quick Start
 
 ```ts
-import { ref } from 'vue';
 import { createViewer, useViewer } from '@vesium/core';
+import { ref } from 'vue';
 
 const elRef = ref<HTMLElement>();
 createViewer(elRef);

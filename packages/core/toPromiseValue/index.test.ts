@@ -21,7 +21,7 @@ describe('toPromiseValue', () => {
 
   it('should handle async functions', async () => {
     const result = await toPromiseValue(async () => {
-      return new Promise(resolve => setTimeout(() => resolve('async'), 10));
+      return new Promise(resolve => setTimeout(resolve, 10, 'async'));
     });
     expect(result).toBe('async');
   });

@@ -22,7 +22,7 @@ const { isActive, pause, resume } = useScreenSpaceEventHandler({
   inputAction: (ctx) => {
     console.log(ctx);
   }
-  });
+});
 ```
 
 ## 说明

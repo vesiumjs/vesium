@@ -11,7 +11,7 @@ Skeleton factories define how editable control points behave inside `usePlot`.
 ## Quick Start
 
 ```ts
-import { PlotScheme, control, interval, moved } from '@vesium/plot';
+import { control, interval, moved, PlotScheme } from '@vesium/plot';
 
 const scheme = new PlotScheme({
   type: 'Custom',

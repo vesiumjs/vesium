@@ -154,7 +154,7 @@ export class SampledPlotProperty<D = any> {
       return;
     }
     const start = this._times[0];
-    const end = this._times[this._times.length - 1];
+    const end = this._times.at(-1);
     if (JulianDate.lessThan(time, start) || JulianDate.greaterThan(time, end)) {
       switch (this.strategy) {
         case SampledPlotStrategy.STRICT: {
@@ -163,12 +163,12 @@ export class SampledPlotProperty<D = any> {
         case SampledPlotStrategy.NEAR: {
           time = JulianDate.lessThan(time, this._times[0])
             ? this._times[0].clone()
-            : this._times[this._times.length - 1].clone();
+            : this._times.at(-1).clone();
           break;
         }
         case SampledPlotStrategy.CYCLE: {
           const startMS = JulianDate.toDate(this._times[0]).getTime();
-          const endMS = JulianDate.toDate(this._times[this._times.length - 1]).getTime();
+          const endMS = JulianDate.toDate(this._times.at(-1)).getTime();
           const duration = endMS - startMS;
           if (duration === 0) {
             time = this._times[0].clone();
@@ -268,7 +268,7 @@ export class SampledPlotProperty<D = any> {
       this._sampleds.splice(0, 0, positions);
       this._derivatives.splice(0, 0, derivative);
     }
-    else if (JulianDate.greaterThan(time, this._times[this._times.length - 1])) {
+    else if (JulianDate.greaterThan(time, this._times.at(-1))) {
       this._times.push(time);
       this._sampleds.push(positions);
       this._derivatives.push(derivative);

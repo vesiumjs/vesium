@@ -21,9 +21,9 @@ const listener = throttle(() => {
 }, 100);
 useCesiumEventListener(() => viewer.value?.scene.postRender, listener);
 
-const current = refThrottled(ref(new Date().getTime()), 100);
+const current = refThrottled(ref(Date.now()), 100);
 useCesiumEventListener(() => viewer.value?.scene.postRender, () => {
-  current.value = new Date().getTime();
+  current.value = Date.now();
 });
 ```
 
