@@ -21,8 +21,6 @@
 <a href="https://github.com/vesiumjs/vesium/blob/main/README.md" target="__blank">English</a>
 </p>
 
-> 🚧 This project is under active development, and the API may change frequently. Any version may introduce breaking changes.
-
 ## Documentation
 
 To view the documentation, visit <a href="https://vesium.js.org" target="__blank">vesium.js.org</a>
