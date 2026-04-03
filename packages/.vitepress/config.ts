@@ -9,6 +9,38 @@ import { generateSidebar } from './utils/generateSidebar';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const SIDEBAR_ROOT_ORDER = ['start', 'best', 'core', 'shared', 'plot'] as const;
+const SIDEBAR_TRAILING_SLASH_RE = /\/$/;
+const SIDEBAR_HTML_TAG_RE = /<[^>]+>/g;
+
+interface SidebarItem {
+  link?: string;
+  text?: string;
+  sort?: number;
+}
+
+function getSidebarRootKey(item: SidebarItem): string {
+  return item.link?.replace(SIDEBAR_TRAILING_SLASH_RE, '') ?? item.text?.replace(SIDEBAR_HTML_TAG_RE, '') ?? '';
+}
+
+function sortSidebar(items: SidebarItem[]): SidebarItem[] {
+  return [...items].sort((a, b) => {
+    const aKey = getSidebarRootKey(a);
+    const bKey = getSidebarRootKey(b);
+    const aIndex = SIDEBAR_ROOT_ORDER.indexOf(aKey as (typeof SIDEBAR_ROOT_ORDER)[number]);
+    const bIndex = SIDEBAR_ROOT_ORDER.indexOf(bKey as (typeof SIDEBAR_ROOT_ORDER)[number]);
+
+    if (aIndex !== -1 || bIndex !== -1) {
+      const normalizedA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+      const normalizedB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+      if (normalizedA !== normalizedB) {
+        return normalizedA - normalizedB;
+      }
+    }
+
+    return (a.sort ?? Number.MAX_SAFE_INTEGER) - (b.sort ?? Number.MAX_SAFE_INTEGER);
+  });
+}
 
 let transformHtml = `
 <script> window.CESIUM_BASE_URL="https://cdn.jsdmirror.com/npm/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
@@ -74,10 +106,10 @@ export default defineConfig({
           { text: 'Home', link: '/' },
           { text: 'Start', link: '/start' },
         ],
-        sidebar: generateSidebar({
+        sidebar: sortSidebar(generateSidebar({
           base: '/',
           filter: path => path.endsWith('.en.md'),
-        }),
+        })),
         lastUpdated: {
           text: 'Last Updated',
         },
@@ -105,10 +137,10 @@ export default defineConfig({
           { text: '首页', link: '/zh' },
           { text: '开始使用', link: '/zh/start' },
         ],
-        sidebar: generateSidebar({
+        sidebar: sortSidebar(generateSidebar({
           base: '/zh',
           filter: path => path.endsWith('.zh.md'),
-        }),
+        })),
         sidebarMenuLabel: '列表',
         langMenuLabel: '更换语言',
         returnToTopLabel: '返回顶部',
