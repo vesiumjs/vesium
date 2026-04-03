@@ -1,6 +1,5 @@
 ---
 sort: 99
-subText: Scoped post-process stage operations
 tip: Internal
 ---
 

@@ -1,6 +1,5 @@
 ---
 sort: 99
-subText: Scoped imagery-layer operations
 tip: Internal
 ---
 

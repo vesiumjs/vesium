@@ -1,8 +1,14 @@
+---
+sort: 1
+---
+
 # usePlot
 
 Manage a Cesium plotting session with a single composable.
 
-It keeps a reactive list of plots, coordinates the active plot being defined, and wires the render/skeleton/sample pipelines together for you.
+It keeps the session state for the current plotting workflow, including the reactive plot list, the shared timeline, the active plot being defined, and the cleanup/cancellation lifecycle.
+
+In practice, `usePlot()` is the entry point you use when you want to create, restore, or remove plots while letting the underlying `PlotScheme` and `PlotSkeleton` instances drive rendering and interaction.
 
 ## Usage
 

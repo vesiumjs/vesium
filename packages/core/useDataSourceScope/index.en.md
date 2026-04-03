@@ -1,6 +1,5 @@
 ---
 sort: 99
-subText: Scoped data source operations
 tip: Internal
 ---
 

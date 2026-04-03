@@ -1,6 +1,5 @@
 ---
 sort: 99
-subText: Scope SideEffects
 tip: Internal
 ---
 

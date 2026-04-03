@@ -1,6 +1,5 @@
 ---
 text: useScreenSpaceEventHandler
-subText: Screen space events
 ---
 
 # useScreenSpaceEventHandler

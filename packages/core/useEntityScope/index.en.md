@@ -1,6 +1,5 @@
 ---
 sort: 99
-subText: Scoped entity operations
 tip: Internal
 ---
 

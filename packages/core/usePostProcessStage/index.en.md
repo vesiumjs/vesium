@@ -1,7 +1,3 @@
----
-subText: Reactive post-process stages
----
-
 # usePostProcessStage
 
 Reactively add `PostProcessStage` instances to Cesium's post-process stage collection. The previous stage is removed automatically when the input changes.

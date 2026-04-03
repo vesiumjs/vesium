@@ -1,6 +1,5 @@
 ---
 sort: 99
-subText: Scoped primitive operations
 tip: Internal
 ---
 
