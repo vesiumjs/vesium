@@ -7,8 +7,6 @@ sort: 1
 
 Vesium 是一个为 [Cesium](https://github.com/CesiumGS/cesium) 打造的高性能库，采用与 [VueUse](https://vueuse.org) 一致的 Composable 模式设计，通过 Hooks 方式实现 Cesium 的无缝集成，提供类型安全的 API，大幅简化了在 Vue 应用中使用 Cesium 的复杂度。
 
-> 🚧 **请注意**：本项目仍在积极开发中，API 可能会频繁变动。
-
 ## 前置要求
 
 在开始使用之前，请确保您已具备以下条件：

@@ -1,6 +1,5 @@
 ---
 text: Best Practices
-tip: beta
 sort: 2
 ---
 

@@ -6,8 +6,6 @@ sort: 1
 
 Vesium is a high-performance library designed for [Cesium](https://github.com/CesiumGS/cesium), adopting the Composable pattern consistent with [VueUse](https://vueuse.org). It integrates Cesium seamlessly using Hooks, providing type-safe APIs that significantly simplify the complexity of using Cesium in Vue applications.
 
-> 🚧 **Note**: This project is actively under development, and the API may change frequently.
-
 ## Prerequisites
 
 Before you start, ensure you have the following:
