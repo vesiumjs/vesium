@@ -94,7 +94,6 @@ export function useImageryLayer<T extends ImageryLayer>(
       }
       list.forEach((item) => {
         if (!item) {
-          console.warn('ImageryLayer is undefined');
           return;
         }
         if (item?.isDestroyed()) {
