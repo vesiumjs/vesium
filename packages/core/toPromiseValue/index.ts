@@ -34,21 +34,15 @@ export interface ToPromiseValueOptions {
  * ```
  */
 export async function toPromiseValue<T>(source: MaybeRefOrAsyncGetter<T>, options: ToPromiseValueOptions = {}): Promise<T> {
-  try {
-    const { raw = true } = options;
-    let value: T;
+  const { raw = true } = options;
+  let value: T;
 
-    if (isFunction(source)) {
-      value = await source();
-    }
-    else {
-      const result = toValue(source);
-      value = isPromise(result) ? await result : result;
-    }
-    return raw ? toRaw(value) : value;
+  if (isFunction(source)) {
+    value = await source();
   }
-  catch (error) {
-    console.error(error);
-    throw error;
+  else {
+    const result = toValue(source);
+    value = isPromise(result) ? await result : result;
   }
+  return raw ? toRaw(value) : value;
 }
