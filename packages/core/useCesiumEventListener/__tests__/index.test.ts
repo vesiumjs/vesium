@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import * as Cesium from 'cesium';
 import { describe, expect, it, vi } from 'vitest';
 import { nextTick, ref } from 'vue';
-import { useCesiumEventListener } from '../index';
+import { useCesiumEventListener } from '../../index';
 
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;

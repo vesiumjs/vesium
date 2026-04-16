@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { effectScope } from 'vue';
-import { useCollectionScope } from '../useCollectionScope';
+import { useCollectionScope } from '../../useCollectionScope';
 
 describe('useCollectionScope', () => {
   it('should add items to scope', () => {

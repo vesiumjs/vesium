@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ref } from 'vue';
-import { toPromiseValue } from '../toPromiseValue';
+import { toPromiseValue } from '../../toPromiseValue';
 
 describe('toPromiseValue', () => {
   it('should handle plain values', async () => {
