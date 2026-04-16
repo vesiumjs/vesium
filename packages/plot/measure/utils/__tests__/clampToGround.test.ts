@@ -1,6 +1,6 @@
 import { Cartesian3, ClassificationType } from 'cesium';
 import { describe, expect, it, vi } from 'vitest';
-import { clampToHeightMostDetailedByTilesetOrTerrain } from './clampToGround';
+import { clampToHeightMostDetailedByTilesetOrTerrain } from '../clampToGround';
 
 const mocks = vi.hoisted(() => ({
   sampleTerrainMostDetailed: vi.fn(async () => [{ longitude: 120, latitude: 30, height: 999 }]),

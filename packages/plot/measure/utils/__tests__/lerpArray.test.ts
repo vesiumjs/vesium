@@ -1,6 +1,6 @@
 import { Cartesian3 } from 'cesium';
 import { describe, expect, it } from 'vitest';
-import { lerpArray } from './lerpArray';
+import { lerpArray } from '../lerpArray';
 
 describe('lerpArray', () => {
   it('returns start, interpolated points, and end', async () => {
