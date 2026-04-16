@@ -7,7 +7,7 @@ export type EffcetRemovePredicate<T> = (instance: T) => boolean;
 
 export interface UseCollectionScopeOptions<
   T,
-  AddArgs extends any[],
+  AddArgs extends any[] = any[],
   RemoveArgs extends any[] = [],
   RemoveReturn = any,
 > {
@@ -68,19 +68,19 @@ export interface UseCollectionScopeReturn<
 export function useCollectionScope<
   T,
   AddArgs extends any[] = any[],
-  RemoveArgs extends any[] = any[],
+  RemoveArgs extends any[] = [],
   RemoveReturn = any,
 >(
   options: UseCollectionScopeOptions<T, AddArgs, RemoveArgs, RemoveReturn>,
 ): UseCollectionScopeReturn<T, AddArgs, RemoveArgs, RemoveReturn> {
   const { addEffect, removeEffect, removeScopeArgs } = options;
   const scope = shallowReactive(new Set<T>());
-  const add = (instance: any, ...args: any) => {
+  const add = (instance: T | Promise<T>, ...args: AddArgs) => {
     const result = addEffect(instance, ...args);
     // 可能为promise 如dataSource
     if (isPromise(result)) {
-      return new Promise((resolve, reject) => {
-        result.then((i: any) => {
+      return new Promise<T>((resolve, reject) => {
+        result.then((i: T) => {
           scope.add(i);
           resolve(i);
         }).catch(error => reject(error));
@@ -98,24 +98,24 @@ export function useCollectionScope<
   };
 
   const removeWhere = (predicate: EffcetRemovePredicate<T>, ...args: RemoveArgs) => {
-    scope.forEach((instance) => {
+    for (const instance of Array.from(scope)) {
       if (predicate(instance)) {
         remove(instance, ...args);
       }
-    });
+    }
   };
 
   const removeScope = (...args: RemoveArgs) => {
-    scope.forEach((instance) => {
+    for (const instance of Array.from(scope)) {
       remove(instance, ...args);
-    });
+    }
   };
 
-  tryOnScopeDispose(() => removeScope(...(removeScopeArgs || [] as any)));
+  tryOnScopeDispose(() => removeScope(...(removeScopeArgs ?? [] as RemoveArgs)));
 
   return {
     scope: shallowReadonly(scope),
-    add: add as any,
+    add: add as UseCollectionScopeReturn<T, AddArgs, RemoveArgs, RemoveReturn>['add'],
     remove,
     removeWhere,
     removeScope,
