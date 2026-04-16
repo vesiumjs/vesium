@@ -2,8 +2,8 @@ import { mount } from '@vue/test-utils';
 import * as Cesium from 'cesium';
 import { describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
-import { createViewer } from '../createViewer';
-import { useSceneDrillPick } from '../index';
+import { createViewer } from '../../createViewer';
+import { useSceneDrillPick } from '../../index';
 
 const mocks = vi.hoisted(() => ({
   drillPick: vi.fn(() => [{ id: 'picked' }]),
