@@ -1,6 +1,6 @@
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { EffectScope, InjectionKey, MaybeRef, ShallowRef } from 'vue';
-import { tryOnScopeDispose, useMutationObserver } from '@vueuse/core';
+import { tryOnScopeDispose, unrefElement, useMutationObserver } from '@vueuse/core';
 import { Viewer } from 'cesium';
 import { computed, getCurrentScope, markRaw, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
 
@@ -37,13 +37,18 @@ export function createViewer(
  * @returns The Viewer instance
  */
 export function createViewer(
-  element?: MaybeComputedElementRef,
+  element: MaybeComputedElementRef,
   options?: Viewer.ConstructorOptions,
 ): Readonly<ShallowRef<Viewer | undefined>>;
 
 /**
+ * @internal
  */
-export function createViewer(...args: any) {
+export function createViewer(
+  arg1?: MaybeRef<Viewer | undefined> | MaybeComputedElementRef,
+  arg2?: Viewer.ConstructorOptions,
+): Readonly<ShallowRef<Viewer | undefined>> {
+  const args: [MaybeRef<Viewer | undefined> | MaybeComputedElementRef | undefined, Viewer.ConstructorOptions | undefined] = [arg1, arg2];
   const viewer = shallowRef<Viewer>();
   const readonlyViewer = shallowReadonly(viewer);
 
@@ -76,9 +81,8 @@ export function createViewer(...args: any) {
       viewer.value = markRaw(value);
     }
     else if (value) {
-      const element = value;
-      const options = arg2;
-      viewer.value = new Viewer(element, options);
+      const element = unrefElement(value);
+      viewer.value = new Viewer(element, arg2);
       onCleanup(() => !viewer.value?.isDestroyed() && viewer.value?.destroy());
     }
     else {
