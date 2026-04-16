@@ -2,20 +2,43 @@ import { describe, expect, it, vi } from 'vitest';
 import { cesiumEquals } from '../src/cesiumEquals';
 
 describe('cesiumEquals', () => {
-  it('should return true for identical objects', () => {
-    const obj = {};
+  it('should return true for identical references', () => {
+    const obj = { value: 1 };
     expect(cesiumEquals(obj, obj)).toBe(true);
   });
 
-  it('should use equals method if available', () => {
-    const left = { equals: vi.fn(() => true) };
-    const right = {};
+  it('should return true for equal primitives', () => {
+    expect(cesiumEquals(1, 1)).toBe(true);
+    expect(cesiumEquals('a', 'a')).toBe(true);
+  });
+
+  it('should use left.equals if available', () => {
+    const left = { equals: vi.fn().mockReturnValue(true) };
+    const right = { value: 1 };
     expect(cesiumEquals(left, right)).toBe(true);
     expect(left.equals).toHaveBeenCalledWith(right);
   });
 
-  it('should handle falsy values', () => {
-    expect(cesiumEquals(null, undefined)).toBe(false);
+  it('should use right.equals if left has no equals method', () => {
+    const left = { value: 1 };
+    const right = { equals: vi.fn().mockReturnValue(true) };
+    expect(cesiumEquals(left, right)).toBe(true);
+    expect(right.equals).toHaveBeenCalledWith(left);
+  });
+
+  it('should return false if neither has equals and references differ', () => {
+    const left = { value: 1 };
+    const right = { value: 1 };
+    expect(cesiumEquals(left, right)).toBe(false);
+  });
+
+  it('should handle null values', () => {
+    expect(cesiumEquals(null, null)).toBe(true);
+    expect(cesiumEquals(null, {})).toBe(false);
+  });
+
+  it('should handle undefined values', () => {
     expect(cesiumEquals(undefined, undefined)).toBe(true);
+    expect(cesiumEquals(undefined, {})).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 import type { CommonCoord, CoordArray, CoordArray_ALT, CoordObject, CoordObject_ALT } from './types';
-import { Cartesian3, Cartographic, Ellipsoid, Math } from 'cesium';
+import { Cartesian3, Cartographic, Math as CesiumMath, Ellipsoid } from 'cesium';
 
 interface ToCoordOptions<T extends 'Array' | 'Object', Alt extends boolean> {
   /**
@@ -44,19 +44,20 @@ export function toCoord<T extends 'Array' | 'Object' = 'Array', Alt extends bool
 
   const { type = 'Array', alt = false } = options;
 
-  let longitude: number, latitude: number, height: number | undefined;
+  let longitude: number;
+  let latitude: number;
+  let height: number | undefined;
 
   if (position instanceof Cartesian3) {
     const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
-    longitude = Math.toDegrees(cartographic.longitude);
-    latitude = Math.toDegrees(cartographic.latitude);
+    longitude = CesiumMath.toDegrees(cartographic.longitude);
+    latitude = CesiumMath.toDegrees(cartographic.latitude);
     height = cartographic.height;
   }
   else if (position instanceof Cartographic) {
-    const cartographic = position;
-    longitude = Math.toDegrees(cartographic.longitude);
-    latitude = Math.toDegrees(cartographic.latitude);
-    height = cartographic.height;
+    longitude = CesiumMath.toDegrees(position.longitude);
+    latitude = CesiumMath.toDegrees(position.latitude);
+    height = position.height;
   }
   else if (Array.isArray(position)) {
     longitude = position[0];
@@ -66,13 +67,13 @@ export function toCoord<T extends 'Array' | 'Object' = 'Array', Alt extends bool
   else {
     longitude = position.longitude;
     latitude = position.latitude;
-    height = (position as any).height;
+    height = (position as CoordObject_ALT).height;
   }
 
   if (type === 'Array') {
-    return alt ? [longitude, latitude, height] as any : [longitude, latitude] as any;
+    return (alt ? [longitude, latitude, height] : [longitude, latitude]) as unknown as ToCoordReturn<T, Alt>;
   }
   else {
-    return alt ? { longitude, latitude, height } as any : { longitude, latitude } as any;
+    return (alt ? { longitude, latitude, height } : { longitude, latitude }) as unknown as ToCoordReturn<T, Alt>;
   }
 }

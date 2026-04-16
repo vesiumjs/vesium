@@ -27,7 +27,7 @@ export function throttle<T extends any[]>(
         callback(...restList[0]);
       }
       catch (error) {
-        console.error(error);
+        console.error('[throttle] Error during leading callback:', error);
       }
     }
     if (trailing && (!leading || restList.length > 1)) {
@@ -35,7 +35,7 @@ export function throttle<T extends any[]>(
         callback(...restList.at(-1)!);
       }
       catch (error) {
-        console.error(error);
+        console.error('[throttle] Error during trailing callback:', error);
       }
     }
     restList.length = 0;
