@@ -32,7 +32,7 @@ export function useDataSourceScope(options: UseDataSourceScopeOptions = {}) {
     return toValue(_collection) ?? viewer.value?.dataSources;
   });
 
-  return useCollectionScope<CesiumDataSource>({
+  return useCollectionScope<CesiumDataSource, [], [destroy?: boolean], boolean>({
     addEffect(instance) {
       if (!collection.value) {
         throw new Error('collection is not defined');
@@ -41,8 +41,13 @@ export function useDataSourceScope(options: UseDataSourceScopeOptions = {}) {
       if (isPromise(instance)) {
         return new Promise<CesiumDataSource>((resolve, reject) => {
           instance.then((i) => {
-            collection.value.add(i);
-            resolve(i);
+            try {
+              collection.value!.add(i);
+              resolve(i);
+            }
+            catch (error) {
+              reject(error);
+            }
           }).catch(error => reject(error));
         });
       }
