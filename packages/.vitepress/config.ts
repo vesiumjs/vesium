@@ -2,6 +2,7 @@ import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 import { getPackageInfoSync } from 'local-pkg';
 import { defineConfig } from 'vitepress';
+import llmstxtPlugin from 'vitepress-plugin-llmstxt';
 import { badgeTransform } from './plugins/badge';
 import { markdownDemoContainer } from './plugins/demoContainer';
 import { markdownDtsContainer } from './plugins/dtsContainer';
@@ -72,7 +73,15 @@ var _hmt = _hmt || [];
 export default defineConfig({
 
   srcDir: './',
-  vite: { configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)) },
+  vite: {
+    configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)),
+    plugins: [
+      llmstxtPlugin({
+        hostname: 'https://vesium.js.org',
+        ignore: ['**/index.md'],
+      }),
+    ],
+  },
   title: 'Vesium',
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }],
