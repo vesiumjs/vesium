@@ -32,15 +32,22 @@ jobs:
 
       - run: pnpm install
 
+      - run: pnpm run lint
+
+      - run: pnpm run test:unit:coverage
+
+      - run: pnpm run type-check
+
       - run: pnpm run build:ci
+
+      - name: Publish to NPM
+        run: pnpm run publish:ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_CONFIG_PROVENANCE: true
+          NODE_OPTIONS: --max-old-space-size=6144
 
       - run: npx changelogithub --no-group
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - run: pnpm run publish:ci
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          NPM_CONFIG_PROVENANCE: true
-          NODE_OPTIONS: --max-old-space-size=6144
