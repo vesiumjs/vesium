@@ -2,7 +2,7 @@
   "name": "@vesium/special",
   "type": "module",
   "version": "1.0.1",
-  "description": "Vue component and composition-api library for Cesium.",
+  "description": "Special effects and rendering for Cesium.",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",
   "repository": {
