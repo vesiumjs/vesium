@@ -24,7 +24,7 @@ import { refThrottled } from '@vueuse/core';
 import { useCesiumEventListener } from 'vesium';
 
 const listener = throttle(() => {
-  // TODO
+  console.log('Camera moved');
 }, 100);
 useCesiumEventListener(() => viewer.value?.scene.postRender, listener);
 

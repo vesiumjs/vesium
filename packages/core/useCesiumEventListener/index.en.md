@@ -17,7 +17,7 @@ import { refThrottled } from '@vueuse/core';
 import { useCesiumEventListener } from 'vesium';
 
 const listener = throttle(() => {
-  // TODO
+  console.log('Scene post-render event triggered');
 }, 100);
 useCesiumEventListener(() => viewer.value?.scene.postRender, listener);
 
