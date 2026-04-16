@@ -48,7 +48,6 @@ export function createViewer(
   arg1?: MaybeRef<Viewer | undefined> | MaybeComputedElementRef,
   arg2?: Viewer.ConstructorOptions,
 ): Readonly<ShallowRef<Viewer | undefined>> {
-  const args: [MaybeRef<Viewer | undefined> | MaybeComputedElementRef | undefined, Viewer.ConstructorOptions | undefined] = [arg1, arg2];
   const viewer = shallowRef<Viewer>();
   const readonlyViewer = shallowReadonly(viewer);
 
@@ -75,7 +74,6 @@ export function createViewer(
   }
 
   watchEffect((onCleanup) => {
-    const [arg1, arg2] = args;
     const value = toRaw(toValue(arg1));
     if (value instanceof Viewer) {
       viewer.value = markRaw(value);
