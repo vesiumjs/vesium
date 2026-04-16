@@ -1,7 +1,8 @@
-import type { Cartesian3, JulianDate } from 'cesium';
+import type { SampledPositionProperty as CesiumSampledPositionProperty, JulianDate } from 'cesium';
+import type { Cartesian3JSON } from './Cartesian3';
 import { SampledPositionProperty } from 'cesium';
 import { z } from 'zod';
-import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
+import { Cartesian3FromJSON, Cartesian3ZodSchema } from './Cartesian3';
 import { JulianDateFromJSON, JulianDateToJSON, JulianDateZodSchema } from './JulianDate';
 import { ReferenceFrameFromJSON, ReferenceFrameToJSON, ReferenceFrameZodSchema } from './ReferenceFrame';
 
@@ -25,7 +26,7 @@ export type SampledPositionPropertyJSON = z.infer<ReturnType<typeof SampledPosit
 /**
  * Convert `Cesium.SampledPositionProperty` instance to JSON
  */
-export function SampledPositionPropertyToJSON(instance?: SampledPositionProperty): SampledPositionPropertyJSON | undefined {
+export function SampledPositionPropertyToJSON(instance?: CesiumSampledPositionProperty): SampledPositionPropertyJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -33,7 +34,20 @@ export function SampledPositionPropertyToJSON(instance?: SampledPositionProperty
   // SampledProperty
   const property = (instance as any)._property;
   const times: JulianDate[] = property._times;
-  const values: Cartesian3[] = property._values;
+  // _values is a flat array [x1, y1, z1, x2, y2, z2, ...]
+  const rawValues: number[] = property._values;
+
+  const cartesianValues: Cartesian3JSON[] = [];
+  for (let i = 0; i < rawValues.length; i += 3) {
+    cartesianValues.push({
+      parser: 'Cartesian3',
+      value: {
+        x: rawValues[i],
+        y: rawValues[i + 1],
+        z: rawValues[i + 2],
+      },
+    });
+  }
 
   return {
     parser: 'SampledPositionProperty',
@@ -41,7 +55,7 @@ export function SampledPositionPropertyToJSON(instance?: SampledPositionProperty
       referenceFrame: ReferenceFrameToJSON(instance.referenceFrame),
       numberOfDerivatives: instance.numberOfDerivatives,
       times: times.map(item => JulianDateToJSON(item)!),
-      values: values.map(item => Cartesian3ToJSON(item)!),
+      values: cartesianValues,
     },
   };
 }
@@ -49,32 +63,29 @@ export function SampledPositionPropertyToJSON(instance?: SampledPositionProperty
 /**
  * Convert JSON to `Cesium.SampledPositionProperty` instance
  * @param json - A JSON containing instance data
- * @param result - Used to store the resulting instance. If not provided, a new instance will be created
+ * @param _result - Unused parameter kept for API compatibility. SampledPositionProperty.referenceFrame is read-only after construction, so the result instance cannot be properly reused.
  */
-export function SampledPositionPropertyFromJSON(json?: SampledPositionPropertyJSON, result?: SampledPositionProperty): SampledPositionProperty | undefined {
+export function SampledPositionPropertyFromJSON(json?: SampledPositionPropertyJSON, _result?: CesiumSampledPositionProperty): CesiumSampledPositionProperty | undefined {
   if (!json) {
     return undefined;
   }
   json = SampledPositionPropertyZodSchema().parse(json);
 
-  const instance = new SampledPositionProperty(
-    ReferenceFrameFromJSON(json.value.referenceFrame),
-    json.value.numberOfDerivatives,
-  );
-  if (!(result instanceof SampledPositionProperty)) {
-    result = instance;
-  }
+  const referenceFrame = ReferenceFrameFromJSON(json.value.referenceFrame);
+  const numberOfDerivatives = json.value.numberOfDerivatives;
 
-  result.referenceFrame = instance.referenceFrame;
-  result.numberOfDerivatives = instance.numberOfDerivatives;
+  // referenceFrame is read-only, so we must create a new instance with the correct values
+  const instance = new SampledPositionProperty(referenceFrame, numberOfDerivatives);
 
   const times = json.value.times?.map(item => JulianDateFromJSON(item)!);
   const values = json.value.values?.map(item => Cartesian3FromJSON(item)!);
-  times?.forEach(item => result.removeSample(item));
 
   if (times?.length && values?.length) {
-    result.addSamples(times, values);
+    instance.addSamples(times, values);
   }
 
-  return result;
+  // SampledPositionProperty.referenceFrame is read-only after construction,
+  // so we cannot properly reuse a result instance with a different referenceFrame.
+  // Always return the newly created instance.
+  return instance;
 }

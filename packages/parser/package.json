@@ -2,7 +2,7 @@
   "name": "@vesium/parser",
   "type": "module",
   "version": "1.0.1",
-  "description": "Vue component and composition-api library for Cesium.",
+  "description": "JSON serialization/deserialization for Cesium objects.",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",
   "repository": {

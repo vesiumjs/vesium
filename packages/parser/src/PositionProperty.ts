@@ -21,12 +21,12 @@ export type PositionPropertyJSON = z.infer<ReturnType<typeof PositionPropertyZod
  */
 export function PositionPropertyToJSON(instance?: PositionProperty, time?: JulianDate): PositionPropertyJSON | undefined {
   let value: any;
-  if (z.instanceof(ConstantPositionProperty).parse(instance)) {
-    value = ConstantPositionPropertyToJSON(instance as ConstantPositionProperty, time);
+  if (instance instanceof ConstantPositionProperty) {
+    value = ConstantPositionPropertyToJSON(instance, time);
   }
-  if (z.instanceof(SampledPositionProperty).parse(instance)) {
-    value = SampledPositionPropertyToJSON(instance as SampledPositionProperty);
-  };
+  else if (instance instanceof SampledPositionProperty) {
+    value = SampledPositionPropertyToJSON(instance);
+  }
   return {
     parser: 'PositionProperty',
     value,
@@ -43,6 +43,10 @@ export function PositionPropertyFromJSON(json?: PositionPropertyJSON, result?: P
     return;
   }
   json = PositionPropertyZodSchema().parse(json);
+
+  if (!json.value) {
+    return;
+  }
 
   if (json.value.parser === 'ConstantPositionProperty') {
     return ConstantPositionPropertyFromJSON(json.value, result as ConstantPositionProperty);

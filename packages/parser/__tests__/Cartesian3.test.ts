@@ -1,0 +1,149 @@
+import { Cartesian3 } from 'cesium';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from '../src/Cartesian3';
+
+describe('cartesian3', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('cartesian3ZodSchema', () => {
+    it('should parse valid JSON with full coordinates', () => {
+      const json = {
+        parser: 'Cartesian3' as const,
+        value: { x: 1, y: 2, z: 3 },
+      };
+      const result = Cartesian3ZodSchema().parse(json);
+      expect(result).toEqual(json);
+    });
+
+    it('should parse JSON with partial coordinates', () => {
+      const json = {
+        parser: 'Cartesian3' as const,
+        value: { x: 1 },
+      };
+      const result = Cartesian3ZodSchema().parse(json);
+      expect(result.value.x).toBe(1);
+      expect(result.value.y).toBeUndefined();
+      expect(result.value.z).toBeUndefined();
+    });
+
+    it('should parse JSON with empty value object', () => {
+      const json = {
+        parser: 'Cartesian3' as const,
+        value: {},
+      };
+      const result = Cartesian3ZodSchema().parse(json);
+      expect(result.value).toEqual({});
+    });
+
+    it('should reject JSON with wrong parser type', () => {
+      const json = {
+        parser: 'Cartesian2' as const,
+        value: { x: 1, y: 2, z: 3 },
+      };
+      expect(() => Cartesian3ZodSchema().parse(json)).toThrow();
+    });
+
+    it('should reject JSON with non-number coordinates', () => {
+      const json = {
+        parser: 'Cartesian3' as const,
+        value: { x: 'invalid' as any, y: 2, z: 3 },
+      };
+      expect(() => Cartesian3ZodSchema().parse(json)).toThrow();
+    });
+  });
+
+  describe('cartesian3ToJSON', () => {
+    it('should convert Cartesian3 instance to JSON', () => {
+      const instance = new Cartesian3(1, 2, 3);
+      const result = Cartesian3ToJSON(instance);
+      expect(result).toEqual({
+        parser: 'Cartesian3',
+        value: { x: 1, y: 2, z: 3 },
+      });
+    });
+
+    it('should return undefined for undefined input', () => {
+      const result = Cartesian3ToJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should convert Cartesian3 with zero values', () => {
+      const instance = new Cartesian3(0, 0, 0);
+      const result = Cartesian3ToJSON(instance);
+      expect(result?.value.x).toBe(0);
+      expect(result?.value.y).toBe(0);
+      expect(result?.value.z).toBe(0);
+    });
+
+    it('should convert Cartesian3 with negative values', () => {
+      const instance = new Cartesian3(-1, -2, -3);
+      const result = Cartesian3ToJSON(instance);
+      expect(result?.value.x).toBe(-1);
+      expect(result?.value.y).toBe(-2);
+      expect(result?.value.z).toBe(-3);
+    });
+  });
+
+  describe('cartesian3FromJSON', () => {
+    it('should convert JSON to Cartesian3 instance', () => {
+      const json = {
+        parser: 'Cartesian3' as const,
+        value: { x: 1, y: 2, z: 3 },
+      };
+      const result = Cartesian3FromJSON(json);
+      expect(result).toBeInstanceOf(Cartesian3);
+      expect(result?.x).toBe(1);
+      expect(result?.y).toBe(2);
+      expect(result?.z).toBe(3);
+    });
+
+    it('should return undefined for undefined input', () => {
+      const result = Cartesian3FromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should use default values for missing coordinates', () => {
+      const json = {
+        parser: 'Cartesian3' as const,
+        value: { x: 1 },
+      };
+      const result = Cartesian3FromJSON(json);
+      expect(result?.x).toBe(1);
+      // Cesium Cartesian3 constructor converts undefined to 0
+      expect(result?.y).toBe(0);
+      expect(result?.z).toBe(0);
+    });
+
+    it('should use result parameter for cloning', () => {
+      const json = {
+        parser: 'Cartesian3' as const,
+        value: { x: 1, y: 2, z: 3 },
+      };
+      const result = new Cartesian3(0, 0, 0);
+      const output = Cartesian3FromJSON(json, result);
+      expect(output).toBe(result);
+      expect(output?.x).toBe(1);
+      expect(output?.y).toBe(2);
+      expect(output?.z).toBe(3);
+    });
+
+    it('should create new instance when result is not provided', () => {
+      const json = {
+        parser: 'Cartesian3' as const,
+        value: { x: 1, y: 2, z: 3 },
+      };
+      const output = Cartesian3FromJSON(json);
+      expect(output).toBeInstanceOf(Cartesian3);
+    });
+
+    it('should reject invalid JSON structure', () => {
+      const json = {
+        parser: 'Cartesian2' as const,
+        value: { x: 1, y: 2 },
+      };
+      expect(() => Cartesian3FromJSON(json as any)).toThrow();
+    });
+  });
+});

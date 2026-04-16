@@ -1,3 +1,4 @@
+import type { TimeInterval } from 'cesium';
 import { TimeIntervalCollection } from 'cesium';
 import { z } from 'zod';
 import { TimeIntervalFromJSON, TimeIntervalToJSON, TimeIntervalZodSchema } from './TimeInterval';
@@ -24,7 +25,10 @@ export function TimeIntervalCollectionToJSON(instance?: TimeIntervalCollection):
     return undefined;
   }
   instance = z.instanceof(TimeIntervalCollection).parse(instance);
-  const intervals = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
+  const intervals: TimeInterval[] = [];
+  for (let i = 0; i < instance.length; i++) {
+    intervals.push(instance.get(i));
+  }
   return {
     parser: 'TimeIntervalCollection',
     value: {
