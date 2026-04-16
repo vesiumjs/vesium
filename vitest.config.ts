@@ -6,5 +6,24 @@ export default defineConfig({
     environment: 'jsdom',
     exclude: [...configDefaults.exclude, 'e2e/**', '**/packages/.vitepress/**'],
     root: fileURLToPath(new URL('./', import.meta.url)),
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        ...configDefaults.exclude,
+        'e2e/**',
+        '**/packages/.vitepress/**',
+        '**/node_modules/**',
+        '**/*.d.ts',
+        '**/*.test.ts',
+        'packages/**/demo.vue',
+      ],
+      thresholds: {
+        lines: 0,
+        functions: 0,
+        branches: 0,
+        statements: 0,
+      },
+    },
   },
 });

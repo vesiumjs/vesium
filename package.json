@@ -9,6 +9,8 @@
   "repository": {
     "url": "https://github.com/vesiumjs/vesium"
   },
+  "llms": "https://vesium.js.org/llms.txt",
+  "llmsFull": "https://vesium.js.org/llms-full.txt",
   "bugs": {
     "url": "https://github.com/vesiumjs/vesium/issues"
   },
@@ -28,6 +30,7 @@
     "docs:preview": "vitepress preview packages",
     "build:types": "vue-tsc -p ./tsconfig.build.json --emitDeclarationOnly",
     "test:unit": "vitest",
+    "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "type-check": "vue-tsc --build --force",
@@ -40,14 +43,11 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@unocss/reset": "catalog:",
     "@vesium/plot": "workspace:*",
     "@vueuse/core": "catalog:",
     "cesium": "catalog:",
-    "pinia": "catalog:",
     "vesium": "workspace:*",
-    "vue": "catalog:",
-    "vue-router": "catalog:"
+    "vue": "catalog:"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
@@ -60,6 +60,7 @@
     "@types/markdown-it-container": "catalog:",
     "@types/node": "catalog:",
     "@unocss/eslint-plugin": "catalog:",
+    "@unocss/reset": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vue/test-utils": "catalog:",
@@ -78,6 +79,7 @@
     "magic-string": "catalog:",
     "markdown-it": "catalog:",
     "markdown-it-container": "catalog:",
+    "pinia": "catalog:",
     "pnpm": "catalog:",
     "sass": "catalog:",
     "start-server-and-test": "catalog:",
@@ -100,7 +102,9 @@
     "vite": "catalog:",
     "vite-plugin-vue-devtools": "catalog:",
     "vitepress": "catalog:",
+    "vitepress-plugin-llmstxt": "catalog:",
     "vitest": "catalog:",
+    "vue-router": "catalog:",
     "vue-tsc": "catalog:"
   },
   "lint-staged": {

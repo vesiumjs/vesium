@@ -1,5 +1,6 @@
 import type { UserConfig } from 'tsdown/config';
 import fs from 'node:fs';
+import process from 'node:process';
 
 import fastGlob from 'fast-glob';
 import { defineConfig } from 'tsdown/config';
@@ -22,7 +23,9 @@ const iifeGlobals: Record<string, string> = {
   'zod': 'z',
   ...internalIifeGlobals,
 };
-console.log(iifeGlobals);
+if (process.env.DEBUG) {
+  console.log('[tsdown] IIFE globals:', iifeGlobals);
+}
 
 const config: UserConfig = {
   entry: '*.ts',
