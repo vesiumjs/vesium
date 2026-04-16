@@ -2,8 +2,8 @@ import { mount } from '@vue/test-utils';
 import * as Cesium from 'cesium';
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
-import { createViewer } from '../createViewer';
-import { useImageryLayer } from '../index';
+import { createViewer } from '../../createViewer';
+import { useImageryLayer } from '../../index';
 
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
