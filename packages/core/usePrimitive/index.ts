@@ -16,6 +16,13 @@ export interface UsePrimitiveOptions {
   collection?: PrimitiveCollection | 'ground';
 
   /**
+   * Whether to destroy the primitive when removed from the collection.
+   * When true, the primitive's GPU resources will be released.
+   * @default true
+   */
+  destroyOnRemove?: boolean;
+
+  /**
    * default value of `isActive`
    * @default true
    */
@@ -53,6 +60,7 @@ export function usePrimitive<T extends Primitive>(
 ) {
   const {
     collection,
+    destroyOnRemove = true,
     isActive = true,
     evaluating,
   } = options;
@@ -68,6 +76,9 @@ export function usePrimitive<T extends Primitive>(
   const viewer = useViewer();
 
   watchEffect((onCleanup) => {
+    if (!viewer.value) {
+      return;
+    }
     const _isActive = toValue(isActive);
     if (_isActive) {
       const list = Array.isArray(result.value) ? [...result.value] : [result.value];
@@ -75,7 +86,14 @@ export function usePrimitive<T extends Primitive>(
 
       list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
-        !_collection?.isDestroyed() && list.forEach(item => item && _collection?.remove(item));
+        !_collection?.isDestroyed() && list.forEach((item) => {
+          if (item) {
+            _collection?.remove(item);
+            if (destroyOnRemove && typeof item.destroy === 'function' && !item.isDestroyed()) {
+              item.destroy();
+            }
+          }
+        });
       });
     }
   });

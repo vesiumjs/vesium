@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
-import { createViewer } from '../createViewer';
-import { usePrimitive } from '../index';
+import { createViewer } from '../../createViewer';
+import { usePrimitive } from '../../index';
 
 const mockPrimitives = {
   add: vi.fn(p => p),
