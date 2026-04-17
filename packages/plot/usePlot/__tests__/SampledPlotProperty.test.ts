@@ -1,6 +1,6 @@
 import { Cartesian3, JulianDate } from 'cesium';
 import { describe, expect, it } from 'vitest';
-import { SampledPlotProperty } from './SampledPlotProperty';
+import { SampledPlotProperty } from '../SampledPlotProperty';
 
 describe('sampledPlotProperty', () => {
   it('interpolates between adjacent samples', () => {

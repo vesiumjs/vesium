@@ -4,7 +4,7 @@ import { Cartesian3, Event, JulianDate, TimeInterval } from 'cesium';
 /**
  * 标绘采集到的数据
  */
-export interface SampledPlotPackable<D = any> {
+export interface SampledPlotPackable<D = unknown> {
 
   /**
    * 当前标绘所属于的时间节点
@@ -28,12 +28,12 @@ export enum SampledPlotStrategy {
   STRICT = 2,
 }
 
-export type SampledPlotInterpolationAlgorithm<D = any> = (
+export type SampledPlotInterpolationAlgorithm<D = unknown> = (
   time: JulianDate,
   previous: SampledPlotPackable<D>,
   next: SampledPlotPackable<D>,
   proportion: number,
-) => SampledPlotPackable;
+) => SampledPlotPackable<D>;
 
 /**
  * 默认插值算法
@@ -72,7 +72,7 @@ const defaultInterpolationAlgorithm: SampledPlotInterpolationAlgorithm = (time, 
   };
 };
 
-export interface SampledPlotPropertyConstructorOptions<D = any> {
+export interface SampledPlotPropertyConstructorOptions<D = unknown> {
   interpolationAlgorithm?: SampledPlotInterpolationAlgorithm<D>;
   strategy?: SampledPlotStrategy;
   packables?: SampledPlotPackable<D>[];
@@ -83,7 +83,7 @@ export interface SampledPlotPropertyConstructorOptions<D = any> {
  * 标绘采样点数据是一个时间序列数据，包含时间、位置和附带的额外数据。
  * 具体用法可参考 [Cesium.SampledProperty](https://cesium.com/learn/cesiumjs/ref-doc/SampledProperty.html)
  */
-export class SampledPlotProperty<D = any> {
+export class SampledPlotProperty<D = unknown> {
   constructor(options?: SampledPlotPropertyConstructorOptions<D>) {
     this.interpolationAlgorithm = options?.interpolationAlgorithm;
     this.strategy = options?.strategy ?? SampledPlotStrategy.NEAR;
@@ -99,11 +99,11 @@ export class SampledPlotProperty<D = any> {
     }
   }
 
-  static defaultInterpolationAlgorithm: SampledPlotInterpolationAlgorithm<any> = defaultInterpolationAlgorithm;
+  static defaultInterpolationAlgorithm: SampledPlotInterpolationAlgorithm = defaultInterpolationAlgorithm;
 
   strategy: SampledPlotStrategy;
 
-  interpolationAlgorithm?: SampledPlotInterpolationAlgorithm;
+  interpolationAlgorithm?: SampledPlotInterpolationAlgorithm<D>;
 
   /**
    * @internal
@@ -122,16 +122,16 @@ export class SampledPlotProperty<D = any> {
 
   get isConstant(): boolean {
     return this._times.length === 0;
-  };
+  }
 
   /**
    * @internal
    */
-  private _definitionChanged = new Event<(...args: any[]) => void>();
+  private _definitionChanged = new Event<(property: SampledPlotProperty<D>) => void>();
 
-  get definitionChanged(): Event<(...args: any[]) => void> {
+  get definitionChanged(): Event<(property: SampledPlotProperty<D>) => void> {
     return this._definitionChanged;
-  };
+  }
 
   /**
    * 获取时间数组
@@ -163,12 +163,12 @@ export class SampledPlotProperty<D = any> {
         case SampledPlotStrategy.NEAR: {
           time = JulianDate.lessThan(time, this._times[0])
             ? this._times[0].clone()
-            : this._times.at(-1).clone();
+            : this._times.at(-1)!.clone();
           break;
         }
         case SampledPlotStrategy.CYCLE: {
           const startMS = JulianDate.toDate(this._times[0]).getTime();
-          const endMS = JulianDate.toDate(this._times.at(-1)).getTime();
+          const endMS = JulianDate.toDate(this._times.at(-1)!).getTime();
           const duration = endMS - startMS;
           if (duration === 0) {
             time = this._times[0].clone();
@@ -207,7 +207,7 @@ export class SampledPlotProperty<D = any> {
    * @returns 插值后的样本点数据，存储在提供的或新创建的result容器中。
    * @template D 数据类型。
    */
-  getValue(time?: JulianDate, result?: SampledPlotPackable): SampledPlotPackable<D> {
+  getValue(time?: JulianDate, result?: SampledPlotPackable<D>): SampledPlotPackable<D> {
     result ??= { time, positions: [] };
     Object.assign(result, {
       time: time?.clone(),
@@ -268,10 +268,16 @@ export class SampledPlotProperty<D = any> {
       this._sampleds.splice(0, 0, positions);
       this._derivatives.splice(0, 0, derivative);
     }
-    else if (JulianDate.greaterThan(time, this._times.at(-1))) {
+    else if (JulianDate.greaterThan(time, this._times.at(-1)!)) {
       this._times.push(time);
       this._sampleds.push(positions);
       this._derivatives.push(derivative);
+    }
+    else {
+      const insertIndex = this._times.findIndex(t => JulianDate.greaterThan(t, time));
+      this._times.splice(insertIndex, 0, time);
+      this._sampleds.splice(insertIndex, 0, positions);
+      this._derivatives.splice(insertIndex, 0, derivative);
     }
 
     this.definitionChanged.raiseEvent(this);
