@@ -1,3 +1,4 @@
+import type { ScenePickResult } from '@vesium/shared';
 import type { Cartesian2, Viewer } from 'cesium';
 import type { MaybeRefOrGetter, ShallowRef } from 'vue';
 import { refThrottled } from '@vueuse/core';
@@ -34,7 +35,7 @@ interface PickCacheEntry {
   position: Cartesian2;
   width: number | undefined;
   height: number | undefined;
-  pick: any;
+  pick: ScenePickResult | undefined;
 }
 
 // Cache the most recent pick for the same viewer/position/size tuple so throttled cursor updates
@@ -50,7 +51,7 @@ const pickCache = new WeakMap<Viewer, PickCacheEntry>();
 export function useScenePick(
   windowPosition: MaybeRefOrGetter<Cartesian2 | undefined>,
   options: UseScenePickOptions = {},
-): Readonly<ShallowRef<any | undefined>> {
+): Readonly<ShallowRef<ScenePickResult | undefined>> {
   const { width = 3, height = 3, throttled = 8 } = options;
 
   const isActive = toRef(options.isActive ?? true);
@@ -59,7 +60,7 @@ export function useScenePick(
 
   const position = refThrottled(computed(() => toValue(windowPosition)?.clone()), throttled, false, true);
 
-  const pick = shallowRef<any | undefined>();
+  const pick = shallowRef<ScenePickResult | undefined>();
   watchEffect(() => {
     if (viewer.value && position.value && isActive.value) {
       const widthValue = toValue(width);
@@ -69,23 +70,27 @@ export function useScenePick(
         pick.value = cache.pick;
       }
       else {
-        const nextPick = viewer.value?.scene.pick(
-          position.value,
-          widthValue,
-          heightValue,
-        );
-        pick.value = nextPick;
-        pickCache.set(viewer.value, {
-          position: position.value.clone(),
-          width: widthValue,
-          height: heightValue,
-          pick: nextPick,
-        });
+        try {
+          const nextPick = viewer.value?.scene.pick(
+            position.value,
+            widthValue,
+            heightValue,
+          );
+          pick.value = nextPick;
+          pickCache.set(viewer.value, {
+            position: position.value.clone(),
+            width: widthValue,
+            height: heightValue,
+            pick: nextPick,
+          });
+        }
+        catch (error) {
+          console.error('[useScenePick] Error during pick:', error);
+          pick.value = undefined;
+        }
       }
     }
     else {
-      // Clear stale picks so consumers do not keep rendering a previous result after the input
-      // becomes inactive or the cursor position disappears.
       pick.value = undefined;
     }
   });
