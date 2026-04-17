@@ -63,13 +63,13 @@ export function useRender(
       }
       else if (key === 'primitives') {
         const { added, removed } = arrayDiff(newValue as Entity[], oldValue as Entity[]);
-        added.forEach(item => primitiveScope.add(item));
-        removed.forEach(item => primitiveScope.remove(item));
+        added.forEach(item => primitiveScope.add(item as any));
+        removed.forEach(item => primitiveScope.remove(item as any));
       }
       else if (key === 'groundPrimitives') {
         const { added, removed } = arrayDiff(newValue as Entity[], oldValue as Entity[]);
-        added.forEach(item => groundPrimitiveScope.add(item));
-        removed.forEach(item => groundPrimitiveScope.remove(item));
+        added.forEach(item => groundPrimitiveScope.add(item as any));
+        removed.forEach(item => groundPrimitiveScope.remove(item as any));
       }
     },
   );
