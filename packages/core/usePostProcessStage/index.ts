@@ -15,6 +15,13 @@ export interface UsePostProcessStageOptions {
   collection?: PostProcessStageCollection;
 
   /**
+   * Whether to destroy the stage when removed from the collection.
+   * When true, the stage's GPU resources will be released.
+   * @default true
+   */
+  destroyOnRemove?: boolean;
+
+  /**
    * default value of `isActive`
    * @default true
    */
@@ -52,6 +59,7 @@ export function usePostProcessStage<T extends PostProcessStage>(
 ) {
   const {
     collection,
+    destroyOnRemove = true,
     isActive = true,
     evaluating,
   } = options;
@@ -77,7 +85,14 @@ export function usePostProcessStage<T extends PostProcessStage>(
 
       list.forEach(item => (item && _collection.add(item)));
       onCleanup(() => {
-        list.forEach(item => item && _collection.remove(item));
+        list.forEach((item) => {
+          if (item) {
+            _collection.remove(item);
+            if (destroyOnRemove && typeof item.destroy === 'function' && !item.isDestroyed()) {
+              item.destroy();
+            }
+          }
+        });
       });
     }
   });

@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
-import { createViewer } from '../createViewer';
-import { usePostProcessStage } from '../index';
+import { createViewer } from '../../createViewer';
+import { usePostProcessStage } from '../../index';
 
 const mocks = vi.hoisted(() => ({
   add: vi.fn(),

@@ -11,6 +11,13 @@ export interface UsePostProcessStageScopeOptions {
    * @default useViewer().value.postProcessStages
    */
   collection?: MaybeRefOrGetter<PostProcessStageCollection | undefined>;
+
+  /**
+   * Whether to destroy the stage when removed from the collection.
+   * When true, the stage's GPU resources will be released.
+   * @default true
+   */
+  destroyOnRemove?: boolean;
 }
 
 /**
@@ -18,7 +25,7 @@ export interface UsePostProcessStageScopeOptions {
  * automatically remove `PostProcessStage` instance when component is unmounted.
  */
 export function usePostProcessStageScope(options: UsePostProcessStageScopeOptions = {}) {
-  const { collection: _collection } = options;
+  const { collection: _collection, destroyOnRemove = true } = options;
   const viewer = useViewer();
 
   const collection = computed(() => {
@@ -33,9 +40,9 @@ export function usePostProcessStageScope(options: UsePostProcessStageScopeOption
       if (isPromise(instance)) {
         return new Promise<PostProcessStage | PostProcessStageComposite>((resolve, reject) => {
           instance
-            .then((instance) => {
-              collection.value.add(instance);
-              resolve(instance);
+            .then((resolvedInstance) => {
+              collection.value!.add(resolvedInstance);
+              resolve(resolvedInstance);
             })
             .catch(error => reject(error));
         });
@@ -44,9 +51,15 @@ export function usePostProcessStageScope(options: UsePostProcessStageScopeOption
         return collection.value.add(instance);
       }
     },
-    removeEffect(instance, ...args) {
-      // @ts-expect-error 'remove' method
-      return !!collection.value?.remove(instance, ...args as any[]);
+    removeEffect(instance) {
+      if (!collection.value) {
+        return false;
+      }
+      const removed = collection.value.remove(instance);
+      if (removed && destroyOnRemove && instance && typeof instance.destroy === 'function' && !instance.isDestroyed()) {
+        instance.destroy();
+      }
+      return !!removed;
     },
     removeScopeArgs: [],
   });

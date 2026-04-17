@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
-import { createViewer } from '../createViewer';
-import { usePrimitiveScope } from '../index';
+import { createViewer } from '../../createViewer';
+import { usePrimitiveScope } from '../../index';
 
 const mocks = vi.hoisted(() => ({
   add: vi.fn(p => p),
@@ -84,5 +84,60 @@ describe('usePrimitiveScope', () => {
     await nextTick();
     wrapper.vm.removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockPrimitive);
+  });
+
+  it('should destroy primitive when destroyOnRemove is true', async () => {
+    mocks.remove.mockReturnValue(true);
+    const mockDestroy = vi.fn();
+    const mockIsDestroyed = vi.fn(() => false);
+    const mockPrimitive = {
+      id: 'test',
+      destroy: mockDestroy,
+      isDestroyed: mockIsDestroyed,
+    } as any;
+
+    const TestComponent = defineComponent({
+      setup() {
+        createViewer(document.createElement('div'));
+        const { add, removeScope } = usePrimitiveScope({ destroyOnRemove: true });
+        add(mockPrimitive);
+        return { removeScope };
+      },
+      render() { return h('div'); },
+    });
+
+    const wrapper = mount(TestComponent);
+    await nextTick();
+    wrapper.vm.removeScope();
+    expect(mocks.remove).toHaveBeenCalledWith(mockPrimitive);
+    expect(mockDestroy).toHaveBeenCalled();
+    mocks.remove.mockReset();
+  });
+
+  it('should not destroy primitive when destroyOnRemove is false', async () => {
+    mocks.remove.mockClear();
+    const mockDestroy = vi.fn();
+    const mockIsDestroyed = vi.fn(() => false);
+    const mockPrimitive = {
+      id: 'test',
+      destroy: mockDestroy,
+      isDestroyed: mockIsDestroyed,
+    } as any;
+
+    const TestComponent = defineComponent({
+      setup() {
+        createViewer(document.createElement('div'));
+        const { add, removeScope } = usePrimitiveScope({ destroyOnRemove: false });
+        add(mockPrimitive);
+        return { removeScope };
+      },
+      render() { return h('div'); },
+    });
+
+    const wrapper = mount(TestComponent);
+    await nextTick();
+    wrapper.vm.removeScope();
+    expect(mocks.remove).toHaveBeenCalledWith(mockPrimitive);
+    expect(mockDestroy).not.toHaveBeenCalled();
   });
 });

@@ -1,4 +1,4 @@
-import type { PrimitiveCollection } from 'cesium';
+import type { GroundPrimitive, Primitive, PrimitiveCollection } from 'cesium';
 import type { MaybeRefOrGetter } from 'vue';
 import { isPromise } from '@vesium/shared';
 import { computed, toValue } from 'vue';
@@ -12,6 +12,13 @@ export interface UsePrimitiveScopeOptions {
    * @default useViewer().value.scene.primitives
    */
   collection?: MaybeRefOrGetter<PrimitiveCollection | 'ground' | undefined>;
+
+  /**
+   * Whether to destroy the primitive when removed from the collection.
+   * When true, the primitive's GPU resources will be released.
+   * @default true
+   */
+  destroyOnRemove?: boolean;
 }
 
 /**
@@ -19,7 +26,7 @@ export interface UsePrimitiveScopeOptions {
  * automatically remove `Primitive` instance when component is unmounted.
  */
 export function usePrimitiveScope(options: UsePrimitiveScopeOptions = {}) {
-  const { collection: _collection } = options;
+  const { collection: _collection, destroyOnRemove = true } = options;
   const viewer = useViewer();
 
   const collection = computed(() => {
@@ -27,15 +34,15 @@ export function usePrimitiveScope(options: UsePrimitiveScopeOptions = {}) {
     return value === 'ground' ? viewer.value?.scene?.groundPrimitives : (value || viewer.value?.scene.primitives);
   });
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<any>({
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<Primitive | GroundPrimitive>({
     addEffect(instance, ...args) {
       if (!collection.value) {
         throw new Error('collection is not defined');
       }
       if (isPromise(instance)) {
-        return new Promise<typeof instance>((resolve, reject) => {
+        return new Promise<Primitive | GroundPrimitive>((resolve, reject) => {
           instance
-            .then(instance => resolve(collection.value.add(instance, ...args)))
+            .then(instance => resolve(collection.value!.add(instance, ...args)))
             .catch(error => reject(error));
         });
       }
@@ -44,7 +51,14 @@ export function usePrimitiveScope(options: UsePrimitiveScopeOptions = {}) {
       }
     },
     removeEffect(instance) {
-      return !!collection.value?.remove(instance);
+      if (!collection.value) {
+        return false;
+      }
+      const removed = collection.value.remove(instance);
+      if (removed && destroyOnRemove && instance && typeof instance.destroy === 'function' && !instance.isDestroyed()) {
+        instance.destroy();
+      }
+      return !!removed;
     },
     removeScopeArgs: [],
   },
