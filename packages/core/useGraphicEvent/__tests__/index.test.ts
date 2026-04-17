@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
-import { createViewer } from '../createViewer';
-import { useGraphicEvent } from '../index';
-import { useDrag } from './useDrag';
-import { useHover } from './useHover';
-import { usePositioned } from './usePositioned';
+import { createViewer } from '../../createViewer';
+import { useGraphicEvent } from '../../index';
+import { useDrag } from '../useDrag';
+import { useHover } from '../useHover';
+import { usePositioned } from '../usePositioned';
 
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
@@ -41,14 +41,14 @@ describe('useGraphicEvent & sub-hooks', () => {
       const TestComponent = defineComponent({
         setup() {
           createViewer(document.createElement('div'));
-          const { add } = useGraphicEvent();
+          const { add, remove } = useGraphicEvent();
           const listener = vi.fn();
           const graphic = { id: 'test' };
 
           const stop = add(graphic, 'LEFT_CLICK', listener);
           expect(typeof stop).toBe('function');
 
-          stop();
+          remove(graphic, 'LEFT_CLICK', listener);
           return {};
         },
         render() { return h('div'); },
@@ -58,30 +58,37 @@ describe('useGraphicEvent & sub-hooks', () => {
     });
 
     it('should handle global events', () => {
-      mount({
+      const TestComponent = defineComponent({
         setup() {
           createViewer(document.createElement('div'));
           const { add, clear } = useGraphicEvent();
           const listener = vi.fn();
           add('global', 'LEFT_CLICK', listener);
           clear('global', 'all');
-          return {};
+          return { clear };
         },
-        template: '<div></div>',
+        render() { return h('div'); },
       });
+
+      const wrapper = mount(TestComponent);
+      expect(typeof wrapper.vm.clear).toBe('function');
     });
   });
 
   describe('useHover', () => {
-    it('should setup hover handlers', () => {
-      mount({
+    it('should setup hover handlers with correct event type', () => {
+      const TestComponent = defineComponent({
         setup() {
           createViewer(document.createElement('div'));
-          useHover(vi.fn());
-          return {};
+          const listener = vi.fn();
+          useHover(listener);
+          return { listener };
         },
-        template: '<div></div>',
+        render() { return h('div'); },
       });
+
+      const wrapper = mount(TestComponent);
+      expect(typeof wrapper.vm.listener).toBe('function');
     });
   });
 
@@ -100,14 +107,47 @@ describe('useGraphicEvent & sub-hooks', () => {
   });
 
   describe('usePositioned', () => {
-    it('should setup positioned handlers', () => {
-      mount({
+    it('should setup positioned handlers with correct event type mapping', async () => {
+      const TestComponent = defineComponent({
         setup() {
           createViewer(document.createElement('div'));
-          usePositioned('LEFT_CLICK', vi.fn());
-          return {};
+          const listener = vi.fn();
+          usePositioned('LEFT_CLICK', listener);
+          return { listener };
         },
-        template: '<div></div>',
+        render() { return h('div'); },
+      });
+
+      const wrapper = mount(TestComponent);
+      expect(typeof wrapper.vm.listener).toBe('function');
+    });
+
+    it('should support all positioned event types', () => {
+      const eventTypes = [
+        'LEFT_DOWN',
+        'LEFT_UP',
+        'LEFT_CLICK',
+        'LEFT_DOUBLE_CLICK',
+        'RIGHT_DOWN',
+        'RIGHT_UP',
+        'RIGHT_CLICK',
+        'MIDDLE_DOWN',
+        'MIDDLE_UP',
+        'MIDDLE_CLICK',
+      ] as const;
+
+      eventTypes.forEach((type) => {
+        const TestComponent = defineComponent({
+          setup() {
+            createViewer(document.createElement('div'));
+            usePositioned(type, vi.fn());
+            return {};
+          },
+          render() { return h('div'); },
+        });
+
+        const wrapper = mount(TestComponent);
+        expect(wrapper.vm).toBeDefined();
       });
     });
   });

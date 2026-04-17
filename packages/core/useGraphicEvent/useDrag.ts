@@ -1,3 +1,4 @@
+import type { ScenePickResult } from '@vesium/shared';
 import type { Cartesian2, ScreenSpaceEventHandler } from 'cesium';
 import type { WatchStopHandle } from 'vue';
 import { throttle } from '@vesium/shared';
@@ -20,7 +21,7 @@ export interface GraphicDragEvent {
   /**
    * The graphic object picked by `scene.pick`
    */
-  pick: any;
+  pick: ScenePickResult;
 
   /**
    * Whether the graphic is currently being dragged.
@@ -48,21 +49,21 @@ export function useDrag(
 
   const cameraLocked = ref(false);
 
-  watch(cameraLocked, (cameraLocked) => {
-    viewer.value && (viewer.value.scene.screenSpaceCameraController.enableRotate = !cameraLocked);
+  watch(cameraLocked, (locked) => {
+    viewer.value && (viewer.value.scene.screenSpaceCameraController.enableRotate = !locked);
   });
 
   const lockCamera = () => {
     cameraLocked.value = true;
   };
 
-  const execute = (pick: unknown, startPosition: Cartesian2, endPosition: Cartesian2) => {
+  const execute = (pickedValue: ScenePickResult, startPosition: Cartesian2, endPosition: Cartesian2) => {
     listener({
       event: {
         startPosition: startPosition.clone(),
         endPosition: endPosition.clone(),
       },
-      pick,
+      pick: pickedValue,
       dragging: dragging.value,
       lockCamera,
     });
@@ -93,10 +94,10 @@ export function useDrag(
   );
 
   // dragging
-  watch([pick, motionEvent], ([pick, motionEvent]) => {
-    if (pick && motionEvent) {
-      const { startPosition, endPosition } = motionEvent;
-      dragging.value && execute(pick, startPosition, endPosition);
+  watch([pick, motionEvent], ([pickValue, motionValue]) => {
+    if (pickValue && motionValue) {
+      const { startPosition, endPosition } = motionValue;
+      dragging.value && execute(pickValue, startPosition, endPosition);
     }
   });
 

@@ -1,3 +1,4 @@
+import type { ScenePickResult } from '@vesium/shared';
 import type { ScreenSpaceEventHandler } from 'cesium';
 import { ScreenSpaceEventType } from 'cesium';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
@@ -44,7 +45,7 @@ export interface GraphicPositionedEvent {
   /**
    * The graphic object picked by `scene.pick`
    */
-  pick: any;
+  pick: ScenePickResult;
 }
 
 export function usePositioned(
@@ -56,6 +57,6 @@ export function usePositioned(
   useScreenSpaceEventHandler(screenEvent, (event) => {
     const position = event.position;
     const pick = viewer.value?.scene.pick(position);
-    pick && position && listener({ event: { position }, pick });
+    pick && position && listener({ event: { position }, pick: pick as ScenePickResult });
   });
 }

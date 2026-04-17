@@ -1,3 +1,4 @@
+import type { ScenePickResult } from '@vesium/shared';
 import type { Cartesian2, ScreenSpaceEventHandler } from 'cesium';
 import { ScreenSpaceEventType } from 'cesium';
 import { shallowRef, watch } from 'vue';
@@ -16,7 +17,7 @@ export interface GraphicHoverEvent {
   /**
    * The graphic object picked by `scene.pick`
    */
-  pick: any;
+  pick: ScenePickResult;
 
   /**
    * Whether the graphic is currently being hoverged. Returns `true` continuously while hoverging, and `false` once it ends.
@@ -34,13 +35,13 @@ export function useHover(
   const motionEvent = shallowRef<ScreenSpaceEventHandler.MotionEvent>();
   const pick = useScenePick(() => motionEvent.value?.endPosition);
 
-  const execute = (pick: unknown, startPosition: Cartesian2, endPosition: Cartesian2, hovering: boolean) => {
+  const execute = (pickedValue: ScenePickResult, startPosition: Cartesian2, endPosition: Cartesian2, hovering: boolean) => {
     listener({
       event: {
         startPosition: startPosition.clone(),
         endPosition: endPosition.clone(),
       },
-      pick,
+      pick: pickedValue,
       hovering,
     });
   };
@@ -48,22 +49,24 @@ export function useHover(
   useScreenSpaceEventHandler(
     ScreenSpaceEventType.MOUSE_MOVE,
     ({ startPosition, endPosition }) => {
-      if (!startPosition.equals(motionEvent.value?.startPosition) || !endPosition.equals(motionEvent.value?.endPosition)) {
+      const prevStart = motionEvent.value?.startPosition;
+      const prevEnd = motionEvent.value?.endPosition;
+      if (!prevStart || !prevEnd || !startPosition.equals(prevStart) || !endPosition.equals(prevEnd)) {
         motionEvent.value = { startPosition: startPosition.clone(), endPosition: endPosition.clone() };
       }
     },
   );
 
   // hovering
-  watch([pick, motionEvent], ([pick, motionEvent]) => {
-    if (pick && motionEvent) {
-      const { startPosition, endPosition } = motionEvent;
-      execute(pick, startPosition, endPosition, true);
+  watch([pick, motionEvent], ([pickValue, motionValue]) => {
+    if (pickValue && motionValue) {
+      const { startPosition, endPosition } = motionValue;
+      execute(pickValue, startPosition, endPosition, true);
     }
   });
 
   // hover end
-  watch(pick, (pick, prevPick) => {
+  watch(pick, (pickValue, prevPick) => {
     if (prevPick && motionEvent.value) {
       const { startPosition, endPosition } = motionEvent.value;
       execute(prevPick, startPosition, endPosition, false);
