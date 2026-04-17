@@ -120,14 +120,16 @@ export function useSkeleton(
       }
     }, {
       cursor: ({ pick }) => {
-        if (!current.value?.defining && entityScope.scope.has(pick.id)) {
-          const skeleton = pick.id.skeleton as PlotSkeleton;
+        const pickId = pick.id as PlotSkeletonEntity;
+        if (!current.value?.defining && entityScope.scope.has(pickId)) {
+          const skeleton = pickId.skeleton as PlotSkeleton;
           return isFunction(skeleton?.cursor) ? skeleton.cursor(pick) : toValue(skeleton?.cursor);
         }
       },
       dragCursor: ({ pick }) => {
-        if (!current.value?.defining && entityScope.scope.has(pick.id)) {
-          const skeleton = pick.id.skeleton as PlotSkeleton;
+        const pickId = pick.id as PlotSkeletonEntity;
+        if (!current.value?.defining && entityScope.scope.has(pickId)) {
+          const skeleton = pickId.skeleton as PlotSkeleton;
           return isFunction(skeleton?.dragCursor) ? skeleton.dragCursor(pick) : toValue(skeleton?.dragCursor);
         }
       },
