@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
-import { createViewer } from '../createViewer';
-import { useImageryLayerScope } from '../index';
+import { createViewer } from '../../createViewer';
+import { useImageryLayerScope } from '../../index';
 
 const mocks = vi.hoisted(() => ({
   add: vi.fn(),
@@ -59,7 +59,7 @@ describe('useImageryLayerScope', () => {
 
     const wrapper = mount(TestComponent);
     await nextTick();
-    wrapper.vm.removeScope(true);
+    wrapper.vm.removeScope(true as boolean | undefined);
     expect(mocks.remove).toHaveBeenCalledWith(mockLayer, true);
   });
 });

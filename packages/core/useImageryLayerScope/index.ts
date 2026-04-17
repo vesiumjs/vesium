@@ -32,8 +32,8 @@ export function useImageryLayerScope(options: UseImageryLayerScopeOptions = {}) 
     return toValue(_collection) ?? viewer.value?.imageryLayers;
   });
 
-  return useCollectionScope<ImageryLayer>({
-    addEffect(instance, index?: number) {
+  return useCollectionScope<ImageryLayer, [index?: number], [destroy?: boolean], boolean>({
+    addEffect(instance, index) {
       if (!collection.value) {
         throw new Error('collection is not defined');
       }
@@ -41,8 +41,13 @@ export function useImageryLayerScope(options: UseImageryLayerScopeOptions = {}) 
       if (isPromise(instance)) {
         return new Promise<ImageryLayer>((resolve, reject) => {
           instance.then((i) => {
-            collection.value.add(i, index);
-            resolve(i);
+            try {
+              collection.value!.add(i, index);
+              resolve(i);
+            }
+            catch (error) {
+              reject(error);
+            }
           }).catch(error => reject(error));
         });
       }
