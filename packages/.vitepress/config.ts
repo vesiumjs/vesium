@@ -49,7 +49,7 @@ let transformHtml = `
   JSON.stringify(
     {
       imports: {
-        cesium: `https://cdn.jsdmirror.com/npm/cesium@${CESIUM_VERSION}/Build/Cesium/index.js/+esm`,
+        cesium: `https://cdn.jsdmirror.com/npm/cesium@${CESIUM_VERSION}/Build/Cesium/index.js`,
       },
     },
   )

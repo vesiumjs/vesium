@@ -10,7 +10,6 @@ const imageryLayer = useImageryLayer(
   {
     isActive,
     destroyOnRemove: false,
-    index: 9999,
   },
 );
 
