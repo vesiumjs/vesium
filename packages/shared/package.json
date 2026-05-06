@@ -1,7 +1,7 @@
 {
   "name": "@vesium/shared",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Shared utilities and type definitions for Vesium",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",
