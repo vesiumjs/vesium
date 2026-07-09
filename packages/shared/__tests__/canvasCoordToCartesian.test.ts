@@ -1,8 +1,19 @@
-import { Cartesian2, Cartesian3 } from 'cesium';
-import { describe, expect, it, vi } from 'vitest';
+import { Cartesian2, Cartesian3, Ellipsoid } from 'cesium';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { canvasCoordToCartesian } from '../src/canvasCoordToCartesian';
 
 describe('canvasCoordToCartesian', () => {
+  const cartesianToCartoSpy = vi.spyOn(Ellipsoid.prototype as any, 'cartesianToCartographic');
+
+  afterEach(() => {
+    cartesianToCartoSpy.mockReset();
+  });
+
+  function mockHeight(cartesian: Cartesian3): number {
+    // Use the z component as a deterministic cartographic height
+    return cartesian.z;
+  }
+
   function createMockScene(options: {
     pickPosition?: Cartesian3 | undefined;
     pickRay?: { direction: Cartesian3; origin: Cartesian3 };
@@ -10,9 +21,9 @@ describe('canvasCoordToCartesian', () => {
     depthTestAgainstTerrain?: boolean;
   } = {}) {
     const {
-      pickPosition = new Cartesian3(1, 2, 3),
+      pickPosition,
       pickRay = { direction: new Cartesian3(0, 0, 1), origin: new Cartesian3(0, 0, 0) },
-      globePick = new Cartesian3(4, 5, 6),
+      globePick,
       depthTestAgainstTerrain = false,
     } = options;
 
@@ -95,20 +106,45 @@ describe('canvasCoordToCartesian', () => {
       expect(result).toBe(expected);
     });
 
-    it('should use both pickPosition and globePick when depthTestAgainstTerrain is false', () => {
+    it('should return the higher position when both are defined (position2 higher)', () => {
       const canvasCoord = new Cartesian2(100, 200);
       const position1 = new Cartesian3(1, 2, 3);
       const position2 = new Cartesian3(4, 5, 6);
       const mockScene = createMockScene({ pickPosition: position1, globePick: position2 });
+      cartesianToCartoSpy.mockImplementation((c: Cartesian3) => ({ height: mockHeight(c) }) as any);
 
       const result = canvasCoordToCartesian(canvasCoord, mockScene, 'auto');
 
-      // Both should be called in auto mode
       expect(mockScene.pickPosition).toHaveBeenCalled();
       expect(mockScene.camera.getPickRay).toHaveBeenCalled();
       expect(mockScene.globe.pick).toHaveBeenCalled();
-      // Result depends on height comparison, we just verify it returns one of them
-      expect([position1, position2]).toContain(result);
+      // position2 has the higher height (6 > 3), so it must be returned
+      expect(result).toBe(position2);
+    });
+
+    it('should return the higher position when both are defined (position1 higher)', () => {
+      const canvasCoord = new Cartesian2(100, 200);
+      const position1 = new Cartesian3(1, 2, 9);
+      const position2 = new Cartesian3(4, 5, 2);
+      const mockScene = createMockScene({ pickPosition: position1, globePick: position2 });
+      cartesianToCartoSpy.mockImplementation((c: Cartesian3) => ({ height: mockHeight(c) }) as any);
+
+      const result = canvasCoordToCartesian(canvasCoord, mockScene, 'auto');
+
+      // position1 has the higher height (9 > 2), so it must be returned
+      expect(result).toBe(position1);
+    });
+
+    it('should return position2 when heights are equal', () => {
+      const canvasCoord = new Cartesian2(100, 200);
+      const position1 = new Cartesian3(1, 2, 5);
+      const position2 = new Cartesian3(4, 5, 5);
+      const mockScene = createMockScene({ pickPosition: position1, globePick: position2 });
+      cartesianToCartoSpy.mockImplementation((c: Cartesian3) => ({ height: mockHeight(c) }) as any);
+
+      const result = canvasCoordToCartesian(canvasCoord, mockScene, 'auto');
+
+      expect(result).toBe(position2);
     });
   });
 });

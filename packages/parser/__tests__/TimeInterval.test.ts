@@ -1,12 +1,8 @@
 import { JulianDate, TimeInterval } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { TimeIntervalFromJSON, TimeIntervalToJSON, TimeIntervalZodSchema } from '../src/TimeInterval';
 
 describe('timeInterval', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('timeIntervalZodSchema', () => {
     it('should parse valid JSON with full values', () => {
       const json = {
@@ -56,10 +52,13 @@ describe('timeInterval', () => {
   });
 
   describe('timeIntervalToJSON', () => {
+    const START = '2024-01-01T00:00:00Z';
+    const STOP = '2024-12-31T23:59:59Z';
+
     it('should convert TimeInterval instance to JSON', () => {
       const instance = new TimeInterval({
-        start: JulianDate.fromIso8601('2024-01-01T00:00:00Z'),
-        stop: JulianDate.fromIso8601('2024-12-31T23:59:59Z'),
+        start: JulianDate.fromIso8601(START),
+        stop: JulianDate.fromIso8601(STOP),
         isStartIncluded: true,
         isStopIncluded: false,
         data: { test: 123 },
@@ -68,11 +67,11 @@ describe('timeInterval', () => {
       expect(result?.parser).toBe('TimeInterval');
       expect(result?.value.start).toEqual({
         parser: 'JulianDate',
-        value: '2024-01-01T00:00:00Z',
+        value: START,
       });
       expect(result?.value.stop).toEqual({
         parser: 'JulianDate',
-        value: '2024-12-31T23:59:59Z',
+        value: STOP,
       });
       expect(result?.value.isStartIncluded).toBe(true);
       expect(result?.value.isStopIncluded).toBe(false);
@@ -84,13 +83,17 @@ describe('timeInterval', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = TimeIntervalToJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should convert TimeInterval with default flags', () => {
       const instance = new TimeInterval({
-        start: JulianDate.fromIso8601('2024-01-01T00:00:00Z'),
-        stop: JulianDate.fromIso8601('2024-12-31T23:59:59Z'),
+        start: JulianDate.fromIso8601(START),
+        stop: JulianDate.fromIso8601(STOP),
       });
       const result = TimeIntervalToJSON(instance);
-      // Cesium TimeInterval default values
       expect(result?.value.isStartIncluded).toBe(true);
       expect(result?.value.isStopIncluded).toBe(true);
     });
@@ -117,6 +120,11 @@ describe('timeInterval', () => {
 
     it('should return undefined for undefined input', () => {
       const result = TimeIntervalFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = TimeIntervalFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 

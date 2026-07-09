@@ -1,18 +1,9 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
 import { arrowStraightFine } from '../src/arrowStraightFine';
+import { expectCoordArray } from './utils';
 
 describe('arrowStraightFine', () => {
-  it('should return an array of coordinates with valid input (2 points)', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [10, 10],
-    ];
-    const result = arrowStraightFine(coords);
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
-  });
-
   it('should return 5 points for a fine arrow shape', () => {
     const coords: CoordArray[] = [
       [0, 0],
@@ -27,20 +18,7 @@ describe('arrowStraightFine', () => {
     expect(() => arrowStraightFine([[5, 5]])).toThrow('coords.length must >= 2');
   });
 
-  it('should return coordinates in [x, y] format', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [100000, 0],
-    ];
-    const result = arrowStraightFine(coords);
-    result.forEach((coord) => {
-      expect(coord.length).toBe(2);
-      expect(typeof coord[0]).toBe('number');
-      expect(typeof coord[1]).toBe('number');
-    });
-  });
-
-  it('should scale arrow length based on distance', () => {
+  it('should produce different coordinates for different distances', () => {
     const coords1: CoordArray[] = [
       [0, 0],
       [100000, 0],
@@ -51,9 +29,9 @@ describe('arrowStraightFine', () => {
     ];
     const result1 = arrowStraightFine(coords1);
     const result2 = arrowStraightFine(coords2);
-    // The arrow coordinates should differ due to different distances
-    expect(Array.isArray(result1)).toBe(true);
-    expect(Array.isArray(result2)).toBe(true);
+    // The left/right wing coordinates should differ
+    const diff = Math.hypot(result1[2][0] - result2[2][0], result1[2][1] - result2[2][1]);
+    expect(diff).toBeGreaterThan(0);
   });
 
   it('should handle vertical direction', () => {
@@ -63,5 +41,23 @@ describe('arrowStraightFine', () => {
     ];
     const result = arrowStraightFine(coords);
     expect(result.length).toBe(5);
+  });
+
+  it('should handle degenerate zero distance', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [0, 0],
+    ];
+    const result = arrowStraightFine(coords);
+    expect(result.length).toBe(5);
+  });
+
+  it('should return valid coordinate arrays', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [100000, 0],
+    ];
+    const result = arrowStraightFine(coords);
+    expectCoordArray(result);
   });
 });

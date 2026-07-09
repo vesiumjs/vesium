@@ -20,7 +20,7 @@ export function ellipse(coords: CoordArray[]): CoordArray[] {
     angle = (Math.PI * 2 * i) / FITTING_COUNT;
     x = center[0] + majorRadius * Math.cos(angle);
     y = center[1] + minorRadius * Math.sin(angle);
-    coords.push([x, y]);
+    _coords.push([x, y]);
   }
   return _coords;
 }

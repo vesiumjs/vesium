@@ -28,4 +28,24 @@ describe('cartesianToCanvasCoord', () => {
 
     expect(result).toBeUndefined();
   });
+
+  it('should throw when scene.cartesianToCanvasCoordinates is not a function', () => {
+    const position = new Cartesian3(1, 2, 3);
+    const mockScene = {
+      cartesianToCanvasCoordinates: 'not-a-function' as any,
+    } as any;
+
+    expect(() => cartesianToCanvasCoord(position, mockScene)).toThrow();
+  });
+
+  it('should propagate errors thrown by cartesianToCanvasCoordinates', () => {
+    const position = new Cartesian3(1, 2, 3);
+    const mockScene = {
+      cartesianToCanvasCoordinates: vi.fn().mockImplementation(() => {
+        throw new Error('scene error');
+      }),
+    } as any;
+
+    expect(() => cartesianToCanvasCoord(position, mockScene)).toThrow('scene error');
+  });
 });

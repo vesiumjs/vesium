@@ -1,13 +1,9 @@
 import type { TimeIntervalJSON } from '../src/TimeInterval';
 import { JulianDate, TimeInterval, TimeIntervalCollection } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { TimeIntervalCollectionFromJSON, TimeIntervalCollectionToJSON, TimeIntervalCollectionZodSchema } from '../src/TimeIntervalCollection';
 
 describe('timeIntervalCollection', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('timeIntervalCollectionZodSchema', () => {
     it('should parse valid JSON with intervals array', () => {
       const json = {
@@ -92,6 +88,11 @@ describe('timeIntervalCollection', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = TimeIntervalCollectionToJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should convert TimeIntervalCollection with multiple intervals', () => {
       const collection = new TimeIntervalCollection([
         new TimeInterval({
@@ -131,6 +132,11 @@ describe('timeIntervalCollection', () => {
 
     it('should return undefined for undefined input', () => {
       const result = TimeIntervalCollectionFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = TimeIntervalCollectionFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 

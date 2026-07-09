@@ -1,16 +1,17 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
 import { arrowAttackDirectionTailed } from '../src/arrowAttackDirectionTailed';
+import { expectCoordArray } from './utils';
 
 describe('arrowAttackDirectionTailed', () => {
-  it('should return an array of coordinates with valid input (3 points)', () => {
+  it('should return coordinates with valid 3-point input', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [0, 10000],
       [100000, 50000],
     ];
     const result = arrowAttackDirectionTailed(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
   });
 
   it('should throw error when input has less than 3 points', () => {
@@ -19,7 +20,7 @@ describe('arrowAttackDirectionTailed', () => {
     expect(() => arrowAttackDirectionTailed([[0, 0], [10, 10]])).toThrow('coords.length must >= 3');
   });
 
-  it('should return empty array for insufficient head coords', () => {
+  it('should handle degenerate input (all same points) without throwing', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [0, 0],
@@ -43,23 +44,19 @@ describe('arrowAttackDirectionTailed', () => {
       tailWidthFactor: 0.12,
       swallowTailFactor: 1.5,
     });
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
   });
 
-  it('should return coordinates in [x, y] format', () => {
+  it('should handle zero swallowTailFactor', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [0, 10000],
       [100000, 50000],
     ];
-    const result = arrowAttackDirectionTailed(coords);
-    if (result.length > 0) {
-      result.forEach((coord) => {
-        expect(coord.length).toBe(2);
-        expect(typeof coord[0]).toBe('number');
-        expect(typeof coord[1]).toBe('number');
-      });
-    }
+    const result = arrowAttackDirectionTailed(coords, {
+      swallowTailFactor: 0,
+    });
+    expect(result.length).toBeGreaterThan(0);
   });
 
   it('should handle input with 4 or more points', () => {
@@ -70,6 +67,18 @@ describe('arrowAttackDirectionTailed', () => {
       [100000, 50000],
     ];
     const result = arrowAttackDirectionTailed(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  it('should return valid coordinate arrays', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [0, 10000],
+      [100000, 50000],
+    ];
+    const result = arrowAttackDirectionTailed(coords);
+    if (result.length > 0) {
+      expectCoordArray(result);
+    }
   });
 });

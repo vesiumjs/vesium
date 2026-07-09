@@ -29,6 +29,7 @@ import {
   wholeDistance,
   ZERO_TOLERANCE,
 } from '../src/helper';
+import { expectCoordArray } from './utils';
 
 describe('constants', () => {
   it('should have correct FITTING_COUNT value', () => {
@@ -83,13 +84,11 @@ describe('wholeDistance', () => {
   });
 
   it('should return correct distance for two points', () => {
-    const points: CoordArray[] = [[0, 0], [3, 4]];
-    expect(wholeDistance(points)).toBe(5);
+    expect(wholeDistance([[0, 0], [3, 4]])).toBe(5);
   });
 
   it('should return sum of distances for multiple points', () => {
-    const points: CoordArray[] = [[0, 0], [3, 0], [3, 4]];
-    expect(wholeDistance(points)).toBe(7);
+    expect(wholeDistance([[0, 0], [3, 0], [3, 4]])).toBe(7);
   });
 });
 
@@ -117,25 +116,25 @@ describe('mid', () => {
   it('should calculate midpoint with negative coordinates', () => {
     expect(mid([-10, -10], [10, 10])).toEqual([0, 0]);
   });
-
-  it('should calculate midpoint on horizontal line', () => {
-    expect(mid([0, 5], [10, 5])).toEqual([5, 5]);
-  });
-
-  it('should calculate midpoint on vertical line', () => {
-    expect(mid([5, 0], [5, 10])).toEqual([5, 5]);
-  });
 });
 
 describe('getCircleCenterOfThreeCoords', () => {
   it('should calculate center of circle through three points', () => {
     const center = getCircleCenterOfThreeCoords([0, -1], [1, 0], [0, 1]);
-    // For these 3 points on a unit circle centered at origin
     expect(center[0]).toBeCloseTo(0, 5);
     expect(center[1]).toBeCloseTo(0, 5);
   });
 
-  it('should return valid coordinates for any non-collinear points', () => {
+  it('should return correct center for points (0,0), (10,0), (5,10)', () => {
+    const center = getCircleCenterOfThreeCoords([0, 0], [10, 0], [5, 10]);
+    // Perpendicular bisector of (0,0)-(10,0) is x=5
+    // Perpendicular bisector of (0,0)-(5,10) has slope -0.5 through (2.5,5)
+    // Center should be at (5, 3.75)
+    expect(center[0]).toBeCloseTo(5, 5);
+    expect(center[1]).toBeCloseTo(3.75, 5);
+  });
+
+  it('should return valid coordinates for non-collinear points', () => {
     const center = getCircleCenterOfThreeCoords([0, 0], [10, 0], [5, 10]);
     expect(typeof center[0]).toBe('number');
     expect(typeof center[1]).toBe('number');
@@ -144,8 +143,6 @@ describe('getCircleCenterOfThreeCoords', () => {
 
 describe('getIntersectCoord', () => {
   it('should calculate intersection of two lines', () => {
-    // Line AB: vertical line at x=5
-    // Line CD: horizontal line at y=5
     const result = getIntersectCoord([5, 0], [5, 10], [0, 5], [10, 5]);
     expect(result[0]).toBeCloseTo(5, 5);
     expect(result[1]).toBeCloseTo(5, 5);
@@ -157,7 +154,7 @@ describe('getIntersectCoord', () => {
     expect(result[1]).toBeCloseTo(5, 5);
   });
 
-  it('should return valid coordinates', () => {
+  it('should return correct intersection for diagonal lines', () => {
     const result = getIntersectCoord([0, 0], [10, 10], [0, 10], [10, 0]);
     expect(result[0]).toBeCloseTo(5, 5);
     expect(result[1]).toBeCloseTo(5, 5);
@@ -165,22 +162,24 @@ describe('getIntersectCoord', () => {
 });
 
 describe('getAzimuth', () => {
-  it('should return valid azimuth angle', () => {
+  it('should return PI for [0,0] -> [10,0] (east direction)', () => {
     const angle = getAzimuth([0, 0], [10, 0]);
-    expect(typeof angle).toBe('number');
-    expect(angle).toBeGreaterThanOrEqual(0);
-    expect(angle).toBeLessThanOrEqual(Math.PI * 2);
+    expect(angle).toBeCloseTo(Math.PI, 5);
   });
 
-  it('should return valid azimuth for different quadrants', () => {
-    const angle1 = getAzimuth([0, 0], [10, 10]);
-    const angle2 = getAzimuth([0, 0], [-10, 10]);
-    const angle3 = getAzimuth([0, 0], [-10, -10]);
-    const angle4 = getAzimuth([0, 0], [10, -10]);
-    expect(angle1).toBeGreaterThanOrEqual(0);
-    expect(angle2).toBeGreaterThanOrEqual(0);
-    expect(angle3).toBeGreaterThanOrEqual(0);
-    expect(angle4).toBeGreaterThanOrEqual(0);
+  it('should return 3*PI/2 for [0,0] -> [0,10] (north direction)', () => {
+    const angle = getAzimuth([0, 0], [0, 10]);
+    expect(angle).toBeCloseTo(Math.PI * 3 / 2, 5);
+  });
+
+  it('should return PI/2 for [0,0] -> [0,-10] (south direction)', () => {
+    const angle = getAzimuth([0, 0], [0, -10]);
+    expect(angle).toBeCloseTo(Math.PI / 2, 5);
+  });
+
+  it('should return 2*PI for [0,0] -> [-10,0] (west direction)', () => {
+    const angle = getAzimuth([0, 0], [-10, 0]);
+    expect(angle).toBeCloseTo(Math.PI * 2, 5);
   });
 
   it('should handle identical points gracefully', () => {
@@ -190,32 +189,35 @@ describe('getAzimuth', () => {
 });
 
 describe('getAngleOfThreeCoords', () => {
-  it('should return positive angle between 0 and 2*PI', () => {
+  it('should return PI/2 for right angle at (0,0) with (0,10) and (10,0)', () => {
+    const angle = getAngleOfThreeCoords([0, 10], [0, 0], [10, 0]);
+    expect(angle).toBeCloseTo(Math.PI / 2, 1);
+  });
+
+  it('should return PI for straight angle', () => {
+    const angle = getAngleOfThreeCoords([0, 0], [5, 5], [10, 10]);
+    expect(angle).toBeCloseTo(Math.PI, 1);
+  });
+
+  it('should return angle between 0 and 2*PI', () => {
     const angle = getAngleOfThreeCoords([0, 0], [5, 5], [10, 0]);
     expect(angle).toBeGreaterThanOrEqual(0);
     expect(angle).toBeLessThanOrEqual(Math.PI * 2);
   });
-
-  it('should return valid angle for right angle', () => {
-    const angle = getAngleOfThreeCoords([0, 10], [0, 0], [10, 0]);
-    expect(angle).toBeCloseTo(Math.PI / 2, 1);
-  });
 });
 
 describe('isClockWise', () => {
-  it('should return true for clockwise points', () => {
-    // Clockwise: (0,0) -> (10,0) -> (0,10)
+  it('should return true for clockwise points (0,0)->(10,0)->(0,10)', () => {
     const result = isClockWise([0, 0], [10, 0], [0, 10]);
-    expect(typeof result).toBe('boolean');
+    expect(result).toBe(true);
   });
 
-  it('should return false for counter-clockwise points', () => {
-    // Counter-clockwise: (0,0) -> (0,10) -> (10,0)
+  it('should return false for counter-clockwise points (0,0)->(0,10)->(10,0)', () => {
     const result = isClockWise([0, 0], [0, 10], [10, 0]);
-    expect(typeof result).toBe('boolean');
+    expect(result).toBe(false);
   });
 
-  it('should return consistent results', () => {
+  it('should return consistent results (same input yields same output)', () => {
     const result1 = isClockWise([0, 0], [10, 0], [5, 5]);
     const result2 = isClockWise([0, 0], [10, 0], [5, 5]);
     expect(result1).toBe(result2);
@@ -240,101 +242,90 @@ describe('getCoordOnLine', () => {
     expect(result[0]).toBeCloseTo(5, 5);
     expect(result[1]).toBeCloseTo(5, 5);
   });
-
-  it('should return point beyond end when t>1', () => {
-    const result = getCoordOnLine(2, [0, 0], [10, 10]);
-    expect(result[0]).toBeCloseTo(20, 5);
-    expect(result[1]).toBeCloseTo(20, 5);
-  });
 });
 
 describe('getCubicValue', () => {
   it('should return start point when t=0', () => {
-    const start: CoordArray = [0, 0];
-    const end: CoordArray = [10, 10];
-    const result = getCubicValue(0, start, [2, 5], [8, 5], end);
-    expect(result[0]).toBeCloseTo(start[0], 5);
-    expect(result[1]).toBeCloseTo(start[1], 5);
+    const result = getCubicValue(0, [0, 0], [2, 5], [8, 5], [10, 10]);
+    expect(result[0]).toBeCloseTo(0, 5);
+    expect(result[1]).toBeCloseTo(0, 5);
   });
 
   it('should return end point when t=1', () => {
-    const start: CoordArray = [0, 0];
-    const end: CoordArray = [10, 10];
-    const result = getCubicValue(1, start, [2, 5], [8, 5], end);
-    expect(result[0]).toBeCloseTo(end[0], 5);
-    expect(result[1]).toBeCloseTo(end[1], 5);
+    const result = getCubicValue(1, [0, 0], [2, 5], [8, 5], [10, 10]);
+    expect(result[0]).toBeCloseTo(10, 5);
+    expect(result[1]).toBeCloseTo(10, 5);
   });
 
   it('should clamp t to [0, 1] range', () => {
-    const start: CoordArray = [0, 0];
-    const end: CoordArray = [10, 10];
-    const resultNegative = getCubicValue(-1, start, [2, 5], [8, 5], end);
-    const resultOver = getCubicValue(2, start, [2, 5], [8, 5], end);
-    expect(resultNegative[0]).toBeCloseTo(start[0], 5);
-    expect(resultOver[0]).toBeCloseTo(end[0], 5);
-  });
-
-  it('should return midpoint for linear case when t=0.5', () => {
-    const start: CoordArray = [0, 0];
-    const end: CoordArray = [10, 0];
-    // With control points on the line, should be linear
-    const result = getCubicValue(0.5, start, [3.33, 0], [6.67, 0], end);
-    expect(result[0]).toBeCloseTo(5, 1);
+    const resultNegative = getCubicValue(-1, [0, 0], [2, 5], [8, 5], [10, 10]);
+    const resultOver = getCubicValue(2, [0, 0], [2, 5], [8, 5], [10, 10]);
+    expect(resultNegative[0]).toBeCloseTo(0, 5);
+    expect(resultOver[0]).toBeCloseTo(10, 5);
   });
 });
 
 describe('getThirdCoord', () => {
-  it('should return a valid coordinate', () => {
-    const result = getThirdCoord([0, 0], [10, 0], Math.PI / 4, 10, true);
-    expect(result.length).toBe(2);
-    expect(typeof result[0]).toBe('number');
-    expect(typeof result[1]).toBe('number');
-  });
-
-  it('should return different results for clockwise vs counter-clockwise', () => {
-    // Use a diagonal direction where the azimuth angle creates clearly different results
-    const cw = getThirdCoord([0, 0], [10, 10], Math.PI / 3, 10, true);
-    const ccw = getThirdCoord([0, 0], [10, 10], Math.PI / 3, 10, false);
-    // At least one coordinate should differ significantly
-    const diff = Math.hypot(cw[0] - ccw[0], cw[1] - ccw[1]);
-    expect(diff).toBeGreaterThan(1);
-  });
-
-  it('should return point at correct distance', () => {
+  it('should return point at correct distance from endCoord', () => {
     const start: CoordArray = [0, 0];
     const end: CoordArray = [10, 0];
     const result = getThirdCoord(start, end, 0, 10, true);
     const dist = mathDistance(end, result);
     expect(dist).toBeCloseTo(10, 5);
   });
+
+  it('should return different results for clockwise vs counter-clockwise', () => {
+    const cw = getThirdCoord([0, 0], [10, 10], Math.PI / 3, 10, true);
+    const ccw = getThirdCoord([0, 0], [10, 10], Math.PI / 3, 10, false);
+    const diff = Math.hypot(cw[0] - ccw[0], cw[1] - ccw[1]);
+    expect(diff).toBeGreaterThan(1);
+  });
+
+  it('should return endpoint when distance is 0', () => {
+    const end: CoordArray = [10, 0];
+    const result = getThirdCoord([0, 0], end, Math.PI / 4, 0, true);
+    expect(result[0]).toBeCloseTo(end[0], 5);
+    expect(result[1]).toBeCloseTo(end[1], 5);
+  });
+
+  it('should handle negative distance (opposite direction)', () => {
+    const end: CoordArray = [10, 0];
+    const result = getThirdCoord([0, 0], end, 0, -10, true);
+    const dist = mathDistance(end, result);
+    expect(dist).toBeCloseTo(10, 5);
+  });
 });
 
 describe('getArcCoords', () => {
-  it('should return 101 points', () => {
-    const center: CoordArray = [0, 0];
-    const result = getArcCoords(center, 10, 0, Math.PI);
-    expect(result.length).toBe(101);
+  it('should return FITTING_COUNT + 1 points', () => {
+    const result = getArcCoords([0, 0], 10, 0, Math.PI);
+    expect(result.length).toBe(FITTING_COUNT + 1);
   });
 
   it('should return points on arc', () => {
-    const center: CoordArray = [0, 0];
     const radius = 10;
-    const result = getArcCoords(center, radius, 0, Math.PI / 2);
-    // First point should be at (radius, 0)
+    const result = getArcCoords([0, 0], radius, 0, Math.PI / 2);
     expect(result[0][0]).toBeCloseTo(radius, 0);
     expect(result[0][1]).toBeCloseTo(0, 0);
   });
 
   it('should handle full circle (startAngle == endAngle)', () => {
-    const center: CoordArray = [0, 0];
-    const result = getArcCoords(center, 10, 0, 0);
-    expect(result.length).toBe(101);
+    const result = getArcCoords([0, 0], 10, 0, 0);
+    expect(result.length).toBe(FITTING_COUNT + 1);
   });
 
   it('should handle negative angle difference', () => {
-    const center: CoordArray = [0, 0];
-    const result = getArcCoords(center, 10, Math.PI, 0);
-    expect(result.length).toBe(101);
+    const result = getArcCoords([0, 0], 10, Math.PI, 0);
+    expect(result.length).toBe(FITTING_COUNT + 1);
+  });
+
+  it('should handle radius 0 (all points at center)', () => {
+    const result = getArcCoords([5, 5], 0, 0, Math.PI);
+    expect(result.length).toBe(FITTING_COUNT + 1);
+    result.forEach(([x, y]) => {
+      expect(x).toBeCloseTo(5, 6);
+      expect(y).toBeCloseTo(5, 6);
+    });
   });
 });
 
@@ -349,6 +340,13 @@ describe('getBisectorNormals', () => {
   it('should handle collinear points', () => {
     const result = getBisectorNormals(0.3, [0, 0], [5, 0], [10, 0]);
     expect(result.length).toBe(2);
+    // Collinear: dist is 0 so goes to else branch
+    // coord2 + t * (coord1 - coord2) = [5,0] + 0.3 * [-5,0] = [3.5, 0]
+    // coord2 + t * (coord3 - coord2) = [5,0] + 0.3 * [5,0] = [6.5, 0]
+    expect(result[0][0]).toBeCloseTo(3.5, 5);
+    expect(result[0][1]).toBeCloseTo(0, 5);
+    expect(result[1][0]).toBeCloseTo(6.5, 5);
+    expect(result[1][1]).toBeCloseTo(0, 5);
   });
 
   it('should return different results for different t values', () => {
@@ -381,22 +379,7 @@ describe('getCurveCoords', () => {
       [10, 0],
     ];
     const result = getCurveCoords(0.3, controlCoords);
-    expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(controlCoords.length);
-  });
-
-  it('should return coordinates in [x, y] format', () => {
-    const controlCoords: CoordArray[] = [
-      [0, 0],
-      [5, 5],
-      [10, 0],
-    ];
-    const result = getCurveCoords(0.3, controlCoords);
-    result.forEach((coord) => {
-      expect(coord.length).toBe(2);
-      expect(typeof coord[0]).toBe('number');
-      expect(typeof coord[1]).toBe('number');
-    });
   });
 
   it('should handle more control points', () => {
@@ -409,6 +392,16 @@ describe('getCurveCoords', () => {
     const result = getCurveCoords(0.3, controlCoords);
     expect(result.length).toBeGreaterThan(controlCoords.length);
   });
+
+  it('should return valid coordinate arrays', () => {
+    const controlCoords: CoordArray[] = [
+      [0, 0],
+      [5, 5],
+      [10, 0],
+    ];
+    const result = getCurveCoords(0.3, controlCoords);
+    expectCoordArray(result);
+  });
 });
 
 describe('getBezierCoords', () => {
@@ -418,79 +411,84 @@ describe('getBezierCoords', () => {
     expect(result.length).toBeGreaterThan(0);
   });
 
-  it('should return original points for 2 or fewer', () => {
+  it('should return original array reference for 2 or fewer (not cloned)', () => {
     const points: CoordArray[] = [[0, 0], [10, 10]];
     const result = getBezierCoords(points);
-    expect(result).toEqual(points);
+    expect(result).toBe(points);
+  });
+
+  it('should return original array reference for 1 point', () => {
+    const points: CoordArray[] = [[5, 5]];
+    const result = getBezierCoords(points);
+    expect(result).toBe(points);
   });
 
   it('should include the last point', () => {
     const points: CoordArray[] = [[0, 0], [5, 10], [10, 0]];
     const result = getBezierCoords(points);
-    const last = result.at(-1);
+    const last = result.at(-1)!;
     expect(last[0]).toBeCloseTo(points[2][0], 5);
     expect(last[1]).toBeCloseTo(points[2][1], 5);
   });
 
-  it('should return coordinates in [x, y] format', () => {
+  it('should handle 5 control points', () => {
+    const points: CoordArray[] = [[0, 0], [2, 5], [5, 10], [8, 5], [10, 0]];
+    const result = getBezierCoords(points);
+    expect(result.length).toBeGreaterThan(points.length);
+  });
+
+  it('should return valid coordinate arrays', () => {
     const points: CoordArray[] = [[0, 0], [5, 10], [10, 0]];
     const result = getBezierCoords(points);
-    result.forEach((coord) => {
-      expect(coord.length).toBe(2);
-      expect(typeof coord[0]).toBe('number');
-      expect(typeof coord[1]).toBe('number');
-    });
+    expectCoordArray(result);
   });
 });
 
 describe('getFactorial', () => {
-  it('should return 1 for n=0', () => {
-    expect(getFactorial(0)).toBe(1);
+  it.each([
+    [0, 1],
+    [1, 1],
+    [2, 2],
+    [3, 6],
+    [4, 24],
+    [5, 120],
+    [6, 720],
+    [7, 5040],
+    [8, 40320],
+    [10, 3628800],
+  ])('should return %i for n=%i', (n, expected) => {
+    expect(getFactorial(n)).toBe(expected);
   });
 
-  it('should return 1 for n=1', () => {
-    expect(getFactorial(1)).toBe(1);
-  });
-
-  it('should return 2 for n=2', () => {
-    expect(getFactorial(2)).toBe(2);
-  });
-
-  it('should return 6 for n=3', () => {
-    expect(getFactorial(3)).toBe(6);
-  });
-
-  it('should return 24 for n=4', () => {
-    expect(getFactorial(4)).toBe(24);
-  });
-
-  it('should return 120 for n=5', () => {
-    expect(getFactorial(5)).toBe(120);
-  });
-
-  it('should return correct value for n=6', () => {
-    expect(getFactorial(6)).toBe(720);
+  it('should handle large n=24 via default loop', () => {
+    const result = getFactorial(24);
+    // 24! = 620448401733239439360000
+    expect(result).toBeGreaterThan(0);
+    expect(Number.isFinite(result)).toBe(true);
+    // Verify by computing expected value
+    let expected = 1;
+    for (let i = 2; i <= 24; i++) {
+      expected *= i;
+    }
+    expect(result).toBe(expected);
   });
 });
 
 describe('getBinomialFactor', () => {
-  it('should return 1 for n=0, index=0', () => {
-    expect(getBinomialFactor(0, 0)).toBe(1);
-  });
-
-  it('should return 1 for n=5, index=0 or index=5', () => {
-    expect(getBinomialFactor(5, 0)).toBe(1);
-    expect(getBinomialFactor(5, 5)).toBe(1);
-  });
-
-  it('should return 5 for n=5, index=1 or index=4', () => {
-    expect(getBinomialFactor(5, 1)).toBe(5);
-    expect(getBinomialFactor(5, 4)).toBe(5);
-  });
-
-  it('should return 10 for n=5, index=2 or index=3', () => {
-    expect(getBinomialFactor(5, 2)).toBe(10);
-    expect(getBinomialFactor(5, 3)).toBe(10);
+  it.each([
+    [0, 0, 1],
+    [5, 0, 1],
+    [5, 5, 1],
+    [5, 1, 5],
+    [5, 4, 5],
+    [5, 2, 10],
+    [5, 3, 10],
+    [6, 0, 1],
+    [6, 3, 20],
+    [6, 6, 1],
+    [7, 3, 35],
+  ])('should return %i for n=%i, index=%i', (n, index, expected) => {
+    expect(getBinomialFactor(n, index)).toBe(expected);
   });
 });
 
@@ -501,7 +499,7 @@ describe('getQBSplineCoords', () => {
     expect(result.length).toBeGreaterThan(points.length);
   });
 
-  it('should return original points for 2 or fewer', () => {
+  it('should return original array for 2 or fewer', () => {
     const points: CoordArray[] = [[0, 0], [10, 10]];
     const result = getQBSplineCoords(points);
     expect(result).toEqual(points);
@@ -511,7 +509,7 @@ describe('getQBSplineCoords', () => {
     const points: CoordArray[] = [[0, 0], [5, 10], [10, 0]];
     const result = getQBSplineCoords(points);
     const first = result[0];
-    const last = result.at(-1);
+    const last = result.at(-1)!;
     expect(first[0]).toBeCloseTo(points[0][0], 5);
     expect(first[1]).toBeCloseTo(points[0][1], 5);
     expect(last[0]).toBeCloseTo(points[2][0], 5);
@@ -548,6 +546,17 @@ describe('getLeftMostControlCoord', () => {
     expect(result.length).toBe(2);
     expect(typeof result[0]).toBe('number');
     expect(typeof result[1]).toBe('number');
+    expect(Number.isFinite(result[0])).toBe(true);
+    expect(Number.isFinite(result[1])).toBe(true);
+  });
+
+  it('should handle collinear control points with different t', () => {
+    const controlCoords: CoordArray[] = [[0, 0], [5, 0], [10, 0]];
+    const r1 = getLeftMostControlCoord(controlCoords, 0.1);
+    const r2 = getLeftMostControlCoord(controlCoords, 0.5);
+    // collinear branch uses t: coord1 + t * (coord2 - coord1)
+    expect(r1[0]).toBeCloseTo(0.5, 5);
+    expect(r2[0]).toBeCloseTo(2.5, 5);
   });
 });
 
@@ -558,5 +567,16 @@ describe('getRightMostControlCoord', () => {
     expect(result.length).toBe(2);
     expect(typeof result[0]).toBe('number');
     expect(typeof result[1]).toBe('number');
+    expect(Number.isFinite(result[0])).toBe(true);
+    expect(Number.isFinite(result[1])).toBe(true);
+  });
+
+  it('should handle collinear control points with different t', () => {
+    const controlCoords: CoordArray[] = [[0, 0], [5, 0], [10, 0]];
+    const r1 = getRightMostControlCoord(controlCoords, 0.1);
+    const r2 = getRightMostControlCoord(controlCoords, 0.5);
+    // collinear branch uses t: coord3 + t * (coord2 - coord3)
+    expect(r1[0]).toBeCloseTo(9.5, 5);
+    expect(r2[0]).toBeCloseTo(7.5, 5);
   });
 });

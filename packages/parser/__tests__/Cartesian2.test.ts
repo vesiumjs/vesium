@@ -1,12 +1,8 @@
 import { Cartesian2 } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Cartesian2FromJSON, Cartesian2ToJSON, Cartesian2ZodSchema } from '../src/Cartesian2';
 
 describe('cartesian2', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('cartesian2ZodSchema', () => {
     it('should parse valid JSON with full coordinates', () => {
       const json = {
@@ -54,17 +50,25 @@ describe('cartesian2', () => {
   });
 
   describe('cartesian2ToJSON', () => {
+    const X = 1;
+    const Y = 2;
+
     it('should convert Cartesian2 instance to JSON', () => {
-      const instance = new Cartesian2(1, 2);
+      const instance = new Cartesian2(X, Y);
       const result = Cartesian2ToJSON(instance);
       expect(result).toEqual({
         parser: 'Cartesian2',
-        value: { x: 1, y: 2 },
+        value: { x: X, y: Y },
       });
     });
 
     it('should return undefined for undefined input', () => {
       const result = Cartesian2ToJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = Cartesian2ToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -100,6 +104,11 @@ describe('cartesian2', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = Cartesian2FromJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should use default values for missing coordinates', () => {
       const json = {
         parser: 'Cartesian2' as const,
@@ -107,7 +116,6 @@ describe('cartesian2', () => {
       };
       const result = Cartesian2FromJSON(json);
       expect(result?.x).toBe(1);
-      // Cesium Cartesian2 constructor converts undefined to 0
       expect(result?.y).toBe(0);
     });
 

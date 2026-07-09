@@ -1,15 +1,16 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
 import { arrowUnitCombatOperation } from '../src/arrowUnitCombatOperation';
+import { expectCoordArray } from './utils';
 
 describe('arrowUnitCombatOperation', () => {
-  it('should return an array of coordinates with valid input (2 points)', () => {
+  it('should return coordinates with valid 2-point input', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [100000, 50000],
     ];
     const result = arrowUnitCombatOperation(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
   });
 
   it('should throw error when input has less than 2 points', () => {
@@ -17,7 +18,7 @@ describe('arrowUnitCombatOperation', () => {
     expect(() => arrowUnitCombatOperation([[5, 5]])).toThrow('coords.length must >= 2');
   });
 
-  it('should return empty array for insufficient head coords', () => {
+  it('should handle degenerate input (identical points) without throwing', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [0, 0],
@@ -38,22 +39,7 @@ describe('arrowUnitCombatOperation', () => {
       neckHeightFactor: 0.88,
       tailWidthFactor: 0.15,
     });
-    expect(Array.isArray(result)).toBe(true);
-  });
-
-  it('should return coordinates in [x, y] format', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [100000, 50000],
-    ];
-    const result = arrowUnitCombatOperation(coords);
-    if (result.length > 0) {
-      result.forEach((coord) => {
-        expect(coord.length).toBe(2);
-        expect(typeof coord[0]).toBe('number');
-        expect(typeof coord[1]).toBe('number');
-      });
-    }
+    expect(result.length).toBeGreaterThan(0);
   });
 
   it('should handle input with 3 or more points', () => {
@@ -63,6 +49,17 @@ describe('arrowUnitCombatOperation', () => {
       [100000, 50000],
     ];
     const result = arrowUnitCombatOperation(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  it('should return valid coordinate arrays', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [100000, 50000],
+    ];
+    const result = arrowUnitCombatOperation(coords);
+    if (result.length > 0) {
+      expectCoordArray(result);
+    }
   });
 });

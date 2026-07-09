@@ -1,12 +1,8 @@
 import { JulianDate } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { JulianDateFromJSON, JulianDateToJSON, JulianDateZodSchema } from '../src/JulianDate';
 
 describe('julianDate', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('julianDateZodSchema', () => {
     it('should parse valid JSON with ISO 8601 string', () => {
       const json = {
@@ -56,6 +52,11 @@ describe('julianDate', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = JulianDateToJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should convert JulianDate with current time', () => {
       const instance = JulianDate.now();
       const result = JulianDateToJSON(instance);
@@ -78,6 +79,11 @@ describe('julianDate', () => {
 
     it('should return undefined for undefined input', () => {
       const result = JulianDateFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = JulianDateFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 

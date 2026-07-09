@@ -79,6 +79,26 @@ describe('pick', () => {
       const result = resolvePick(pickResult);
       expect(result.length).toBe(4);
     });
+
+    it('should handle id being a Cesium3DTileFeature-like object', () => {
+      const tileFeature = { primitive: 'tile', featureId: 0 };
+      const pickResult: ScenePickResult = { id: tileFeature as any };
+      const result = resolvePick(pickResult);
+      expect(result).toContain(tileFeature);
+    });
+
+    it('should handle id being Entity[] from scene.drillPick', () => {
+      const entities = [
+        { id: 'a', entityCollection: { owner: { name: 'ds1' } } },
+        { id: 'b', entityCollection: { owner: { name: 'ds2' } } },
+      ] as unknown as Entity[];
+      const pickResult: ScenePickResult = { id: entities };
+      const result = resolvePick(pickResult);
+      // id is an Entity[]; resolvePick spreads it but does not check entityCollection on array itself
+      expect(result).toHaveLength(2);
+      expect(result).toContain(entities[0]);
+      expect(result).toContain(entities[1]);
+    });
   });
 
   describe('pickHitGraphic', () => {

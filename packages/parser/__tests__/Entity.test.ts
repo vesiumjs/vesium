@@ -1,12 +1,27 @@
-import { Cartesian3, Color, ConstantPositionProperty, Entity } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { CallbackProperty, Cartesian3, Color, ConstantPositionProperty, Entity, JulianDate } from 'cesium';
+import { describe, expect, it } from 'vitest';
 import { EntityFromJSON, EntityToJSON, EntityZodSchema } from '../src/Entity';
 
-describe('entity', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+const POSITION_JSON = {
+  parser: 'PositionProperty' as const,
+  value: {
+    parser: 'ConstantPositionProperty' as const,
+    value: { x: 1, y: 2, z: 3 },
+  },
+};
 
+const GRAPHICS_CASES = [
+  { name: 'billboard', key: 'billboard', value: { parser: 'BillboardGraphics' as const, value: { show: true, image: 'icon.png' } } },
+  { name: 'label', key: 'label', value: { parser: 'LabelGraphics' as const, value: { show: true, text: 'Hello' } } },
+  { name: 'point', key: 'point', value: { parser: 'PointGraphics' as const, value: { show: true, pixelSize: 10 } } },
+  { name: 'polyline', key: 'polyline', value: { parser: 'PolylineGraphics' as const, value: { show: true, positions: [{ parser: 'Cartesian3' as const, value: { x: 0, y: 0, z: 0 } }, { parser: 'Cartesian3' as const, value: { x: 1, y: 1, z: 1 } }] } } },
+  { name: 'polygon', key: 'polygon', value: { parser: 'PolygonGraphics' as const, value: { show: true, hierarchy: { parser: 'PolygonHierarchy' as const, value: { positions: [{ parser: 'Cartesian3' as const, value: { x: 0, y: 0, z: 0 } }, { parser: 'Cartesian3' as const, value: { x: 1, y: 0, z: 0 } }, { parser: 'Cartesian3' as const, value: { x: 1, y: 1, z: 0 } }] } } } } },
+  { name: 'ellipse', key: 'ellipse', value: { parser: 'EllipseGraphics' as const, value: { show: true, semiMajorAxis: 1000, semiMinorAxis: 500 } } },
+  { name: 'box', key: 'box', value: { parser: 'BoxGraphics' as const, value: { show: true, dimensions: { parser: 'Cartesian3' as const, value: { x: 10, y: 20, z: 30 } } } } },
+  { name: 'model', key: 'model', value: { parser: 'ModelGraphics' as const, value: { show: true, uri: 'model.glb' } } },
+] as const;
+
+describe('entity', () => {
   describe('entityZodSchema', () => {
     it('should parse valid JSON with basic values', () => {
       const json = {
@@ -16,13 +31,7 @@ describe('entity', () => {
           name: 'Test Entity',
           show: true,
           description: 'A test entity',
-          position: {
-            parser: 'PositionProperty' as const,
-            value: {
-              parser: 'ConstantPositionProperty' as const,
-              value: { x: 0, y: 0, z: 0 },
-            },
-          },
+          position: POSITION_JSON,
         },
       };
       const result = EntityZodSchema().parse(json);
@@ -30,161 +39,16 @@ describe('entity', () => {
       expect(result.value.name).toBe('Test Entity');
     });
 
-    it('should parse JSON with billboard graphics', () => {
+    it.each(GRAPHICS_CASES)('should parse JSON with $name graphics', ({ key, value }) => {
       const json = {
         parser: 'Entity' as const,
         value: {
-          id: 'billboard-entity',
-          billboard: {
-            parser: 'BillboardGraphics' as const,
-            value: {
-              show: true,
-              image: 'icon.png',
-            },
-          },
+          id: `${key}-entity`,
+          [key]: value,
         },
       };
       const result = EntityZodSchema().parse(json);
-      expect(result.value.billboard?.parser).toBe('BillboardGraphics');
-    });
-
-    it('should parse JSON with label graphics', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'label-entity',
-          label: {
-            parser: 'LabelGraphics' as const,
-            value: {
-              show: true,
-              text: 'Hello',
-            },
-          },
-        },
-      };
-      const result = EntityZodSchema().parse(json);
-      expect(result.value.label?.parser).toBe('LabelGraphics');
-    });
-
-    it('should parse JSON with point graphics', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'point-entity',
-          point: {
-            parser: 'PointGraphics' as const,
-            value: {
-              show: true,
-              pixelSize: 10,
-            },
-          },
-        },
-      };
-      const result = EntityZodSchema().parse(json);
-      expect(result.value.point?.parser).toBe('PointGraphics');
-    });
-
-    it('should parse JSON with polyline graphics', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'polyline-entity',
-          polyline: {
-            parser: 'PolylineGraphics' as const,
-            value: {
-              show: true,
-              positions: [
-                { parser: 'Cartesian3' as const, value: { x: 0, y: 0, z: 0 } },
-                { parser: 'Cartesian3' as const, value: { x: 1, y: 1, z: 1 } },
-              ],
-            },
-          },
-        },
-      };
-      const result = EntityZodSchema().parse(json);
-      expect(result.value.polyline?.parser).toBe('PolylineGraphics');
-    });
-
-    it('should parse JSON with polygon graphics', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'polygon-entity',
-          polygon: {
-            parser: 'PolygonGraphics' as const,
-            value: {
-              show: true,
-              hierarchy: {
-                parser: 'PolygonHierarchy' as const,
-                value: {
-                  positions: [
-                    { parser: 'Cartesian3' as const, value: { x: 0, y: 0, z: 0 } },
-                    { parser: 'Cartesian3' as const, value: { x: 1, y: 0, z: 0 } },
-                    { parser: 'Cartesian3' as const, value: { x: 1, y: 1, z: 0 } },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      };
-      const result = EntityZodSchema().parse(json);
-      expect(result.value.polygon?.parser).toBe('PolygonGraphics');
-    });
-
-    it('should parse JSON with ellipse graphics', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'ellipse-entity',
-          ellipse: {
-            parser: 'EllipseGraphics' as const,
-            value: {
-              show: true,
-              semiMajorAxis: 1000,
-              semiMinorAxis: 500,
-            },
-          },
-        },
-      };
-      const result = EntityZodSchema().parse(json);
-      expect(result.value.ellipse?.parser).toBe('EllipseGraphics');
-    });
-
-    it('should parse JSON with box graphics', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'box-entity',
-          box: {
-            parser: 'BoxGraphics' as const,
-            value: {
-              show: true,
-              dimensions: { parser: 'Cartesian3' as const, value: { x: 10, y: 20, z: 30 } },
-            },
-          },
-        },
-      };
-      const result = EntityZodSchema().parse(json);
-      expect(result.value.box?.parser).toBe('BoxGraphics');
-    });
-
-    it('should parse JSON with model graphics', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'model-entity',
-          model: {
-            parser: 'ModelGraphics' as const,
-            value: {
-              show: true,
-              uri: 'model.glb',
-            },
-          },
-        },
-      };
-      const result = EntityZodSchema().parse(json);
-      expect(result.value.model?.parser).toBe('ModelGraphics');
+      expect(result.value[key]?.parser).toBe(value.parser);
     });
 
     it('should parse JSON with availability', () => {
@@ -249,6 +113,11 @@ describe('entity', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = EntityToJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should convert Entity with position', () => {
       const instance = new Entity({
         position: new ConstantPositionProperty(new Cartesian3(1, 2, 3)),
@@ -305,6 +174,28 @@ describe('entity', () => {
       expect(result?.value.label).toBeDefined();
       expect(result?.value.point).toBeDefined();
     });
+
+    it('should omit a field when omit is provided', () => {
+      const instance = new Entity({ id: 'test', name: 'Test', billboard: { image: 'icon.png' } });
+      const result = EntityToJSON(instance, undefined, 'billboard' as any);
+      expect(result?.value.billboard).toBeUndefined();
+      expect(result?.value.id).toBe('test');
+    });
+
+    it('should evaluate dynamic property by time', () => {
+      const timeBefore = JulianDate.fromIso8601('2020-01-01T00:00:00Z');
+      const timeAfter = JulianDate.fromIso8601('2030-01-01T00:00:00Z');
+      const threshold = JulianDate.fromIso8601('2025-01-01T00:00:00Z');
+      const instance = new Entity({ id: 'test' });
+      instance.description = new CallbackProperty(
+        (time: JulianDate) => JulianDate.greaterThan(time, threshold) ? 'after' : 'before',
+        false,
+      );
+      const before = EntityToJSON(instance, timeBefore);
+      const after = EntityToJSON(instance, timeAfter);
+      expect(before?.value.description).toBe('before');
+      expect(after?.value.description).toBe('after');
+    });
   });
 
   describe('entityFromJSON', () => {
@@ -330,18 +221,17 @@ describe('entity', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = EntityFromJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should convert JSON with position', () => {
       const json = {
         parser: 'Entity' as const,
         value: {
           id: 'position-entity',
-          position: {
-            parser: 'PositionProperty' as const,
-            value: {
-              parser: 'ConstantPositionProperty' as const,
-              value: { x: 1, y: 2, z: 3 },
-            },
-          },
+          position: POSITION_JSON,
         },
       };
       const result = EntityFromJSON(json);
@@ -349,169 +239,17 @@ describe('entity', () => {
       expect(result?.position).toBeDefined();
     });
 
-    it('should convert JSON with billboard', () => {
+    it.each(GRAPHICS_CASES)('should convert JSON with $name', ({ key, value }) => {
       const json = {
         parser: 'Entity' as const,
         value: {
-          id: 'billboard-entity',
-          billboard: {
-            parser: 'BillboardGraphics' as const,
-            value: {
-              show: true,
-              image: 'icon.png',
-            },
-          },
+          id: `${key}-entity`,
+          [key]: value,
         },
       };
       const result = EntityFromJSON(json);
       expect(result).toBeInstanceOf(Entity);
-      expect(result?.billboard).toBeDefined();
-    });
-
-    it('should convert JSON with label', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'label-entity',
-          label: {
-            parser: 'LabelGraphics' as const,
-            value: {
-              show: true,
-              text: 'Hello World',
-            },
-          },
-        },
-      };
-      const result = EntityFromJSON(json);
-      expect(result).toBeInstanceOf(Entity);
-      expect(result?.label).toBeDefined();
-    });
-
-    it('should convert JSON with point', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'point-entity',
-          point: {
-            parser: 'PointGraphics' as const,
-            value: {
-              show: true,
-              pixelSize: 10,
-            },
-          },
-        },
-      };
-      const result = EntityFromJSON(json);
-      expect(result).toBeInstanceOf(Entity);
-      expect(result?.point).toBeDefined();
-    });
-
-    it('should convert JSON with polyline', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'polyline-entity',
-          polyline: {
-            parser: 'PolylineGraphics' as const,
-            value: {
-              show: true,
-              positions: [
-                { parser: 'Cartesian3' as const, value: { x: 0, y: 0, z: 0 } },
-                { parser: 'Cartesian3' as const, value: { x: 1, y: 1, z: 1 } },
-              ],
-            },
-          },
-        },
-      };
-      const result = EntityFromJSON(json);
-      expect(result).toBeInstanceOf(Entity);
-      expect(result?.polyline).toBeDefined();
-    });
-
-    it('should convert JSON with polygon', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'polygon-entity',
-          polygon: {
-            parser: 'PolygonGraphics' as const,
-            value: {
-              show: true,
-              hierarchy: {
-                parser: 'PolygonHierarchy' as const,
-                value: {
-                  positions: [
-                    { parser: 'Cartesian3' as const, value: { x: 0, y: 0, z: 0 } },
-                    { parser: 'Cartesian3' as const, value: { x: 1, y: 0, z: 0 } },
-                    { parser: 'Cartesian3' as const, value: { x: 0, y: 1, z: 0 } },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      };
-      const result = EntityFromJSON(json);
-      expect(result).toBeInstanceOf(Entity);
-      expect(result?.polygon).toBeDefined();
-    });
-
-    it('should convert JSON with ellipse', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'ellipse-entity',
-          ellipse: {
-            parser: 'EllipseGraphics' as const,
-            value: {
-              show: true,
-              semiMajorAxis: 1000,
-              semiMinorAxis: 500,
-            },
-          },
-        },
-      };
-      const result = EntityFromJSON(json);
-      expect(result).toBeInstanceOf(Entity);
-      expect(result?.ellipse).toBeDefined();
-    });
-
-    it('should convert JSON with box', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'box-entity',
-          box: {
-            parser: 'BoxGraphics' as const,
-            value: {
-              show: true,
-              dimensions: { parser: 'Cartesian3' as const, value: { x: 10, y: 20, z: 30 } },
-            },
-          },
-        },
-      };
-      const result = EntityFromJSON(json);
-      expect(result).toBeInstanceOf(Entity);
-      expect(result?.box).toBeDefined();
-    });
-
-    it('should convert JSON with model', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {
-          id: 'model-entity',
-          model: {
-            parser: 'ModelGraphics' as const,
-            value: {
-              show: true,
-              uri: 'model.glb',
-            },
-          },
-        },
-      };
-      const result = EntityFromJSON(json);
-      expect(result).toBeInstanceOf(Entity);
-      expect(result?.model).toBeDefined();
+      expect((result as any)?.[key]).toBeDefined();
     });
 
     it('should convert JSON with empty values', () => {
@@ -521,6 +259,20 @@ describe('entity', () => {
       };
       const result = EntityFromJSON(json);
       expect(result).toBeInstanceOf(Entity);
+    });
+
+    it('should omit a field when omit is provided', () => {
+      const json = {
+        parser: 'Entity' as const,
+        value: {
+          id: 'test',
+          name: 'Test',
+          billboard: { parser: 'BillboardGraphics' as const, value: { image: 'icon.png' } },
+        },
+      };
+      const result = EntityFromJSON(json, 'billboard' as any);
+      expect(result?.billboard).toBeUndefined();
+      expect(result?.id).toBe('test');
     });
 
     it('should reject invalid JSON structure', () => {

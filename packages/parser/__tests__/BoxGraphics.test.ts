@@ -1,19 +1,18 @@
-import { BoxGraphics, Cartesian3 } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { BoxGraphics, CallbackProperty, Cartesian3, JulianDate } from 'cesium';
+import { toPropertyValue } from 'vesium';
+import { describe, expect, it } from 'vitest';
 import { BoxGraphicsFromJSON, BoxGraphicsToJSON, BoxGraphicsZodSchema } from '../src/BoxGraphics';
 
-describe('boxGraphics', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+const DIM = { parser: 'Cartesian3' as const, value: { x: 10, y: 20, z: 30 } };
 
+describe('boxGraphics', () => {
   describe('boxGraphicsZodSchema', () => {
     it('should parse valid JSON with full values', () => {
       const json = {
         parser: 'BoxGraphics' as const,
         value: {
           show: true,
-          dimensions: { parser: 'Cartesian3' as const, value: { x: 10, y: 20, z: 30 } },
+          dimensions: DIM,
           heightReference: { parser: 'HeightReference' as const, value: 'NONE' as const },
           fill: true,
           outline: true,
@@ -32,7 +31,7 @@ describe('boxGraphics', () => {
         parser: 'BoxGraphics' as const,
         value: {
           show: true,
-          dimensions: { parser: 'Cartesian3' as const, value: { x: 10, y: 20, z: 30 } },
+          dimensions: DIM,
         },
       };
       const result = BoxGraphicsZodSchema().parse(json);
@@ -54,6 +53,16 @@ describe('boxGraphics', () => {
       const json = {
         parser: 'Cartesian3' as const,
         value: {},
+      };
+      expect(() => BoxGraphicsZodSchema().parse(json)).toThrow();
+    });
+
+    it('should reject JSON with invalid nested dimensions type', () => {
+      const json = {
+        parser: 'BoxGraphics' as const,
+        value: {
+          dimensions: { parser: 'Cartesian3' as const, value: { x: 'bad' as any } },
+        },
       };
       expect(() => BoxGraphicsZodSchema().parse(json)).toThrow();
     });
@@ -80,6 +89,11 @@ describe('boxGraphics', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = BoxGraphicsToJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should convert BoxGraphics with basic dimensions', () => {
       const instance = new BoxGraphics({
         dimensions: new Cartesian3(5, 5, 5),
@@ -87,6 +101,25 @@ describe('boxGraphics', () => {
       const result = BoxGraphicsToJSON(instance);
       expect(result?.parser).toBe('BoxGraphics');
       expect(result?.value.dimensions?.value.x).toBe(5);
+    });
+
+    it('should omit a field when omit is provided', () => {
+      const instance = new BoxGraphics({ show: true, fill: true });
+      const result = BoxGraphicsToJSON(instance, undefined, 'fill');
+      expect(result?.value.fill).toBeUndefined();
+      expect(result?.value.show).toBe(true);
+    });
+
+    it('should evaluate dynamic property by time', () => {
+      const instance = new BoxGraphics({ dimensions: new Cartesian3(10, 20, 30) });
+      const timeBefore = JulianDate.fromIso8601('2020-01-01T00:00:00Z');
+      const timeAfter = JulianDate.fromIso8601('2030-01-01T00:00:00Z');
+      const threshold = JulianDate.fromIso8601('2025-01-01T00:00:00Z');
+      instance.show = new CallbackProperty((time: JulianDate) => JulianDate.greaterThan(time, threshold), false);
+      const before = BoxGraphicsToJSON(instance, timeBefore);
+      const after = BoxGraphicsToJSON(instance, timeAfter);
+      expect(before?.value.show).toBe(false);
+      expect(after?.value.show).toBe(true);
     });
   });
 
@@ -96,17 +129,24 @@ describe('boxGraphics', () => {
         parser: 'BoxGraphics' as const,
         value: {
           show: true,
-          dimensions: { parser: 'Cartesian3' as const, value: { x: 10, y: 20, z: 30 } },
+          dimensions: DIM,
           fill: true,
           outline: true,
         },
       };
       const result = BoxGraphicsFromJSON(json);
       expect(result).toBeInstanceOf(BoxGraphics);
+      expect(toPropertyValue(result?.show)).toBe(true);
+      expect(toPropertyValue(result?.fill)).toBe(true);
     });
 
     it('should return undefined for undefined input', () => {
       const result = BoxGraphicsFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = BoxGraphicsFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -128,6 +168,27 @@ describe('boxGraphics', () => {
       };
       const result = BoxGraphicsFromJSON(json);
       expect(result).toBeInstanceOf(BoxGraphics);
+    });
+
+    it('should reuse the result instance when provided', () => {
+      const json = {
+        parser: 'BoxGraphics' as const,
+        value: { show: true, dimensions: DIM },
+      };
+      const result = new BoxGraphics({ show: false });
+      const output = BoxGraphicsFromJSON(json, result);
+      expect(output).toBe(result);
+      expect(toPropertyValue(output?.show)).toBe(true);
+    });
+
+    it('should omit a field when omit is provided', () => {
+      const json = {
+        parser: 'BoxGraphics' as const,
+        value: { show: true, fill: true },
+      };
+      const result = BoxGraphicsFromJSON(json, undefined, 'fill');
+      expect(toPropertyValue(result?.fill)).toBeUndefined();
+      expect(toPropertyValue(result?.show)).toBe(true);
     });
 
     it('should reject invalid JSON structure', () => {

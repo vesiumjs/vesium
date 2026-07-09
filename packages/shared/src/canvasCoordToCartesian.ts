@@ -43,6 +43,7 @@ export function canvasCoordToCartesian(
     }
     const height1 = (position1 && Ellipsoid.WGS84.cartesianToCartographic(position1).height) ?? 0;
     const height2 = (position2 && Ellipsoid.WGS84.cartesianToCartographic(position2).height) ?? 0;
-    return height1 < height2 ? position1 : position2;
+    // pick the higher (top-most) position
+    return height1 > height2 ? position1 : position2;
   }
 }

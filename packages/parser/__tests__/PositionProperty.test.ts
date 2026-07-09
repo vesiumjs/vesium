@@ -1,12 +1,8 @@
 import { Cartesian3, ConstantPositionProperty, JulianDate, SampledPositionProperty } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { PositionPropertyFromJSON, PositionPropertyToJSON, PositionPropertyZodSchema } from '../src/PositionProperty';
 
 describe('positionProperty', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('positionPropertyZodSchema', () => {
     it('should parse valid JSON with ConstantPositionProperty', () => {
       const json = {
@@ -75,10 +71,14 @@ describe('positionProperty', () => {
       expect(result?.value?.parser).toBe('SampledPositionProperty');
     });
 
-    it('should handle undefined instance', () => {
+    it('should return undefined for undefined instance', () => {
       const result = PositionPropertyToJSON(undefined as any);
-      expect(result?.parser).toBe('PositionProperty');
-      expect(result?.value).toBeUndefined();
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null instance', () => {
+      const result = PositionPropertyToJSON(null as any);
+      expect(result).toBeUndefined();
     });
   });
 
@@ -116,6 +116,11 @@ describe('positionProperty', () => {
 
     it('should return undefined for undefined input', () => {
       const result = PositionPropertyFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = PositionPropertyFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 

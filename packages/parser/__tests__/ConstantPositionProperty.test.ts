@@ -1,12 +1,8 @@
 import { Cartesian3, ConstantPositionProperty } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ConstantPositionPropertyFromJSON, ConstantPositionPropertyToJSON, ConstantPositionPropertyZodSchema } from '../src/ConstantPositionProperty';
 
 describe('constantPositionProperty', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('constantPositionPropertyZodSchema', () => {
     it('should parse valid JSON with full values', () => {
       const json = {
@@ -89,6 +85,11 @@ describe('constantPositionProperty', () => {
 
     it('should return undefined for undefined input', () => {
       const result = ConstantPositionPropertyFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = ConstantPositionPropertyFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 

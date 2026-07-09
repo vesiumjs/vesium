@@ -1,12 +1,8 @@
 import { Cartesian3 } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from '../src/Cartesian3';
 
 describe('cartesian3', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('cartesian3ZodSchema', () => {
     it('should parse valid JSON with full coordinates', () => {
       const json = {
@@ -55,17 +51,26 @@ describe('cartesian3', () => {
   });
 
   describe('cartesian3ToJSON', () => {
+    const X = 1;
+    const Y = 2;
+    const Z = 3;
+
     it('should convert Cartesian3 instance to JSON', () => {
-      const instance = new Cartesian3(1, 2, 3);
+      const instance = new Cartesian3(X, Y, Z);
       const result = Cartesian3ToJSON(instance);
       expect(result).toEqual({
         parser: 'Cartesian3',
-        value: { x: 1, y: 2, z: 3 },
+        value: { x: X, y: Y, z: Z },
       });
     });
 
     it('should return undefined for undefined input', () => {
       const result = Cartesian3ToJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = Cartesian3ToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -104,6 +109,11 @@ describe('cartesian3', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = Cartesian3FromJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should use default values for missing coordinates', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -111,7 +121,6 @@ describe('cartesian3', () => {
       };
       const result = Cartesian3FromJSON(json);
       expect(result?.x).toBe(1);
-      // Cesium Cartesian3 constructor converts undefined to 0
       expect(result?.y).toBe(0);
       expect(result?.z).toBe(0);
     });

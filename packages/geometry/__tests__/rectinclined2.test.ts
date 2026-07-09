@@ -1,20 +1,20 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
 import { calculateFourthCoord, calculateIntersectionCoord, rectinclined2 } from '../src/rectinclined2';
+import { expectCoordArray } from './utils';
 
 describe('rectinclined2', () => {
-  it('should return an array of 5 coordinates forming an inclined rectangle', () => {
+  it('should return 5 coordinates forming an inclined rectangle', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
       [5, 5],
     ];
     const result = rectinclined2(coords);
-    expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(5);
   });
 
-  it('should return a closed shape (first and last points are the same)', () => {
+  it('should return a closed shape (first and last points match)', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
@@ -31,7 +31,7 @@ describe('rectinclined2', () => {
     expect(() => rectinclined2([[0, 0], [10, 10]])).toThrow('coords.length must >= 3');
   });
 
-  it('should handle coordinates with negative values', () => {
+  it('should handle negative coordinates', () => {
     const coords: CoordArray[] = [
       [-10, 0],
       [10, 0],
@@ -40,10 +40,30 @@ describe('rectinclined2', () => {
     const result = rectinclined2(coords);
     expect(result.length).toBe(5);
   });
+
+  it('should handle point on the line (zero height rectangle)', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [10, 0],
+      [5, 0],
+    ];
+    const result = rectinclined2(coords);
+    expect(result.length).toBe(5);
+  });
+
+  it('should return valid coordinate arrays', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [10, 0],
+      [5, 5],
+    ];
+    const result = rectinclined2(coords);
+    expectCoordArray(result);
+  });
 });
 
 describe('calculateIntersectionCoord', () => {
-  it('should calculate the intersection point of a perpendicular from p3 to line p1-p2', () => {
+  it('should calculate the perpendicular projection of p3 onto line p1-p2', () => {
     const p1: CoordArray = [0, 0];
     const p2: CoordArray = [10, 0];
     const p3: CoordArray = [5, 5];

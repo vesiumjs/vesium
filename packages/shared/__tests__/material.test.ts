@@ -1,8 +1,18 @@
 import { Material } from 'cesium';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { addMaterialCache, getMaterialCache } from '../src/material';
 
 describe('material', () => {
+  let originalMaterialCache: any;
+
+  beforeEach(() => {
+    originalMaterialCache = (Material as any)._materialCache;
+  });
+
+  afterEach(() => {
+    (Material as any)._materialCache = originalMaterialCache;
+  });
+
   describe('getMaterialCache', () => {
     it('should call Material._materialCache.getMaterial with the correct type', () => {
       const getMaterial = vi.fn().mockReturnValue({ type: 'test' });
@@ -40,5 +50,11 @@ describe('material', () => {
 
       expect(addMaterial).toHaveBeenCalledWith('custom', materialOptions);
     });
+  });
+
+  it('should throw when _materialCache is undefined', () => {
+    (Material as any)._materialCache = undefined;
+    expect(() => getMaterialCache('test')).toThrow();
+    expect(() => addMaterialCache('test', {} as any)).toThrow();
   });
 });

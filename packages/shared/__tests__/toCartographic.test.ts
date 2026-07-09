@@ -66,4 +66,18 @@ describe('toCartographic', () => {
       expect(toCartographic(null as any)).toBeUndefined();
     });
   });
+
+  describe('with malformed input', () => {
+    it('should throw DeveloperError for empty array (NaN longitude)', () => {
+      expect(() => toCartographic([])).toThrow();
+    });
+
+    it('should throw DeveloperError for object missing longitude field', () => {
+      expect(() => toCartographic({ latitude: 30 } as any)).toThrow();
+    });
+
+    it('should throw DeveloperError for object missing both fields', () => {
+      expect(() => toCartographic({} as any)).toThrow();
+    });
+  });
 });

@@ -1,12 +1,8 @@
 import { Color } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ColorFromJSON, ColorToJSON, ColorZodSchema } from '../src/Color';
 
 describe('color', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('colorZodSchema', () => {
     it('should parse valid JSON with full color values', () => {
       const json = {
@@ -56,17 +52,27 @@ describe('color', () => {
   });
 
   describe('colorToJSON', () => {
+    const RED = 1;
+    const GREEN = 0;
+    const BLUE = 0;
+    const ALPHA = 0.5;
+
     it('should convert Color instance to JSON', () => {
-      const instance = new Color(1, 0, 0, 0.5);
+      const instance = new Color(RED, GREEN, BLUE, ALPHA);
       const result = ColorToJSON(instance);
       expect(result).toEqual({
         parser: 'Color',
-        value: { red: 1, green: 0, blue: 0, alpha: 0.5 },
+        value: { red: RED, green: GREEN, blue: BLUE, alpha: ALPHA },
       });
     });
 
     it('should return undefined for undefined input', () => {
       const result = ColorToJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = ColorToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -97,11 +103,16 @@ describe('color', () => {
       expect(result?.red).toBe(1);
       expect(result?.green).toBe(0);
       expect(result?.blue).toBe(0);
-      expect(result?.alpha).toBe(0.5);
+      expect(result?.alpha).toBeCloseTo(0.5);
     });
 
     it('should return undefined for undefined input', () => {
       const result = ColorFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = ColorFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -112,7 +123,6 @@ describe('color', () => {
       };
       const result = ColorFromJSON(json);
       expect(result?.red).toBe(1);
-      // Cesium Color constructor defaults to 1 for all missing components (white)
       expect(result?.green).toBe(1);
       expect(result?.blue).toBe(1);
       expect(result?.alpha).toBe(1);

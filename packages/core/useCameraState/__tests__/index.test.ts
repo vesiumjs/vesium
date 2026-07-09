@@ -39,7 +39,7 @@ vi.mock('cesium', async (importOriginal) => {
 });
 
 describe('useCameraState', () => {
-  it('should track camera state', async () => {
+  it('should track camera position', async () => {
     let state: any;
     mount({
       setup() {
@@ -53,9 +53,48 @@ describe('useCameraState', () => {
     await nextTick();
     expect(state.camera.value).toBeDefined();
     expect(state.position.value).toEqual({ x: 1, y: 2, z: 3 });
+  });
+
+  it('should track camera orientation', async () => {
+    let state: any;
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        state = useCameraState({ delay: 0 });
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
     expect(state.upWC.value).toEqual({ x: 19, y: 20, z: 21 });
     expect(state.rightWC.value).toEqual({ x: 22, y: 23, z: 24 });
     expect(state.level.value).toBeDefined();
+  });
+
+  it('should add event listener on camera changed', async () => {
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        useCameraState({ delay: 0 });
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
     expect(mocks.addEventListener).toHaveBeenCalled();
+  });
+
+  it('should throw when no viewer is provided', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => mount({
+      setup() {
+        useCameraState();
+        return {};
+      },
+      template: '<div></div>',
+    })).toThrow();
+    spy.mockRestore();
   });
 });

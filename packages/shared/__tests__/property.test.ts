@@ -90,8 +90,9 @@ describe('property', () => {
     it('should create a readable property field', () => {
       const scope: any = {};
       createPropertyField(scope, 'test', 'value', true);
-      expect(scope.test).toBeDefined();
-      expect(scope._test).toBeDefined();
+      expect(scope.test).toBe(scope._test);
+      expect(scope._test).toBeInstanceOf(ConstantProperty);
+      expect(scope._test.getValue()).toBe('value');
     });
 
     it('should create a writable property field', () => {
@@ -148,6 +149,8 @@ describe('property', () => {
       const scope: any = { definitionChanged: { raiseEvent: vi.fn() } };
       createCesiumProperty(scope, 'test', 'value');
       expect(scope.test).toBeDefined();
+      expect(scope._test).toBeInstanceOf(ConstantProperty);
+      expect(scope._test.getValue()).toBe('value');
     });
   });
 });

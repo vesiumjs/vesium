@@ -58,19 +58,15 @@ describe('useCesiumFps', () => {
     expect(typeof result.fps.value).toBe('number');
   });
 
-  it('should support custom delay option', async () => {
-    let result: any;
-    mount({
+  it('should throw when no viewer is provided', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => mount({
       setup() {
-        createViewer(document.createElement('div'));
-        result = useCesiumFps({ delay: 200 });
-        return result;
+        useCesiumFps();
+        return {};
       },
       template: '<div></div>',
-    });
-
-    await nextTick();
-    expect(result.fps).toBeDefined();
-    expect(result.interval).toBeDefined();
+    })).toThrow();
+    spy.mockRestore();
   });
 });

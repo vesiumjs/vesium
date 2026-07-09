@@ -1,19 +1,9 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
 import { curve } from '../src/curve';
+import { expectCoordArray } from './utils';
 
 describe('curve', () => {
-  it('should return an array of coordinates with valid input (3 points)', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [5, 10],
-      [10, 0],
-    ];
-    const result = curve(coords);
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
-  });
-
   it('should return more points than input (interpolated curve)', () => {
     const coords: CoordArray[] = [
       [0, 0],
@@ -22,9 +12,10 @@ describe('curve', () => {
     ];
     const result = curve(coords);
     expect(result.length).toBeGreaterThan(coords.length);
+    expectCoordArray(result);
   });
 
-  it('should throw error when input has less than 3 points', () => {
+  it('should throw error when input has less than 2 points', () => {
     expect(() => curve([])).toThrow('coords.length must >= 2');
     expect(() => curve([[5, 5]])).toThrow('coords.length must >= 2');
     expect(() => curve([[0, 0], [10, 10]])).toThrow('coords.length must >= 2');
@@ -38,32 +29,17 @@ describe('curve', () => {
       [10, 0],
     ];
     const result = curve(coords);
-    expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(coords.length);
   });
 
-  it('should handle coordinates with negative values', () => {
+  it('should handle negative coordinates', () => {
     const coords: CoordArray[] = [
       [-10, -10],
       [0, 10],
       [10, -10],
     ];
     const result = curve(coords);
-    expect(Array.isArray(result)).toBe(true);
-  });
-
-  it('should return coordinates in [x, y] format', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [5, 5],
-      [10, 0],
-    ];
-    const result = curve(coords);
-    result.forEach((coord) => {
-      expect(coord.length).toBe(2);
-      expect(typeof coord[0]).toBe('number');
-      expect(typeof coord[1]).toBe('number');
-    });
+    expect(result.length).toBeGreaterThan(coords.length);
   });
 
   it('should handle collinear points', () => {
@@ -73,8 +49,7 @@ describe('curve', () => {
       [10, 10],
     ];
     const result = curve(coords);
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
+    expect(result.length).toBeGreaterThan(coords.length);
   });
 
   it('should handle large coordinate values', () => {
@@ -84,16 +59,26 @@ describe('curve', () => {
       [200000, 200000],
     ];
     const result = curve(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(coords.length);
   });
 
-  it('should handle coordinates with decimal values', () => {
+  it('should handle decimal coordinates', () => {
     const coords: CoordArray[] = [
       [0.5, 1.5],
       [2.5, 3.5],
       [4.5, 0.5],
     ];
     const result = curve(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(coords.length);
+  });
+
+  it('should return valid coordinate arrays', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [5, 5],
+      [10, 0],
+    ];
+    const result = curve(coords);
+    expectCoordArray(result);
   });
 });

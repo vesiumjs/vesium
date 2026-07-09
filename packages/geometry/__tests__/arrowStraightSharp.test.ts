@@ -1,18 +1,9 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
 import { arrowStraightSharp } from '../src/arrowStraightSharp';
+import { expectCoordArray } from './utils';
 
 describe('arrowStraightSharp', () => {
-  it('should return an array of coordinates with valid input (2 points)', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [10, 10],
-    ];
-    const result = arrowStraightSharp(coords);
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
-  });
-
   it('should return 7 points for a standard sharp arrow shape', () => {
     const coords: CoordArray[] = [
       [0, 0],
@@ -39,21 +30,20 @@ describe('arrowStraightSharp', () => {
       headAngle: Math.PI / 6,
       neckAngle: Math.PI / 10,
     });
-    expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(7);
   });
 
-  it('should return coordinates in [x, y] format', () => {
+  it('should handle zero tail/head width factors', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [100000, 0],
     ];
-    const result = arrowStraightSharp(coords);
-    result.forEach((coord) => {
-      expect(coord.length).toBe(2);
-      expect(typeof coord[0]).toBe('number');
-      expect(typeof coord[1]).toBe('number');
+    const result = arrowStraightSharp(coords, {
+      tailWidthFactor: 0,
+      headWidthFactor: 0,
+      neckWidthFactor: 0,
     });
+    expect(result.length).toBe(7);
   });
 
   it('should handle vertical direction', () => {
@@ -71,6 +61,24 @@ describe('arrowStraightSharp', () => {
       [1000000, 1000000],
     ];
     const result = arrowStraightSharp(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(7);
+  });
+
+  it('should handle degenerate zero distance', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [0, 0],
+    ];
+    const result = arrowStraightSharp(coords);
+    expect(result.length).toBe(7);
+  });
+
+  it('should return valid coordinate arrays', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [100000, 0],
+    ];
+    const result = arrowStraightSharp(coords);
+    expectCoordArray(result);
   });
 });

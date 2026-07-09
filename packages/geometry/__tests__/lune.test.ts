@@ -1,26 +1,27 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
+import { FITTING_COUNT } from '../src/helper';
 import { lune } from '../src/lune';
+import { expectCoordArray } from './utils';
 
 describe('lune', () => {
-  it('should return an array of coordinates with valid input (2 points)', () => {
+  it('should return FITTING_COUNT + 2 points (arc + closing point)', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
     ];
     const result = lune(coords);
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
+    expect(result.length).toBe(FITTING_COUNT + 2);
   });
 
-  it('should return an array with the shape closed (last point equals first)', () => {
+  it('should have last point equal to first point (closed shape)', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
     ];
     const result = lune(coords);
     const first = result[0];
-    const last = result.at(-1);
+    const last = result.at(-1)!;
     expect(first[0]).toBeCloseTo(last[0], 5);
     expect(first[1]).toBeCloseTo(last[1], 5);
   });
@@ -37,28 +38,43 @@ describe('lune', () => {
       [5, 5],
     ];
     const result = lune(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(FITTING_COUNT + 2);
   });
 
-  it('should handle coordinates with negative values', () => {
+  it('should handle negative coordinates', () => {
     const coords: CoordArray[] = [
       [-10, 0],
       [10, 0],
     ];
     const result = lune(coords);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(FITTING_COUNT + 2);
   });
 
-  it('should return coordinates in [x, y] format', () => {
+  it('should handle collinear points (3 points on same line)', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [10, 0],
+      [20, 0],
+    ];
+    const result = lune(coords);
+    expect(result.length).toBe(FITTING_COUNT + 2);
+  });
+
+  it('should handle identical points (radius 0 degeneracy)', () => {
+    const coords: CoordArray[] = [
+      [5, 5],
+      [5, 5],
+    ];
+    const result = lune(coords);
+    expect(result.length).toBe(FITTING_COUNT + 2);
+  });
+
+  it('should return valid coordinate arrays', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
     ];
     const result = lune(coords);
-    result.forEach((coord) => {
-      expect(coord.length).toBe(2);
-      expect(typeof coord[0]).toBe('number');
-      expect(typeof coord[1]).toBe('number');
-    });
+    expectCoordArray(result);
   });
 });

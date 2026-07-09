@@ -53,7 +53,6 @@ describe('is.ts', () => {
   describe('isFunction', () => {
     it('should return true for functions', () => {
       expect(isFunction(() => {})).toBe(true);
-      expect(isFunction(() => {})).toBe(true);
       expect(isFunction(async () => {})).toBe(true);
     });
 
@@ -120,16 +119,14 @@ describe('is.ts', () => {
 
   describe('isWindow', () => {
     it('should return true for window in jsdom', () => {
-      // In jsdom, window returns [object global] instead of [object Window]
-      // This is expected behavior for the jsdom environment
-      const result = isWindow(window);
-      expect(typeof result).toBe('boolean');
+      expect(isWindow(window)).toBe(true);
     });
 
     it('should return false for non-window values', () => {
       expect(isWindow({})).toBe(false);
       expect(isWindow(document)).toBe(false);
       expect(isWindow(null)).toBe(false);
+      expect(isWindow(undefined)).toBe(false);
     });
   });
 

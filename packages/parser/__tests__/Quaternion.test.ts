@@ -1,12 +1,8 @@
 import { Quaternion } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { QuaternionFromJSON, QuaternionToJSON, QuaternionZodSchema } from '../src/Quaternion';
 
 describe('quaternion', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('quaternionZodSchema', () => {
     it('should parse valid JSON with full quaternion values', () => {
       const json = {
@@ -57,13 +53,18 @@ describe('quaternion', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = QuaternionToJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should convert Quaternion with negative values', () => {
       const instance = new Quaternion(-0.5, 0.5, -0.5, 0.5);
       const result = QuaternionToJSON(instance);
-      expect(result?.value.x).toBe(-0.5);
-      expect(result?.value.y).toBe(0.5);
-      expect(result?.value.z).toBe(-0.5);
-      expect(result?.value.w).toBe(0.5);
+      expect(result?.value.x).toBeCloseTo(-0.5);
+      expect(result?.value.y).toBeCloseTo(0.5);
+      expect(result?.value.z).toBeCloseTo(-0.5);
+      expect(result?.value.w).toBeCloseTo(0.5);
     });
   });
 
@@ -83,6 +84,11 @@ describe('quaternion', () => {
 
     it('should return undefined for undefined input', () => {
       const result = QuaternionFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = QuaternionFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 

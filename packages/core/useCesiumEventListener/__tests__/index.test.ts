@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import * as Cesium from 'cesium';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick, ref } from 'vue';
 import { useCesiumEventListener } from '../../index';
 
@@ -13,6 +13,10 @@ vi.mock('cesium', async (importOriginal) => {
 });
 
 describe('useCesiumEventListener', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should add listener to single event', async () => {
     const mockEvent = new Cesium.Event() as any;
     const listener = vi.fn();
@@ -68,5 +72,48 @@ describe('useCesiumEventListener', () => {
     isActive.value = false;
     await nextTick();
     expect(stopFn).toHaveBeenCalled();
+  });
+
+  it('should stop on unmount', async () => {
+    const mockEvent = new Cesium.Event() as any;
+    const listener = vi.fn();
+
+    const wrapper = mount({
+      setup() {
+        useCesiumEventListener(mockEvent, listener);
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    const stopFn = (mockEvent.addEventListener as any).mock.results[0].value;
+    expect(stopFn).not.toHaveBeenCalled();
+
+    wrapper.unmount();
+    expect(stopFn).toHaveBeenCalled();
+  });
+
+  it('should return stop handle that unregisters the listener', async () => {
+    const mockEvent1 = new Cesium.Event() as any;
+    const mockEvent2 = new Cesium.Event() as any;
+    const listener = vi.fn();
+    let stop: any;
+
+    mount({
+      setup() {
+        stop = useCesiumEventListener([mockEvent1, mockEvent2], listener);
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    const stopFn1 = (mockEvent1.addEventListener as any).mock.results[0].value;
+    const stopFn2 = (mockEvent2.addEventListener as any).mock.results[0].value;
+
+    stop();
+    expect(stopFn1).toHaveBeenCalled();
+    expect(stopFn2).toHaveBeenCalled();
   });
 });

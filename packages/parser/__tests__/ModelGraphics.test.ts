@@ -1,19 +1,19 @@
-import { ModelGraphics } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { CallbackProperty, JulianDate, ModelGraphics } from 'cesium';
+import { toPropertyValue } from 'vesium';
+import { describe, expect, it } from 'vitest';
 import { ModelGraphicsFromJSON, ModelGraphicsToJSON, ModelGraphicsZodSchema } from '../src/ModelGraphics';
 
-describe('modelGraphics', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+const URI = 'model.glb';
+const SCALE = 1.5;
 
+describe('modelGraphics', () => {
   describe('modelGraphicsZodSchema', () => {
     it('should parse valid JSON with full values', () => {
       const json = {
         parser: 'ModelGraphics' as const,
         value: {
           show: true,
-          uri: 'model.glb',
+          uri: URI,
           scale: 1.0,
           minimumPixelSize: 1,
           maximumScale: 100,
@@ -27,7 +27,7 @@ describe('modelGraphics', () => {
         },
       };
       const result = ModelGraphicsZodSchema().parse(json);
-      expect(result.value.uri).toBe('model.glb');
+      expect(result.value.uri).toBe(URI);
       expect(result.value.scale).toBe(1.0);
     });
 
@@ -36,11 +36,11 @@ describe('modelGraphics', () => {
         parser: 'ModelGraphics' as const,
         value: {
           show: true,
-          uri: 'model.glb',
+          uri: URI,
         },
       };
       const result = ModelGraphicsZodSchema().parse(json);
-      expect(result.value.uri).toBe('model.glb');
+      expect(result.value.uri).toBe(URI);
       expect(result.value.scale).toBeUndefined();
     });
 
@@ -60,22 +60,37 @@ describe('modelGraphics', () => {
       };
       expect(() => ModelGraphicsZodSchema().parse(json)).toThrow();
     });
+
+    it('should reject JSON with invalid nested color type', () => {
+      const json = {
+        parser: 'ModelGraphics' as const,
+        value: {
+          color: { parser: 'Color' as const, value: { red: 'bad' as any } },
+        },
+      };
+      expect(() => ModelGraphicsZodSchema().parse(json)).toThrow();
+    });
   });
 
   describe('modelGraphicsToJSON', () => {
     it('should convert ModelGraphics instance to JSON', () => {
       const instance = new ModelGraphics({
         show: true,
-        uri: 'model.glb',
-        scale: 1.5,
+        uri: URI,
+        scale: SCALE,
       });
       const result = ModelGraphicsToJSON(instance);
       expect(result?.parser).toBe('ModelGraphics');
-      expect(result?.value.uri).toBe('model.glb');
+      expect(result?.value.uri).toBe(URI);
     });
 
     it('should return undefined for undefined input', () => {
       const result = ModelGraphicsToJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = ModelGraphicsToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -89,6 +104,25 @@ describe('modelGraphics', () => {
       expect(result?.parser).toBe('ModelGraphics');
       expect(result?.value.uri).toBe('animated.glb');
     });
+
+    it('should omit a field when omit is provided', () => {
+      const instance = new ModelGraphics({ show: true, uri: URI });
+      const result = ModelGraphicsToJSON(instance, undefined, 'uri');
+      expect(result?.value.uri).toBeUndefined();
+      expect(result?.value.show).toBe(true);
+    });
+
+    it('should evaluate dynamic property by time', () => {
+      const instance = new ModelGraphics({ uri: URI });
+      const timeBefore = JulianDate.fromIso8601('2020-01-01T00:00:00Z');
+      const timeAfter = JulianDate.fromIso8601('2030-01-01T00:00:00Z');
+      const threshold = JulianDate.fromIso8601('2025-01-01T00:00:00Z');
+      instance.show = new CallbackProperty((time: JulianDate) => JulianDate.greaterThan(time, threshold), false);
+      const before = ModelGraphicsToJSON(instance, timeBefore);
+      const after = ModelGraphicsToJSON(instance, timeAfter);
+      expect(before?.value.show).toBe(false);
+      expect(after?.value.show).toBe(true);
+    });
   });
 
   describe('modelGraphicsFromJSON', () => {
@@ -97,16 +131,23 @@ describe('modelGraphics', () => {
         parser: 'ModelGraphics' as const,
         value: {
           show: true,
-          uri: 'model.glb',
-          scale: 1.5,
+          uri: URI,
+          scale: SCALE,
         },
       };
       const result = ModelGraphicsFromJSON(json);
       expect(result).toBeInstanceOf(ModelGraphics);
+      expect(toPropertyValue(result?.uri)).toBe(URI);
+      expect(toPropertyValue(result?.scale)).toBe(SCALE);
     });
 
     it('should return undefined for undefined input', () => {
       const result = ModelGraphicsFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = ModelGraphicsFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -128,6 +169,27 @@ describe('modelGraphics', () => {
       };
       const result = ModelGraphicsFromJSON(json);
       expect(result).toBeInstanceOf(ModelGraphics);
+    });
+
+    it('should reuse the result instance when provided', () => {
+      const json = {
+        parser: 'ModelGraphics' as const,
+        value: { show: true, uri: URI },
+      };
+      const result = new ModelGraphics({ show: false });
+      const output = ModelGraphicsFromJSON(json, result);
+      expect(output).toBe(result);
+      expect(toPropertyValue(output?.uri)).toBe(URI);
+    });
+
+    it('should omit a field when omit is provided', () => {
+      const json = {
+        parser: 'ModelGraphics' as const,
+        value: { show: true, uri: URI },
+      };
+      const result = ModelGraphicsFromJSON(json, undefined, 'uri');
+      expect(toPropertyValue(result?.uri)).toBeUndefined();
+      expect(toPropertyValue(result?.show)).toBe(true);
     });
 
     it('should reject invalid JSON structure', () => {

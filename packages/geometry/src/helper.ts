@@ -1,6 +1,6 @@
 import type { CoordArray } from '@vesium/shared';
 
-export const FITTING_COUNT = 100;
+export const FITTING_COUNT = 100; // 拟合采样点数（生成 FITTING_COUNT + 1 个点）
 export const HALF_PI = Math.PI / 2;
 export const ZERO_TOLERANCE = 0.0001;
 export const TWO_PI = Math.PI * 2;
@@ -190,8 +190,8 @@ export function getThirdCoord(startCoord: CoordArray, endCoord: CoordArray, angl
 export function getArcCoords(center: CoordArray, radius: number, startAngle: number, endAngle: number): CoordArray[] {
   let [x, y, coords, angleDiff]: [number, number, CoordArray[], number] = [0, 0, [], endAngle - startAngle];
   angleDiff = angleDiff < 0 ? angleDiff + Math.PI * 2 : angleDiff;
-  for (let i = 0; i <= 100; i++) {
-    const angle = startAngle + (angleDiff * i) / 100;
+  for (let i = 0; i <= FITTING_COUNT; i++) {
+    const angle = startAngle + (angleDiff * i) / FITTING_COUNT;
     x = center[0] + radius * Math.cos(angle);
     y = center[1] + radius * Math.sin(angle);
     coords.push([x, y]);
@@ -425,9 +425,6 @@ export function getFactorial(n: number): number {
       break;
     case n === 3:
       result = 6;
-      break;
-    case n === 24:
-      result = 24;
       break;
     case n === 5:
       result = 120;

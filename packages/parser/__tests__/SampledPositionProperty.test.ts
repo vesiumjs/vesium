@@ -1,12 +1,8 @@
 import { Cartesian3, JulianDate, ReferenceFrame, SampledPositionProperty } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { SampledPositionPropertyFromJSON, SampledPositionPropertyToJSON, SampledPositionPropertyZodSchema } from '../src/SampledPositionProperty';
 
 describe('sampledPositionProperty', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('sampledPositionPropertyZodSchema', () => {
     it('should parse valid JSON with full values', () => {
       const json = {
@@ -80,6 +76,11 @@ describe('sampledPositionProperty', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return undefined for null input', () => {
+      const result = SampledPositionPropertyToJSON(null as any);
+      expect(result).toBeUndefined();
+    });
+
     it('should convert SampledPositionProperty with multiple samples', () => {
       const instance = new SampledPositionProperty();
       instance.addSample(
@@ -115,6 +116,11 @@ describe('sampledPositionProperty', () => {
 
     it('should return undefined for undefined input', () => {
       const result = SampledPositionPropertyFromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = SampledPositionPropertyFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 

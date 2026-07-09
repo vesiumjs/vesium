@@ -1,12 +1,8 @@
 import { Matrix4 } from 'cesium';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Matrix4FromJSON, Matrix4ToJSON, Matrix4ZodSchema } from '../src/Matrix4';
 
 describe('matrix4', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('matrix4ZodSchema', () => {
     it('should parse valid JSON with 16-element array', () => {
       const values = Array.from({ length: 16 }).fill(0).map((_, i) => i);
@@ -57,7 +53,6 @@ describe('matrix4', () => {
     it('should convert Matrix4 instance to JSON', () => {
       const values = Array.from({ length: 16 }).fill(0).map((_, i) => i);
       const instance = new Matrix4(...values);
-      // Matrix4 stores values in column-major order
       const result = Matrix4ToJSON(instance);
       expect(result).toEqual({
         parser: 'Matrix4',
@@ -67,6 +62,11 @@ describe('matrix4', () => {
 
     it('should return undefined for undefined input', () => {
       const result = Matrix4ToJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = Matrix4ToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -84,6 +84,8 @@ describe('matrix4', () => {
   });
 
   describe('matrix4FromJSON', () => {
+    const COL_MAJOR = [0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15];
+
     it('should convert JSON to Matrix4 instance', () => {
       const values = Array.from({ length: 16 }).fill(0).map((_, i) => i);
       const json = {
@@ -92,14 +94,16 @@ describe('matrix4', () => {
       };
       const result = Matrix4FromJSON(json);
       expect(result).toBeInstanceOf(Matrix4);
-      // Matrix4 stores values in column-major order: Array.from returns column-by-column
-      // Input: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] (row-major conceptual layout)
-      // Output as columns: [0,4,8,12, 1,5,9,13, 2,6,10,14, 3,7,11,15]
-      expect(Array.from(result!)).toEqual([0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15]);
+      expect(Array.from(result!)).toEqual(COL_MAJOR);
     });
 
     it('should return undefined for undefined input', () => {
       const result = Matrix4FromJSON(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for null input', () => {
+      const result = Matrix4FromJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -112,8 +116,7 @@ describe('matrix4', () => {
       const result = new Matrix4();
       const output = Matrix4FromJSON(json, result);
       expect(output).toBe(result);
-      // Matrix4 stores values in column-major order
-      expect(Array.from(output!)).toEqual([0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15]);
+      expect(Array.from(output!)).toEqual(COL_MAJOR);
     });
 
     it('should create new instance when result is not provided', () => {

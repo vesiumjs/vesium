@@ -1,25 +1,30 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
 import { circle } from '../src/circle';
+import { FITTING_COUNT } from '../src/helper';
+import { expectCoordArray } from './utils';
 
 describe('circle', () => {
-  it('should return an array of coordinates with valid input (2 points)', () => {
+  it('should return FITTING_COUNT + 1 points for 2-point input', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
     ];
     const result = circle(coords);
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
+    expect(result.length).toBe(FITTING_COUNT + 1);
   });
 
-  it('should return 101 points (100 iterations + 1)', () => {
+  it('should return points at distance radius from center', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
     ];
     const result = circle(coords);
-    expect(result.length).toBe(101);
+    expect(result.length).toBe(FITTING_COUNT + 1);
+    result.forEach((coord) => {
+      const dist = Math.hypot(coord[0], coord[1]);
+      expect(dist).toBeCloseTo(10, 5);
+    });
   });
 
   it('should throw error when input has less than 2 points', () => {
@@ -27,40 +32,25 @@ describe('circle', () => {
     expect(() => circle([[5, 5]])).toThrow('coords.length must >= 2');
   });
 
-  it('should return coordinates forming a circle shape', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [10, 0],
-    ];
-    const result = circle(coords);
-    // All points should be approximately distance 10 from center (0,0)
-    const radius = 10;
-    result.forEach((coord) => {
-      const dist = Math.sqrt(coord[0] ** 2 + coord[1] ** 2);
-      expect(dist).toBeCloseTo(radius, 0);
-    });
-  });
-
-  it('should handle coordinates with negative center', () => {
+  it('should handle negative center', () => {
     const coords: CoordArray[] = [
       [-5, -5],
       [5, -5],
     ];
     const result = circle(coords);
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBe(101);
+    expect(result.length).toBe(FITTING_COUNT + 1);
   });
 
-  it('should return coordinates in [x, y] format', () => {
+  it('should handle radius 0 (identical points)', () => {
     const coords: CoordArray[] = [
       [0, 0],
-      [10, 0],
+      [0, 0],
     ];
     const result = circle(coords);
-    result.forEach((coord) => {
-      expect(coord.length).toBe(2);
-      expect(typeof coord[0]).toBe('number');
-      expect(typeof coord[1]).toBe('number');
+    expect(result.length).toBe(FITTING_COUNT + 1);
+    result.forEach(([x, y]) => {
+      expect(x).toBeCloseTo(0, 6);
+      expect(y).toBeCloseTo(0, 6);
     });
   });
 
@@ -70,6 +60,15 @@ describe('circle', () => {
       [100000, 0],
     ];
     const result = circle(coords);
-    expect(result.length).toBe(101);
+    expect(result.length).toBe(FITTING_COUNT + 1);
+  });
+
+  it('should return valid coordinate arrays', () => {
+    const coords: CoordArray[] = [
+      [0, 0],
+      [10, 0],
+    ];
+    const result = circle(coords);
+    expectCoordArray(result);
   });
 });
