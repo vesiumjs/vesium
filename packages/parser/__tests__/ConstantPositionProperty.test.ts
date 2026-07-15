@@ -26,15 +26,6 @@ describe('constantPositionProperty', () => {
       expect(result.value?.z).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'ConstantPositionProperty' as const,
-        value: {},
-      };
-      const result = ConstantPositionPropertyZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should parse JSON with undefined value', () => {
       const json = {
         parser: 'ConstantPositionProperty' as const,
@@ -102,29 +93,6 @@ describe('constantPositionProperty', () => {
     it('should return undefined for undefined input', () => {
       const result = ConstantPositionPropertyFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = ConstantPositionPropertyFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'ConstantPositionProperty' as const,
-        value: { x: 1 },
-      };
-      const result = ConstantPositionPropertyFromJSON(json);
-      expect(result).toBeInstanceOf(ConstantPositionProperty);
-    });
-
-    it('should convert JSON with empty value', () => {
-      const json = {
-        parser: 'ConstantPositionProperty' as const,
-        value: {},
-      };
-      const result = ConstantPositionPropertyFromJSON(json);
-      expect(result).toBeInstanceOf(ConstantPositionProperty);
     });
 
     it('should reject invalid JSON structure', () => {

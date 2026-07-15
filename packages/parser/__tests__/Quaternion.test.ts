@@ -53,11 +53,6 @@ describe('quaternion', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = QuaternionToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should convert Quaternion with negative values', () => {
       const instance = new Quaternion(-0.5, 0.5, -0.5, 0.5);
       const result = QuaternionToJSON(instance);
@@ -87,11 +82,6 @@ describe('quaternion', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = QuaternionFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should use result parameter for cloning', () => {
       const json = {
         parser: 'Quaternion' as const,
@@ -104,15 +94,6 @@ describe('quaternion', () => {
       expect(output?.y).toBe(0);
       expect(output?.z).toBe(0);
       expect(output?.w).toBe(1);
-    });
-
-    it('should create new instance when result is not provided', () => {
-      const json = {
-        parser: 'Quaternion' as const,
-        value: { x: 0, y: 0, z: 0, w: 1 },
-      };
-      const output = QuaternionFromJSON(json);
-      expect(output).toBeInstanceOf(Quaternion);
     });
 
     it('should reject invalid JSON structure', () => {

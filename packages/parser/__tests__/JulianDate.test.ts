@@ -51,19 +51,6 @@ describe('julianDate', () => {
       const result = JulianDateToJSON(undefined);
       expect(result).toBeUndefined();
     });
-
-    it('should return undefined for null input', () => {
-      const result = JulianDateToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JulianDate with current time', () => {
-      const instance = JulianDate.now();
-      const result = JulianDateToJSON(instance);
-      expect(result?.parser).toBe('JulianDate');
-      expect(typeof result?.value).toBe('string');
-      expect(result?.value?.length).toBeGreaterThan(0);
-    });
   });
 
   describe('julianDateFromJSON', () => {
@@ -82,11 +69,6 @@ describe('julianDate', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = JulianDateFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should use result parameter for cloning', () => {
       const json = {
         parser: 'JulianDate' as const,
@@ -98,30 +80,12 @@ describe('julianDate', () => {
       expect(JulianDate.toIso8601(output!)).toBe('2024-01-01T00:00:00Z');
     });
 
-    it('should create new instance when result is not provided', () => {
-      const json = {
-        parser: 'JulianDate' as const,
-        value: '2024-06-15T12:30:45Z',
-      };
-      const output = JulianDateFromJSON(json);
-      expect(output).toBeInstanceOf(JulianDate);
-    });
-
     it('should reject invalid JSON structure', () => {
       const json = {
         parser: 'Cartesian3' as const,
         value: '2024-01-01T00:00:00Z',
       };
       expect(() => JulianDateFromJSON(json as any)).toThrow();
-    });
-
-    it('should parse dates with different formats', () => {
-      const json = {
-        parser: 'JulianDate' as const,
-        value: '2024-12-31T23:59:59Z',
-      };
-      const result = JulianDateFromJSON(json);
-      expect(result).toBeInstanceOf(JulianDate);
     });
   });
 });

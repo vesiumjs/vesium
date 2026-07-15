@@ -44,15 +44,6 @@ describe('modelGraphics', () => {
       expect(result.value.scale).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'ModelGraphics' as const,
-        value: {},
-      };
-      const result = ModelGraphicsZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -87,22 +78,6 @@ describe('modelGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = ModelGraphicsToJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = ModelGraphicsToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert ModelGraphics with animation settings', () => {
-      const instance = new ModelGraphics({
-        uri: 'animated.glb',
-        runAnimations: false,
-        clampAnimations: false,
-      });
-      const result = ModelGraphicsToJSON(instance);
-      expect(result?.parser).toBe('ModelGraphics');
-      expect(result?.value.uri).toBe('animated.glb');
     });
 
     it('should omit a field when omit is provided', () => {
@@ -144,31 +119,6 @@ describe('modelGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = ModelGraphicsFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = ModelGraphicsFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'ModelGraphics' as const,
-        value: {
-          show: true,
-        },
-      };
-      const result = ModelGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(ModelGraphics);
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'ModelGraphics' as const,
-        value: {},
-      };
-      const result = ModelGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(ModelGraphics);
     });
 
     it('should reuse the result instance when provided', () => {

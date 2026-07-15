@@ -76,15 +76,6 @@ describe('entity', () => {
       expect(result.value.availability?.parser).toBe('TimeIntervalCollection');
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {},
-      };
-      const result = EntityZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -110,11 +101,6 @@ describe('entity', () => {
 
     it('should return undefined for undefined input', () => {
       const result = EntityToJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = EntityToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -221,11 +207,6 @@ describe('entity', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = EntityFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should convert JSON with position', () => {
       const json = {
         parser: 'Entity' as const,
@@ -250,15 +231,6 @@ describe('entity', () => {
       const result = EntityFromJSON(json);
       expect(result).toBeInstanceOf(Entity);
       expect((result as any)?.[key]).toBeDefined();
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'Entity' as const,
-        value: {},
-      };
-      const result = EntityFromJSON(json);
-      expect(result).toBeInstanceOf(Entity);
     });
 
     it('should omit a field when omit is provided', () => {

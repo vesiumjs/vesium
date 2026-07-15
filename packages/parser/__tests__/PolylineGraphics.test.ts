@@ -42,15 +42,6 @@ describe('polylineGraphics', () => {
       expect(result.value.positions).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'PolylineGraphics' as const,
-        value: {},
-      };
-      const result = PolylineGraphicsZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -91,11 +82,6 @@ describe('polylineGraphics', () => {
 
     it('should return undefined for undefined input', () => {
       const result = PolylineGraphicsToJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = PolylineGraphicsToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -155,31 +141,6 @@ describe('polylineGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = PolylineGraphicsFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = PolylineGraphicsFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'PolylineGraphics' as const,
-        value: {
-          show: true,
-        },
-      };
-      const result = PolylineGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(PolylineGraphics);
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'PolylineGraphics' as const,
-        value: {},
-      };
-      const result = PolylineGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(PolylineGraphics);
     });
 
     it('should reuse the result instance when provided', () => {

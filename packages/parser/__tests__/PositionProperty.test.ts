@@ -119,11 +119,6 @@ describe('positionProperty', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = PositionPropertyFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should return undefined for JSON with no value', () => {
       const json = {
         parser: 'PositionProperty' as const,

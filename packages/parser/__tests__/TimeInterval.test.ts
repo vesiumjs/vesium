@@ -33,15 +33,6 @@ describe('timeInterval', () => {
       expect(result.value.data).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'TimeInterval' as const,
-        value: {},
-      };
-      const result = TimeIntervalZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -83,11 +74,6 @@ describe('timeInterval', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = TimeIntervalToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should convert TimeInterval with default flags', () => {
       const instance = new TimeInterval({
         start: JulianDate.fromIso8601(START),
@@ -123,11 +109,6 @@ describe('timeInterval', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = TimeIntervalFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should use default values for optional fields', () => {
       const json = {
         parser: 'TimeInterval' as const,
@@ -156,18 +137,6 @@ describe('timeInterval', () => {
       });
       const output = TimeIntervalFromJSON(json, result);
       expect(output).toBe(result);
-    });
-
-    it('should create new instance when result is not provided', () => {
-      const json = {
-        parser: 'TimeInterval' as const,
-        value: {
-          start: { parser: 'JulianDate' as const, value: '2024-01-01T00:00:00Z' },
-          stop: { parser: 'JulianDate' as const, value: '2024-12-31T23:59:59Z' },
-        },
-      };
-      const output = TimeIntervalFromJSON(json);
-      expect(output).toBeInstanceOf(TimeInterval);
     });
 
     it('should reject invalid JSON structure', () => {

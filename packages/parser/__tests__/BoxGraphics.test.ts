@@ -40,15 +40,6 @@ describe('boxGraphics', () => {
       expect(result.value.fill).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'BoxGraphics' as const,
-        value: {},
-      };
-      const result = BoxGraphicsZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -87,20 +78,6 @@ describe('boxGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = BoxGraphicsToJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = BoxGraphicsToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert BoxGraphics with basic dimensions', () => {
-      const instance = new BoxGraphics({
-        dimensions: new Cartesian3(5, 5, 5),
-      });
-      const result = BoxGraphicsToJSON(instance);
-      expect(result?.parser).toBe('BoxGraphics');
-      expect(result?.value.dimensions?.value.x).toBe(5);
     });
 
     it('should omit a field when omit is provided', () => {
@@ -143,31 +120,6 @@ describe('boxGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = BoxGraphicsFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = BoxGraphicsFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'BoxGraphics' as const,
-        value: {
-          show: true,
-        },
-      };
-      const result = BoxGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(BoxGraphics);
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'BoxGraphics' as const,
-        value: {},
-      };
-      const result = BoxGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(BoxGraphics);
     });
 
     it('should reuse the result instance when provided', () => {

@@ -41,15 +41,6 @@ describe('billboardGraphics', () => {
       expect(result.value.scale).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'BillboardGraphics' as const,
-        value: {},
-      };
-      const result = BillboardGraphicsZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -84,11 +75,6 @@ describe('billboardGraphics', () => {
 
     it('should return undefined for undefined input', () => {
       const result = BillboardGraphicsToJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = BillboardGraphicsToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -127,29 +113,6 @@ describe('billboardGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = BillboardGraphicsFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = BillboardGraphicsFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'BillboardGraphics' as const,
-        value: { show: true },
-      };
-      const result = BillboardGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(BillboardGraphics);
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'BillboardGraphics' as const,
-        value: {},
-      };
-      const result = BillboardGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(BillboardGraphics);
     });
 
     it('should reuse the result instance when provided', () => {

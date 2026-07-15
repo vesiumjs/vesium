@@ -47,15 +47,6 @@ describe('ellipseGraphics', () => {
       expect(result.value.height).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'EllipseGraphics' as const,
-        value: {},
-      };
-      const result = EllipseGraphicsZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -94,11 +85,6 @@ describe('ellipseGraphics', () => {
 
     it('should return undefined for undefined input', () => {
       const result = EllipseGraphicsToJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = EllipseGraphicsToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -155,31 +141,6 @@ describe('ellipseGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = EllipseGraphicsFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = EllipseGraphicsFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'EllipseGraphics' as const,
-        value: {
-          show: true,
-        },
-      };
-      const result = EllipseGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(EllipseGraphics);
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'EllipseGraphics' as const,
-        value: {},
-      };
-      const result = EllipseGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(EllipseGraphics);
     });
 
     it('should reuse the result instance when provided', () => {

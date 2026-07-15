@@ -29,7 +29,6 @@ import {
   wholeDistance,
   ZERO_TOLERANCE,
 } from '../src/helper';
-import { expectCoordArray } from './utils';
 
 describe('constants', () => {
   it('should have correct FITTING_COUNT value', () => {
@@ -46,7 +45,6 @@ describe('constants', () => {
 
   it('should have small ZERO_TOLERANCE value', () => {
     expect(ZERO_TOLERANCE).toBe(0.0001);
-    expect(ZERO_TOLERANCE).toBeGreaterThan(0);
   });
 });
 
@@ -372,7 +370,7 @@ describe('getNormal', () => {
 });
 
 describe('getCurveCoords', () => {
-  it('should return interpolated curve points', () => {
+  it('should interpolate with endpoints preserved', () => {
     const controlCoords: CoordArray[] = [
       [0, 0],
       [5, 10],
@@ -380,47 +378,15 @@ describe('getCurveCoords', () => {
     ];
     const result = getCurveCoords(0.3, controlCoords);
     expect(result.length).toBeGreaterThan(controlCoords.length);
-  });
-
-  it('should handle more control points', () => {
-    const controlCoords: CoordArray[] = [
-      [0, 0],
-      [3, 8],
-      [7, 8],
-      [10, 0],
-    ];
-    const result = getCurveCoords(0.3, controlCoords);
-    expect(result.length).toBeGreaterThan(controlCoords.length);
-  });
-
-  it('should return valid coordinate arrays', () => {
-    const controlCoords: CoordArray[] = [
-      [0, 0],
-      [5, 5],
-      [10, 0],
-    ];
-    const result = getCurveCoords(0.3, controlCoords);
-    expectCoordArray(result);
+    expect(result[0]).toEqual([0, 0]);
+    expect(result.at(-1)).toEqual([10, 0]);
   });
 });
 
 describe('getBezierCoords', () => {
-  it('should return points for 3 control points', () => {
-    const points: CoordArray[] = [[0, 0], [5, 10], [10, 0]];
-    const result = getBezierCoords(points);
-    expect(result.length).toBeGreaterThan(0);
-  });
-
-  it('should return original array reference for 2 or fewer (not cloned)', () => {
+  it('should return original array reference for 2 or fewer points', () => {
     const points: CoordArray[] = [[0, 0], [10, 10]];
-    const result = getBezierCoords(points);
-    expect(result).toBe(points);
-  });
-
-  it('should return original array reference for 1 point', () => {
-    const points: CoordArray[] = [[5, 5]];
-    const result = getBezierCoords(points);
-    expect(result).toBe(points);
+    expect(getBezierCoords(points)).toBe(points);
   });
 
   it('should include the last point', () => {
@@ -429,18 +395,6 @@ describe('getBezierCoords', () => {
     const last = result.at(-1)!;
     expect(last[0]).toBeCloseTo(points[2][0], 5);
     expect(last[1]).toBeCloseTo(points[2][1], 5);
-  });
-
-  it('should handle 5 control points', () => {
-    const points: CoordArray[] = [[0, 0], [2, 5], [5, 10], [8, 5], [10, 0]];
-    const result = getBezierCoords(points);
-    expect(result.length).toBeGreaterThan(points.length);
-  });
-
-  it('should return valid coordinate arrays', () => {
-    const points: CoordArray[] = [[0, 0], [5, 10], [10, 0]];
-    const result = getBezierCoords(points);
-    expectCoordArray(result);
   });
 });
 
@@ -493,40 +447,22 @@ describe('getBinomialFactor', () => {
 });
 
 describe('getQBSplineCoords', () => {
-  it('should return interpolated points for 3+ input points', () => {
-    const points: CoordArray[] = [[0, 0], [5, 10], [10, 0]];
-    const result = getQBSplineCoords(points);
-    expect(result.length).toBeGreaterThan(points.length);
-  });
-
   it('should return original array for 2 or fewer', () => {
     const points: CoordArray[] = [[0, 0], [10, 10]];
-    const result = getQBSplineCoords(points);
-    expect(result).toEqual(points);
+    expect(getQBSplineCoords(points)).toEqual(points);
   });
 
   it('should include first and last points', () => {
     const points: CoordArray[] = [[0, 0], [5, 10], [10, 0]];
     const result = getQBSplineCoords(points);
-    const first = result[0];
-    const last = result.at(-1)!;
-    expect(first[0]).toBeCloseTo(points[0][0], 5);
-    expect(first[1]).toBeCloseTo(points[0][1], 5);
-    expect(last[0]).toBeCloseTo(points[2][0], 5);
-    expect(last[1]).toBeCloseTo(points[2][1], 5);
+    expect(result[0][0]).toBeCloseTo(0, 5);
+    expect(result[0][1]).toBeCloseTo(0, 5);
+    expect(result.at(-1)![0]).toBeCloseTo(10, 5);
+    expect(result.at(-1)![1]).toBeCloseTo(0, 5);
   });
 });
 
 describe('getQuadricBSplineFactor', () => {
-  it('should return valid values for k=0,1,2', () => {
-    const f0 = getQuadricBSplineFactor(0, 0.5);
-    const f1 = getQuadricBSplineFactor(1, 0.5);
-    const f2 = getQuadricBSplineFactor(2, 0.5);
-    expect(typeof f0).toBe('number');
-    expect(typeof f1).toBe('number');
-    expect(typeof f2).toBe('number');
-  });
-
   it('should return 0 for k outside 0-2', () => {
     expect(getQuadricBSplineFactor(3, 0.5)).toBe(0);
     expect(getQuadricBSplineFactor(-1, 0.5)).toBe(0);

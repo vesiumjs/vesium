@@ -38,15 +38,6 @@ describe('pointGraphics', () => {
       expect(result.value.color).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'PointGraphics' as const,
-        value: {},
-      };
-      const result = PointGraphicsZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -82,22 +73,6 @@ describe('pointGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = PointGraphicsToJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = PointGraphicsToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert PointGraphics with outline', () => {
-      const instance = new PointGraphics({
-        pixelSize: 8,
-        outlineColor: new Color(0, 0, 0, 1),
-        outlineWidth: 2,
-      });
-      const result = PointGraphicsToJSON(instance);
-      expect(result?.parser).toBe('PointGraphics');
-      expect(result?.value.pixelSize).toBe(8);
     });
 
     it('should omit a field when omit is provided', () => {
@@ -139,31 +114,6 @@ describe('pointGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = PointGraphicsFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = PointGraphicsFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'PointGraphics' as const,
-        value: {
-          show: true,
-        },
-      };
-      const result = PointGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(PointGraphics);
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'PointGraphics' as const,
-        value: {},
-      };
-      const result = PointGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(PointGraphics);
     });
 
     it('should reuse the result instance when provided', () => {

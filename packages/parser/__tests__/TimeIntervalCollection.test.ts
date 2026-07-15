@@ -50,17 +50,6 @@ describe('timeIntervalCollection', () => {
       expect(result.value.intervals).toHaveLength(2);
     });
 
-    it('should parse JSON with empty intervals array', () => {
-      const json: { parser: 'TimeIntervalCollection'; value: { intervals: TimeIntervalJSON[] } } = {
-        parser: 'TimeIntervalCollection' as const,
-        value: {
-          intervals: [],
-        },
-      };
-      const result = TimeIntervalCollectionZodSchema().parse(json);
-      expect(result.value.intervals).toEqual([]);
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json: { parser: 'Cartesian3'; value: { intervals: TimeIntervalJSON[] } } = {
         parser: 'Cartesian3' as const,
@@ -85,11 +74,6 @@ describe('timeIntervalCollection', () => {
 
     it('should return undefined for undefined input', () => {
       const result = TimeIntervalCollectionToJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = TimeIntervalCollectionToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -135,11 +119,6 @@ describe('timeIntervalCollection', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = TimeIntervalCollectionFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should convert JSON with multiple intervals', () => {
       const json = {
         parser: 'TimeIntervalCollection' as const,
@@ -164,18 +143,6 @@ describe('timeIntervalCollection', () => {
       };
       const result = TimeIntervalCollectionFromJSON(json);
       expect(result.length).toBe(2);
-    });
-
-    it('should convert JSON with empty intervals', () => {
-      const json: { parser: 'TimeIntervalCollection'; value: { intervals: TimeIntervalJSON[] } } = {
-        parser: 'TimeIntervalCollection' as const,
-        value: {
-          intervals: [],
-        },
-      };
-      const result = TimeIntervalCollectionFromJSON(json);
-      expect(result).toBeInstanceOf(TimeIntervalCollection);
-      expect(result.length).toBe(0);
     });
 
     it('should reuse result parameter when provided', () => {

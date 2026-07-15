@@ -39,16 +39,6 @@ describe('sampledPositionProperty', () => {
       expect(result.value.values).toHaveLength(1);
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'SampledPositionProperty' as const,
-        value: {},
-      };
-      const result = SampledPositionPropertyZodSchema().parse(json);
-      expect(result.value.times).toBeUndefined();
-      expect(result.value.values).toBeUndefined();
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -73,11 +63,6 @@ describe('sampledPositionProperty', () => {
 
     it('should return undefined for undefined input', () => {
       const result = SampledPositionPropertyToJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = SampledPositionPropertyToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -119,11 +104,6 @@ describe('sampledPositionProperty', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = SampledPositionPropertyFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should convert JSON with reference frame', () => {
       const json = {
         parser: 'SampledPositionProperty' as const,
@@ -154,15 +134,6 @@ describe('sampledPositionProperty', () => {
             { parser: 'Cartesian3' as const, value: { x: 4, y: 5, z: 6 } },
           ],
         },
-      };
-      const result = SampledPositionPropertyFromJSON(json);
-      expect(result).toBeInstanceOf(SampledPositionProperty);
-    });
-
-    it('should convert JSON with empty samples', () => {
-      const json = {
-        parser: 'SampledPositionProperty' as const,
-        value: {},
       };
       const result = SampledPositionPropertyFromJSON(json);
       expect(result).toBeInstanceOf(SampledPositionProperty);

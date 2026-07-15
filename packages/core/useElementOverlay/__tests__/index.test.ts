@@ -70,23 +70,7 @@ describe('useElementOverlay', () => {
     expect(style.value).toContain('top:200px');
   });
 
-  it('should return x=0,y=0 when position is null', async () => {
-    let x: any, y: any;
-    mount({
-      setup() {
-        createViewer(document.createElement('div'));
-        ({ x, y } = useElementOverlay(undefined, null));
-        return { x, y };
-      },
-      template: '<div></div>',
-    });
-
-    await nextTick();
-    expect(x.value).toBe(0);
-    expect(y.value).toBe(0);
-  });
-
-  it('should return x=0,y=0 when position is undefined', async () => {
+  it('should return x=0,y=0 when position is nullish', async () => {
     let x: any, y: any;
     mount({
       setup() {

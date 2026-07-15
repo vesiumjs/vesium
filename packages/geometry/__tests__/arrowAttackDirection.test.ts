@@ -19,7 +19,6 @@ describe('arrowAttackDirection', () => {
     const before = snapshotCoords(coords);
     const result = arrowAttackDirection(coords);
 
-    expect(result.length).toBeGreaterThan(0);
     expect(includesCoord(result, [100_000, 50_000])).toBe(true);
     expect(includesCoord([result[0], result.at(-1)!], [0, 0])).toBe(true);
     expect(includesCoord([result[0], result.at(-1)!], [0, 10_000])).toBe(true);

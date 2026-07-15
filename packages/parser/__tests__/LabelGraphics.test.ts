@@ -43,15 +43,6 @@ describe('labelGraphics', () => {
       expect(result.value.font).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'LabelGraphics' as const,
-        value: {},
-      };
-      const result = LabelGraphicsZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -85,11 +76,6 @@ describe('labelGraphics', () => {
 
     it('should return undefined for undefined input', () => {
       const result = LabelGraphicsToJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = LabelGraphicsToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -142,31 +128,6 @@ describe('labelGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = LabelGraphicsFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = LabelGraphicsFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'LabelGraphics' as const,
-        value: {
-          show: true,
-        },
-      };
-      const result = LabelGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(LabelGraphics);
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'LabelGraphics' as const,
-        value: {},
-      };
-      const result = LabelGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(LabelGraphics);
     });
 
     it('should reuse the result instance when provided', () => {

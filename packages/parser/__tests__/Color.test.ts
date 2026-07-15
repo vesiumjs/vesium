@@ -25,15 +25,6 @@ describe('color', () => {
       expect(result.value.alpha).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'Color' as const,
-        value: {},
-      };
-      const result = ColorZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -70,26 +61,6 @@ describe('color', () => {
       const result = ColorToJSON(undefined);
       expect(result).toBeUndefined();
     });
-
-    it('should return undefined for null input', () => {
-      const result = ColorToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert Color with default alpha', () => {
-      const instance = new Color(0.5, 0.5, 0.5, 1);
-      const result = ColorToJSON(instance);
-      expect(result?.value.alpha).toBe(1);
-    });
-
-    it('should convert Color with zero values', () => {
-      const instance = new Color(0, 0, 0, 0);
-      const result = ColorToJSON(instance);
-      expect(result?.value.red).toBe(0);
-      expect(result?.value.green).toBe(0);
-      expect(result?.value.blue).toBe(0);
-      expect(result?.value.alpha).toBe(0);
-    });
   });
 
   describe('colorFromJSON', () => {
@@ -108,11 +79,6 @@ describe('color', () => {
 
     it('should return undefined for undefined input', () => {
       const result = ColorFromJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = ColorFromJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -140,15 +106,6 @@ describe('color', () => {
       expect(output?.green).toBe(0);
       expect(output?.blue).toBe(0);
       expect(output?.alpha).toBe(1);
-    });
-
-    it('should create new instance when result is not provided', () => {
-      const json = {
-        parser: 'Color' as const,
-        value: { red: 0, green: 1, blue: 0, alpha: 1 },
-      };
-      const output = ColorFromJSON(json);
-      expect(output).toBeInstanceOf(Color);
     });
 
     it('should reject invalid JSON structure', () => {

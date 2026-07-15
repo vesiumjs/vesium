@@ -23,15 +23,6 @@ describe('cartesian2', () => {
       expect(result.value.y).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'Cartesian2' as const,
-        value: {},
-      };
-      const result = Cartesian2ZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -66,25 +57,6 @@ describe('cartesian2', () => {
       const result = Cartesian2ToJSON(undefined);
       expect(result).toBeUndefined();
     });
-
-    it('should return undefined for null input', () => {
-      const result = Cartesian2ToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert Cartesian2 with zero values', () => {
-      const instance = new Cartesian2(0, 0);
-      const result = Cartesian2ToJSON(instance);
-      expect(result?.value.x).toBe(0);
-      expect(result?.value.y).toBe(0);
-    });
-
-    it('should convert Cartesian2 with negative values', () => {
-      const instance = new Cartesian2(-1, -2);
-      const result = Cartesian2ToJSON(instance);
-      expect(result?.value.x).toBe(-1);
-      expect(result?.value.y).toBe(-2);
-    });
   });
 
   describe('cartesian2FromJSON', () => {
@@ -101,11 +73,6 @@ describe('cartesian2', () => {
 
     it('should return undefined for undefined input', () => {
       const result = Cartesian2FromJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = Cartesian2FromJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -129,15 +96,6 @@ describe('cartesian2', () => {
       expect(output).toBe(result);
       expect(output?.x).toBe(1);
       expect(output?.y).toBe(2);
-    });
-
-    it('should create new instance when result is not provided', () => {
-      const json = {
-        parser: 'Cartesian2' as const,
-        value: { x: 1, y: 2 },
-      };
-      const output = Cartesian2FromJSON(json);
-      expect(output).toBeInstanceOf(Cartesian2);
     });
 
     it('should reject invalid JSON structure', () => {

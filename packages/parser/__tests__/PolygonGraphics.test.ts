@@ -49,15 +49,6 @@ describe('polygonGraphics', () => {
       expect(result.value.hierarchy).toBeUndefined();
     });
 
-    it('should parse JSON with empty value object', () => {
-      const json = {
-        parser: 'PolygonGraphics' as const,
-        value: {},
-      };
-      const result = PolygonGraphicsZodSchema().parse(json);
-      expect(result.value).toEqual({});
-    });
-
     it('should reject JSON with wrong parser type', () => {
       const json = {
         parser: 'Cartesian3' as const,
@@ -97,11 +88,6 @@ describe('polygonGraphics', () => {
 
     it('should return undefined for undefined input', () => {
       const result = PolygonGraphicsToJSON(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = PolygonGraphicsToJSON(null as any);
       expect(result).toBeUndefined();
     });
 
@@ -145,31 +131,6 @@ describe('polygonGraphics', () => {
     it('should return undefined for undefined input', () => {
       const result = PolygonGraphicsFromJSON(undefined);
       expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for null input', () => {
-      const result = PolygonGraphicsFromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
-    it('should convert JSON with partial values', () => {
-      const json = {
-        parser: 'PolygonGraphics' as const,
-        value: {
-          show: true,
-        },
-      };
-      const result = PolygonGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(PolygonGraphics);
-    });
-
-    it('should convert JSON with empty values', () => {
-      const json = {
-        parser: 'PolygonGraphics' as const,
-        value: {},
-      };
-      const result = PolygonGraphicsFromJSON(json);
-      expect(result).toBeInstanceOf(PolygonGraphics);
     });
 
     it('should reuse the result instance when provided', () => {

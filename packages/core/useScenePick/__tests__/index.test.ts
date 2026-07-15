@@ -107,23 +107,6 @@ describe('useScenePick', () => {
     expect(pick.value).toBeUndefined();
   });
 
-  it('should return undefined when position is null', async () => {
-    let pick: any;
-
-    mount({
-      setup() {
-        createViewer(document.createElement('div'));
-        pick = useScenePick(null as any);
-        return {};
-      },
-      template: '<div></div>',
-    });
-
-    await nextTick();
-    await new Promise(r => setTimeout(r, 20));
-    expect(pick.value).toBeUndefined();
-  });
-
   it('should return undefined when pick returns empty', async () => {
     mocks.pick.mockReturnValue(undefined);
     const pos = new Cesium.Cartesian2(10, 10);

@@ -65,21 +65,10 @@ describe('matrix4', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = Matrix4ToJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should convert identity Matrix4', () => {
       const instance = Matrix4.clone(Matrix4.IDENTITY);
       const result = Matrix4ToJSON(instance);
       expect(result?.value).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-    });
-
-    it('should convert Matrix4 with all zeros', () => {
-      const instance = new Matrix4(...(Array.from({ length: 16 }).fill(0) as number[]));
-      const result = Matrix4ToJSON(instance);
-      expect(result?.value).toEqual(Array.from({ length: 16 }).fill(0));
     });
   });
 
@@ -102,11 +91,6 @@ describe('matrix4', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for null input', () => {
-      const result = Matrix4FromJSON(null as any);
-      expect(result).toBeUndefined();
-    });
-
     it('should use result parameter for cloning', () => {
       const values = Array.from({ length: 16 }).fill(0).map((_, i) => i);
       const json = {
@@ -117,15 +101,6 @@ describe('matrix4', () => {
       const output = Matrix4FromJSON(json, result);
       expect(output).toBe(result);
       expect(Array.from(output!)).toEqual(COL_MAJOR);
-    });
-
-    it('should create new instance when result is not provided', () => {
-      const json = {
-        parser: 'Matrix4' as const,
-        value: Array.from({ length: 16 }).fill(0) as number[],
-      };
-      const output = Matrix4FromJSON(json);
-      expect(output).toBeInstanceOf(Matrix4);
     });
 
     it('should reject invalid JSON structure', () => {

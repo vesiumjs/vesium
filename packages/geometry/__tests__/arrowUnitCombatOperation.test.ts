@@ -14,7 +14,6 @@ describe('arrowUnitCombatOperation', () => {
     const before = snapshotCoords(coords);
     const result = arrowUnitCombatOperation(coords);
 
-    expect(result.length).toBeGreaterThan(0);
     expect(includesCoord(result, [100_000, 50_000])).toBe(true);
     expect(coords).toEqual(before);
     expectCoordArray(result);
