@@ -112,7 +112,7 @@ export function useCollectionScope<
     }
   };
 
-  tryOnScopeDispose(() => removeScope());
+  tryOnScopeDispose(() => removeScope(...(removeScopeArgs ?? [] as unknown as RemoveArgs)));
 
   return {
     scope: shallowReadonly(scope),

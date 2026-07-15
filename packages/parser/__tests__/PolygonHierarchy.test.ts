@@ -1,3 +1,4 @@
+import type { PolygonHierarchyJSON } from '../src/PolygonHierarchy';
 import { Cartesian3, PolygonHierarchy } from 'cesium';
 import { describe, expect, it } from 'vitest';
 import { PolygonHierarchyFromJSON, PolygonHierarchyToJSON, PolygonHierarchyZodSchema } from '../src/PolygonHierarchy';
@@ -16,13 +17,13 @@ const hole = [
 
 describe('polygonHierarchy', () => {
   it('parses hierarchy with nested holes', () => {
-    const json = {
-      parser: 'PolygonHierarchy' as const,
+    const json: PolygonHierarchyJSON = {
+      parser: 'PolygonHierarchy',
       value: {
         positions: outer,
         holes: [{
-          parser: 'PolygonHierarchy' as const,
-          value: { positions: hole, holes: [] },
+          parser: 'PolygonHierarchy',
+          value: { positions: hole },
         }],
       },
     };
@@ -47,11 +48,10 @@ describe('polygonHierarchy', () => {
   });
 
   it('reuses result parameter when provided', () => {
-    const json = {
-      parser: 'PolygonHierarchy' as const,
+    const json: PolygonHierarchyJSON = {
+      parser: 'PolygonHierarchy',
       value: {
         positions: outer,
-        holes: [],
       },
     };
     const result = new PolygonHierarchy([]);
