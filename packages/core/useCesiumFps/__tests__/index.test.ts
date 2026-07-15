@@ -1,18 +1,22 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it, vi } from 'vitest';
-import { nextTick } from 'vue';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { isReadonly, nextTick } from 'vue';
 import { createViewer } from '../../createViewer';
 import { useCesiumFps } from '../../index';
 
 const mocks = vi.hoisted(() => ({
   addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
 }));
 
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
   class Viewer {
     scene = {
-      postRender: { addEventListener: mocks.addEventListener },
+      postRender: {
+        addEventListener: mocks.addEventListener,
+        removeEventListener: mocks.removeEventListener,
+      },
     };
 
     isDestroyed = vi.fn(() => false);
@@ -23,39 +27,41 @@ vi.mock('cesium', async (importOriginal) => {
 });
 
 describe('useCesiumFps', () => {
-  it('should setup fps tracking', async () => {
-    let fps: any, interval: any;
-    mount({
-      setup() {
-        createViewer(document.createElement('div'));
-        ({ fps, interval } = useCesiumFps());
-        return { fps, interval };
-      },
-      template: '<div></div>',
-    });
-
-    await nextTick();
-    expect(fps).toBeDefined();
-    expect(interval).toBeDefined();
-    expect(mocks.addEventListener).toHaveBeenCalled();
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.useFakeTimers();
+    vi.spyOn(performance, 'now').mockReturnValue(0);
   });
 
-  it('should return readonly interval and computed fps', async () => {
-    let result: any;
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('should sample interval and fps from postRender events', async () => {
+    let result: ReturnType<typeof useCesiumFps>;
     mount({
       setup() {
         createViewer(document.createElement('div'));
-        result = useCesiumFps();
+        result = useCesiumFps({ delay: 0 });
         return result;
       },
       template: '<div></div>',
     });
 
     await nextTick();
-    expect(result.interval).toBeDefined();
-    expect(result.fps).toBeDefined();
-    expect(typeof result.interval.value).toBe('number');
-    expect(typeof result.fps.value).toBe('number');
+    expect(mocks.addEventListener).toHaveBeenCalled();
+
+    const onPostRender = mocks.addEventListener.mock.calls[0][0] as () => void;
+    vi.mocked(performance.now).mockReturnValue(16);
+    onPostRender();
+    await nextTick();
+    await vi.advanceTimersByTimeAsync(0);
+    await nextTick();
+
+    expect(result!.interval.value).toBe(16);
+    expect(result!.fps.value).toBeCloseTo(1000 / 16, 5);
+    expect(isReadonly(result!.interval)).toBe(true);
   });
 
   it('should throw when no viewer is provided', () => {

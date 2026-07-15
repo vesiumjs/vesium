@@ -47,7 +47,7 @@ describe('useImageryLayerScope', () => {
     expect(mocks.add).toHaveBeenCalledWith(mockLayer, 1);
   });
 
-  it('should remove layer with destroyOnRemove via removeScope', async () => {
+  it('should pass destroyOnRemove: true as default remove arg', async () => {
     const mockLayer = { id: 'test' } as any;
     const wrapper = mount({
       setup() {
@@ -60,11 +60,11 @@ describe('useImageryLayerScope', () => {
     });
 
     await nextTick();
-    (wrapper.vm as any).removeScope(true as boolean | undefined);
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockLayer, true);
   });
 
-  it('should support destroyOnRemove: false', async () => {
+  it('should pass destroyOnRemove: false as default remove arg', async () => {
     const mockLayer = { id: 'test' } as any;
     const wrapper = mount({
       setup() {
@@ -77,7 +77,7 @@ describe('useImageryLayerScope', () => {
     });
 
     await nextTick();
-    (wrapper.vm as any).removeScope(false as boolean | undefined);
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockLayer, false);
   });
 

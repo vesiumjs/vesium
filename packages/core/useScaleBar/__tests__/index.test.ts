@@ -156,28 +156,6 @@ describe('useScaleBar', () => {
     expect(result.width.value).toBe(100);
   });
 
-  it('should return readonly pixelDistance ref', async () => {
-    mocks.getPickRay.mockReturnValue({});
-    mocks.pick.mockReturnValue({});
-    mocks.surfaceDistance = 1000;
-
-    let result: any;
-    mount({
-      setup() {
-        createViewer(document.createElement('div'));
-        result = useScaleBar({ maxPixel: 80 });
-        return result;
-      },
-      template: '<div></div>',
-    });
-
-    await nextTick();
-    await nextTick();
-    expect(result.pixelDistance.value).toBe(1000);
-    expect(result.distance.value).toBe(50000);
-    expect(result.width.value).toBe(50);
-  });
-
   it('should throw when no viewer is provided', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => mount({

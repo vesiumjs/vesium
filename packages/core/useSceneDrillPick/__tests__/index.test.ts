@@ -39,89 +39,94 @@ describe('useSceneDrillPick', () => {
 
   it('should drill pick objects at position', async () => {
     const pos = new Cesium.Cartesian2(10, 10);
+    let pick: ReturnType<typeof useSceneDrillPick>;
 
-    const wrapper = mount({
+    mount({
       setup() {
         createViewer(document.createElement('div'));
-        const pick = useSceneDrillPick(pos, { throttled: 0 });
-        return { pick };
-      },
-      template: '<div></div>',
-    });
-
-    await nextTick();
-    await new Promise((resolve) => {
-      vi.waitFor(() => {
-        if ((wrapper.vm as any).pick !== undefined) {
-          resolve(true);
-          return true;
-        }
-        return false;
-      }, { timeout: 1000 }).then(resolve).catch(resolve);
-    });
-
-    expect(mocks.drillPick).toHaveBeenCalled();
-    expect((wrapper.vm as any).pick).toEqual([{ id: 'picked' }]);
-  });
-
-  it('should respect width and height options', async () => {
-    const pos = new Cesium.Cartesian2(10, 10);
-
-    const wrapper = mount({
-      setup() {
-        createViewer(document.createElement('div'));
-        const pick = useSceneDrillPick(pos, { throttled: 0, width: 5, height: 7 });
-        return { pick };
-      },
-      template: '<div></div>',
-    });
-
-    await new Promise((resolve) => {
-      vi.waitFor(() => {
-        if ((wrapper.vm as any).pick !== undefined) {
-          resolve(true);
-          return true;
-        }
-        return false;
-      }, { timeout: 1000 }).then(resolve).catch(resolve);
-    });
-
-    expect(mocks.drillPick).toHaveBeenCalledWith(pos, undefined, 5, 7);
-  });
-
-  it('should return undefined for undefined position', async () => {
-    const pos = ref<Cesium.Cartesian2 | undefined>(undefined);
-
-    const wrapper = mount({
-      setup() {
-        createViewer(document.createElement('div'));
-        const pick = useSceneDrillPick(pos, { throttled: 0 });
-        return { pick };
+        pick = useSceneDrillPick(pos, { throttled: 0 });
+        return {};
       },
       template: '<div></div>',
     });
 
     await nextTick();
     await new Promise(r => setTimeout(r, 20));
-    expect((wrapper.vm as any).pick).toBeUndefined();
+    expect(mocks.drillPick).toHaveBeenCalledWith(pos, undefined, 3, 3);
+    expect(pick!.value).toEqual([{ id: 'picked' }]);
+  });
+
+  it('should respect width, height and limit options', async () => {
+    const pos = new Cesium.Cartesian2(10, 10);
+
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        useSceneDrillPick(pos, { throttled: 0, width: 5, height: 7, limit: 2 });
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    await new Promise(r => setTimeout(r, 20));
+    expect(mocks.drillPick).toHaveBeenCalledWith(pos, 2, 5, 7);
+  });
+
+  it('should return undefined for undefined position', async () => {
+    const pos = ref<Cesium.Cartesian2 | undefined>(undefined);
+    let pick: ReturnType<typeof useSceneDrillPick>;
+
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        pick = useSceneDrillPick(pos, { throttled: 0 });
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    await new Promise(r => setTimeout(r, 20));
+    expect(pick!.value).toBeUndefined();
   });
 
   it('should return empty array when drillPick returns empty', async () => {
     mocks.drillPick.mockReturnValue([]);
     const pos = new Cesium.Cartesian2(10, 10);
+    let pick: ReturnType<typeof useSceneDrillPick>;
 
-    const wrapper = mount({
+    mount({
       setup() {
         createViewer(document.createElement('div'));
-        const pick = useSceneDrillPick(pos, { throttled: 0 });
-        return { pick };
+        pick = useSceneDrillPick(pos, { throttled: 0 });
+        return {};
       },
       template: '<div></div>',
     });
 
     await nextTick();
     await new Promise(r => setTimeout(r, 20));
-    expect((wrapper.vm as any).pick).toEqual([]);
+    expect(pick!.value).toEqual([]);
+  });
+
+  it('should skip drillPick when isActive is false', async () => {
+    const pos = new Cesium.Cartesian2(10, 10);
+    let pick: ReturnType<typeof useSceneDrillPick>;
+
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        pick = useSceneDrillPick(pos, { throttled: 0, isActive: false });
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    await new Promise(r => setTimeout(r, 20));
+    expect(pick!.value).toBeUndefined();
+    expect(mocks.drillPick).not.toHaveBeenCalled();
   });
 
   it('should throw when no viewer is provided', () => {

@@ -1,7 +1,7 @@
 import type { Cartesian2 } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
 import { refThrottled } from '@vueuse/core';
-import { computed, toValue } from 'vue';
+import { computed, shallowRef, toValue, watchEffect } from 'vue';
 import { useViewer } from '../useViewer';
 
 export interface UseSceneDrillPickOptions {
@@ -46,23 +46,27 @@ export interface UseSceneDrillPickOptions {
 export function useSceneDrillPick(
   windowPosition: MaybeRefOrGetter<Cartesian2 | undefined>,
   options: UseSceneDrillPickOptions = {},
-): ComputedRef<any [] | undefined> {
+): ComputedRef<any[] | undefined> {
   const { width = 3, height = 3, limit, throttled = 8, isActive = true } = options;
 
   const viewer = useViewer();
 
   const position = refThrottled(computed(() => toValue(windowPosition)), throttled, false, true);
+  const pick = shallowRef<any[] | undefined>();
 
-  const pick = computed(() => {
-    if (position.value && toValue(isActive)) {
-      return viewer.value?.scene.drillPick(
+  watchEffect(() => {
+    if (viewer.value && position.value && toValue(isActive)) {
+      pick.value = viewer.value.scene.drillPick(
         position.value,
         toValue(limit),
         toValue(width),
         toValue(height),
       );
     }
+    else {
+      pick.value = undefined;
+    }
   });
 
-  return pick;
+  return computed(() => pick.value);
 }

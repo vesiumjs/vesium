@@ -84,7 +84,7 @@ describe('useDataSourceScope', () => {
     expect(mocks.add).toHaveBeenCalledWith(mockDs);
   });
 
-  it('should support destroyOnRemove option', async () => {
+  it('should pass destroyOnRemove option as default remove arg', async () => {
     const mockDs = { id: 'test' } as any;
     const wrapper = mount({
       setup() {
@@ -97,7 +97,7 @@ describe('useDataSourceScope', () => {
     });
 
     await nextTick();
-    (wrapper.vm as any).removeScope(true as boolean | undefined);
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockDs, true);
   });
 

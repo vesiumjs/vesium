@@ -69,7 +69,11 @@ describe('useCameraState', () => {
     await nextTick();
     expect(state.upWC.value).toEqual({ x: 19, y: 20, z: 21 });
     expect(state.rightWC.value).toEqual({ x: 22, y: 23, z: 24 });
-    expect(state.level.value).toBeDefined();
+    expect(state.heading.value).toBe(1);
+    expect(state.pitch.value).toBe(2);
+    expect(state.roll.value).toBe(3);
+    // computeLevel(0) = D + (A - D) / (1 + 0) = A
+    expect(state.level.value).toBeCloseTo(40487.57, 5);
   });
 
   it('should add event listener on camera changed', async () => {
