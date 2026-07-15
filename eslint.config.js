@@ -4,6 +4,7 @@ export default antfu({
   ignores: [
     '**/tests/core/**',
     '**/.agents/**',
+    '**/AGENTS.md',
   ],
   formatters: true,
   // https://github.com/antfu/eslint-config?tab=readme-ov-file#editor-specific-disables

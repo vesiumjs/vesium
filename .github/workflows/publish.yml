@@ -32,11 +32,11 @@ jobs:
 
       - run: pnpm install
 
-      - run: pnpm run lint
+      - run: pnpm run eslint
 
       - run: pnpm run test:unit:coverage
 
-      - run: pnpm run type-check
+      - run: pnpm run tsc
 
       - run: pnpm run build:ci
 

@@ -34,8 +34,8 @@
     "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
-    "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --fix",
+    "tsc": "vue-tsc --build --force",
+    "eslint": "eslint . --fix",
     "taze": "taze",
     "release": "bumpp -r",
     "==========[CI/CD]===========": "",
@@ -82,11 +82,6 @@
     "pinia": "catalog:",
     "sass": "catalog:",
     "start-server-and-test": "catalog:",
-    "stylelint": "catalog:",
-    "stylelint-config-recess-order": "catalog:",
-    "stylelint-config-recommended-vue": "catalog:",
-    "stylelint-config-standard": "catalog:",
-    "stylelint-config-standard-scss": "catalog:",
     "svgo": "catalog:",
     "taze": "catalog:",
     "tsdown": "catalog:",
@@ -109,9 +104,6 @@
   "lint-staged": {
     "**/*": [
       "eslint --fix --no-warn-ignored"
-    ],
-    "**/*.{vue,css,scss,sass,less,styl}": [
-      "stylelint --fix --allow-empty-input"
     ]
   }
 }

@@ -20,8 +20,8 @@ Package manager: `pnpm`
 
 - `pnpm install` — install dependencies
 - `pnpm build:ci` — build all packages (`tsdown`)
-- `pnpm type-check` — type check (`vue-tsc`)
-- `pnpm lint` — lint and auto-fix (`eslint`)
+- `pnpm tsc` — type check (`vue-tsc`)
+- `pnpm eslint` — ESLint check and auto-fix
 - `pnpm test:unit` — unit tests (`vitest`)
 - `pnpm vitest <path>` — run a single test file
 - `pnpm test:unit:coverage` — unit tests with coverage
@@ -34,3 +34,18 @@ Package manager: `pnpm`
 - Vitest; place under co-located `__tests__/`
 - Naming: `*.test.ts` (not `*.spec.ts`)
 - `index.ts` → `index.test.ts`; otherwise match source basename (`circle.ts` → `circle.test.ts`)
+
+## Verification
+
+After code changes, run and ensure all pass before finishing:
+
+1. `pnpm eslint`
+2. `pnpm tsc`
+3. `pnpm test:unit` (or `pnpm vitest <path>` for scoped changes)
+
+Do not leave the task with eslint, tsc, or test failures.
+
+## Git hooks (husky)
+
+- **pre-commit**: `pnpm lint-staged` — staged files via `eslint --fix`
+- **pre-push**: `pnpm eslint` → `pnpm tsc` → `pnpm test:unit run`
