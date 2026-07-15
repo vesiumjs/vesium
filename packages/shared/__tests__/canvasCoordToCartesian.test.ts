@@ -111,7 +111,7 @@ describe('canvasCoordToCartesian', () => {
       const position1 = new Cartesian3(1, 2, 3);
       const position2 = new Cartesian3(4, 5, 6);
       const mockScene = createMockScene({ pickPosition: position1, globePick: position2 });
-      cartesianToCartoSpy.mockImplementation((c: Cartesian3) => ({ height: mockHeight(c) }) as any);
+      cartesianToCartoSpy.mockImplementation((c: any) => ({ height: mockHeight(c) }));
 
       const result = canvasCoordToCartesian(canvasCoord, mockScene, 'auto');
 
@@ -127,7 +127,7 @@ describe('canvasCoordToCartesian', () => {
       const position1 = new Cartesian3(1, 2, 9);
       const position2 = new Cartesian3(4, 5, 2);
       const mockScene = createMockScene({ pickPosition: position1, globePick: position2 });
-      cartesianToCartoSpy.mockImplementation((c: Cartesian3) => ({ height: mockHeight(c) }) as any);
+      cartesianToCartoSpy.mockImplementation((c: any) => ({ height: mockHeight(c) }));
 
       const result = canvasCoordToCartesian(canvasCoord, mockScene, 'auto');
 
@@ -140,7 +140,7 @@ describe('canvasCoordToCartesian', () => {
       const position1 = new Cartesian3(1, 2, 5);
       const position2 = new Cartesian3(4, 5, 5);
       const mockScene = createMockScene({ pickPosition: position1, globePick: position2 });
-      cartesianToCartoSpy.mockImplementation((c: Cartesian3) => ({ height: mockHeight(c) }) as any);
+      cartesianToCartoSpy.mockImplementation((c: any) => ({ height: mockHeight(c) }));
 
       const result = canvasCoordToCartesian(canvasCoord, mockScene, 'auto');
 

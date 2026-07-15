@@ -1,3 +1,4 @@
+import type { CoordObject, CoordObject_ALT } from '../src/types';
 import { Cartesian3, Cartographic } from 'cesium';
 import { describe, expect, it } from 'vitest';
 import { toCoord } from '../src/toCoord';
@@ -23,7 +24,7 @@ describe('toCoord', () => {
 
     it('should convert Cartesian3 to object without altitude', () => {
       const cartesian = Cartesian3.fromDegrees(120, 30);
-      const result = toCoord(cartesian, { type: 'Object' }) as Record<string, number>;
+      const result = toCoord(cartesian, { type: 'Object' }) as CoordObject;
       expect(result.longitude).toBeCloseTo(120);
       expect(result.latitude).toBeCloseTo(30);
       expect(result).not.toHaveProperty('height');
@@ -31,7 +32,7 @@ describe('toCoord', () => {
 
     it('should convert Cartesian3 to object with altitude', () => {
       const cartesian = Cartesian3.fromDegrees(120, 30, 100);
-      const result = toCoord(cartesian, { type: 'Object', alt: true }) as Record<string, number>;
+      const result = toCoord(cartesian, { type: 'Object', alt: true }) as CoordObject_ALT;
       expect(result.longitude).toBeCloseTo(120);
       expect(result.latitude).toBeCloseTo(30);
       expect(result.height).toBeCloseTo(100);
@@ -58,7 +59,7 @@ describe('toCoord', () => {
 
     it('should convert Cartographic to object with altitude', () => {
       const cartographic = Cartographic.fromDegrees(120, 30, 100);
-      const result = toCoord(cartographic, { type: 'Object', alt: true }) as Record<string, number>;
+      const result = toCoord(cartographic, { type: 'Object', alt: true }) as CoordObject_ALT;
       expect(result.longitude).toBeCloseTo(120);
       expect(result.latitude).toBeCloseTo(30);
       expect(result.height).toBeCloseTo(100);
