@@ -51,6 +51,7 @@ export function TimeIntervalCollectionFromJSON(json?: TimeIntervalCollectionJSON
   if (result) {
     result.removeAll();
     intervals.forEach(item => result.addInterval(item));
+    return result;
   }
   return new TimeIntervalCollection(intervals);
 }

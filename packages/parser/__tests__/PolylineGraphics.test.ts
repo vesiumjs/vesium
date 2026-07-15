@@ -86,6 +86,7 @@ describe('polylineGraphics', () => {
       expect(result?.parser).toBe('PolylineGraphics');
       expect(result?.value.show).toBe(true);
       expect(result?.value.width).toBe(WIDTH);
+      expect(result?.value.positions).toEqual(POSITIONS);
     });
 
     it('should return undefined for undefined input', () => {
@@ -132,6 +133,23 @@ describe('polylineGraphics', () => {
       expect(result).toBeInstanceOf(PolylineGraphics);
       expect(toPropertyValue(result?.show)).toBe(true);
       expect(toPropertyValue(result?.width)).toBe(WIDTH);
+      const positions = toPropertyValue(result?.positions) as Cartesian3[];
+      expect(positions).toHaveLength(2);
+      expect(positions[0].x).toBe(0);
+      expect(positions[1].x).toBe(1);
+    });
+
+    it('should round-trip positions', () => {
+      const json = {
+        parser: 'PolylineGraphics' as const,
+        value: {
+          show: true,
+          positions: POSITIONS,
+          width: WIDTH,
+        },
+      };
+      const again = PolylineGraphicsToJSON(PolylineGraphicsFromJSON(json)!);
+      expect(again?.value.positions).toEqual(POSITIONS);
     });
 
     it('should return undefined for undefined input', () => {

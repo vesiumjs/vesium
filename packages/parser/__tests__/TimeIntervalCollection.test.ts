@@ -178,7 +178,7 @@ describe('timeIntervalCollection', () => {
       expect(result.length).toBe(0);
     });
 
-    it('should use result parameter for updating', () => {
+    it('should reuse result parameter when provided', () => {
       const json = {
         parser: 'TimeIntervalCollection' as const,
         value: {
@@ -195,8 +195,8 @@ describe('timeIntervalCollection', () => {
       };
       const result = new TimeIntervalCollection();
       const output = TimeIntervalCollectionFromJSON(json, result);
-      expect(output).toBeInstanceOf(TimeIntervalCollection);
-      expect(output.length).toBe(1);
+      expect(output).toBe(result);
+      expect(output!.length).toBe(1);
     });
 
     it('should reject invalid JSON structure', () => {

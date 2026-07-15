@@ -81,6 +81,22 @@ describe('constantPositionProperty', () => {
       };
       const result = ConstantPositionPropertyFromJSON(json);
       expect(result).toBeInstanceOf(ConstantPositionProperty);
+      expect(result!.getValue().x).toBe(1);
+      expect(result!.getValue().y).toBe(2);
+      expect(result!.getValue().z).toBe(3);
+    });
+
+    it('should reuse result parameter when provided', () => {
+      const json = {
+        parser: 'ConstantPositionProperty' as const,
+        value: { x: 1, y: 2, z: 3 },
+      };
+      const result = new ConstantPositionProperty(new Cartesian3(0, 0, 0));
+      const output = ConstantPositionPropertyFromJSON(json, result);
+      expect(output).toBe(result);
+      expect(output!.getValue().x).toBe(1);
+      expect(output!.getValue().y).toBe(2);
+      expect(output!.getValue().z).toBe(3);
     });
 
     it('should return undefined for undefined input', () => {
