@@ -9,7 +9,7 @@ import { getArcCoords, getAzimuth, mathDistance } from './helper';
 export function sector(coords: CoordArray[]): CoordArray[] {
   const coordLength = coords.length;
   if (coordLength < 3) {
-    throw new Error('coords.length must >= 2');
+    throw new Error('coords.length must >= 3');
   }
   else {
     const [center, coord2, coord3] = [coords[0], coords[1], coords[2]];

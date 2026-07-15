@@ -12,7 +12,6 @@ describe('ellipse', () => {
     ];
     const result = ellipse(coords);
     expect(result.length).toBe(FITTING_COUNT + 1);
-    expect(coords.length).toBe(2);
   });
 
   it('should generate points forming an ellipse shape', () => {
@@ -45,7 +44,6 @@ describe('ellipse', () => {
     ];
     const result = ellipse(coords);
     expect(result.length).toBe(FITTING_COUNT + 1);
-    expect(coords.length).toBe(2);
   });
 
   it('should handle radius 0 (identical points) by returning degenerate points at center', () => {

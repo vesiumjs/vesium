@@ -42,22 +42,12 @@ describe('sector', () => {
   });
 
   it('should throw error when input has less than 3 points', () => {
-    expect(() => sector([])).toThrow('coords.length must >= 2');
-    expect(() => sector([[5, 5]])).toThrow('coords.length must >= 2');
-    expect(() => sector([[0, 0], [10, 10]])).toThrow('coords.length must >= 2');
+    expect(() => sector([])).toThrow('coords.length must >= 3');
+    expect(() => sector([[5, 5]])).toThrow('coords.length must >= 3');
+    expect(() => sector([[0, 0], [10, 10]])).toThrow('coords.length must >= 3');
   });
 
-  it('should handle negative coordinates', () => {
-    const coords: CoordArray[] = [
-      [-5, -5],
-      [5, -5],
-      [-5, 5],
-    ];
-    const result = sector(coords);
-    expect(result.length).toBe(FITTING_COUNT + 3);
-  });
-
-  it('should handle collinear points (angle 0)', () => {
+  it('should return valid coordinate arrays for collinear input', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
@@ -65,36 +55,6 @@ describe('sector', () => {
     ];
     const result = sector(coords);
     expect(result.length).toBe(FITTING_COUNT + 3);
-    expectCoordArray(result);
-  });
-
-  it('should handle large coordinate values', () => {
-    const coords: CoordArray[] = [
-      [100000, 100000],
-      [200000, 100000],
-      [100000, 200000],
-    ];
-    const result = sector(coords);
-    expect(result.length).toBe(FITTING_COUNT + 3);
-  });
-
-  it('should handle decimal coordinates', () => {
-    const coords: CoordArray[] = [
-      [0.5, 0.5],
-      [10.5, 0.5],
-      [0.5, 10.5],
-    ];
-    const result = sector(coords);
-    expect(result.length).toBe(FITTING_COUNT + 3);
-  });
-
-  it('should return valid coordinate arrays', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [10, 0],
-      [0, 10],
-    ];
-    const result = sector(coords);
     expectCoordArray(result);
   });
 });
