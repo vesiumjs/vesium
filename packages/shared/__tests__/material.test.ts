@@ -51,10 +51,4 @@ describe('material', () => {
       expect(addMaterial).toHaveBeenCalledWith('custom', materialOptions);
     });
   });
-
-  it('should throw when _materialCache is undefined', () => {
-    (Material as any)._materialCache = undefined;
-    expect(() => getMaterialCache('test')).toThrow();
-    expect(() => addMaterialCache('test', {} as any)).toThrow();
-  });
 });

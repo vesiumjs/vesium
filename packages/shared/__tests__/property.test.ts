@@ -83,6 +83,7 @@ describe('property', () => {
       const getter = () => 42;
       const result = toProperty(getter, true);
       expect(result).toBeInstanceOf(CallbackProperty);
+      expect(result.isConstant).toBe(true);
     });
   });
 
@@ -148,9 +149,19 @@ describe('property', () => {
     it('should create a property with toProperty enabled', () => {
       const scope: any = { definitionChanged: { raiseEvent: vi.fn() } };
       createCesiumProperty(scope, 'test', 'value');
-      expect(scope.test).toBeDefined();
       expect(scope._test).toBeInstanceOf(ConstantProperty);
-      expect(scope._test.getValue()).toBe('value');
+      expect(toPropertyValue(scope.test)).toBe('value');
+    });
+
+    it('should accept Property assignment and reject plain values', () => {
+      const scope: any = { definitionChanged: { raiseEvent: vi.fn() } };
+      createCesiumProperty(scope, 'test', 'value');
+      const next = new ConstantProperty('next');
+      scope.test = next;
+      expect(scope._test).toBe(next);
+      expect(() => {
+        scope.test = 'invalid';
+      }).toThrow('The value of test must be a Cesium.Property object');
     });
   });
 });
