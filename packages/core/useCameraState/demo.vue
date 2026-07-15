@@ -20,12 +20,7 @@ const {
 </script>
 
 <template>
-  <div
-    h="250px"
-    flex="~ col gap-y-10px"
-    p="10px"
-    of="scroll"
-  >
+  <div class="p-10px flex flex-col gap-y-10px h-250px overflow-scroll">
     <pre> {{ { position, direction, up, right, positionCartographic, positionWC, directionWC, upWC, rightWC, viewRectangle, heading, pitch, roll, level } }}</pre>
   </div>
 </template>

@@ -53,12 +53,7 @@ if (inBrowser) {
     <template #home-hero-before>
       <client-only>
         <teleport to="#app">
-          <div
-            position="fixed inset-0"
-            bg="#000"
-            of="hidden"
-            z--1
-          />
+          <div class="bg-black inset-0 fixed overflow-hidden -z-1" />
         </teleport>
         <HomeHeroBefore />
       </client-only>

@@ -29,7 +29,7 @@ const _stageControlled = usePostProcessStage(bloomStage, {
 </script>
 
 <template>
-  <div p="10px">
+  <div class="p-10px">
     <button @click="isActive = !isActive">
       PostProcessStage: {{ isActive ? 'ON' : 'OFF' }}
     </button>

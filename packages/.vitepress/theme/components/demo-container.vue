@@ -48,38 +48,25 @@ function openGithub() {
 </script>
 
 <template>
-  <div
-    class="demo-container"
-    b="1px [var(--vp-c-divider)]"
-    rd="4px"
-    of="hidden"
-  >
+  <div class="demo-container border border-[var(--vp-c-divider)] rounded-4px overflow-hidden">
     <client-only>
-      <div ref="containerRef" class="demo-view relative min-h-550px text-12px">
+      <div ref="containerRef" class="demo-view text-12px min-h-550px relative">
         <Suspense v-if="reset">
           <component :is="defineAsyncComponent(() => import('./cesium-container.vue'))" v-if="cesium">
-            <div class="absolute bottom-0 right-0" bg="[var(--vp-c-bg)]">
+            <div class="bg-[var(--vp-c-bg)] bottom-0 right-0 absolute">
               <component :is="demo" />
             </div>
           </component>
           <component :is="demo" v-else />
           <template #fallback>
-            <div class="absolute inset-0" flex="~ justify-center items-center">
-              <span class="i-svg-spinners:3-dots-scale block" text="50px [var(--vp-c-brand-1)]" />
+            <div class="flex items-center inset-0 justify-center absolute">
+              <span class="i-svg-spinners:3-dots-scale text-50px text-[var(--vp-c-brand-1)] block" />
             </div>
           </template>
         </Suspense>
       </div>
     </client-only>
-    <div
-      class="handle-bar"
-      size="h-40px"
-      p="x-10px"
-      flex="~ justify-end items-center"
-      b-t="1px [var(--vp-c-divider)]"
-      children:p="8px"
-      children:mx="8px"
-    >
+    <div class="handle-bar px-10px border-t border-t-[var(--vp-c-divider)] flex h-40px items-center justify-end children:mx-8px children:p-8px">
       <button
         type="button"
         class="i-tabler:arrows-maximize"

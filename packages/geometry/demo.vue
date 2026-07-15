@@ -82,8 +82,8 @@ watchPostEffect(() => {
 </script>
 
 <template>
-  <div p="10px" flex="~ col" gap="8px">
-    <p text-sm>
+  <div class="p-10px flex flex-col gap-8px">
+    <p class="text-sm">
       @vesium/geometry provides geometry algorithms for plotting: circle, ellipse, arrows, curves, etc.
     </p>
   </div>

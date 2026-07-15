@@ -16,10 +16,7 @@ useCesiumEventListener(() => viewer.value?.camera.moveEnd, () => {
 </script>
 
 <template>
-  <div
-    flex="~ col gap-y-10px"
-    p="10px"
-  >
+  <div class="p-10px flex flex-col gap-y-10px">
     Camera Changed : {{ changedSymbol }}
   </div>
 </template>

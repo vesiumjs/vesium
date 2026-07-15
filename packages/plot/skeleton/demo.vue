@@ -20,8 +20,8 @@ const _customSkeletons = [moved, control, interval];
 </script>
 
 <template>
-  <div p="10px">
-    <p mb-4 text-sm>
+  <div class="p-10px">
+    <p class="text-sm mb-4">
       Skeleton 模块提供标绘交互骨架：control(控制点拖拽)、interval(中点插入)、moved(整体平移)。
       点击按钮开始标绘，完成后可以拖拽顶点或边进行编辑。
     </p>

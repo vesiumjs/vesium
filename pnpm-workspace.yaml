@@ -21,7 +21,6 @@ catalog:
   '@types/markdown-it-container': ^4.0.0
   '@types/node': ^25.9.5
   '@unocss/eslint-plugin': ^66.7.5
-  '@unocss/reset': ^66.7.5
   '@vitejs/plugin-vue': ^6.0.7
   '@vitest/coverage-v8': ^4.1.10
   '@vue/test-utils': ^2.4.11

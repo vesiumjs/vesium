@@ -11,5 +11,5 @@ createViewer(elRef, {
 </script>
 
 <template>
-  <div ref="elRef" class="absolute inset-0" />
+  <div ref="elRef" class="inset-0 absolute" />
 </template>

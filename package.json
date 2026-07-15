@@ -61,7 +61,6 @@
     "@types/markdown-it-container": "catalog:",
     "@types/node": "catalog:",
     "@unocss/eslint-plugin": "catalog:",
-    "@unocss/reset": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vue/test-utils": "catalog:",

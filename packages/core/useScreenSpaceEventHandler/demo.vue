@@ -11,12 +11,7 @@ Object.values(Cesium.ScreenSpaceEventType).forEach((type: any) => {
 </script>
 
 <template>
-  <div
-    w="200px"
-    bg="[var(--vp-c-bg)]"
-    p="10px"
-    flex="~ col gap-5px"
-  >
+  <div class="p-10px bg-[var(--vp-c-bg)] flex flex-col gap-5px w-200px">
     <span v-for="(value, key) in Cesium.ScreenSpaceEventType" :key="key">
       {{ key }} : {{ coord[value] || '--' }}
     </span>

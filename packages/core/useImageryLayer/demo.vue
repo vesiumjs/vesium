@@ -27,9 +27,7 @@ watchPostEffect(() => {
 </script>
 
 <template>
-  <div
-    p="10px"
-  >
+  <div class="p-10px">
     <button @click="isActive = !isActive">
       visible:{{ isActive }}
     </button>

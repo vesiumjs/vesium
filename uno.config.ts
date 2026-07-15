@@ -1,22 +1,19 @@
 import { fileURLToPath } from 'node:url';
 import {
   defineConfig,
-  presetAttributify,
   presetIcons,
-  presetUno,
-  transformerAttributifyJsx,
+  presetWind4,
 } from 'unocss';
 import { generateIconCollection } from './internals/icon';
 
 const customIconPath = fileURLToPath(new URL('./icons', import.meta.url));
 
 export default defineConfig({
-  transformers: [transformerAttributifyJsx()],
   presets: [
-    presetUno({}),
-    presetAttributify({
-      prefix: 'un-',
-      ignoreAttributes: ['icon-class'],
+    presetWind4({
+      preflights: {
+        reset: true,
+      },
     }),
     presetIcons({
       autoInstall: true,

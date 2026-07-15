@@ -29,6 +29,6 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div ref="elRef" position="absolute inset-0" />
+  <div ref="elRef" class="inset-0 absolute" />
   <slot />
 </template>

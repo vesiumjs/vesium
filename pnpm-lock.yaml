@@ -42,9 +42,6 @@ catalogs:
     '@unocss/eslint-plugin':
       specifier: ^66.7.5
       version: 66.7.5
-    '@unocss/reset':
-      specifier: ^66.7.5
-      version: 66.7.5
     '@vitejs/plugin-vue':
       specifier: ^6.0.7
       version: 6.0.7
@@ -247,9 +244,6 @@ importers:
       '@unocss/eslint-plugin':
         specifier: 'catalog:'
         version: 66.7.5(eslint@10.6.0(jiti@2.7.0))(typescript@5.9.3)
-      '@unocss/reset':
-        specifier: 'catalog:'
-        version: 66.7.5
       '@vitejs/plugin-vue':
         specifier: 'catalog:'
         version: 6.0.7(vite@8.1.4(@types/node@25.9.5)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.101.0)(tsx@4.23.0)(yaml@2.9.0))(vue@3.5.39(typescript@5.9.3))
@@ -2443,9 +2437,6 @@ packages:
 
   '@unocss/preset-wind@66.7.5':
     resolution: {integrity: sha512-LVKgGr0A9Lc7F85xGXrrb71DDXMlHGA8bcj/Kht8BCsuRdBZadNbLlnv5qnSJiHYhi3/blzcgVoaeRor6L9yNA==}
-
-  '@unocss/reset@66.7.5':
-    resolution: {integrity: sha512-z3wbt2cuQPjtT6w5xzRYZYFIIlUPzhVKz8yIcE9fvu7BgR3hO7uVsg/5mzDoGwQ96Ya3Sk68rpmI/gLYl4bJag==}
 
   '@unocss/rule-utils@66.7.5':
     resolution: {integrity: sha512-/AKHBRF6ZOexE3EDDv8ZEYh40P5e2Eha41IYUbE1wjigW7++ssmvimSTdufJzZvU5DGP++E3B3WEsFPprZMjAg==}
@@ -8802,8 +8793,6 @@ snapshots:
     dependencies:
       '@unocss/core': 66.7.5
       '@unocss/preset-wind3': 66.7.5
-
-  '@unocss/reset@66.7.5': {}
 
   '@unocss/rule-utils@66.7.5':
     dependencies:
