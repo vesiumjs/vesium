@@ -34,7 +34,6 @@ describe('area', () => {
     const result = await area([p0, p1, p2]);
 
     expect(result).toBeCloseTo(6, 5);
-    expect(result).toBeGreaterThan(0);
   });
 
   it('calculates area of a square in XY plane', async () => {
@@ -47,7 +46,6 @@ describe('area', () => {
     const result = await area([p0, p1, p2, p3]);
 
     expect(result).toBeCloseTo(100, 5);
-    expect(result).toBeGreaterThan(0);
   });
 
   it('throws when positions length < 2', async () => {
@@ -69,19 +67,6 @@ describe('area', () => {
     ).rejects.toThrow('options.density must > 0');
   });
 
-  it('returns positive area for any valid polygon', async () => {
-    const positions = [
-      new Cartesian3(0, 0, 0),
-      new Cartesian3(5, 0, 0),
-      new Cartesian3(5, 5, 0),
-      new Cartesian3(0, 5, 0),
-    ];
-
-    const result = await area(positions);
-
-    expect(result).toBeGreaterThan(0);
-  });
-
   it('calculates area with clampToGround option (uses triangleGrid path)', async () => {
     const scene = {
       clampToHeightMostDetailed: vi.fn(async (positions: Cartesian3[]) => positions),
@@ -101,7 +86,9 @@ describe('area', () => {
       density: 10,
     });
 
-    expect(result).toBeGreaterThanOrEqual(0);
+    // Rough ground square ~0.003° ≈ 330m side; area should be large and finite.
+    expect(result).toBeGreaterThan(1e4);
+    expect(Number.isFinite(result)).toBe(true);
   });
 
   it('handles triangle in 3D space', async () => {
