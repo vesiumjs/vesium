@@ -22,7 +22,7 @@ export interface MaterialPropertyProgram<T extends MaterialProperty = any> {
 const _programs = new Map<string, any>();
 
 export function MaterialPropertyGetProgram(programName: string) {
-  _programs.get(programName);
+  return _programs.get(programName);
 }
 
 /**

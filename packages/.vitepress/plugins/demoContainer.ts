@@ -1,15 +1,16 @@
-import type MarkdownIt from 'markdown-it';
 import type { MarkdownEnv } from 'vitepress';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import mdContainer from 'markdown-it-container';
-import { escapeHtml } from '../utils/html';
+import { escapeHtml } from '../utils/html.ts';
 
 // eslint-disable-next-line regexp/no-super-linear-backtracking
 const DEMO_RE = /^demo\s*(.*)$/;
 const SRC_RE = /src=['"](.*?)['"]/;
 const SRC_ATTR_RE = /\s*src=(['"])(.*?)\1/;
+
+type MarkdownIt = Parameters<typeof mdContainer>[0];
 
 export function markdownDemoContainer(md: MarkdownIt) {
   mdContainer(md, 'demo', {

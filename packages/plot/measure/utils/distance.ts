@@ -96,12 +96,13 @@ export async function distance(positions: Cartesian3[], options?: DistanceOption
   }
 
   // 按每段长度占总长度的比例分配插值数量
+  // 每段至少插值 1 个点，避免过短的线段因取整为 0 导致 lerpArray 抛错
   const densities = stages.map((stage) => {
-    return Math.floor((stage / count) * density);
+    return Math.max(1, Math.floor((stage / count) * density));
   });
   // 出现未分配的插值数量则分配给最后一项
   const diff = density - densities.reduce((count, current) => (count += current), 0);
-  if (diff) {
+  if (diff > 0) {
     densities[densities.length - 1] += diff;
   }
 

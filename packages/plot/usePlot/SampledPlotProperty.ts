@@ -318,7 +318,7 @@ export class SampledPlotProperty<D = unknown> {
    * @param interval 要移除样本的时间间隔
    */
   removeSamples(interval: TimeInterval): void {
-    for (let i = 0; i < this._times.length; i++) {
+    for (let i = this._times.length - 1; i >= 0; i--) {
       const time = this._times[i];
       TimeInterval.contains(interval, time) && this.removeSample(time);
     }

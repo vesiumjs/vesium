@@ -1,5 +1,5 @@
 import type { PlotSkeleton } from '../usePlot';
-import { Cartesian3, Color, HorizontalOrigin, Rectangle, VerticalOrigin } from 'cesium';
+import { Cartesian2, Cartesian3, Color, HorizontalOrigin, Rectangle, VerticalOrigin } from 'cesium';
 import { canvasCoordToCartesian, toCartesian3 } from 'vesium';
 import { PlotAction } from '../usePlot';
 
@@ -59,7 +59,7 @@ export function moved(): PlotSkeleton {
           width: 20,
           height: 20,
           color: colors[action],
-          pixelOffset: new Cartesian3(0, -20),
+          pixelOffset: new Cartesian2(0, -20),
           horizontalOrigin: HorizontalOrigin.CENTER,
           verticalOrigin: VerticalOrigin.BOTTOM,
           disableDepthTestDistance: Number.POSITIVE_INFINITY,

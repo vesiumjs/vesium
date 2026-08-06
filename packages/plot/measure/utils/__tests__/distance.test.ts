@@ -1,5 +1,5 @@
 import { Cartesian3 } from 'cesium';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { distance } from '../distance';
 
 describe('distance', () => {
@@ -37,5 +37,21 @@ describe('distance', () => {
       new Cartesian3(5, 12, 0),
     ]);
     expect(result.count).toBe(result.stages.reduce((sum, current) => sum + current, 0));
+  });
+
+  it('does not throw when a segment is tiny relative to the total', async () => {
+    const scene = {
+      clampToHeightMostDetailed: vi.fn(() => Promise.resolve([])),
+    } as any;
+    const result = await distance(
+      [
+        Cartesian3.fromDegrees(116, 30, 0),
+        Cartesian3.fromDegrees(116, 30.0000001, 0),
+        Cartesian3.fromDegrees(116.5, 30, 0),
+      ],
+      { clampToGround: true, density: 50, scene },
+    );
+    expect(result.count).toBeGreaterThan(0);
+    expect(result.stages).toHaveLength(2);
   });
 });

@@ -4,6 +4,9 @@ import { control, interval } from '../skeleton';
 import { PlotScheme } from '../usePlot';
 import { area } from './utils';
 
+// 每个实体的渲染序号，用于丢弃过期渲染的异步计算结果
+const renderIds = new WeakMap<Entity, number>();
+
 export const schemeMeasureArea = new PlotScheme({
   type: 'MeasureArea',
   allowManualComplete: packable => packable.positions!.length >= 3,
@@ -49,16 +52,26 @@ export const schemeMeasureArea = new PlotScheme({
       );
       entity.label!.text = new ConstantProperty('');
 
-      area(positions).then((e) => {
-        let text: string = '';
-        if (e / 1000 / 1000 > 10) {
-          text = `${(e / 1000 / 1000).toFixed(2)}km²`;
-        }
-        else {
-          text = `${(+e).toFixed(2)}m²`;
-        }
-        entity.label!.text = new ConstantProperty(text);
-      });
+      const renderId = (renderIds.get(entity) ?? 0) + 1;
+      renderIds.set(entity, renderId);
+      area(positions)
+        .then((e) => {
+          // 已被更新的渲染取代时丢弃结果，避免旧数据覆盖新面积
+          if (renderIds.get(entity) !== renderId) {
+            return;
+          }
+          let text: string = '';
+          if (e / 1000 / 1000 > 10) {
+            text = `${(e / 1000 / 1000).toFixed(2)}km²`;
+          }
+          else {
+            text = `${(+e).toFixed(2)}m²`;
+          }
+          entity.label!.text = new ConstantProperty(text);
+        })
+        .catch(() => {
+          // 面积计算失败时保持空标签
+        });
       entity.polyline!.positions = undefined;
       entity.polygon!.hierarchy = new CallbackProperty(() => {
         return positions.length >= 3 ? new PolygonHierarchy([...positions]) : undefined;

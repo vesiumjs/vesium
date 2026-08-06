@@ -1,4 +1,4 @@
-import type { PlotSkeleton } from '../usePlot';
+import type { PlotFeature, PlotSkeleton } from '../usePlot';
 import { Cartesian3, Color } from 'cesium';
 import { canvasCoordToCartesian } from 'vesium';
 import { PlotAction } from '../usePlot';
@@ -7,7 +7,8 @@ import { PlotAction } from '../usePlot';
  * 绘制封闭的间隔框架点，如多边形。拖拽时，会在两点之间插入一个控制点，并持续拖拽该点。
  */
 export function interval(): PlotSkeleton {
-  let dragIndex = -1;
+  // 拖拽状态按标绘实例隔离，避免多个标绘共用方案单例时相互污染
+  const dragIndexes = new WeakMap<PlotFeature, number>();
   return {
     disabled: ({ active, defining }) => !active || defining,
     cursor: 'pointer',
@@ -22,7 +23,7 @@ export function interval(): PlotSkeleton {
         return Cartesian3.midpoint(position, next, new Cartesian3());
       });
     },
-    onDrag({ viewer, sampled, packable, event, index, lockCamera, dragging }) {
+    onDrag({ feature, viewer, sampled, packable, event, index, lockCamera, dragging }) {
       lockCamera();
 
       const position = canvasCoordToCartesian(event.endPosition, viewer.scene);
@@ -30,15 +31,16 @@ export function interval(): PlotSkeleton {
         return;
       }
       const positions = [...packable.positions ?? []];
+      const dragIndex = dragIndexes.get(feature) ?? -1;
       if (dragIndex === -1) {
-        dragIndex = index;
+        dragIndexes.set(feature, index);
         positions.splice(index + 1, 0, position);
       }
       else {
         positions[dragIndex + 1] = position;
       }
       if (!dragging) {
-        dragIndex = -1;
+        dragIndexes.set(feature, -1);
       }
       sampled.setSample({
         time: packable.time,

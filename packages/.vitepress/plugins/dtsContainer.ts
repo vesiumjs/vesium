@@ -1,13 +1,14 @@
-import type MarkdownIt from 'markdown-it';
 import type { MarkdownEnv } from 'vitepress';
 import fs from 'node:fs';
 import path from 'node:path';
 import mdContainer from 'markdown-it-container';
-import { VITEPRESS_BUILD_TYPES_PATH, VITEPRESS_PACKAGE_PATH } from '../path';
+import { VITEPRESS_BUILD_TYPES_PATH, VITEPRESS_PACKAGE_PATH } from '../path.ts';
 
 // eslint-disable-next-line regexp/no-super-linear-backtracking
 const DTS_RE = /^dts\s*(.*)$/;
 const TS_EXT_RE = /\.ts$/;
+
+type MarkdownIt = Parameters<typeof mdContainer>[0];
 
 export function markdownDtsContainer(md: MarkdownIt) {
   mdContainer(md, 'dts', {

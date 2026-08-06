@@ -5,8 +5,8 @@ import path from 'node:path';
 import FastGlob from 'fast-glob';
 import matter from 'gray-matter';
 import { createFilter, normalizePath } from 'vite';
-import { VITEPRESS_PACKAGE_PATH } from '../path';
-import { escapeHtml } from './html';
+import { VITEPRESS_PACKAGE_PATH } from '../path.ts';
+import { escapeHtml } from './html.ts';
 
 const MARKDOWN_EXT_RE = /\.md$/;
 const GENERIC_EXT_RE = /(\.(\w|-)*)$/;

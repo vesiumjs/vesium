@@ -3,10 +3,10 @@ import { fileURLToPath, URL } from 'node:url';
 import { getPackageInfoSync } from 'local-pkg';
 import { defineConfig } from 'vitepress';
 import llmstxtPlugin from 'vitepress-plugin-llmstxt';
-import { badgeTransform } from './plugins/badge';
-import { markdownDemoContainer } from './plugins/demoContainer';
-import { markdownDtsContainer } from './plugins/dtsContainer';
-import { generateSidebar } from './utils/generateSidebar';
+import { badgeTransform } from './plugins/badge.ts';
+import { markdownDemoContainer } from './plugins/demoContainer.ts';
+import { markdownDtsContainer } from './plugins/dtsContainer.ts';
+import { generateSidebar } from './utils/generateSidebar.ts';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';

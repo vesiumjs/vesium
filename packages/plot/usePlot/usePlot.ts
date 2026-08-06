@@ -1,6 +1,5 @@
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { PlotFeatureConstructorOptions } from './PlotFeature';
-import type { SampledPlotPackable } from './SampledPlotProperty';
 import { JulianDate, ScreenSpaceEventType } from 'cesium';
 import { pickHitGraphic, useCesiumEventListener, useScreenSpaceEventHandler, useViewer } from 'vesium';
 import { computed, nextTick, shallowReactive, shallowRef } from 'vue';
@@ -41,9 +40,8 @@ export interface UsePlotReturn {
 
   /**
    * Abort the current `operate()` call if one is pending.
-   * This can be `undefined` before a plot operation starts.
    */
-  cancel: VoidFunction | undefined;
+  cancel: VoidFunction;
 }
 
 export function usePlot(options?: UsePlotOptions): UsePlotReturn {
@@ -61,13 +59,6 @@ export function usePlot(options?: UsePlotOptions): UsePlotReturn {
   const plots = computed(() => Array.from(collection));
   // The plot currently being defined or restored.
   const current = shallowRef<PlotFeature>();
-  const packable = shallowRef<SampledPlotPackable>();
-
-  useCesiumEventListener([
-    () => current.value?.sampled.definitionChanged,
-  ], () => {
-    packable.value = current.value?.sampled.getValue(getCurrentTime());
-  });
 
   useSampled(current, getCurrentTime);
   useRender(plots, current, getCurrentTime);
@@ -145,6 +136,9 @@ export function usePlot(options?: UsePlotOptions): UsePlotReturn {
   const remove = (plot: PlotFeature): boolean => {
     if (plot === current.value) {
       current.value = undefined;
+      if (plot.defining) {
+        operateReject?.();
+      }
     }
     if (collection.has(plot)) {
       collection.delete(plot);
@@ -158,6 +152,6 @@ export function usePlot(options?: UsePlotOptions): UsePlotReturn {
     time,
     operate,
     remove,
-    cancel: operateReject,
+    cancel: () => operateReject?.(),
   };
 }

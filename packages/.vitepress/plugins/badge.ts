@@ -1,5 +1,5 @@
 import type { MarkdownRenderer } from 'vitepress';
-import { escapeHtml } from '../utils/html';
+import { escapeHtml } from '../utils/html.ts';
 
 const TAG_RE = /^\^\(([^)]*)\)/;
 

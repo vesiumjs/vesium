@@ -142,7 +142,9 @@ describe('sampledPlotProperty', () => {
       isStartIncluded: true,
       isStopIncluded: true,
     }));
-    expect(property.getTimes().some(time => JulianDate.equals(time, mid))).toBe(false);
+    const remaining = property.getTimes();
+    expect(remaining).toHaveLength(1);
+    expect(JulianDate.equals(remaining[0], start)).toBe(true);
   });
 
   it('uses custom interpolation algorithm when provided', () => {

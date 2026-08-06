@@ -65,7 +65,12 @@ export function useSkeleton(
             action: getPointAction(entity),
           });
 
-          const merge: any = new PlotSkeletonEntity(options ?? {});
+          // 不返回任何值则不渲染该点位
+          if (!options) {
+            return;
+          }
+
+          const merge: any = new PlotSkeletonEntity(options);
           if (entity) {
             merge.propertyNames.forEach((key: string) => {
               if (key !== 'id') {
