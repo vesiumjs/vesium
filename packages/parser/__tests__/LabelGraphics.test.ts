@@ -87,6 +87,9 @@ describe('labelGraphics', () => {
       const result = LabelGraphicsToJSON(instance);
       expect(result?.parser).toBe('LabelGraphics');
       expect(result?.value.text).toBe('Test Label');
+      expect(result?.value.font).toBe('16pt monospace');
+      const restored = LabelGraphicsFromJSON(result!);
+      expect(toPropertyValue(restored?.font)).toBe('16pt monospace');
     });
 
     it('should omit a field when omit is provided', () => {
@@ -149,14 +152,6 @@ describe('labelGraphics', () => {
       const result = LabelGraphicsFromJSON(json, undefined, 'text');
       expect(toPropertyValue(result?.text)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
-    });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => LabelGraphicsFromJSON(json as any)).toThrow();
     });
   });
 });

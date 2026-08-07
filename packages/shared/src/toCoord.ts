@@ -38,7 +38,7 @@ export function toCoord<T extends 'Array' | 'Object' = 'Array', Alt extends bool
   position?: CommonCoord,
   options: ToCoordOptions<T, Alt> = {},
 ): ToCoordReturn<T, Alt> | undefined {
-  if (!position) {
+  if (!position || (Array.isArray(position) && position.length === 0)) {
     return undefined;
   }
 

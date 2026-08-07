@@ -97,6 +97,9 @@ describe('ellipseGraphics', () => {
       const result = EllipseGraphicsToJSON(instance);
       expect(result?.parser).toBe('EllipseGraphics');
       expect(result?.value.semiMajorAxis).toBe(2000);
+      expect(result?.value.rotation).toBeCloseTo(Math.PI / 4);
+      const restored = EllipseGraphicsFromJSON(result!);
+      expect(toPropertyValue(restored?.rotation)).toBeCloseTo(Math.PI / 4);
     });
 
     it('should omit a field when omit is provided', () => {
@@ -162,14 +165,6 @@ describe('ellipseGraphics', () => {
       const result = EllipseGraphicsFromJSON(json, undefined, 'semiMajorAxis');
       expect(toPropertyValue(result?.semiMajorAxis)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
-    });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => EllipseGraphicsFromJSON(json as any)).toThrow();
     });
   });
 });

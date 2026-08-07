@@ -61,4 +61,36 @@ describe('interval skeleton drag state', () => {
     drag(featureB, 0, true);
     expect(featureB.sampled.getValue().positions).toHaveLength(4);
   });
+
+  it('recovers from a stale dragIndex left by a missed drag end', () => {
+    const feature = createFeature();
+    const skeleton = interval();
+    const event = { endPosition: { x: 1, y: 1 } };
+
+    const drag = (index: number, dragging: boolean) => {
+      skeleton.onDrag!({
+        feature,
+        viewer: {} as any,
+        sampled: feature.sampled,
+        packable: feature.sampled.getValue(),
+        event: event as any,
+        index,
+        lockCamera: () => {},
+        dragging,
+      } as any);
+    };
+
+    // 拖拽 index 1 插入点（dragIndex=1），然后点位被外部重置为 2 个（模拟未重置的残留状态）
+    drag(1, true);
+    feature.sampled.setSample({
+      time: feature.sampled.getTimes()[0],
+      positions: [new Cartesian3(0, 0, 0), new Cartesian3(1, 0, 0)],
+    });
+
+    // 残留 dragIndex=1 越界：应视为新拖拽重新插入，而不是覆盖 positions[2]
+    drag(0, true);
+    const positions = feature.sampled.getValue().positions;
+    expect(positions).toHaveLength(3);
+    expect(Cartesian3.equals(positions[1]!, new Cartesian3(99, 0, 0))).toBe(true);
+  });
 });

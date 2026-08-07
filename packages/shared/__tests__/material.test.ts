@@ -24,13 +24,10 @@ describe('material', () => {
       expect(result).toEqual({ type: 'test' });
     });
 
-    it('should return undefined if material not in cache', () => {
-      const getMaterial = vi.fn().mockReturnValue(undefined);
-      (Material as any)._materialCache = { getMaterial };
-
-      const result = getMaterialCache('nonexistent');
-
-      expect(result).toBeUndefined();
+    it('should return undefined for unknown material type', () => {
+      // 使用真实的 Cesium 材质缓存验证未注册类型的返回
+      (Material as any)._materialCache = originalMaterialCache;
+      expect(getMaterialCache(`material-unknown-${Date.now()}`)).toBeUndefined();
     });
   });
 

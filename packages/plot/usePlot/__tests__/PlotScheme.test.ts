@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { PlotScheme } from '../PlotScheme';
 
 describe('plotScheme', () => {
@@ -49,17 +49,9 @@ describe('plotScheme', () => {
     expect(() => PlotScheme.setCache({} as any)).toThrow('`scheme.type` is required');
   });
 
-  it('fails assert when resolving unknown cache type', () => {
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+  it('throws when resolving an unknown cache type', () => {
     const missing = `missing-${Date.now()}`;
-    try {
-      PlotScheme.resolve(missing);
-    }
-    catch {
-      // vue assert may throw depending on build mode
-    }
-    // Either throws or leaves cache empty for the missing type.
+    expect(() => PlotScheme.resolve(missing)).toThrow(`scheme ${missing} not found`);
     expect(PlotScheme.getCache(missing)).toBeUndefined();
-    spy.mockRestore();
   });
 });

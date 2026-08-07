@@ -132,10 +132,14 @@ describe('getCircleCenterOfThreeCoords', () => {
     expect(center[1]).toBeCloseTo(3.75, 5);
   });
 
-  it('should return valid coordinates for non-collinear points', () => {
-    const center = getCircleCenterOfThreeCoords([0, 0], [10, 0], [5, 10]);
-    expect(typeof center[0]).toBe('number');
-    expect(typeof center[1]).toBe('number');
+  it('should return correct center for points (0,0), (2,0), (1,3)', () => {
+    const center = getCircleCenterOfThreeCoords([0, 0], [2, 0], [1, 3]);
+    // Perpendicular bisector of (0,0)-(2,0) is x=1
+    // Perpendicular bisector of (0,0)-(1,3) passes through (0.5,1.5) with slope -1/3
+    expect(center[0]).toBeCloseTo(1, 5);
+    expect(center[1]).toBeCloseTo(4 / 3, 5);
+    expect(Number.isFinite(center[0])).toBe(true);
+    expect(Number.isFinite(center[1])).toBe(true);
   });
 });
 
@@ -182,7 +186,7 @@ describe('getAzimuth', () => {
 
   it('should handle identical points gracefully', () => {
     const angle = getAzimuth([0, 0], [0, 0]);
-    expect(typeof angle).toBe('number');
+    expect(angle).toBe(0);
   });
 });
 
@@ -197,10 +201,9 @@ describe('getAngleOfThreeCoords', () => {
     expect(angle).toBeCloseTo(Math.PI, 1);
   });
 
-  it('should return angle between 0 and 2*PI', () => {
-    const angle = getAngleOfThreeCoords([0, 0], [5, 5], [10, 0]);
-    expect(angle).toBeGreaterThanOrEqual(0);
-    expect(angle).toBeLessThanOrEqual(Math.PI * 2);
+  it('should return PI/2 for a right angle at (0,0) with (0,1) and (1,0)', () => {
+    const angle = getAngleOfThreeCoords([0, 1], [0, 0], [1, 0]);
+    expect(angle).toBeCloseTo(Math.PI / 2, 5);
   });
 });
 
@@ -213,12 +216,6 @@ describe('isClockWise', () => {
   it('should return false for counter-clockwise points (0,0)->(0,10)->(10,0)', () => {
     const result = isClockWise([0, 0], [0, 10], [10, 0]);
     expect(result).toBe(false);
-  });
-
-  it('should return consistent results (same input yields same output)', () => {
-    const result1 = isClockWise([0, 0], [10, 0], [5, 5]);
-    const result2 = isClockWise([0, 0], [10, 0], [5, 5]);
-    expect(result1).toBe(result2);
   });
 });
 
@@ -279,6 +276,15 @@ describe('getThirdCoord', () => {
     expect(diff).toBeGreaterThan(1);
   });
 
+  it('should place the point on opposite sides of the segment for clockwise vs counter-clockwise', () => {
+    const cw = getThirdCoord([0, 0], [1, 0], Math.PI / 2, 1, true);
+    const ccw = getThirdCoord([0, 0], [1, 0], Math.PI / 2, 1, false);
+    expect(cw[0]).toBeCloseTo(1, 5);
+    expect(cw[1]).toBeCloseTo(-1, 5);
+    expect(ccw[0]).toBeCloseTo(1, 5);
+    expect(ccw[1]).toBeCloseTo(1, 5);
+  });
+
   it('should return endpoint when distance is 0', () => {
     const end: CoordArray = [10, 0];
     const result = getThirdCoord([0, 0], end, Math.PI / 4, 0, true);
@@ -300,21 +306,43 @@ describe('getArcCoords', () => {
     expect(result.length).toBe(FITTING_COUNT + 1);
   });
 
-  it('should return points on arc', () => {
+  it('should return points on the quarter arc', () => {
     const radius = 10;
     const result = getArcCoords([0, 0], radius, 0, Math.PI / 2);
-    expect(result[0][0]).toBeCloseTo(radius, 0);
-    expect(result[0][1]).toBeCloseTo(0, 0);
+    expect(result[0][0]).toBeCloseTo(radius, 5);
+    expect(result[0][1]).toBeCloseTo(0, 5);
+    // result[50] is at 45 deg
+    expect(result[50][0]).toBeCloseTo(radius * Math.cos(Math.PI / 4), 5);
+    expect(result[50][1]).toBeCloseTo(radius * Math.sin(Math.PI / 4), 5);
+    // result[100] is at 90 deg
+    expect(result[100][0]).toBeCloseTo(0, 5);
+    expect(result[100][1]).toBeCloseTo(radius, 5);
   });
 
-  it('should handle full circle (startAngle == endAngle)', () => {
-    const result = getArcCoords([0, 0], 10, 0, 0);
+  it('should draw a full circle when the angle difference is 2*PI', () => {
+    const result = getArcCoords([0, 0], 10, 0, 2 * Math.PI);
     expect(result.length).toBe(FITTING_COUNT + 1);
+    expect(result[0][0]).toBeCloseTo(10, 5);
+    expect(result[0][1]).toBeCloseTo(0, 5);
+    // result[100] is at 2*PI, back at the start point
+    expect(result.at(-1)![0]).toBeCloseTo(10, 5);
+    expect(result.at(-1)![1]).toBeCloseTo(0, 5);
+    // result[50] is at PI
+    expect(result[50][0]).toBeCloseTo(-10, 5);
+    expect(result[50][1]).toBeCloseTo(0, 5);
   });
 
-  it('should handle negative angle difference', () => {
+  it('should draw from endAngle to startAngle+2*PI when the angle difference is negative', () => {
     const result = getArcCoords([0, 0], 10, Math.PI, 0);
     expect(result.length).toBe(FITTING_COUNT + 1);
+    expect(result[0][0]).toBeCloseTo(-10, 5);
+    expect(result[0][1]).toBeCloseTo(0, 5);
+    // result[50] is at 3*PI/2
+    expect(result[50][0]).toBeCloseTo(0, 5);
+    expect(result[50][1]).toBeCloseTo(-10, 5);
+    // result[100] is back at 2*PI == 0
+    expect(result[100][0]).toBeCloseTo(10, 5);
+    expect(result[100][1]).toBeCloseTo(0, 5);
   });
 
   it('should handle radius 0 (all points at center)', () => {
@@ -355,11 +383,12 @@ describe('getBisectorNormals', () => {
 });
 
 describe('getNormal', () => {
-  it('should return a normal vector for three points', () => {
+  it('should return the sum of unit vectors for three points', () => {
     const result = getNormal([0, 0], [5, 5], [10, 0]);
     expect(result.length).toBe(2);
-    expect(typeof result[0]).toBe('number');
-    expect(typeof result[1]).toBe('number');
+    // unit vectors from (5,5) are (-1/sqrt(2), -1/sqrt(2)) and (1/sqrt(2), -1/sqrt(2))
+    expect(result[0]).toBeCloseTo(0, 5);
+    expect(result[1]).toBeCloseTo(-Math.SQRT2, 5);
   });
 
   it('should return a non-zero vector for non-collinear points', () => {

@@ -4,9 +4,7 @@ import { degreesToDms, dmsDecode, dmsEncode, dmsToDegrees } from '../src/convert
 describe('convertDMS', () => {
   describe('dmsEncode', () => {
     it('should encode degrees to DMS format', () => {
-      const result = dmsEncode(120.5125);
-      expect(result).toMatch(/^120°30′4[45]\.\d+″$/);
-      expect(Number(result.split('′')[1].replace('″', ''))).toBeCloseTo(45, 1);
+      expect(dmsEncode(120.5125)).toBe('120°30′45″');
     });
 
     it('should encode integer degrees', () => {
@@ -14,15 +12,16 @@ describe('convertDMS', () => {
     });
 
     it('should encode with custom precision', () => {
-      const result = dmsEncode(120.5125, 2);
-      // When seconds are integer 45, toFixed(2) produces "45.00" but the source
-      // splits on "." and may not find one, resulting in "45" not "45.00"
-      expect(result).toMatch(/^120°30′45(\.00)?″$/);
+      expect(dmsEncode(120.5125, 2)).toBe('120°30′45″');
+      expect(dmsEncode(120.5126, 2)).toBe('120°30′45.36″');
+      expect(dmsEncode(120.5126, 3)).toBe('120°30′45.36″');
+      expect(dmsEncode(120.51265, 3)).toBe('120°30′45.54″');
     });
 
     it.each([
       [-120.5, '120°30′0″'],
       [120.5, '120°30′0″'],
+      [120.9999999, '121°0′0″'],
     ])('should handle %s -> %s', (input, expected) => {
       expect(dmsEncode(input)).toBe(expected);
     });

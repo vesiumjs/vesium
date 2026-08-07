@@ -76,9 +76,41 @@ describe('measureDistance async race guard', () => {
       Cesium.Cartesian3.fromDegrees(116.1, 30, 0),
     ], first.entities).entities;
 
-    // 旧渲染（4 段）的结果在撤销后返回，不允许越界写入崩溃
+    // 旧渲染（4 段）的结果在撤销后返回，不允许越界写入崩溃，也不允许覆盖新标签
     pending[0]!({ stages: [1, 2, 3, 4], count: 10 });
     await Promise.resolve();
     expect(entities.length).toBe(3);
+    for (const item of entities.slice(1)) {
+      expect(item.label?.text).toBeUndefined();
+    }
+  });
+
+  it('discards stale results and trims labels when points shrink below 2', async () => {
+    const entity = new Cesium.Entity({ polyline: {} });
+    const render = (positions: Cesium.Cartesian3[], previous?: Cesium.Entity[]) => {
+      const result = schemeMeasureDistance.render!({
+        packable: { positions },
+        defining: false,
+        mouse: undefined,
+        previous: { entities: previous ?? [entity] },
+        getPositions: () => [],
+      });
+      return result as { entities: Cesium.Entity[] };
+    };
+
+    const first = render([
+      Cesium.Cartesian3.fromDegrees(116, 30, 0),
+      Cesium.Cartesian3.fromDegrees(116.1, 30, 0),
+    ]);
+    // 撤销到 1 个点 → 早退分支（不发起计算）
+    const entities = render([
+      Cesium.Cartesian3.fromDegrees(116, 30, 0),
+    ], first.entities).entities;
+
+    // 早退前的挂起结果返回：必须被失效，不允许写入已裁剪的实体
+    pending[0]!({ stages: [111111], count: 111111 });
+    await Promise.resolve();
+    expect(entities.length).toBe(1);
+    expect(entities[1]).toBeUndefined();
   });
 });

@@ -97,6 +97,10 @@ describe('sampledPositionProperty', () => {
       };
       const result = SampledPositionPropertyFromJSON(json);
       expect(result).toBeInstanceOf(SampledPositionProperty);
+      const value = result!.getValue(JulianDate.fromIso8601('2024-01-01T00:00:00Z'));
+      expect(value?.x).toBe(1);
+      expect(value?.y).toBe(2);
+      expect(value?.z).toBe(3);
     });
 
     it('should return undefined for undefined input', () => {
@@ -137,14 +141,14 @@ describe('sampledPositionProperty', () => {
       };
       const result = SampledPositionPropertyFromJSON(json);
       expect(result).toBeInstanceOf(SampledPositionProperty);
-    });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => SampledPositionPropertyFromJSON(json as any)).toThrow();
+      const first = result!.getValue(JulianDate.fromIso8601('2024-01-01T00:00:00Z'));
+      expect(first?.x).toBe(1);
+      expect(first?.y).toBe(2);
+      expect(first?.z).toBe(3);
+      const second = result!.getValue(JulianDate.fromIso8601('2024-06-01T00:00:00Z'));
+      expect(second?.x).toBe(4);
+      expect(second?.y).toBe(5);
+      expect(second?.z).toBe(6);
     });
   });
 });

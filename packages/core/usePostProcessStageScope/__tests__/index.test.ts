@@ -92,7 +92,9 @@ describe('usePostProcessStageScope', () => {
   });
 
   it('should not destroy stage when destroyOnRemove is false', async () => {
+    // remove 必须返回 true，否则源码中 `removed && destroyOnRemove && destroy()` 会在第一项短路，测试无法触及 false 分支
     mocks.remove.mockClear();
+    mocks.remove.mockReturnValue(true);
     const mockDestroy = vi.fn();
     const mockIsDestroyed = vi.fn(() => false);
     const mockStage = {
@@ -115,6 +117,7 @@ describe('usePostProcessStageScope', () => {
     (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockStage);
     expect(mockDestroy).not.toHaveBeenCalled();
+    mocks.remove.mockReset();
   });
 
   it('should handle async stage add', async () => {

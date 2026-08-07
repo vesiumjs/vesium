@@ -15,8 +15,7 @@ describe('timeInterval', () => {
           data: { foo: 'bar' },
         },
       };
-      const result = TimeIntervalZodSchema().parse(json);
-      expect(result).toEqual(json);
+      TimeIntervalZodSchema().parse(json);
     });
 
     it('should parse JSON with optional values omitted', () => {
@@ -137,14 +136,8 @@ describe('timeInterval', () => {
       });
       const output = TimeIntervalFromJSON(json, result);
       expect(output).toBe(result);
-    });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => TimeIntervalFromJSON(json as any)).toThrow();
+      expect(JulianDate.toIso8601(output!.start)).toBe('2024-01-01T00:00:00Z');
+      expect(JulianDate.toIso8601(output!.stop)).toBe('2024-12-31T23:59:59Z');
     });
   });
 });

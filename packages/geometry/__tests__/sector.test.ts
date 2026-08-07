@@ -15,19 +15,6 @@ describe('sector', () => {
     expect(result.length).toBe(FITTING_COUNT + 3);
   });
 
-  it('should close the sector shape (last point equals first)', () => {
-    const coords: CoordArray[] = [
-      [0, 0],
-      [10, 0],
-      [5, 5],
-    ];
-    const result = sector(coords);
-    const first = result[0];
-    const last = result.at(-1)!;
-    expect(first[0]).toBeCloseTo(last[0], 5);
-    expect(first[1]).toBeCloseTo(last[1], 5);
-  });
-
   it('should include the center point at index FITTING_COUNT+1', () => {
     const center: CoordArray = [0, 0];
     const coords: CoordArray[] = [

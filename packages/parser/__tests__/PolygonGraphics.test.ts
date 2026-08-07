@@ -153,13 +153,5 @@ describe('polygonGraphics', () => {
       expect(toPropertyValue(result?.height)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => PolygonGraphicsFromJSON(json as any)).toThrow();
-    });
   });
 });

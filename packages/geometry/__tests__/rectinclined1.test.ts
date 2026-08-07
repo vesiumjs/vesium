@@ -14,11 +14,20 @@ describe('rectinclined1', () => {
     expect(() => rectinclined1([[0, 0], [10, 10]])).toThrow('coords.length must >= 3');
   });
 
-  it('should return a closed shape', () => {
+  it('should return a closed rectangle with the mouse point projected onto a perpendicular', () => {
     const result = rectinclined1([[0, 0], [10, 0], [5, 5]]);
+    const expected: CoordArray[] = [
+      [0, 0],
+      [10, 0],
+      [10, 5],
+      [0, 5],
+      [0, 0],
+    ];
     expect(result).toHaveLength(5);
-    expect(result[0][0]).toBeCloseTo(result[4][0], 5);
-    expect(result[0][1]).toBeCloseTo(result[4][1], 5);
+    result.forEach((point, index) => {
+      expect(point[0]).toBeCloseTo(expected[index][0], 5);
+      expect(point[1]).toBeCloseTo(expected[index][1], 5);
+    });
   });
 });
 

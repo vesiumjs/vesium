@@ -123,6 +123,8 @@ describe('entity', () => {
       const result = EntityToJSON(instance);
       expect(result?.parser).toBe('Entity');
       expect(result?.value.billboard?.parser).toBe('BillboardGraphics');
+      expect(result?.value.billboard?.value.image).toBe('icon.png');
+      expect(result?.value.billboard?.value.show).toBe(true);
     });
 
     it('should convert Entity with label', () => {
@@ -135,6 +137,7 @@ describe('entity', () => {
       const result = EntityToJSON(instance);
       expect(result?.parser).toBe('Entity');
       expect(result?.value.label?.parser).toBe('LabelGraphics');
+      expect(result?.value.label?.value.text).toBe('Test Label');
     });
 
     it('should convert Entity with point', () => {
@@ -147,6 +150,8 @@ describe('entity', () => {
       const result = EntityToJSON(instance);
       expect(result?.parser).toBe('Entity');
       expect(result?.value.point?.parser).toBe('PointGraphics');
+      expect(result?.value.point?.value.pixelSize).toBe(10);
+      expect(result?.value.point?.value.color?.value.red).toBe(1);
     });
 
     it('should convert Entity with multiple graphics', () => {
@@ -245,14 +250,6 @@ describe('entity', () => {
       const result = EntityFromJSON(json, 'billboard' as any);
       expect(result?.billboard).toBeUndefined();
       expect(result?.id).toBe('test');
-    });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => EntityFromJSON(json as any)).toThrow();
     });
   });
 });

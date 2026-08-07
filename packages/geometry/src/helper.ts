@@ -95,7 +95,11 @@ export function getIntersectCoord(coordA: CoordArray, coordB: CoordArray, coordC
  */
 export function getAzimuth(startCoord: CoordArray, endCoord: CoordArray): number {
   let azimuth = 0;
-  const angle = Math.asin(Math.abs(endCoord[1] - startCoord[1]) / mathDistance(startCoord, endCoord));
+  const distance = mathDistance(startCoord, endCoord);
+  if (distance === 0) {
+    return 0;
+  }
+  const angle = Math.asin(Math.abs(endCoord[1] - startCoord[1]) / distance);
   if (endCoord[1] >= startCoord[1] && endCoord[0] >= startCoord[0]) {
     azimuth = angle + Math.PI;
   }

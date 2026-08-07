@@ -54,7 +54,9 @@ describe('triangleGrid', () => {
     ];
     const lowDensity = await triangleGrid(positions, { density: 2 });
     const highDensity = await triangleGrid(positions, { density: 10 });
-    expect(highDensity.length).toBeGreaterThanOrEqual(lowDensity.length);
+    expect(lowDensity.length).toBe(16);
+    expect(highDensity.length).toBe(384);
+    expect(highDensity.length).toBeGreaterThan(lowDensity.length);
   });
 
   it('throws when clampToGround is true but scene is not provided', async () => {

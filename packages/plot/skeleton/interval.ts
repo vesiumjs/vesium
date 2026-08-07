@@ -32,7 +32,8 @@ export function interval(): PlotSkeleton {
       }
       const positions = [...packable.positions ?? []];
       const dragIndex = dragIndexes.get(feature) ?? -1;
-      if (dragIndex === -1) {
+      // 索引越界（如上次拖拽的 LEFT_UP 丢失后残留）时视为新拖拽重新插入
+      if (dragIndex === -1 || dragIndex + 1 >= positions.length) {
         dragIndexes.set(feature, index);
         positions.splice(index + 1, 0, position);
       }

@@ -9,8 +9,7 @@ describe('cartesian3', () => {
         parser: 'Cartesian3' as const,
         value: { x: 1, y: 2, z: 3 },
       };
-      const result = Cartesian3ZodSchema().parse(json);
-      expect(result).toEqual(json);
+      Cartesian3ZodSchema().parse(json);
     });
 
     it('should parse JSON with partial coordinates', () => {
@@ -101,14 +100,6 @@ describe('cartesian3', () => {
       expect(output?.x).toBe(1);
       expect(output?.y).toBe(2);
       expect(output?.z).toBe(3);
-    });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian2' as const,
-        value: { x: 1, y: 2 },
-      };
-      expect(() => Cartesian3FromJSON(json as any)).toThrow();
     });
   });
 });

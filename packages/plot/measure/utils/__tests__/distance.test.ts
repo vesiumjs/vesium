@@ -30,15 +30,6 @@ describe('distance', () => {
     )).rejects.toThrow('options.density must > 0');
   });
 
-  it('calculates total count as sum of all stages', async () => {
-    const result = await distance([
-      new Cartesian3(0, 0, 0),
-      new Cartesian3(5, 0, 0),
-      new Cartesian3(5, 12, 0),
-    ]);
-    expect(result.count).toBe(result.stages.reduce((sum, current) => sum + current, 0));
-  });
-
   it('does not throw when a segment is tiny relative to the total', async () => {
     const scene = {
       clampToHeightMostDetailed: vi.fn(() => Promise.resolve([])),

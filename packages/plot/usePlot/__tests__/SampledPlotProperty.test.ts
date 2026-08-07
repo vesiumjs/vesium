@@ -147,6 +147,17 @@ describe('sampledPlotProperty', () => {
     expect(JulianDate.equals(remaining[0], start)).toBe(true);
   });
 
+  it('does not crash when getValue is called after all samples are removed', () => {
+    const property = new SampledPlotProperty({
+      packables: [{ time: start, positions: [new Cartesian3(0, 0, 0)] }],
+    });
+    expect(property.removeSample(start)).toBe(true);
+    expect(property.getTimes()).toHaveLength(0);
+    const value = property.getValue();
+    expect(value.positions).toEqual([]);
+    expect(property.getValue(start).positions).toEqual([]);
+  });
+
   it('uses custom interpolation algorithm when provided', () => {
     const interpolationAlgorithm = vi.fn((_time, _previous, next) => ({
       time: end,

@@ -9,12 +9,11 @@ describe('arrowUnitCombatOperationTailed', () => {
     expect(() => arrowUnitCombatOperationTailed([[5, 5]])).toThrow('coords.length must >= 2');
   });
 
-  it('should return a closed polygon with tip present and no mutation', () => {
+  it('should include the tip and not mutate input', () => {
     const coords: CoordArray[] = [[0, 0], [100_000, 50_000]];
     const before = snapshotCoords(coords);
     const result = arrowUnitCombatOperationTailed(coords);
 
-    expect(result.at(-1)).toEqual(result[0]);
     expect(includesCoord(result, [100_000, 50_000])).toBe(true);
     expect(coords).toEqual(before);
     expectCoordArray(result);

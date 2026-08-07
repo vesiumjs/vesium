@@ -1,5 +1,6 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
+import { FITTING_COUNT } from '../src/helper';
 import { lune } from '../src/lune';
 
 describe('lune', () => {
@@ -8,15 +9,17 @@ describe('lune', () => {
     expect(() => lune([[5, 5]])).toThrow('coords.length must >= 2');
   });
 
-  it('should close the shape', () => {
+  it('should return an arc spanning the two input points plus a closing point', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [10, 0],
     ];
     const result = lune(coords);
-    const first = result[0];
-    const last = result.at(-1)!;
-    expect(first[0]).toBeCloseTo(last[0], 5);
-    expect(first[1]).toBeCloseTo(last[1], 5);
+    expect(result.length).toBe(FITTING_COUNT + 2);
+    // the arc starts at the second input point and ends at the first
+    expect(result[0][0]).toBeCloseTo(10, 5);
+    expect(result[0][1]).toBeCloseTo(0, 5);
+    expect(result[FITTING_COUNT][0]).toBeCloseTo(0, 5);
+    expect(result[FITTING_COUNT][1]).toBeCloseTo(0, 5);
   });
 });

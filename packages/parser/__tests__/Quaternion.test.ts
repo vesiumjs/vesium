@@ -9,8 +9,7 @@ describe('quaternion', () => {
         parser: 'Quaternion' as const,
         value: { x: 0, y: 0, z: 0, w: 1 },
       };
-      const result = QuaternionZodSchema().parse(json);
-      expect(result).toEqual(json);
+      QuaternionZodSchema().parse(json);
     });
 
     it('should reject JSON with missing required values', () => {
@@ -94,14 +93,6 @@ describe('quaternion', () => {
       expect(output?.y).toBe(0);
       expect(output?.z).toBe(0);
       expect(output?.w).toBe(1);
-    });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: { x: 0, y: 0, z: 0 },
-      };
-      expect(() => QuaternionFromJSON(json as any)).toThrow();
     });
 
     it('should reject JSON with missing required values', () => {

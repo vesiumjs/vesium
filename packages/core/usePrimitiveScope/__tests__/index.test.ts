@@ -7,6 +7,8 @@ import { usePrimitiveScope } from '../../index';
 const mocks = vi.hoisted(() => ({
   add: vi.fn(p => p),
   remove: vi.fn(),
+  groundAdd: vi.fn(p => p),
+  groundRemove: vi.fn(),
 }));
 
 vi.mock('cesium', async (importOriginal) => {
@@ -18,8 +20,8 @@ vi.mock('cesium', async (importOriginal) => {
         remove: mocks.remove,
       },
       groundPrimitives: {
-        add: mocks.add,
-        remove: mocks.remove,
+        add: mocks.groundAdd,
+        remove: mocks.groundRemove,
       },
     };
 
@@ -66,7 +68,8 @@ describe('usePrimitiveScope', () => {
     });
 
     await nextTick();
-    expect(mocks.add).toHaveBeenCalledWith(mockPrimitive);
+    expect(mocks.groundAdd).toHaveBeenCalledWith(mockPrimitive);
+    expect(mocks.add).not.toHaveBeenCalledWith(mockPrimitive);
   });
 
   it('should remove primitive via removeScope', async () => {
@@ -114,6 +117,8 @@ describe('usePrimitiveScope', () => {
   });
 
   it('should not destroy primitive when destroyOnRemove is false', async () => {
+    // remove 必须返回 true，否则源码中 `removed && destroyOnRemove && destroy()` 会在第一项短路，测试无法触及 false 分支
+    mocks.remove.mockReturnValue(true);
     const mockDestroy = vi.fn();
     const mockIsDestroyed = vi.fn(() => false);
     const mockPrimitive = {

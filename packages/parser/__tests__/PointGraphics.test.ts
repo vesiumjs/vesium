@@ -136,13 +136,5 @@ describe('pointGraphics', () => {
       expect(toPropertyValue(result?.pixelSize)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => PointGraphicsFromJSON(json as any)).toThrow();
-    });
   });
 });

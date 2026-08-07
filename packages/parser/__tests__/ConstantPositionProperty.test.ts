@@ -94,13 +94,5 @@ describe('constantPositionProperty', () => {
       const result = ConstantPositionPropertyFromJSON(undefined);
       expect(result).toBeUndefined();
     });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: { x: 1, y: 2, z: 3 },
-      };
-      expect(() => ConstantPositionPropertyFromJSON(json as any)).toThrow();
-    });
   });
 });

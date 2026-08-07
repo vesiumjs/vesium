@@ -216,6 +216,9 @@ export class SampledPlotProperty<D = unknown> {
     });
 
     if (!time) {
+      if (!this._times.length) {
+        return result;
+      }
       result.time = this._times[0]!.clone();
       result.positions = this._sampleds[0]?.map(c => c.clone(c));
       result.derivative = this._derivatives[0];

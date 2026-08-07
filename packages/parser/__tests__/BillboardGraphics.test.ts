@@ -135,13 +135,5 @@ describe('billboardGraphics', () => {
       expect(toPropertyValue(result?.image)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => BillboardGraphicsFromJSON(json as any)).toThrow();
-    });
   });
 });

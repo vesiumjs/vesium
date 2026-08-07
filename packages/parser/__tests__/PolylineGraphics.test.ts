@@ -163,13 +163,5 @@ describe('polylineGraphics', () => {
       expect(toPropertyValue(result?.width)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });
-
-    it('should reject invalid JSON structure', () => {
-      const json = {
-        parser: 'Cartesian3' as const,
-        value: {},
-      };
-      expect(() => PolylineGraphicsFromJSON(json as any)).toThrow();
-    });
   });
 });

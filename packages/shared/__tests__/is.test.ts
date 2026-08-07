@@ -24,13 +24,6 @@ describe('is.ts', () => {
       expect(isDef({})).toBe(true);
       expect(isDef([])).toBe(true);
       expect(isDef(undefined)).toBe(false);
-    });
-
-    it('should return false for undefined', () => {
-      expect(isDef(undefined)).toBe(false);
-    });
-
-    it('should work without arguments', () => {
       expect(isDef()).toBe(false);
     });
   });

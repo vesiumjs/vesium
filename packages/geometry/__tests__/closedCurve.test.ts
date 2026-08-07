@@ -1,6 +1,7 @@
 import type { CoordArray } from '@vesium/shared';
 import { describe, expect, it } from 'vitest';
 import { closedCurve } from '../src/closedCurve';
+import { FITTING_COUNT } from '../src/helper';
 import { snapshotCoords } from './utils';
 
 describe('closedCurve', () => {
@@ -10,7 +11,7 @@ describe('closedCurve', () => {
     expect(() => closedCurve([[0, 0], [10, 10]])).toThrow('coords.length must >= 3');
   });
 
-  it('should close the curve without mutating input', () => {
+  it('should pass through the input points without mutating input', () => {
     const coords: CoordArray[] = [
       [0, 0],
       [5, 10],
@@ -18,10 +19,12 @@ describe('closedCurve', () => {
     ];
     const snapshot = snapshotCoords(coords);
     const result = closedCurve(coords);
-    const first = result[0];
-    const last = result.at(-1)!;
-    expect(first[0]).toBeCloseTo(last[0], 3);
-    expect(first[1]).toBeCloseTo(last[1], 3);
+    // one cubic segment per input point, each segment is FITTING_COUNT + 3 points
+    const stride = FITTING_COUNT + 3;
+    expect(result.length).toBe(coords.length * stride);
+    expect(result[0]).toEqual([0, 0]);
+    expect(result[stride]).toEqual([5, 10]);
+    expect(result[stride * 2]).toEqual([10, 0]);
     expect(coords).toEqual(snapshot);
   });
 });

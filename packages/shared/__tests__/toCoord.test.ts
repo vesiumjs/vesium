@@ -77,8 +77,7 @@ describe('toCoord', () => {
     });
 
     it('should return undefined for empty array without alt', () => {
-      const result = toCoord([], { type: 'Array' });
-      expect(result).toEqual([undefined, undefined]);
+      expect(toCoord([], { type: 'Array' })).toBeUndefined();
     });
   });
 

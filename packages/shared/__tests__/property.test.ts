@@ -97,13 +97,24 @@ describe('property', () => {
     });
 
     it('should create a writable property field', () => {
-      const scope: any = { definitionChanged: { raiseEvent: vi.fn() } };
+      const raiseEvent = vi.fn();
+      const scope: any = { definitionChanged: { raiseEvent } };
       const initialProp = new ConstantProperty('value');
       createPropertyField(scope, 'test', initialProp, false);
       const newProp = new ConstantProperty('new value');
       scope.test = newProp;
       expect(scope._test).toBe(newProp);
       expect(scope._test.getValue()).toBe('new value');
+      expect(raiseEvent).toHaveBeenCalledWith(scope, 'test', newProp, initialProp);
+    });
+
+    it('should not raise definitionChanged when setting the same value', () => {
+      const raiseEvent = vi.fn();
+      const scope: any = { definitionChanged: { raiseEvent } };
+      const prop = new ConstantProperty('value');
+      createPropertyField(scope, 'test', prop, false);
+      scope.test = prop;
+      expect(raiseEvent).not.toHaveBeenCalled();
     });
   });
 
@@ -137,11 +148,31 @@ describe('property', () => {
     });
 
     it('should throw error when setting non-property value with toProperty enabled', () => {
-      const scope: any = { definitionChanged: { raiseEvent: vi.fn() } };
+      const raiseEvent = vi.fn();
+      const scope: any = { definitionChanged: { raiseEvent } };
       createCesiumAttribute(scope, 'test', new ConstantProperty(1), { toProperty: true });
       expect(() => {
         scope.test = 'invalid';
       }).toThrow('The value of test must be a Cesium.Property object');
+      expect(raiseEvent).not.toHaveBeenCalled();
+    });
+
+    it('should raise definitionChanged when set', () => {
+      const raiseEvent = vi.fn();
+      const scope: any = { definitionChanged: { raiseEvent } };
+      createCesiumAttribute(scope, 'test', 'value');
+      scope.test = 'next';
+      expect(scope.test).toBe('next');
+      expect(raiseEvent).toHaveBeenCalledWith(scope, 'test', 'next', 'value');
+    });
+
+    it('should propagate inner property changes to host definitionChanged', () => {
+      const raiseEvent = vi.fn();
+      const scope: any = { definitionChanged: { raiseEvent } };
+      createCesiumAttribute(scope, 'test', new ConstantProperty(1), { toProperty: true });
+      const inner = scope._test as ConstantProperty;
+      inner.definitionChanged.raiseEvent(inner);
+      expect(raiseEvent).toHaveBeenCalled();
     });
   });
 
@@ -154,11 +185,13 @@ describe('property', () => {
     });
 
     it('should accept Property assignment and reject plain values', () => {
-      const scope: any = { definitionChanged: { raiseEvent: vi.fn() } };
+      const raiseEvent = vi.fn();
+      const scope: any = { definitionChanged: { raiseEvent } };
       createCesiumProperty(scope, 'test', 'value');
       const next = new ConstantProperty('next');
       scope.test = next;
       expect(scope._test).toBe(next);
+      expect(raiseEvent).toHaveBeenCalledWith(scope, 'test', next, expect.any(ConstantProperty));
       expect(() => {
         scope.test = 'invalid';
       }).toThrow('The value of test must be a Cesium.Property object');

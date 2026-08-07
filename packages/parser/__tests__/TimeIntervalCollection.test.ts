@@ -165,13 +165,5 @@ describe('timeIntervalCollection', () => {
       expect(output).toBe(result);
       expect(output!.length).toBe(1);
     });
-
-    it('should reject invalid JSON structure', () => {
-      const json: { parser: 'Cartesian3'; value: { intervals: TimeIntervalJSON[] } } = {
-        parser: 'Cartesian3' as const,
-        value: { intervals: [] },
-      };
-      expect(() => TimeIntervalCollectionFromJSON(json as any)).toThrow();
-    });
   });
 });

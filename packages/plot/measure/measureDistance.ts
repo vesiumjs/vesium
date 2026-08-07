@@ -33,6 +33,10 @@ export const schemeMeasureDistance = new PlotScheme({
     mouse && positions.push(mouse);
 
     if (positions.length < 2) {
+      // 点数不足时同样失效挂起的计算并清理旧标签实体，避免撤销到 <2 点后陈旧结果写入
+      const pl = entities[0]!;
+      renderIds.set(pl, (renderIds.get(pl) ?? 0) + 1);
+      entities.splice(1);
       return {
         entities,
       };
