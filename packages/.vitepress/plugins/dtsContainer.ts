@@ -26,7 +26,18 @@ export function markdownDtsContainer(md: MarkdownIt) {
           const realPath = path.resolve(env.realPath!, '../', src);
           const relativePath = path.relative(VITEPRESS_PACKAGE_PATH, realPath);
           const fullTypesPath = path.resolve(VITEPRESS_BUILD_TYPES_PATH, relativePath).replace(TS_EXT_RE, '.d.ts');
-          const code = fs.readFileSync(fullTypesPath, 'utf-8').toString();
+          let code: string;
+          try {
+            code = fs.readFileSync(fullTypesPath, 'utf-8');
+          }
+          catch (error) {
+            // The types may not be emitted yet (e.g. the dev-server watch is still on its first
+            // run, or `build:types` was never executed) — render a hint instead of crashing.
+            if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+              return md.render(`> \`${relativePath}\` type definitions not generated yet. Run \`pnpm build:types\`, or use \`docs:dev\` which generates them in watch mode.`);
+            }
+            throw error;
+          }
           return md.render(`\`\`\`typescript\n${code}\n\`\`\``);
         });
 

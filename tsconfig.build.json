@@ -21,5 +21,11 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
-  "include": ["packages/**/*.ts"]
+  "include": ["packages/**/*.ts"],
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/__tests__/**",
+    "packages/.vitepress/.types/**"
+  ]
 }
