@@ -46,7 +46,8 @@ describe('useSkeleton stale graphics', () => {
       initRender: () => ({}),
       skeletons: [
         () => ({
-          // 不依赖 disabled：验证 render 返回 undefined 时旧图形必须被清理
+          // Independent of `disabled`: verify that old graphics are cleaned up when render
+          // returns undefined
           format: () => [new Cesium.Cartesian3(0, 0, 0)],
           render: ({ active }: { active: boolean }) => (active
             ? { position: new Cesium.Cartesian3(0, 0, 0), point: { pixelSize: 6 } }
@@ -77,12 +78,12 @@ describe('useSkeleton stale graphics', () => {
     await nextTick();
     await nextTick();
 
-    // 激活时渲染骨架点
+    // Skeleton points render while the feature is active
     current.value = feature;
     await nextTick();
     expect(skeletonEntities()).toHaveLength(1);
 
-    // 取消激活后骨架点必须被移除，而不是残留旧图形
+    // Deactivating must remove the skeleton points instead of leaving stale graphics behind
     current.value = undefined;
     await nextTick();
     expect(feature.skeletons).toHaveLength(0);

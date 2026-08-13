@@ -54,7 +54,7 @@ export function useSkeleton(
         const positions = skeleton.format?.(packable!) ?? packable?.positions ?? [];
 
         positions.forEach((position, index) => {
-          let entity = oldEntities.find(item => item.index === index && item.skeleton === skeleton);
+          const entity = oldEntities.find(item => item.index === index && item.skeleton === skeleton);
           const options = skeleton.render?.({
             defining,
             active,
@@ -65,26 +65,28 @@ export function useSkeleton(
             action: getPointAction(entity),
           });
 
-          // 不返回任何值则不渲染该点位
+          // A skeleton that returns no options renders no point
           if (!options) {
             return;
           }
 
           const merge: any = new PlotSkeletonEntity(options);
+          let target: PlotSkeletonEntity;
           if (entity) {
             merge.propertyNames.forEach((key: string) => {
               if (key !== 'id') {
                 (entity as any)[key] = merge[key];
               }
             });
+            target = entity;
           }
           else {
-            entity = merge;
+            target = merge;
           }
-          entity.plot = plot;
-          entity.skeleton = skeleton;
-          entity.index = index;
-          entities.push(entity);
+          target.plot = plot;
+          target.skeleton = skeleton;
+          target.index = index;
+          entities.push(target);
         });
       });
     }

@@ -13,7 +13,7 @@
     "types": [
       "vite/client"
     ],
-    "strictNullChecks": false
+    "strictNullChecks": true
   },
   "include": [
     "env.d.ts",
@@ -23,7 +23,7 @@
     "packages/.vitepress/auto-imports.d.ts",
     "packages/**/*.vue",
     "packages/**/*.ts",
-    "packages/core/createViewer/.docs/demo.vue"
+    "e2e/app/src/**/*.{vue,ts}"
   ],
   "exclude": [
     "**/cache/**",

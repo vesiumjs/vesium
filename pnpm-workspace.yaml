@@ -17,17 +17,17 @@ overrides:
   chokidar: ^5.0.0
   semver: ^7.8.5
 catalog:
-  '@antfu/eslint-config': ^9.2.0
+  '@antfu/eslint-config': ^9.3.0
   '@iconify-json/svg-spinners': ^1.2.4
   '@iconify-json/tabler': ^1.2.38
   '@iconify/utils': ^3.1.4
   '@tsconfig/node22': ^22.0.5
   '@turf/turf': ^7.4.0
   '@types/geojson': ^7946.0.16
-  '@types/jsdom': ^28.0.3
+  '@types/jsdom': ^30.0.0
   '@types/markdown-it': ^14.1.2
   '@types/markdown-it-container': ^4.0.0
-  '@types/node': ^26.1.2
+  '@types/node': ^26.2.0
   '@unocss/eslint-plugin': ^66.7.5
   '@vitejs/plugin-vue': ^6.0.8
   '@vitest/coverage-v8': ^4.1.10
@@ -35,10 +35,10 @@ catalog:
   '@vue/tsconfig': ^0.9.1
   '@vueuse/core': ^14.4.0
   '@vueuse/shared': ^14.4.0
-  bumpp: ^12.1.1
+  bumpp: ^12.2.0
   cesium: ^1.144.0
   cypress: ^15.20.0
-  eslint: ^10.8.0
+  eslint: ^10.8.1
   eslint-plugin-format: ^2.0.1
   fast-glob: ^3.3.3
   gray-matter: ^4.0.3
@@ -47,16 +47,16 @@ catalog:
   lightningcss: ^1.33.0
   lint-staged: ^17.3.0
   local-pkg: ^1.2.1
-  magic-string: ^1.1.0
+  magic-string: ^1.1.1
   markdown-it: ^15.0.0
   markdown-it-container: ^4.0.0
   pinia: ^4.0.2
   sass: ^1.102.0
   start-server-and-test: ^3.0.12
   svgo: ^4.0.2
-  taze: ^19.17.2
+  taze: ^20.0.1
   tsdown: ^0.22.14
-  tsx: ^4.23.7
+  tsx: ^4.23.12
   typescript: ^6.0.3
   unocss: ^66.7.5
   unplugin-auto-import: ^21.1.0
@@ -64,7 +64,7 @@ catalog:
   unplugin-icons: ^23.0.1
   unplugin-vue: ^7.2.0
   unplugin-vue-components: ^32.1.0
-  vite: ^8.2.0
+  vite: ^8.2.1
   vite-plugin-vue-devtools: ^8.2.1
   vitepress: ^2.0.0-alpha.19
   vitepress-plugin-llmstxt: ^0.5.2

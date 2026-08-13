@@ -42,7 +42,7 @@ describe('plotScheme', () => {
     expect(scheme).toBeInstanceOf(PlotScheme);
     expect(scheme.type).toBe(type);
     expect(scheme.definingCursor).toBe('pointer');
-    expect(scheme.initRender()).toEqual({ primitives: [1] });
+    expect(scheme.initRender!()).toEqual({ primitives: [1] });
   });
 
   it('throws when type is missing for setCache', () => {

@@ -117,7 +117,8 @@ describe('usePrimitiveScope', () => {
   });
 
   it('should not destroy primitive when destroyOnRemove is false', async () => {
-    // remove 必须返回 true，否则源码中 `removed && destroyOnRemove && destroy()` 会在第一项短路，测试无法触及 false 分支
+    // remove must return true, otherwise `removed && destroyOnRemove && destroy()` short-circuits
+    // on the first operand and the false branch would never be reached
     mocks.remove.mockReturnValue(true);
     const mockDestroy = vi.fn();
     const mockIsDestroyed = vi.fn(() => false);

@@ -4,7 +4,7 @@ import { control, interval } from '../skeleton';
 import { PlotScheme } from '../usePlot';
 import { area } from './utils';
 
-// 每个实体的渲染序号，用于丢弃过期渲染的异步计算结果
+// Render sequence number per entity, used to discard stale async calculation results
 const renderIds = new WeakMap<Entity, number>();
 
 export const schemeMeasureArea = new PlotScheme({
@@ -33,7 +33,10 @@ export const schemeMeasureArea = new PlotScheme({
     };
   },
   render(context) {
-    const entity = context.previous.entities![0]!;
+    const entity = context.previous.entities?.[0];
+    if (!entity) {
+      return { entities: [] };
+    }
     const { mouse, packable } = context;
 
     const positions = [...packable.positions ?? []];
@@ -56,7 +59,7 @@ export const schemeMeasureArea = new PlotScheme({
       renderIds.set(entity, renderId);
       area(positions)
         .then((e) => {
-          // 已被更新的渲染取代时丢弃结果，避免旧数据覆盖新面积
+          // Discard results superseded by a newer render so an old area cannot overwrite the new one
           if (renderIds.get(entity) !== renderId) {
             return;
           }
@@ -70,7 +73,7 @@ export const schemeMeasureArea = new PlotScheme({
           entity.label!.text = new ConstantProperty(text);
         })
         .catch(() => {
-          // 面积计算失败时保持空标签
+          // Keep the label empty when the area calculation fails
         });
       entity.polyline!.positions = undefined;
       entity.polygon!.hierarchy = new CallbackProperty(() => {

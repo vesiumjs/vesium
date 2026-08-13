@@ -13,7 +13,7 @@ export function Cesium3DTilesetGraphicsZodSchema() {
       show: z.boolean().optional(),
       uri: z.string().optional(),
       maximumScreenSpaceError: z.number().optional(),
-    }),
+    }).optional(),
   });
 }
 
@@ -50,9 +50,9 @@ export function Cesium3DTilesetGraphicsFromJSON(json?: Cesium3DTilesetGraphicsJS
   }
   json = Cesium3DTilesetGraphicsZodSchema().parse(json);
   const instance = new Cesium3DTilesetGraphics({
-    show: omit?.includes('show') ? undefined : json.value.show,
-    uri: omit?.includes('uri') ? undefined : json.value.uri,
-    maximumScreenSpaceError: omit?.includes('maximumScreenSpaceError') ? undefined : json.value.maximumScreenSpaceError,
+    show: omit?.includes('show') ? undefined : json.value?.show,
+    uri: omit?.includes('uri') ? undefined : json.value?.uri,
+    maximumScreenSpaceError: omit?.includes('maximumScreenSpaceError') ? undefined : json.value?.maximumScreenSpaceError,
   });
   return result ? instance.clone(result) : instance;
 }

@@ -153,8 +153,8 @@ export class SampledPlotProperty<D = unknown> {
     if (!this._times.length) {
       return;
     }
-    const start = this._times[0];
-    const end = this._times.at(-1);
+    const start = this._times[0]!;
+    const end = this._times.at(-1)!;
     if (JulianDate.lessThan(time, start) || JulianDate.greaterThan(time, end)) {
       switch (this.strategy) {
         case SampledPlotStrategy.STRICT: {

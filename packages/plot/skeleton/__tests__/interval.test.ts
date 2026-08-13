@@ -48,15 +48,15 @@ describe('interval skeleton drag state', () => {
       } as any);
     };
 
-    // A 开始拖拽中点 index 0：插入新控制点
+    // A starts dragging midpoint index 0: a new control point is inserted
     drag(featureA, 0, true);
     expect(featureA.sampled.getValue().positions).toHaveLength(3);
 
-    // B 开始拖拽：必须重新插入，而不是复用 A 残留的 dragIndex
+    // B must insert again instead of reusing A's leftover dragIndex
     drag(featureB, 0, true);
     expect(featureB.sampled.getValue().positions).toHaveLength(3);
 
-    // 拖拽结束后（dragging=false）状态重置，下一次拖拽再次插入
+    // After the drag ends (dragging=false) the state resets, so the next drag inserts again
     drag(featureB, 0, false);
     drag(featureB, 0, true);
     expect(featureB.sampled.getValue().positions).toHaveLength(4);
@@ -80,17 +80,53 @@ describe('interval skeleton drag state', () => {
       } as any);
     };
 
-    // 拖拽 index 1 插入点（dragIndex=1），然后点位被外部重置为 2 个（模拟未重置的残留状态）
+    // Drag index 1 to insert a point (dragIndex=1), then externally reset the positions to 2
+    // points (simulating a stale state where the reset never happened)
     drag(1, true);
     feature.sampled.setSample({
       time: feature.sampled.getTimes()[0],
       positions: [new Cartesian3(0, 0, 0), new Cartesian3(1, 0, 0)],
     });
 
-    // 残留 dragIndex=1 越界：应视为新拖拽重新插入，而不是覆盖 positions[2]
+    // The stale dragIndex=1 is now out of bounds: treat it as a new drag and insert instead of
+    // overwriting positions[2]
     drag(0, true);
     const positions = feature.sampled.getValue().positions;
     expect(positions).toHaveLength(3);
     expect(Cartesian3.equals(positions[1]!, new Cartesian3(99, 0, 0))).toBe(true);
+  });
+
+  it('re-treats a stale dragIndex as a new drag when the drag target index changes', () => {
+    const feature = createFeature();
+    const skeleton = interval();
+    const event = { endPosition: { x: 1, y: 1 } };
+
+    const drag = (index: number, dragging: boolean) => {
+      skeleton.onDrag!({
+        feature,
+        viewer: {} as any,
+        sampled: feature.sampled,
+        packable: feature.sampled.getValue(),
+        event: event as any,
+        index,
+        lockCamera: () => {},
+        dragging,
+      } as any);
+    };
+
+    // Drag midpoint index 0: insert a point at index 1 (dragIndex=0), leaving the state stale by
+    // never dispatching the final dragging=false event
+    drag(0, true);
+    expect(feature.sampled.getValue().positions).toHaveLength(3);
+
+    // Start a new drag on midpoint index 1 while the stale dragIndex=0 is still tracked and the
+    // positions still have 3 points. It must insert at index 2, not move positions[1].
+    drag(1, true);
+    const positions = feature.sampled.getValue().positions;
+    expect(positions).toHaveLength(4);
+    expect(Cartesian3.equals(positions[2]!, new Cartesian3(99, 0, 0))).toBe(true);
+    // The previously dragged midpoint stays in place and the tail point is untouched
+    expect(Cartesian3.equals(positions[1]!, new Cartesian3(99, 0, 0))).toBe(true);
+    expect(Cartesian3.equals(positions[3]!, new Cartesian3(1, 0, 0))).toBe(true);
   });
 });

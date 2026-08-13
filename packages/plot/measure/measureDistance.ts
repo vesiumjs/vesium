@@ -3,7 +3,7 @@ import { control } from '../skeleton';
 import { PlotScheme } from '../usePlot';
 import { distance } from './utils';
 
-// 每个实体的渲染序号，用于丢弃过期渲染的异步计算结果
+// Render sequence number per entity, used to discard stale async calculation results
 const renderIds = new WeakMap<Entity, number>();
 
 export const schemeMeasureDistance = new PlotScheme({
@@ -27,22 +27,24 @@ export const schemeMeasureDistance = new PlotScheme({
   render(context) {
     const { mouse, packable, previous } = context;
 
-    const entities = previous.entities!;
+    const entities = previous.entities;
+    if (!entities?.[0]) {
+      return { entities };
+    }
+    const pl = entities[0];
 
     const positions = [...packable.positions ?? []];
     mouse && positions.push(mouse);
 
     if (positions.length < 2) {
-      // 点数不足时同样失效挂起的计算并清理旧标签实体，避免撤销到 <2 点后陈旧结果写入
-      const pl = entities[0]!;
+      // Invalidate the pending calculation and trim the label entities, so undoing back to fewer
+      // than 2 points cannot write stale results
       renderIds.set(pl, (renderIds.get(pl) ?? 0) + 1);
       entities.splice(1);
       return {
         entities,
       };
     }
-
-    const pl = entities[0]!;
 
     pl.polyline ??= new PolylineGraphics();
     pl.polyline!.positions = new CallbackProperty(() => positions, false);
@@ -66,7 +68,8 @@ export const schemeMeasureDistance = new PlotScheme({
     renderIds.set(pl, renderId);
     distance(positions)
       .then(({ count, stages }) => {
-        // 已被更新的渲染取代时丢弃结果，避免旧数据覆盖新距离或越界写入
+        // Discard results superseded by a newer render so an old distance cannot overwrite the
+        // new labels or write out of bounds
         if (renderIds.get(pl) !== renderId) {
           return;
         }
@@ -84,7 +87,7 @@ export const schemeMeasureDistance = new PlotScheme({
         }
       })
       .catch(() => {
-        // 距离计算失败时保持标签为空
+        // Keep the labels empty when the distance calculation fails
       });
 
     return {

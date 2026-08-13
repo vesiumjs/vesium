@@ -72,7 +72,8 @@ describe('useCameraState', () => {
     expect(state.heading.value).toBe(1);
     expect(state.pitch.value).toBe(2);
     expect(state.roll.value).toBe(3);
-    // computeLevel(100000) ≈ 9.789，非零高度才能验证公式中的 B、C 系数
+    // computeLevel(100000) ≈ 9.789; a non-zero height is required to exercise the B and C
+    // coefficients of the formula
     expect(state.level.value).toBeCloseTo(9.789148938689323, 5);
   });
 

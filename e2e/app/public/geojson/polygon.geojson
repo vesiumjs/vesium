@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "e2e-polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [110, 30],
+            [115, 30],
+            [115, 35],
+            [110, 35],
+            [110, 30]
+          ]
+        ]
+      }
+    }
+  ]
+}

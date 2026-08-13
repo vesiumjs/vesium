@@ -6,7 +6,8 @@ import { createViewer } from '../../createViewer';
 import { useScenePick } from '../../index';
 
 const mocks = vi.hoisted(() => ({
-  pick: vi.fn(() => ({ id: 'picked' })),
+  // scene.pick can legitimately return undefined (empty pick), so allow both shapes
+  pick: vi.fn<() => { id: string } | undefined>(() => ({ id: 'picked' })),
 }));
 
 vi.mock('cesium', async (importOriginal) => {

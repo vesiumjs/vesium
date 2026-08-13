@@ -160,7 +160,9 @@ export class PlotScheme {
   static resolve(maybeScheme: string | PlotScheme | PlotSchemeConstructorOptions): PlotScheme {
     if (typeof maybeScheme === 'string') {
       const _scheme = PlotScheme.getCache(maybeScheme);
-      assertError(!_scheme, `scheme ${maybeScheme} not found`);
+      if (!_scheme) {
+        throw new Error(`scheme ${maybeScheme} not found`);
+      }
       return _scheme;
     }
     else if (!(maybeScheme instanceof PlotScheme)) {

@@ -11,7 +11,8 @@ export type DMSCoord = [longitude: string, latitude: string, height?: number];
  * @returns A DMS formatted string in the format: degrees° minutes′ seconds″
  */
 export function dmsEncode(degrees: number, precision = 3): string {
-  // 以总秒数做一次四舍五入，避免浮点误差（如 0.5125 产生 44.999″）与进位问题
+  // Round the total seconds once so float errors (e.g. 0.5125 producing 44.999″) and
+  // carry-over into minutes/degrees are handled in a single step
   const totalSeconds = Number((Math.abs(degrees) * 3600).toFixed(precision));
   const d = Math.floor(totalSeconds / 3600);
   const m = Math.floor((totalSeconds % 3600) / 60);

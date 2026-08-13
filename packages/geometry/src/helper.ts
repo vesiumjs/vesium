@@ -1,6 +1,6 @@
 import type { CoordArray } from '@vesium/shared';
 
-export const FITTING_COUNT = 100; // 拟合采样点数（生成 FITTING_COUNT + 1 个点）
+export const FITTING_COUNT = 100; // fitting sample count (generates FITTING_COUNT + 1 points)
 export const HALF_PI = Math.PI / 2;
 export const ZERO_TOLERANCE = 0.0001;
 export const TWO_PI = Math.PI * 2;

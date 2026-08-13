@@ -4,10 +4,12 @@ import { canvasCoordToCartesian } from 'vesium';
 import { PlotAction } from '../usePlot';
 
 /**
- * 绘制封闭的间隔框架点，如多边形。拖拽时，会在两点之间插入一个控制点，并持续拖拽该点。
+ * Draws closed interval skeleton points, e.g. for polygons. When dragging, a control point is
+ * inserted between the two points and dragged continuously.
  */
 export function interval(): PlotSkeleton {
-  // 拖拽状态按标绘实例隔离，避免多个标绘共用方案单例时相互污染
+  // Drag state is isolated per plot feature so that a shared scheme singleton cannot leak state
+  // between features.
   const dragIndexes = new WeakMap<PlotFeature, number>();
   return {
     disabled: ({ active, defining }) => !active || defining,
@@ -32,8 +34,10 @@ export function interval(): PlotSkeleton {
       }
       const positions = [...packable.positions ?? []];
       const dragIndex = dragIndexes.get(feature) ?? -1;
-      // 索引越界（如上次拖拽的 LEFT_UP 丢失后残留）时视为新拖拽重新插入
-      if (dragIndex === -1 || dragIndex + 1 >= positions.length) {
+      // Treat as a new drag when the tracked dragIndex is stale: either no drag is active, the
+      // drag target index changed (e.g. a previous LEFT_UP was missed), or the positions were
+      // shrunk below the tracked insertion point.
+      if (dragIndex === -1 || dragIndex !== index || dragIndex + 1 >= positions.length) {
         dragIndexes.set(feature, index);
         positions.splice(index + 1, 0, position);
       }

@@ -27,20 +27,21 @@ export function useEntityScope(options: UseEntityScopeOptions = {}) {
 
   return useCollectionScope<Entity>({
     addEffect(instance) {
-      if (!collection.value) {
+      const collectionValue = collection.value;
+      if (!collectionValue) {
         throw new Error('collection is not defined');
       }
 
       if (isPromise(instance)) {
         return new Promise<Entity>((resolve, reject) => {
           instance.then((i) => {
-            collection.value.add(i);
+            collectionValue.add(i);
             resolve(i);
           }).catch(error => reject(error));
         });
       }
       else {
-        collection.value.add(instance);
+        collectionValue.add(instance);
         return instance;
       }
     },

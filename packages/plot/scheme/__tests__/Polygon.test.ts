@@ -26,7 +26,7 @@ describe('plotSchemePolygon render', () => {
     expect(first.positions).toHaveLength(4);
     expect(Cartesian3.equals(first.positions.at(-1)!, first.positions[0]!)).toBe(true);
 
-    // 多次调用回调，环必须保持稳定，不得持续增长
+    // The ring must stay stable across repeated callback invocations instead of growing
     hierarchyProperty.getValue(time);
     hierarchyProperty.getValue(time);
     const last = hierarchyProperty.getValue(time) as PolygonHierarchy;

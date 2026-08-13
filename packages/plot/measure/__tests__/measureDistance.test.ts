@@ -38,7 +38,8 @@ describe('measureDistance async race guard', () => {
       Cesium.Cartesian3.fromDegrees(118, 30, 0),
     ], first.entities);
 
-    // 最新的渲染先返回结果，随后旧渲染的结果才返回 —— 旧结果必须被丢弃
+    // The newest render resolves first, then the older render resolves afterwards — the stale
+    // result must be discarded
     pending[1]!({ stages: [222222], count: 222222 });
     pending[0]!({ stages: [111111], count: 111111 });
     await Promise.resolve();
@@ -63,7 +64,7 @@ describe('measureDistance async race guard', () => {
       return result as { entities: Cesium.Entity[] };
     };
 
-    // 先渲染 5 个点（4 段），再撤销到 2 个点（1 段，共 3 个实体）
+    // Render 5 points (4 stages) first, then undo back to 2 points (1 stage, 3 entities)
     const first = render([
       Cesium.Cartesian3.fromDegrees(116, 30, 0),
       Cesium.Cartesian3.fromDegrees(116.1, 30, 0),
@@ -76,7 +77,8 @@ describe('measureDistance async race guard', () => {
       Cesium.Cartesian3.fromDegrees(116.1, 30, 0),
     ], first.entities).entities;
 
-    // 旧渲染（4 段）的结果在撤销后返回，不允许越界写入崩溃，也不允许覆盖新标签
+    // The stale result (4 stages) resolves after the undo: it must not crash on out-of-bounds
+    // writes nor overwrite the new labels
     pending[0]!({ stages: [1, 2, 3, 4], count: 10 });
     await Promise.resolve();
     expect(entities.length).toBe(3);
@@ -102,12 +104,13 @@ describe('measureDistance async race guard', () => {
       Cesium.Cartesian3.fromDegrees(116, 30, 0),
       Cesium.Cartesian3.fromDegrees(116.1, 30, 0),
     ]);
-    // 撤销到 1 个点 → 早退分支（不发起计算）
+    // Undo to 1 point → early-return branch (no calculation is started)
     const entities = render([
       Cesium.Cartesian3.fromDegrees(116, 30, 0),
     ], first.entities).entities;
 
-    // 早退前的挂起结果返回：必须被失效，不允许写入已裁剪的实体
+    // A pending result from before the early return resolves: it must be invalidated and not
+    // write into the trimmed entities
     pending[0]!({ stages: [111111], count: 111111 });
     await Promise.resolve();
     expect(entities.length).toBe(1);

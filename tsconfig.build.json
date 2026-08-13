@@ -11,7 +11,7 @@
     "types": ["vite/client"],
     "strict": true,
     "strictFunctionTypes": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "declaration": true,
     "declarationMap": true,
