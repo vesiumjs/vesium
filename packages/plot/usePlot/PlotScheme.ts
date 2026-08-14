@@ -87,6 +87,8 @@ export class PlotScheme {
     this.skeletons = options.skeletons?.map(item => item()) ?? [];
     this.initRender = options.initRender;
     this.render = options.render;
+    // 创建即注册：构造完成即按 type 缓存，后续可直接通过 `PlotScheme.resolve(type)` 使用
+    PlotScheme.setCache(this);
   }
 
   /**

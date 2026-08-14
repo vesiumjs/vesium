@@ -44,6 +44,7 @@
   "dependencies": {
     "@turf/turf": "catalog:",
     "@vesium/geometry": "workspace:*",
+    "@vesium/parser": "workspace:*",
     "@vueuse/core": "catalog:",
     "cesium": "catalog:",
     "vesium": "workspace:*",

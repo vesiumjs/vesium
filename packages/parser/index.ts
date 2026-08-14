@@ -45,6 +45,7 @@ export * from './src/PolygonHierarchy';
 export * from './src/PolylineGraphics';
 export * from './src/PolylineVolumeGraphics';
 export * from './src/PositionProperty';
+export * from './src/private';
 export * from './src/PropertyBag';
 export * from './src/Quaternion';
 export * from './src/Rectangle';
