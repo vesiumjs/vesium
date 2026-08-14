@@ -31,7 +31,7 @@ export function ClippingPlaneCollectionToJSON(instance?: ClippingPlaneCollection
     return undefined;
   }
   instance = z.instanceof(ClippingPlaneCollection).parse(instance);
-  const planes = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
+  const planes = Array.from({ length: instance.length }, (_, i) => instance.get(i));
   return {
     parser: 'ClippingPlaneCollection',
     value: {
@@ -56,7 +56,7 @@ export function ClippingPlaneCollectionFromJSON(json?: ClippingPlaneCollectionJS
   json = ClippingPlaneCollectionZodSchema().parse(json);
   const planes = json.value.planes.map(item => ClippingPlaneFromJSON(item)!);
   const instance = new ClippingPlaneCollection({
-    planes: json.value.planes.map(item => ClippingPlaneFromJSON(item)!),
+    planes,
     enabled: json.value.enabled,
     modelMatrix: Matrix4FromJSON(json.value.modelMatrix)!,
     unionClippingRegions: json.value.unionClippingRegions,

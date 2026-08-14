@@ -9,7 +9,7 @@ import HomeHeroBefore from './home-hero-image.vue';
  * 非手动切换语言时，自动根据当前本地语言进行切换
  */
 if (inBrowser) {
-  const { site, lang, hash } = useData();
+  const { site, lang } = useData();
   const langStorage = useStorage('lang', '');
 
   watch(lang, (lang) => {
@@ -17,6 +17,7 @@ if (inBrowser) {
   });
 
   const router = useRouter();
+  const route = router.route;
 
   watchEffect(() => {
     if (!langStorage.value) {
@@ -43,7 +44,7 @@ if (inBrowser) {
     const currentBase = `${locales[currentLocaleIndex!]?.link || '/'}/`.replaceAll('//', '/');
 
     const nextBase = `${locales[nextLocaleIndex!]?.link}/`.replaceAll('//', '/');
-    router.go(router.route.path.replace(currentBase, nextBase) + hash.value);
+    router.go(route.path.replace(currentBase, nextBase) + route.hash);
   }, { immediate: true });
 }
 </script>
@@ -53,12 +54,7 @@ if (inBrowser) {
     <template #home-hero-before>
       <client-only>
         <teleport to="#app">
-          <div
-            position="fixed inset-0"
-            bg="#000"
-            of="hidden"
-            z--1
-          />
+          <div class="bg-black inset-0 fixed overflow-hidden -z-1" />
         </teleport>
         <HomeHeroBefore />
       </client-only>

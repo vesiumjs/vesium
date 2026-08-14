@@ -62,4 +62,19 @@ describe('useCollectionScope', () => {
     scope.stop();
     expect(removeEffect).toHaveBeenCalled();
   });
+
+  it('should use removeScopeArgs as default removeScope arguments', () => {
+    const addEffect = vi.fn(i => i);
+    const removeEffect = vi.fn();
+    const item = { id: 1 };
+    const { add, removeScope } = useCollectionScope({
+      addEffect,
+      removeEffect,
+      removeScopeArgs: [true],
+    });
+
+    add(item);
+    removeScope();
+    expect(removeEffect).toHaveBeenCalledWith(item, true);
+  });
 });

@@ -18,13 +18,13 @@ export type ClassificationTypeJSON = z.infer<ReturnType<typeof ClassificationTyp
  * Convert `Cesium.ClassificationType` instance to JSON
  */
 export function ClassificationTypeToJSON(instance?: ClassificationType): ClassificationTypeJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(ClassificationType).parse(instance);
   return {
     parser: 'ClassificationType',
-    value: Object.keys(ClassificationType).find((key: any) => Reflect.get(ClassificationType, key) === instance) as any,
+    value: Object.keys(ClassificationType).find(key => Reflect.get(ClassificationType, key) === instance) as (typeof strings)[number],
   };
 }
 

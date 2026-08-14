@@ -19,13 +19,13 @@ export type ShadowModeJSON = z.infer<ReturnType<typeof ShadowModeZodSchema>>;
  * Convert `Cesium.ShadowMode` instance to JSON
  */
 export function ShadowModeToJSON(instance?: ShadowMode): ShadowModeJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(ShadowMode).parse(instance);
   return {
     parser: 'ShadowMode',
-    value: Object.keys(ShadowMode).find((key: any) => Reflect.get(ShadowMode, key) === instance) as any,
+    value: Object.keys(ShadowMode).find(key => Reflect.get(ShadowMode, key) === instance) as (typeof strings)[number],
   };
 }
 

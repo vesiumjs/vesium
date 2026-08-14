@@ -38,7 +38,7 @@ export type PolylineVolumeGraphicsJSON = z.infer<ReturnType<typeof PolylineVolum
 /**
  * Convert `Cesium.PolylineVolumeGraphics` instance to JSON
  */
-export function PolylineVolumeGraphicsToJSON(instance?: PolylineVolumeGraphics, time?: JulianDate, omit?: keyof PolylineVolumeGraphics): PolylineVolumeGraphicsJSON | undefined {
+export function PolylineVolumeGraphicsToJSON(instance?: PolylineVolumeGraphics, time?: JulianDate, omit?: (keyof PolylineVolumeGraphicsJSON['value'])[]): PolylineVolumeGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -52,7 +52,7 @@ export function PolylineVolumeGraphicsToJSON(instance?: PolylineVolumeGraphics, 
       cornerType: omit?.includes('cornerType') ? undefined : CornerTypeToJSON(toPropertyValue(instance.cornerType, time)),
       granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -67,7 +67,7 @@ export function PolylineVolumeGraphicsToJSON(instance?: PolylineVolumeGraphics, 
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function PolylineVolumeGraphicsFromJSON(json?: PolylineVolumeGraphicsJSON, result?: PolylineVolumeGraphics, omit?: keyof PolylineVolumeGraphics): PolylineVolumeGraphics | undefined {
+export function PolylineVolumeGraphicsFromJSON(json?: PolylineVolumeGraphicsJSON, result?: PolylineVolumeGraphics, omit?: (keyof PolylineVolumeGraphicsJSON['value'])[]): PolylineVolumeGraphics | undefined {
   if (!json) {
     return undefined;
   }

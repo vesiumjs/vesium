@@ -19,13 +19,13 @@ export type ArcTypeJSON = z.infer<ReturnType<typeof ArcTypeZodSchema>>;
  * Convert `Cesium.ArcType` instance to JSON
  */
 export function ArcTypeToJSON(instance?: ArcType): ArcTypeJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(ArcType).parse(instance);
   return {
     parser: 'ArcType',
-    value: Object.keys(ArcType).find((key: any) => Reflect.get(ArcType, key) === instance) as any,
+    value: Object.keys(ArcType).find(key => Reflect.get(ArcType, key) === instance) as (typeof strings)[number],
   };
 }
 

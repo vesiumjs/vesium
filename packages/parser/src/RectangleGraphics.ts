@@ -44,7 +44,7 @@ export type RectangleGraphicsJSON = z.infer<ReturnType<typeof RectangleGraphicsZ
 /**
  * Convert `Cesium.RectangleGraphics` instance to JSON
  */
-export function RectangleGraphicsToJSON(instance?: RectangleGraphics, time?: JulianDate, omit?: keyof RectangleGraphics): RectangleGraphicsJSON | undefined {
+export function RectangleGraphicsToJSON(instance?: RectangleGraphics, time?: JulianDate, omit?: (keyof RectangleGraphicsJSON['value'])[]): RectangleGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -62,7 +62,7 @@ export function RectangleGraphicsToJSON(instance?: RectangleGraphics, time?: Jul
       stRotation: omit?.includes('stRotation') ? undefined : toPropertyValue(instance.stRotation, time),
       granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -79,7 +79,7 @@ export function RectangleGraphicsToJSON(instance?: RectangleGraphics, time?: Jul
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function RectangleGraphicsFromJSON(json?: RectangleGraphicsJSON, result?: RectangleGraphics, omit?: keyof RectangleGraphics): RectangleGraphics | undefined {
+export function RectangleGraphicsFromJSON(json?: RectangleGraphicsJSON, result?: RectangleGraphics, omit?: (keyof RectangleGraphicsJSON['value'])[]): RectangleGraphics | undefined {
   if (!json) {
     return undefined;
   }

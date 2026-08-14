@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it, vi } from 'vitest';
-import { nextTick } from 'vue';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { nextTick, ref } from 'vue';
 import { createViewer } from '../../createViewer';
 import { usePostProcessStage } from '../../index';
 
@@ -27,8 +27,11 @@ vi.mock('cesium', async (importOriginal) => {
 });
 
 describe('usePostProcessStage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should add post process stage to viewer', async () => {
-    mocks.add.mockClear();
     const mockStage = { id: 'test' } as any;
     mount({
       setup() {
@@ -44,7 +47,6 @@ describe('usePostProcessStage', () => {
   });
 
   it('should remove stage on cleanup', async () => {
-    mocks.remove.mockClear();
     const mockStage = { id: 'test' } as any;
     const wrapper = mount({
       setup() {
@@ -58,5 +60,78 @@ describe('usePostProcessStage', () => {
     await nextTick();
     wrapper.unmount();
     expect(mocks.remove).toHaveBeenCalledWith(mockStage);
+  });
+
+  it('should handle isActive toggle', async () => {
+    const mockStage = { id: 'test' } as any;
+    const active = ref(true);
+    const wrapper = mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        usePostProcessStage(mockStage, { isActive: active });
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    active.value = false;
+    await nextTick();
+    expect(mocks.remove).toHaveBeenCalledWith(mockStage);
+    wrapper.unmount();
+  });
+
+  it('should re-add stage when isActive becomes true again', async () => {
+    const mockStage = { id: 'test' } as any;
+    const active = ref(false);
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        usePostProcessStage(mockStage, { isActive: active });
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    expect(mocks.add).not.toHaveBeenCalled();
+
+    active.value = true;
+    await nextTick();
+    expect(mocks.add).toHaveBeenCalledWith(mockStage);
+  });
+
+  it('should handle async getter stage source', async () => {
+    const mockStage = { id: 'async-stage' } as any;
+    const asyncGetter = async () => {
+      await new Promise(resolve => setTimeout(resolve, 10));
+      return mockStage;
+    };
+
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        usePostProcessStage(asyncGetter);
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 30));
+    await nextTick();
+    expect(mocks.add).toHaveBeenCalledWith(mockStage);
+  });
+
+  it('should throw when no viewer is provided', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => mount({
+      setup() {
+        usePostProcessStage({ id: 'test' } as any);
+        return {};
+      },
+      template: '<div></div>',
+    })).toThrow();
+    spy.mockRestore();
   });
 });

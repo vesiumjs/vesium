@@ -1,0 +1,14 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "paths": {
+      "vesium": ["../../packages/core"],
+      "@vesium/plot": ["../../packages/plot"]
+    },
+    "types": ["vite/client"],
+    "strictNullChecks": true
+  },
+  "include": ["./src/**/*", "./vite.config.ts"]
+}

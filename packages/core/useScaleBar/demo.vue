@@ -15,14 +15,10 @@ const { pixelDistance, width, distance, distanceText } = useScaleBar();
 </script>
 
 <template>
-  <div
-    w="200px"
-    p="10px"
-    flex="~ col"
-  >
+  <div class="p-10px flex flex-col w-200px">
     <div>pixelDistance: {{ pixelDistance?.toFixed(2) }}m</div>
     <div>distance: {{ distance }}m</div>
-    <div b-b="#666 2px" :style="{ width: `${width}px` }">
+    <div class="border-b-2px border-b-#666" :style="{ width: `${width}px` }">
       {{ distanceText }}
     </div>
   </div>

@@ -95,13 +95,14 @@ export async function distance(positions: Cartesian3[], options?: DistanceOption
     throw new Error('options.density must > 0');
   }
 
-  // 按每段长度占总长度的比例分配插值数量
+  // Allocate interpolation points per stage proportionally to its share of the total length
+  // Give every stage at least 1 point so tiny segments rounded down to 0 do not make lerpArray throw
   const densities = stages.map((stage) => {
-    return Math.floor((stage / count) * density);
+    return Math.max(1, Math.floor((stage / count) * density));
   });
   // 出现未分配的插值数量则分配给最后一项
   const diff = density - densities.reduce((count, current) => (count += current), 0);
-  if (diff) {
+  if (diff > 0) {
     densities[densities.length - 1] += diff;
   }
 

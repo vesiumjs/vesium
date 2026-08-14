@@ -19,13 +19,13 @@ export type SplitDirectionJSON = z.infer<ReturnType<typeof SplitDirectionZodSche
  * Convert `Cesium.SplitDirection` instance to JSON
  */
 export function SplitDirectionToJSON(instance?: SplitDirection): SplitDirectionJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(SplitDirection).parse(instance);
   return {
     parser: 'SplitDirection',
-    value: Object.keys(SplitDirection).find((key: any) => Reflect.get(SplitDirection, key) === instance) as any,
+    value: Object.keys(SplitDirection).find(key => Reflect.get(SplitDirection, key) === instance) as (typeof strings)[number],
   };
 }
 

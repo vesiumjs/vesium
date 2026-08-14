@@ -4,6 +4,9 @@ import { control, interval } from '../skeleton';
 import { PlotScheme } from '../usePlot';
 import { area } from './utils';
 
+// Render sequence number per entity, used to discard stale async calculation results
+const renderIds = new WeakMap<Entity, number>();
+
 export const schemeMeasureArea = new PlotScheme({
   type: 'MeasureArea',
   allowManualComplete: packable => packable.positions!.length >= 3,
@@ -30,7 +33,10 @@ export const schemeMeasureArea = new PlotScheme({
     };
   },
   render(context) {
-    const entity = context.previous.entities![0]!;
+    const entity = context.previous.entities?.[0];
+    if (!entity) {
+      return { entities: [] };
+    }
     const { mouse, packable } = context;
 
     const positions = [...packable.positions ?? []];
@@ -49,16 +55,26 @@ export const schemeMeasureArea = new PlotScheme({
       );
       entity.label!.text = new ConstantProperty('');
 
-      area(positions).then((e) => {
-        let text: string = '';
-        if (e / 1000 / 1000 > 10) {
-          text = `${(e / 1000 / 1000).toFixed(2)}km²`;
-        }
-        else {
-          text = `${(+e).toFixed(2)}m²`;
-        }
-        entity.label!.text = new ConstantProperty(text);
-      });
+      const renderId = (renderIds.get(entity) ?? 0) + 1;
+      renderIds.set(entity, renderId);
+      area(positions)
+        .then((e) => {
+          // Discard results superseded by a newer render so an old area cannot overwrite the new one
+          if (renderIds.get(entity) !== renderId) {
+            return;
+          }
+          let text: string = '';
+          if (e / 1000 / 1000 > 10) {
+            text = `${(e / 1000 / 1000).toFixed(2)}km²`;
+          }
+          else {
+            text = `${(+e).toFixed(2)}m²`;
+          }
+          entity.label!.text = new ConstantProperty(text);
+        })
+        .catch(() => {
+          // Keep the label empty when the area calculation fails
+        });
       entity.polyline!.positions = undefined;
       entity.polygon!.hierarchy = new CallbackProperty(() => {
         return positions.length >= 3 ? new PolygonHierarchy([...positions]) : undefined;

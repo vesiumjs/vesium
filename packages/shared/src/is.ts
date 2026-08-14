@@ -29,7 +29,8 @@ export function isObject(val: unknown): val is object {
 }
 
 export function isWindow(val: unknown): val is Window {
-  return typeof window !== 'undefined' && toString.call(val) === '[object Window]';
+  return typeof window !== 'undefined'
+    && (toString.call(val) === '[object Window]' || toString.call(val) === '[object global]');
 }
 
 export function isPromise<T extends Promise<unknown>>(val: unknown): val is T {

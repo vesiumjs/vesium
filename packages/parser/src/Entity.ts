@@ -40,7 +40,6 @@ export function EntityZodSchema() {
       position: PositionPropertyZodSchema().optional(),
       orientation: QuaternionZodSchema().optional(),
       viewFrom: Cartesian3ZodSchema().optional(),
-      parent: z.string().optional(),
       billboard: BillboardGraphicsZodSchema().optional(),
       box: BoxGraphicsZodSchema().optional(),
       corridor: CorridorGraphicsZodSchema().optional(),
@@ -68,7 +67,7 @@ export type EntityJSON = z.infer<ReturnType<typeof EntityZodSchema>>;
 /**
  * Convert `Cesium.Entity` instance to JSON
  */
-export function EntityToJSON(instance?: Entity, time?: JulianDate, omit?: keyof Entity): EntityJSON | undefined {
+export function EntityToJSON(instance?: Entity, time?: JulianDate, omit?: (keyof EntityJSON['value'])[]): EntityJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -109,7 +108,7 @@ export function EntityToJSON(instance?: Entity, time?: JulianDate, omit?: keyof 
 /**
  * Convert JSON to `Cesium.Entity` instance
  */
-export function EntityFromJSON(json?: EntityJSON, omit?: keyof Entity): Entity | undefined {
+export function EntityFromJSON(json?: EntityJSON, omit?: (keyof EntityJSON['value'])[]): Entity | undefined {
   if (!json) {
     return undefined;
   }
@@ -121,7 +120,7 @@ export function EntityFromJSON(json?: EntityJSON, omit?: keyof Entity): Entity |
     show: omit?.includes('show') ? undefined : json.value.show,
     description: omit?.includes('description') ? undefined : json.value.description,
     position: omit?.includes('position') ? undefined : PositionPropertyFromJSON(json.value.position),
-    orientation: omit?.includes('orientation') ? undefined : QuaternionFromJSON((json.value.orientation)),
+    orientation: omit?.includes('orientation') ? undefined : QuaternionFromJSON(json.value.orientation),
     viewFrom: omit?.includes('viewFrom') ? undefined : Cartesian3FromJSON(json.value.viewFrom),
     billboard: omit?.includes('billboard') ? undefined : BillboardGraphicsFromJSON(json.value.billboard),
     box: omit?.includes('box') ? undefined : BoxGraphicsFromJSON(json.value.box),

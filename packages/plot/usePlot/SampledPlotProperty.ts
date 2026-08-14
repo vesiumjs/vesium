@@ -153,8 +153,8 @@ export class SampledPlotProperty<D = unknown> {
     if (!this._times.length) {
       return;
     }
-    const start = this._times[0];
-    const end = this._times.at(-1);
+    const start = this._times[0]!;
+    const end = this._times.at(-1)!;
     if (JulianDate.lessThan(time, start) || JulianDate.greaterThan(time, end)) {
       switch (this.strategy) {
         case SampledPlotStrategy.STRICT: {
@@ -216,6 +216,9 @@ export class SampledPlotProperty<D = unknown> {
     });
 
     if (!time) {
+      if (!this._times.length) {
+        return result;
+      }
       result.time = this._times[0]!.clone();
       result.positions = this._sampleds[0]?.map(c => c.clone(c));
       result.derivative = this._derivatives[0];
@@ -318,7 +321,7 @@ export class SampledPlotProperty<D = unknown> {
    * @param interval 要移除样本的时间间隔
    */
   removeSamples(interval: TimeInterval): void {
-    for (let i = 0; i < this._times.length; i++) {
+    for (let i = this._times.length - 1; i >= 0; i--) {
       const time = this._times[i];
       TimeInterval.contains(interval, time) && this.removeSample(time);
     }

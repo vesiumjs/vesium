@@ -22,7 +22,7 @@ export interface MaterialPropertyProgram<T extends MaterialProperty = any> {
 const _programs = new Map<string, any>();
 
 export function MaterialPropertyGetProgram(programName: string) {
-  _programs.get(programName);
+  return _programs.get(programName);
 }
 
 /**
@@ -57,7 +57,7 @@ export type MaterialPropertyJSON = z.infer<ReturnType<typeof MaterialPropertyZod
 /**
  * Convert `Cesium.MaterialProperty` instance to JSON
  */
-export function MaterialPropertyToJSON(instance?: MaterialProperty): MaterialPropertyJSON | undefined {
+export function MaterialPropertyToJSON(instance?: MaterialProperty, time?: JulianDate): MaterialPropertyJSON | undefined {
   if (!notNullish(instance)) {
     return undefined;
   }
@@ -67,7 +67,7 @@ export function MaterialPropertyToJSON(instance?: MaterialProperty): MaterialPro
       parser: 'MaterialProperty',
       value: {
         name: program.programName,
-        content: program.toJSON(instance),
+        content: program.toJSON(instance, time),
       },
     };
   };
@@ -81,6 +81,7 @@ export function MaterialPropertyFromJSON(json?: MaterialPropertyJSON): MaterialP
   if (!notNullish(json)) {
     return undefined;
   }
+  json = MaterialPropertyZodSchema().parse(json);
   const program = [..._programs.values()].find(item => item.programName === json.value.name);
   if (program) {
     return program.fromJSON(json.value.content);

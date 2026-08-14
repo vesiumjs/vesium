@@ -1,13 +1,16 @@
-import type { PlotSkeleton } from '../usePlot';
+import type { PlotFeature, PlotSkeleton } from '../usePlot';
 import { Cartesian3, Color } from 'cesium';
 import { canvasCoordToCartesian } from 'vesium';
 import { PlotAction } from '../usePlot';
 
 /**
- * 绘制封闭的间隔框架点，如多边形。拖拽时，会在两点之间插入一个控制点，并持续拖拽该点。
+ * Draws closed interval skeleton points, e.g. for polygons. When dragging, a control point is
+ * inserted between the two points and dragged continuously.
  */
 export function interval(): PlotSkeleton {
-  let dragIndex = -1;
+  // Drag state is isolated per plot feature so that a shared scheme singleton cannot leak state
+  // between features.
+  const dragIndexes = new WeakMap<PlotFeature, number>();
   return {
     disabled: ({ active, defining }) => !active || defining,
     cursor: 'pointer',
@@ -22,7 +25,7 @@ export function interval(): PlotSkeleton {
         return Cartesian3.midpoint(position, next, new Cartesian3());
       });
     },
-    onDrag({ viewer, sampled, packable, event, index, lockCamera, dragging }) {
+    onDrag({ feature, viewer, sampled, packable, event, index, lockCamera, dragging }) {
       lockCamera();
 
       const position = canvasCoordToCartesian(event.endPosition, viewer.scene);
@@ -30,15 +33,19 @@ export function interval(): PlotSkeleton {
         return;
       }
       const positions = [...packable.positions ?? []];
-      if (dragIndex === -1) {
-        dragIndex = index;
+      const dragIndex = dragIndexes.get(feature) ?? -1;
+      // Treat as a new drag when the tracked dragIndex is stale: either no drag is active, the
+      // drag target index changed (e.g. a previous LEFT_UP was missed), or the positions were
+      // shrunk below the tracked insertion point.
+      if (dragIndex === -1 || dragIndex !== index || dragIndex + 1 >= positions.length) {
+        dragIndexes.set(feature, index);
         positions.splice(index + 1, 0, position);
       }
       else {
         positions[dragIndex + 1] = position;
       }
       if (!dragging) {
-        dragIndex = -1;
+        dragIndexes.set(feature, -1);
       }
       sampled.setSample({
         time: packable.time,

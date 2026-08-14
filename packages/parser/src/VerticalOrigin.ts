@@ -19,13 +19,13 @@ export type VerticalOriginJSON = z.infer<ReturnType<typeof VerticalOriginZodSche
  * Convert `Cesium.VerticalOrigin` instance to JSON
  */
 export function VerticalOriginToJSON(instance?: VerticalOrigin): VerticalOriginJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(VerticalOrigin).parse(instance);
   return {
     parser: 'VerticalOrigin',
-    value: Object.keys(VerticalOrigin).find((key: any) => Reflect.get(VerticalOrigin, key) === instance) as any,
+    value: Object.keys(VerticalOrigin).find(key => Reflect.get(VerticalOrigin, key) === instance) as (typeof strings)[number],
   };
 }
 

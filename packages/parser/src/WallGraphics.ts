@@ -36,7 +36,7 @@ export type WallGraphicsJSON = z.infer<ReturnType<typeof WallGraphicsZodSchema>>
 /**
  * Convert `Cesium.WallGraphics` instance to JSON
  */
-export function WallGraphicsToJSON(instance?: WallGraphics, time?: JulianDate, omit?: keyof WallGraphics): WallGraphicsJSON | undefined {
+export function WallGraphicsToJSON(instance?: WallGraphics, time?: JulianDate, omit?: (keyof WallGraphicsJSON['value'])[]): WallGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -50,7 +50,7 @@ export function WallGraphicsToJSON(instance?: WallGraphics, time?: JulianDate, o
       maximumHeights: omit?.includes('maximumHeights') ? undefined : toPropertyValue(instance.maximumHeights, time),
       granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -65,7 +65,7 @@ export function WallGraphicsToJSON(instance?: WallGraphics, time?: JulianDate, o
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function WallGraphicsFromJSON(json?: WallGraphicsJSON, result?: WallGraphics, omit?: keyof WallGraphics): WallGraphics | undefined {
+export function WallGraphicsFromJSON(json?: WallGraphicsJSON, result?: WallGraphics, omit?: (keyof WallGraphicsJSON['value'])[]): WallGraphics | undefined {
   if (!json) {
     return undefined;
   }

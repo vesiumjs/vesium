@@ -11,25 +11,13 @@ export type DMSCoord = [longitude: string, latitude: string, height?: number];
  * @returns A DMS formatted string in the format: degrees° minutes′ seconds″
  */
 export function dmsEncode(degrees: number, precision = 3): string {
-  const str = `${degrees}`;
-  let i = str.indexOf('.');
-  const d = i < 0 ? str : str.slice(0, Math.max(0, i));
-  let m = '0';
-  let s = '0';
-  if (i > 0) {
-    m = `0${str.slice(Math.max(0, i))}`;
-    m = `${+m * 60}`;
-    i = m.indexOf('.');
-    if (i > 0) {
-      s = `0${m.slice(Math.max(0, i))}`;
-      m = m.slice(0, Math.max(0, i));
-      s = `${+s * 60}`;
-      i = s.indexOf('.');
-      s = s.slice(0, Math.max(0, i + 4));
-      s = (+s).toFixed(precision);
-    }
-  }
-  return `${Math.abs(+d)}°${+m}′${+s}″`;
+  // Round the total seconds once so float errors (e.g. 0.5125 producing 44.999″) and
+  // carry-over into minutes/degrees are handled in a single step
+  const totalSeconds = Number((Math.abs(degrees) * 3600).toFixed(precision));
+  const d = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = Number((totalSeconds % 60).toFixed(precision));
+  return `${d}°${m}′${s}″`;
 }
 
 /**

@@ -106,12 +106,13 @@ export function useCollectionScope<
   };
 
   const removeScope = (...args: RemoveArgs) => {
+    const finalArgs = (args.length ? args : removeScopeArgs ?? []) as RemoveArgs;
     for (const instance of Array.from(scope)) {
-      remove(instance, ...args);
+      remove(instance, ...finalArgs);
     }
   };
 
-  tryOnScopeDispose(() => removeScope(...(removeScopeArgs ?? [] as RemoveArgs)));
+  tryOnScopeDispose(() => removeScope(...(removeScopeArgs ?? [] as unknown as RemoveArgs)));
 
   return {
     scope: shallowReadonly(scope),

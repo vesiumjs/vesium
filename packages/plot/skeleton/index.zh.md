@@ -40,7 +40,3 @@ const scheme = new PlotScheme({
   skeletons: [moved, control, interval],
 });
 ```
-
-## 类型定义
-
-:::dts ./index.ts

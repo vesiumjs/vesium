@@ -19,6 +19,7 @@
     "vitest.config.*",
     "cypress.config.*",
     "nightwatch.conf.*",
-    "playwright.config.*"
+    "playwright.config.*",
+    "e2e/app/vite.config.*"
   ]
 }

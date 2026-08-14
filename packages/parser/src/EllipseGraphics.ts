@@ -45,7 +45,7 @@ export type EllipseGraphicsJSON = z.infer<ReturnType<typeof EllipseGraphicsZodSc
 /**
  * Convert `Cesium.EllipseGraphics` instance to JSON
  */
-export function EllipseGraphicsToJSON(instance?: EllipseGraphics, time?: JulianDate, omit?: keyof EllipseGraphics): EllipseGraphicsJSON | undefined {
+export function EllipseGraphicsToJSON(instance?: EllipseGraphics, time?: JulianDate, omit?: (keyof EllipseGraphicsJSON['value'])[]): EllipseGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -64,7 +64,7 @@ export function EllipseGraphicsToJSON(instance?: EllipseGraphics, time?: JulianD
       stRotation: omit?.includes('stRotation') ? undefined : toPropertyValue(instance.stRotation, time),
       granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -82,7 +82,7 @@ export function EllipseGraphicsToJSON(instance?: EllipseGraphics, time?: JulianD
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function EllipseGraphicsFromJSON(json?: EllipseGraphicsJSON, result?: EllipseGraphics, omit?: keyof EllipseGraphics): EllipseGraphics | undefined {
+export function EllipseGraphicsFromJSON(json?: EllipseGraphicsJSON, result?: EllipseGraphics, omit?: (keyof EllipseGraphicsJSON['value'])[]): EllipseGraphics | undefined {
   if (!json) {
     return undefined;
   }

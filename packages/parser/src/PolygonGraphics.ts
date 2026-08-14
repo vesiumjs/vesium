@@ -49,7 +49,7 @@ export type PolygonGraphicsJSON = z.infer<ReturnType<typeof PolygonGraphicsZodSc
 /**
  * Convert `Cesium.PolygonGraphics` instance to JSON
  */
-export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianDate, omit?: keyof PolygonGraphics): PolygonGraphicsJSON | undefined {
+export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianDate, omit?: (keyof PolygonGraphicsJSON['value'])[]): PolygonGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -66,7 +66,7 @@ export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianD
       stRotation: omit?.includes('stRotation') ? undefined : toPropertyValue(instance.stRotation, time),
       granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -88,7 +88,7 @@ export function PolygonGraphicsToJSON(instance?: PolygonGraphics, time?: JulianD
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function PolygonGraphicsFromJSON(json?: PolygonGraphicsJSON, result?: PolygonGraphics, omit?: keyof PolygonGraphics): PolygonGraphics | undefined {
+export function PolygonGraphicsFromJSON(json?: PolygonGraphicsJSON, result?: PolygonGraphics, omit?: (keyof PolygonGraphicsJSON['value'])[]): PolygonGraphics | undefined {
   if (!json) {
     return undefined;
   }

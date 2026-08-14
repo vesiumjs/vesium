@@ -112,7 +112,7 @@ const options = [
 </script>
 
 <template>
-  <div p="10px" flex="~ wrap" gap="4px">
+  <div class="p-10px flex flex-wrap gap-4px">
     <button v-for="item in options" :key="item.label" @click="operate({ scheme: item.scheme })">
       {{ item.label }}
     </button>

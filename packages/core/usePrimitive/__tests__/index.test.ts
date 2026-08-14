@@ -10,12 +10,18 @@ const mockPrimitives = {
   isDestroyed: () => false,
 };
 
+const mockGroundPrimitives = {
+  add: vi.fn(p => p),
+  remove: vi.fn(),
+  isDestroyed: () => false,
+};
+
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
   class Viewer {
     scene = {
       primitives: mockPrimitives,
-      groundPrimitives: mockPrimitives,
+      groundPrimitives: mockGroundPrimitives,
     };
 
     destroy = vi.fn();
@@ -68,7 +74,8 @@ describe('usePrimitive', () => {
     await nextTick();
     await new Promise(resolve => setTimeout(resolve, 10));
     await nextTick();
-    expect(mockPrimitives.add).toHaveBeenCalledWith(mockPrimitive);
+    expect(mockGroundPrimitives.add).toHaveBeenCalledWith(mockPrimitive);
+    expect(mockPrimitives.add).not.toHaveBeenCalledWith(mockPrimitive);
   });
 
   it('should remove primitive on cleanup', async () => {

@@ -19,7 +19,10 @@ export type PositionPropertyJSON = z.infer<ReturnType<typeof PositionPropertyZod
 /**
  * Convert `Cesium.PositionProperty` instance to JSON
  */
-export function PositionPropertyToJSON(instance?: PositionProperty, time?: JulianDate): PositionPropertyJSON | undefined {
+export function PositionPropertyToJSON(instance?: PositionProperty | null, time?: JulianDate): PositionPropertyJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
   let value: any;
   if (instance instanceof ConstantPositionProperty) {
     value = ConstantPositionPropertyToJSON(instance, time);

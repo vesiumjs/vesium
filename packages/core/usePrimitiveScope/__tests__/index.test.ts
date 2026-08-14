@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 import { createViewer } from '../../createViewer';
 import { usePrimitiveScope } from '../../index';
@@ -7,6 +7,8 @@ import { usePrimitiveScope } from '../../index';
 const mocks = vi.hoisted(() => ({
   add: vi.fn(p => p),
   remove: vi.fn(),
+  groundAdd: vi.fn(p => p),
+  groundRemove: vi.fn(),
 }));
 
 vi.mock('cesium', async (importOriginal) => {
@@ -18,8 +20,8 @@ vi.mock('cesium', async (importOriginal) => {
         remove: mocks.remove,
       },
       groundPrimitives: {
-        add: mocks.add,
-        remove: mocks.remove,
+        add: mocks.groundAdd,
+        remove: mocks.groundRemove,
       },
     };
 
@@ -31,8 +33,11 @@ vi.mock('cesium', async (importOriginal) => {
 });
 
 describe('usePrimitiveScope', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should add primitive to scope and collection', async () => {
-    mocks.add.mockClear();
     const mockPrimitive = { id: 'test' } as any;
     const TestComponent = defineComponent({
       setup() {
@@ -51,7 +56,6 @@ describe('usePrimitiveScope', () => {
   });
 
   it('should handle ground primitives', async () => {
-    mocks.add.mockClear();
     const mockPrimitive = { id: 'test' } as any;
     mount({
       setup() {
@@ -64,25 +68,24 @@ describe('usePrimitiveScope', () => {
     });
 
     await nextTick();
-    expect(mocks.add).toHaveBeenCalledWith(mockPrimitive);
+    expect(mocks.groundAdd).toHaveBeenCalledWith(mockPrimitive);
+    expect(mocks.add).not.toHaveBeenCalledWith(mockPrimitive);
   });
 
-  it('should remove primitive on cleanup', async () => {
-    mocks.remove.mockClear();
+  it('should remove primitive via removeScope', async () => {
     const mockPrimitive = { id: 'test' } as any;
-    const TestComponent = defineComponent({
+    const wrapper = mount({
       setup() {
         createViewer(document.createElement('div'));
         const { add, removeScope } = usePrimitiveScope();
         add(mockPrimitive);
         return { removeScope };
       },
-      render() { return h('div'); },
+      template: '<div></div>',
     });
 
-    const wrapper = mount(TestComponent);
     await nextTick();
-    wrapper.vm.removeScope();
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockPrimitive);
   });
 
@@ -96,26 +99,27 @@ describe('usePrimitiveScope', () => {
       isDestroyed: mockIsDestroyed,
     } as any;
 
-    const TestComponent = defineComponent({
+    const wrapper = mount({
       setup() {
         createViewer(document.createElement('div'));
         const { add, removeScope } = usePrimitiveScope({ destroyOnRemove: true });
         add(mockPrimitive);
         return { removeScope };
       },
-      render() { return h('div'); },
+      template: '<div></div>',
     });
 
-    const wrapper = mount(TestComponent);
     await nextTick();
-    wrapper.vm.removeScope();
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockPrimitive);
     expect(mockDestroy).toHaveBeenCalled();
     mocks.remove.mockReset();
   });
 
   it('should not destroy primitive when destroyOnRemove is false', async () => {
-    mocks.remove.mockClear();
+    // remove must return true, otherwise `removed && destroyOnRemove && destroy()` short-circuits
+    // on the first operand and the false branch would never be reached
+    mocks.remove.mockReturnValue(true);
     const mockDestroy = vi.fn();
     const mockIsDestroyed = vi.fn(() => false);
     const mockPrimitive = {
@@ -124,20 +128,50 @@ describe('usePrimitiveScope', () => {
       isDestroyed: mockIsDestroyed,
     } as any;
 
-    const TestComponent = defineComponent({
+    const wrapper = mount({
       setup() {
         createViewer(document.createElement('div'));
         const { add, removeScope } = usePrimitiveScope({ destroyOnRemove: false });
         add(mockPrimitive);
         return { removeScope };
       },
-      render() { return h('div'); },
+      template: '<div></div>',
     });
 
-    const wrapper = mount(TestComponent);
     await nextTick();
-    wrapper.vm.removeScope();
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockPrimitive);
     expect(mockDestroy).not.toHaveBeenCalled();
+  });
+
+  it('should handle async primitive add', async () => {
+    const mockPrimitive = { id: 'async' } as any;
+    const asyncPrimitive = Promise.resolve(mockPrimitive);
+
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        const { add } = usePrimitiveScope();
+        add(asyncPrimitive);
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 10));
+    expect(mocks.add).toHaveBeenCalledWith(mockPrimitive);
+  });
+
+  it('should throw when no viewer is provided', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => mount({
+      setup() {
+        usePrimitiveScope();
+        return {};
+      },
+      template: '<div></div>',
+    })).toThrow();
+    spy.mockRestore();
   });
 });

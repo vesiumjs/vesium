@@ -19,13 +19,13 @@ export type ColorBlendModeJSON = z.infer<ReturnType<typeof ColorBlendModeZodSche
  * Convert `Cesium.ColorBlendMode` instance to JSON
  */
 export function ColorBlendModeToJSON(instance?: ColorBlendMode): ColorBlendModeJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(ColorBlendMode).parse(instance);
   return {
     parser: 'ColorBlendMode',
-    value: Object.keys(ColorBlendMode).find((key: any) => Reflect.get(ColorBlendMode, key) === instance) as any,
+    value: Object.keys(ColorBlendMode).find(key => Reflect.get(ColorBlendMode, key) === instance) as (typeof strings)[number],
   };
 }
 

@@ -10,7 +10,6 @@
 
   // Auto fix
   "editor.codeActionsOnSave": {
-    "source.fixAll.stylelint": "always",
     "source.fixAll.eslint": "always"
   },
 

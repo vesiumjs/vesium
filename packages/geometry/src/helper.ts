@@ -1,6 +1,6 @@
 import type { CoordArray } from '@vesium/shared';
 
-export const FITTING_COUNT = 100;
+export const FITTING_COUNT = 100; // fitting sample count (generates FITTING_COUNT + 1 points)
 export const HALF_PI = Math.PI / 2;
 export const ZERO_TOLERANCE = 0.0001;
 export const TWO_PI = Math.PI * 2;
@@ -95,7 +95,11 @@ export function getIntersectCoord(coordA: CoordArray, coordB: CoordArray, coordC
  */
 export function getAzimuth(startCoord: CoordArray, endCoord: CoordArray): number {
   let azimuth = 0;
-  const angle = Math.asin(Math.abs(endCoord[1] - startCoord[1]) / mathDistance(startCoord, endCoord));
+  const distance = mathDistance(startCoord, endCoord);
+  if (distance === 0) {
+    return 0;
+  }
+  const angle = Math.asin(Math.abs(endCoord[1] - startCoord[1]) / distance);
   if (endCoord[1] >= startCoord[1] && endCoord[0] >= startCoord[0]) {
     azimuth = angle + Math.PI;
   }
@@ -190,8 +194,8 @@ export function getThirdCoord(startCoord: CoordArray, endCoord: CoordArray, angl
 export function getArcCoords(center: CoordArray, radius: number, startAngle: number, endAngle: number): CoordArray[] {
   let [x, y, coords, angleDiff]: [number, number, CoordArray[], number] = [0, 0, [], endAngle - startAngle];
   angleDiff = angleDiff < 0 ? angleDiff + Math.PI * 2 : angleDiff;
-  for (let i = 0; i <= 100; i++) {
-    const angle = startAngle + (angleDiff * i) / 100;
+  for (let i = 0; i <= FITTING_COUNT; i++) {
+    const angle = startAngle + (angleDiff * i) / FITTING_COUNT;
     x = center[0] + radius * Math.cos(angle);
     y = center[1] + radius * Math.sin(angle);
     coords.push([x, y]);
@@ -425,9 +429,6 @@ export function getFactorial(n: number): number {
       break;
     case n === 3:
       result = 6;
-      break;
-    case n === 24:
-      result = 24;
       break;
     case n === 5:
       result = 120;

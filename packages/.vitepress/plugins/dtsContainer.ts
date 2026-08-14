@@ -1,13 +1,13 @@
-import type MarkdownIt from 'markdown-it';
 import type { MarkdownEnv } from 'vitepress';
-import fs from 'node:fs';
 import path from 'node:path';
 import mdContainer from 'markdown-it-container';
-import { VITEPRESS_BUILD_TYPES_PATH, VITEPRESS_PACKAGE_PATH } from '../path';
+import { VITEPRESS_PACKAGE_PATH } from '../path.ts';
+import { getDtsForSource } from '../utils/generateTypes.ts';
 
 // eslint-disable-next-line regexp/no-super-linear-backtracking
 const DTS_RE = /^dts\s*(.*)$/;
-const TS_EXT_RE = /\.ts$/;
+
+type MarkdownIt = Parameters<typeof mdContainer>[0];
 
 export function markdownDtsContainer(md: MarkdownIt) {
   mdContainer(md, 'dts', {
@@ -22,10 +22,13 @@ export function markdownDtsContainer(md: MarkdownIt) {
         const paths = [...new Set(srcs.split(' ').filter(src => !!src))];
 
         const data = paths.map((src) => {
-          const realPath = path.resolve(env.realPath!, '../', src);
+          const realPath = path.resolve(env.filePath ?? env.realPath ?? '', '../', src);
           const relativePath = path.relative(VITEPRESS_PACKAGE_PATH, realPath);
-          const fullTypesPath = path.resolve(VITEPRESS_BUILD_TYPES_PATH, relativePath).replace(TS_EXT_RE, '.d.ts');
-          const code = fs.readFileSync(fullTypesPath, 'utf-8').toString();
+          // Generated in-process from the current sources — always up to date in dev and build.
+          const code = getDtsForSource(realPath);
+          if (code === undefined) {
+            return md.render(`> \`${relativePath}\` type definitions not found.`);
+          }
           return md.render(`\`\`\`typescript\n${code}\n\`\`\``);
         });
 

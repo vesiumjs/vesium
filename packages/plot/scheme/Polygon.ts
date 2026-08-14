@@ -31,8 +31,7 @@ export const PlotSchemePolygon = new PlotScheme({
     else if (positions.length >= 3) {
       entity.polyline!.positions = undefined;
       entity.polygon!.hierarchy = new CallbackProperty(() => {
-        positions.push(positions[0]);
-        return positions.length >= 3 ? new PolygonHierarchy([...positions]) : undefined;
+        return positions.length >= 3 ? new PolygonHierarchy([...positions, positions[0]]) : undefined;
       }, false);
     }
     else {

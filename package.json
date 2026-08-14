@@ -3,6 +3,7 @@
   "type": "module",
   "version": "1.1.0",
   "private": true,
+  "packageManager": "pnpm@11.21.0",
   "description": "Vue component and composition-api library for Cesium.",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",
@@ -26,15 +27,17 @@
   },
   "scripts": {
     "docs:dev": "vitepress dev packages --host",
-    "docs:build": "npm run build:types && vitepress build packages",
+    "docs:build": "vitepress build packages",
     "docs:preview": "vitepress preview packages",
-    "build:types": "vue-tsc -p ./tsconfig.build.json --emitDeclarationOnly",
     "test:unit": "vitest",
     "test:unit:coverage": "vitest run --coverage",
-    "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
-    "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
-    "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --fix",
+    "test:e2e": "pnpm test:e2e:docs && pnpm test:e2e:app",
+    "test:e2e:docs": "vitepress build packages && start-server-and-test 'vitepress preview packages' http://localhost:4173 'cypress run --e2e --spec cypress/e2e/docs.cy.ts'",
+    "test:e2e:app": "start-server-and-test 'vite e2e/app --port 4173 --strictPort' http://localhost:4173 'cypress run --e2e --spec cypress/e2e/app.cy.ts'",
+    "test:e2e:dev": "start-server-and-test 'vitepress dev packages --port 4173' http://localhost:4173 'cypress open --e2e'",
+    "test:e2e:app:dev": "start-server-and-test 'vite e2e/app --port 4173 --strictPort' http://localhost:4173 'cypress open --e2e --spec cypress/e2e/app.cy.ts'",
+    "tsc": "vue-tsc --build --force",
+    "eslint": "eslint . --fix",
     "taze": "taze",
     "release": "bumpp -r",
     "==========[CI/CD]===========": "",
@@ -60,7 +63,6 @@
     "@types/markdown-it-container": "catalog:",
     "@types/node": "catalog:",
     "@unocss/eslint-plugin": "catalog:",
-    "@unocss/reset": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vue/test-utils": "catalog:",
@@ -80,14 +82,8 @@
     "markdown-it": "catalog:",
     "markdown-it-container": "catalog:",
     "pinia": "catalog:",
-    "pnpm": "catalog:",
     "sass": "catalog:",
     "start-server-and-test": "catalog:",
-    "stylelint": "catalog:",
-    "stylelint-config-recess-order": "catalog:",
-    "stylelint-config-recommended-vue": "catalog:",
-    "stylelint-config-standard": "catalog:",
-    "stylelint-config-standard-scss": "catalog:",
     "svgo": "catalog:",
     "taze": "catalog:",
     "tsdown": "catalog:",
@@ -110,9 +106,6 @@
   "lint-staged": {
     "**/*": [
       "eslint --fix --no-warn-ignored"
-    ],
-    "**/*.{vue,css,scss,sass,less,styl}": [
-      "stylelint --fix --allow-empty-input"
     ]
   }
 }

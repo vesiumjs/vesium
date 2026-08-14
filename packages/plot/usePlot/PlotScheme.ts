@@ -3,7 +3,6 @@ import type { Nullable } from 'vesium';
 import type { CSSProperties } from 'vue';
 import type { PlotSkeleton } from './PlotSkeleton';
 import type { SampledPlotPackable } from './SampledPlotProperty';
-import { assert } from '@vueuse/core';
 import { assertError } from 'vesium';
 
 export interface PlotRenderResult {
@@ -88,6 +87,8 @@ export class PlotScheme {
     this.skeletons = options.skeletons?.map(item => item()) ?? [];
     this.initRender = options.initRender;
     this.render = options.render;
+    // 创建即注册：构造完成即按 type 缓存，后续可直接通过 `PlotScheme.resolve(type)` 使用
+    PlotScheme.setCache(this);
   }
 
   /**
@@ -161,8 +162,10 @@ export class PlotScheme {
   static resolve(maybeScheme: string | PlotScheme | PlotSchemeConstructorOptions): PlotScheme {
     if (typeof maybeScheme === 'string') {
       const _scheme = PlotScheme.getCache(maybeScheme);
-      assert(!!_scheme, `scheme ${maybeScheme} not found`);
-      return _scheme!;
+      if (!_scheme) {
+        throw new Error(`scheme ${maybeScheme} not found`);
+      }
+      return _scheme;
     }
     else if (!(maybeScheme instanceof PlotScheme)) {
       return new PlotScheme(maybeScheme);

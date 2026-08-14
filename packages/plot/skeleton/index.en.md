@@ -39,7 +39,3 @@ const scheme = new PlotScheme({
   skeletons: [moved, control, interval],
 });
 ```
-
-## Type Definitions
-
-:::dts ./index.ts

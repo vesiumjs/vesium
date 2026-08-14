@@ -80,6 +80,10 @@ export function createViewer(
     }
     else if (value) {
       const element = unrefElement(value);
+      if (!element) {
+        viewer.value = undefined;
+        return;
+      }
       viewer.value = new Viewer(element, arg2);
       onCleanup(() => !viewer.value?.isDestroyed() && viewer.value?.destroy());
     }

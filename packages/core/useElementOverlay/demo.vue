@@ -37,7 +37,7 @@ const { x, y, style } = useElementOverlay(elRef, position, {
 
 <template>
   <teleport v-if="viewer" :to="viewer?.container">
-    <div ref="elRef" class="position-absolute bg-#000/50 p-20px text-#fff">
+    <div ref="elRef" class="text-white p-20px bg-black/50 absolute">
       <h4>useElementOverlay</h4>
       <pre>{{ JSON.stringify({ x, y, style }, undefined, 2) }}</pre>
     </div>

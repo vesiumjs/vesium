@@ -37,7 +37,7 @@ export type PolylineGraphicsJSON = z.infer<ReturnType<typeof PolylineGraphicsZod
 /**
  * Convert `Cesium.PolylineGraphics` instance to JSON
  */
-export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: JulianDate, omit?: keyof PolylineGraphics): PolylineGraphicsJSON | undefined {
+export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: JulianDate, omit?: (keyof PolylineGraphicsJSON['value'])[]): PolylineGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -49,8 +49,8 @@ export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: Julia
       positions: omit?.includes('positions') ? undefined : toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3ToJSON(item)),
       width: omit?.includes('width') ? undefined : toPropertyValue(instance.width, time),
       granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
-      depthFailMaterial: omit?.includes('depthFailMaterial') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.depthFailMaterial, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
+      depthFailMaterial: omit?.includes('depthFailMaterial') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.depthFailMaterial, time), time),
       arcType: omit?.includes('arcType') ? undefined : ArcTypeToJSON(toPropertyValue(instance.arcType, time)),
       clampToGround: omit?.includes('clampToGround') ? undefined : toPropertyValue(instance.clampToGround, time),
       shadows: omit?.includes('shadows') ? undefined : ShadowModeToJSON(toPropertyValue(instance.shadows, time)),
@@ -66,7 +66,7 @@ export function PolylineGraphicsToJSON(instance?: PolylineGraphics, time?: Julia
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function PolylineGraphicsFromJSON(json?: PolylineGraphicsJSON, result?: PolylineGraphics, omit?: keyof PolylineGraphics): PolylineGraphics | undefined {
+export function PolylineGraphicsFromJSON(json?: PolylineGraphicsJSON, result?: PolylineGraphics, omit?: (keyof PolylineGraphicsJSON['value'])[]): PolylineGraphics | undefined {
   if (!json) {
     return undefined;
   }

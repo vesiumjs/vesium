@@ -4,4 +4,5 @@ export default defineConfig({
   recursive: true,
   write: true,
   install: true,
+  mode: 'major',
 });

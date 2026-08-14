@@ -3,12 +3,13 @@ import { fileURLToPath, URL } from 'node:url';
 import { getPackageInfoSync } from 'local-pkg';
 import { defineConfig } from 'vitepress';
 import llmstxtPlugin from 'vitepress-plugin-llmstxt';
-import { badgeTransform } from './plugins/badge';
-import { markdownDemoContainer } from './plugins/demoContainer';
-import { markdownDtsContainer } from './plugins/dtsContainer';
-import { generateSidebar } from './utils/generateSidebar';
+import { badgeTransform } from './plugins/badge.ts';
+import { markdownDemoContainer } from './plugins/demoContainer.ts';
+import { markdownDtsContainer } from './plugins/dtsContainer.ts';
+import { generateSidebar } from './utils/generateSidebar.ts';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
+const VESIUM_VERSION = (getPackageInfoSync('vesium'))!.version;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const SIDEBAR_ROOT_ORDER = ['start', 'best', 'core', 'shared', 'plot'] as const;
 const SIDEBAR_TRAILING_SLASH_RE = /\/$/;
@@ -85,10 +86,6 @@ export default defineConfig({
   title: 'Vesium',
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }],
-    // no cache html
-    ['meta', { 'http-equiv': 'Cache-Control', 'content': 'no-cache, no-store, must-revalidate' }],
-    ['meta', { 'http-equiv': 'Pragma', 'content': 'no-cache' }],
-    ['meta', { 'http-equiv': 'Expires', 'content': '0' }],
   ],
   rewrites: {
     '(.*)\\.en\\.md': '(.*)\\.md',
@@ -114,6 +111,7 @@ export default defineConfig({
         nav: [
           { text: 'Home', link: '/' },
           { text: 'Start', link: '/start' },
+          { text: `v${VESIUM_VERSION}`, link: 'https://github.com/vesiumjs/vesium/releases' },
         ],
         sidebar: sortSidebar(generateSidebar({
           base: '/',
@@ -145,6 +143,7 @@ export default defineConfig({
         nav: [
           { text: '首页', link: '/zh' },
           { text: '开始使用', link: '/zh/start' },
+          { text: `v${VESIUM_VERSION}`, link: 'https://github.com/vesiumjs/vesium/releases' },
         ],
         sidebar: sortSidebar(generateSidebar({
           base: '/zh',

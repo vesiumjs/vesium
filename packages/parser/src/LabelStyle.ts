@@ -19,13 +19,13 @@ export type LabelStyleJSON = z.infer<ReturnType<typeof LabelStyleZodSchema>>;
  * Convert `Cesium.LabelStyle` instance to JSON
  */
 export function LabelStyleToJSON(instance?: LabelStyle): LabelStyleJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(LabelStyle).parse(instance);
   return {
     parser: 'LabelStyle',
-    value: Object.keys(LabelStyle).find((key: any) => Reflect.get(LabelStyle, key) === instance) as any,
+    value: Object.keys(LabelStyle).find(key => Reflect.get(LabelStyle, key) === instance) as (typeof strings)[number],
   };
 }
 

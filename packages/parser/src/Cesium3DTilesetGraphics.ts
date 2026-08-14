@@ -13,7 +13,7 @@ export function Cesium3DTilesetGraphicsZodSchema() {
       show: z.boolean().optional(),
       uri: z.string().optional(),
       maximumScreenSpaceError: z.number().optional(),
-    }),
+    }).optional(),
   });
 }
 
@@ -22,7 +22,7 @@ export type Cesium3DTilesetGraphicsJSON = z.infer<ReturnType<typeof Cesium3DTile
 /**
  * Convert `Cesium.Cesium3DTilesetGraphics` instance to JSON
  */
-export function Cesium3DTilesetGraphicsToJSON(instance?: Cesium3DTilesetGraphics, time?: JulianDate, omit?: keyof Cesium3DTilesetGraphics): Cesium3DTilesetGraphicsJSON | undefined {
+export function Cesium3DTilesetGraphicsToJSON(instance?: Cesium3DTilesetGraphics, time?: JulianDate, omit?: ('value' | keyof NonNullable<Cesium3DTilesetGraphicsJSON['value']>)[]): Cesium3DTilesetGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -44,15 +44,15 @@ export function Cesium3DTilesetGraphicsToJSON(instance?: Cesium3DTilesetGraphics
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function Cesium3DTilesetGraphicsFromJSON(json?: Cesium3DTilesetGraphicsJSON, result?: Cesium3DTilesetGraphics, omit?: keyof Cesium3DTilesetGraphics): Cesium3DTilesetGraphics | undefined {
+export function Cesium3DTilesetGraphicsFromJSON(json?: Cesium3DTilesetGraphicsJSON, result?: Cesium3DTilesetGraphics, omit?: ('value' | keyof NonNullable<Cesium3DTilesetGraphicsJSON['value']>)[]): Cesium3DTilesetGraphics | undefined {
   if (!json) {
     return undefined;
   }
   json = Cesium3DTilesetGraphicsZodSchema().parse(json);
   const instance = new Cesium3DTilesetGraphics({
-    show: omit?.includes('show') ? undefined : json.value.show,
-    uri: omit?.includes('uri') ? undefined : json.value.uri,
-    maximumScreenSpaceError: omit?.includes('maximumScreenSpaceError') ? undefined : json.value.maximumScreenSpaceError,
+    show: omit?.includes('show') ? undefined : json.value?.show,
+    uri: omit?.includes('uri') ? undefined : json.value?.uri,
+    maximumScreenSpaceError: omit?.includes('maximumScreenSpaceError') ? undefined : json.value?.maximumScreenSpaceError,
   });
   return result ? instance.clone(result) : instance;
 }

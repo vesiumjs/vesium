@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import * as Cesium from 'cesium';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick, ref } from 'vue';
 import { createViewer } from '../../createViewer';
 import { useScreenSpaceEventHandler } from '../../index';
@@ -39,8 +39,11 @@ vi.mock('cesium', async (importOriginal) => {
 });
 
 describe('useScreenSpaceEventHandler', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should set input action on handler', async () => {
-    mocks.setInputAction.mockClear();
     const action = vi.fn();
     const type = Cesium.ScreenSpaceEventType.LEFT_CLICK;
 
@@ -54,12 +57,10 @@ describe('useScreenSpaceEventHandler', () => {
     });
 
     await nextTick();
-    const handler = new Cesium.ScreenSpaceEventHandler();
-    expect(handler.setInputAction).toHaveBeenCalledWith(action, type, undefined);
+    expect(mocks.setInputAction).toHaveBeenCalledWith(action, type, undefined);
   });
 
   it('should remove action on cleanup', async () => {
-    mocks.removeInputAction.mockClear();
     const action = vi.fn();
     const type = Cesium.ScreenSpaceEventType.LEFT_CLICK;
     const active = ref(true);
@@ -74,16 +75,13 @@ describe('useScreenSpaceEventHandler', () => {
     });
 
     await nextTick();
-    const handler = new Cesium.ScreenSpaceEventHandler();
-
     active.value = false;
     await nextTick();
-    expect(handler.removeInputAction).toHaveBeenCalledWith(type, undefined);
+    expect(mocks.removeInputAction).toHaveBeenCalledWith(type, undefined);
     wrapper.unmount();
   });
 
   it('should destroy handler on unmount', async () => {
-    mocks.destroy.mockClear();
     const action = vi.fn();
     const type = Cesium.ScreenSpaceEventType.LEFT_CLICK;
 
@@ -99,5 +97,17 @@ describe('useScreenSpaceEventHandler', () => {
     await nextTick();
     wrapper.unmount();
     expect(mocks.destroy).toHaveBeenCalled();
+  });
+
+  it('should throw when no viewer is provided', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => mount({
+      setup() {
+        useScreenSpaceEventHandler(Cesium.ScreenSpaceEventType.LEFT_CLICK, vi.fn());
+        return {};
+      },
+      template: '<div></div>',
+    })).toThrow();
+    spy.mockRestore();
   });
 });

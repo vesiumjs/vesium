@@ -16,7 +16,7 @@ export interface ScenePickResult {
  */
 export function resolvePick(pick: ScenePickResult = {}): unknown[] {
   const { primitive, id, primitiveCollection, collection } = pick;
-  const entityCollection = (id && 'entityCollection' in id && id.entityCollection) || null;
+  const entityCollection = (id && typeof id === 'object' && 'entityCollection' in id && id.entityCollection) || null;
   const dataSource = (entityCollection && entityCollection.owner) || null;
   const ids = Array.isArray(id) ? id : [id].filter(Boolean);
   return [

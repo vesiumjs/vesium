@@ -4,11 +4,20 @@ import { nextTick, ref } from 'vue';
 import { createViewer } from '../../createViewer';
 import { useScaleBar } from '../../index';
 
-const mocks = vi.hoisted(() => ({
-  addEventListener: vi.fn(),
-  getPickRay: vi.fn(),
-  pick: vi.fn(),
-}));
+const mocks = vi.hoisted(() => {
+  let _surfaceDistance = 1000;
+  return {
+    addEventListener: vi.fn(),
+    getPickRay: vi.fn(),
+    pick: vi.fn(),
+    get surfaceDistance() { return _surfaceDistance; },
+    set surfaceDistance(v: number) { _surfaceDistance = v; },
+    EllipsoidGeodesic: class {
+      surfaceDistance = _surfaceDistance;
+      constructor(_left?: any, _right?: any) {}
+    },
+  };
+});
 
 vi.mock('cesium', async (importOriginal) => {
   const actual = await importOriginal() as any;
@@ -34,11 +43,13 @@ vi.mock('cesium', async (importOriginal) => {
     destroy = vi.fn();
     constructor(_el?: any) {}
   }
-  return { ...actual, Viewer };
+  return { ...actual, Viewer, EllipsoidGeodesic: mocks.EllipsoidGeodesic };
 });
 
 describe('useScaleBar', () => {
-  it('should setup scale bar', async () => {
+  it('should return 0 width/distance when pick ray is not available', async () => {
+    mocks.getPickRay.mockReturnValue(undefined);
+
     let result: any;
     mount({
       setup() {
@@ -50,32 +61,64 @@ describe('useScaleBar', () => {
     });
 
     await nextTick();
-    expect(result.width).toBeDefined();
-    expect(result.distance).toBeDefined();
-    expect(result.distanceText).toBeDefined();
-    expect(result.pixelDistance).toBeDefined();
-    expect(typeof result.width.value).toBe('number');
+    await nextTick();
+    expect(result.width.value).toBe(0);
+    expect(result.distance.value).toBeUndefined();
+    expect(result.distanceText.value).toBeUndefined();
     expect(mocks.addEventListener).toHaveBeenCalled();
   });
 
-  it('should return readonly refs for reactive values', async () => {
+  it('should calculate distance and width when picks succeed', async () => {
+    mocks.getPickRay.mockReturnValue({});
+    mocks.pick.mockReturnValue({});
+    mocks.surfaceDistance = 1000;
+
     let result: any;
     mount({
       setup() {
         createViewer(document.createElement('div'));
-        result = useScaleBar();
+        result = useScaleBar({ maxPixel: 80 });
         return result;
       },
       template: '<div></div>',
     });
 
     await nextTick();
-    expect(result.pixelDistance).toBeDefined();
-    expect(typeof result.width.value).toBe('number');
-    expect(result.width.value).toBeGreaterThanOrEqual(0);
+    await nextTick();
+    expect(result.pixelDistance.value).toBe(1000);
+    expect(result.distance.value).toBe(50000);
+    expect(result.width.value).toBe(50);
+    expect(result.distanceText.value).toBe('50km');
+  });
+
+  it('should handle smaller distances', async () => {
+    mocks.getPickRay.mockReturnValue({});
+    mocks.pick.mockReturnValue({});
+    mocks.surfaceDistance = 10;
+
+    let result: any;
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        result = useScaleBar({ maxPixel: 80 });
+        return result;
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    await nextTick();
+    expect(result.pixelDistance.value).toBe(10);
+    expect(result.distance.value).toBe(500);
+    expect(result.width.value).toBe(50);
+    expect(result.distanceText.value).toBe('500m');
   });
 
   it('should support custom maxPixel option', async () => {
+    mocks.getPickRay.mockReturnValue({});
+    mocks.pick.mockReturnValue({});
+    mocks.surfaceDistance = 1000;
+
     let result: any;
     mount({
       setup() {
@@ -87,27 +130,16 @@ describe('useScaleBar', () => {
     });
 
     await nextTick();
-    expect(result.width).toBeDefined();
-    expect(result.distance).toBeDefined();
-  });
-
-  it('should support custom delay option', async () => {
-    let result: any;
-    mount({
-      setup() {
-        createViewer(document.createElement('div'));
-        result = useScaleBar({ delay: 16 });
-        return result;
-      },
-      template: '<div></div>',
-    });
-
     await nextTick();
-    expect(result.width).toBeDefined();
-    expect(mocks.addEventListener).toHaveBeenCalled();
+    expect(result.distance.value).toBe(50000);
+    expect(result.width.value).toBe(50);
   });
 
   it('should support ref for maxPixel', async () => {
+    mocks.getPickRay.mockReturnValue({});
+    mocks.pick.mockReturnValue({});
+    mocks.surfaceDistance = 1000;
+
     let result: any;
     mount({
       setup() {
@@ -119,7 +151,20 @@ describe('useScaleBar', () => {
     });
 
     await nextTick();
-    expect(result.distance).toBeDefined();
-    expect(result.width).toBeDefined();
+    await nextTick();
+    expect(result.distance.value).toBe(100000);
+    expect(result.width.value).toBe(100);
+  });
+
+  it('should throw when no viewer is provided', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => mount({
+      setup() {
+        useScaleBar();
+        return {};
+      },
+      template: '<div></div>',
+    })).toThrow();
+    spy.mockRestore();
   });
 });

@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 import { createViewer } from '../../createViewer';
 import { usePostProcessStageScope } from '../../index';
@@ -25,8 +25,11 @@ vi.mock('cesium', async (importOriginal) => {
 });
 
 describe('usePostProcessStageScope', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should add post process stage to scope and collection', async () => {
-    mocks.add.mockClear();
     const mockStage = { id: 'test' } as any;
     const TestComponent = defineComponent({
       setup() {
@@ -44,22 +47,20 @@ describe('usePostProcessStageScope', () => {
     expect(mocks.add).toHaveBeenCalledWith(mockStage);
   });
 
-  it('should remove stage on cleanup', async () => {
-    mocks.remove.mockClear();
+  it('should remove stage via removeScope', async () => {
     const mockStage = { id: 'test' } as any;
-    const TestComponent = defineComponent({
+    const wrapper = mount({
       setup() {
         createViewer(document.createElement('div'));
         const { add, removeScope } = usePostProcessStageScope();
         add(mockStage);
         return { removeScope };
       },
-      render() { return h('div'); },
+      template: '<div></div>',
     });
 
-    const wrapper = mount(TestComponent);
     await nextTick();
-    wrapper.vm.removeScope();
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockStage);
   });
 
@@ -73,26 +74,28 @@ describe('usePostProcessStageScope', () => {
       isDestroyed: mockIsDestroyed,
     } as any;
 
-    const TestComponent = defineComponent({
+    const wrapper = mount({
       setup() {
         createViewer(document.createElement('div'));
         const { add, removeScope } = usePostProcessStageScope({ destroyOnRemove: true });
         add(mockStage);
         return { removeScope };
       },
-      render() { return h('div'); },
+      template: '<div></div>',
     });
 
-    const wrapper = mount(TestComponent);
     await nextTick();
-    wrapper.vm.removeScope();
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockStage);
     expect(mockDestroy).toHaveBeenCalled();
     mocks.remove.mockReset();
   });
 
   it('should not destroy stage when destroyOnRemove is false', async () => {
+    // remove must return true, otherwise `removed && destroyOnRemove && destroy()` short-circuits
+    // on the first operand and the false branch would never be reached
     mocks.remove.mockClear();
+    mocks.remove.mockReturnValue(true);
     const mockDestroy = vi.fn();
     const mockIsDestroyed = vi.fn(() => false);
     const mockStage = {
@@ -101,20 +104,51 @@ describe('usePostProcessStageScope', () => {
       isDestroyed: mockIsDestroyed,
     } as any;
 
-    const TestComponent = defineComponent({
+    const wrapper = mount({
       setup() {
         createViewer(document.createElement('div'));
         const { add, removeScope } = usePostProcessStageScope({ destroyOnRemove: false });
         add(mockStage);
         return { removeScope };
       },
-      render() { return h('div'); },
+      template: '<div></div>',
     });
 
-    const wrapper = mount(TestComponent);
     await nextTick();
-    wrapper.vm.removeScope();
+    (wrapper.vm as any).removeScope();
     expect(mocks.remove).toHaveBeenCalledWith(mockStage);
     expect(mockDestroy).not.toHaveBeenCalled();
+    mocks.remove.mockReset();
+  });
+
+  it('should handle async stage add', async () => {
+    const mockStage = { id: 'async' } as any;
+    const asyncStage = Promise.resolve(mockStage);
+
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        const { add } = usePostProcessStageScope();
+        add(asyncStage);
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 10));
+    expect(mocks.add).toHaveBeenCalledWith(mockStage);
+  });
+
+  it('should throw when no viewer is provided', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => mount({
+      setup() {
+        usePostProcessStageScope();
+        return {};
+      },
+      template: '<div></div>',
+    })).toThrow();
+    spy.mockRestore();
   });
 });

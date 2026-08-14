@@ -23,8 +23,8 @@ const pickInfo = computed(() => {
     return 'No object picked';
   }
   const names = drillPick.value.map((item: any, index: number) => {
-    if (item instanceof Cesium.Entity) {
-      return `${index + 1}. Entity: ${item.name || 'unnamed'}`;
+    if (item.id instanceof Cesium.Entity) {
+      return `${index + 1}. Entity: ${item.id.name || 'unnamed'}`;
     }
     if (item.primitive) {
       return `${index + 1}. Primitive: ${item.primitive.id?.name || 'unnamed'}`;

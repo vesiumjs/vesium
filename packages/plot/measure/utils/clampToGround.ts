@@ -43,7 +43,7 @@ export async function clampToHeightMostDetailedByTilesetOrTerrain(
     if (tileset) {
       scene
         .clampToHeightMostDetailed(positions.map(e => e.clone()))
-        .then(resolve)
+        .then(list => resolve(list.filter((p): p is Cartesian3 => p !== undefined)))
         .catch((error) => {
           console.warn(error);
           resolve([]);

@@ -35,7 +35,7 @@ export type BoxGraphicsJSON = z.infer<ReturnType<typeof BoxGraphicsZodSchema>>;
 /**
  * Convert `Cesium.BoxGraphics` instance to JSON
  */
-export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate, omit?: keyof BoxGraphics): BoxGraphicsJSON | undefined {
+export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate, omit?: (keyof BoxGraphicsJSON['value'])[]): BoxGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -47,7 +47,7 @@ export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate, omi
       dimensions: omit?.includes('dimensions') ? undefined : Cartesian3ToJSON(toPropertyValue(instance.dimensions, time)),
       heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -62,7 +62,7 @@ export function BoxGraphicsToJSON(instance?: BoxGraphics, time?: JulianDate, omi
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function BoxGraphicsFromJSON(json?: BoxGraphicsJSON, result?: BoxGraphics, omit?: keyof BoxGraphics): BoxGraphics | undefined {
+export function BoxGraphicsFromJSON(json?: BoxGraphicsJSON, result?: BoxGraphics, omit?: (keyof BoxGraphicsJSON['value'])[]): BoxGraphics | undefined {
   if (!json) {
     return undefined;
   }

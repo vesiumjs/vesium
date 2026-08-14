@@ -4,22 +4,27 @@
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "baseUrl": ".",
+    "rootDir": "./packages",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "types": ["vite/client"],
     "strict": true,
     "strictFunctionTypes": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "declaration": true,
     "declarationMap": true,
-    "outDir": "./packages/.vitepress/.types",
+    "noEmit": true,
     "stripInternal": true,
     "esModuleInterop": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
-  "include": ["packages/**/*.ts"]
+  "include": ["packages/**/*.ts"],
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/__tests__/**"
+  ]
 }

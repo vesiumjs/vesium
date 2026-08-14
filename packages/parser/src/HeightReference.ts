@@ -19,13 +19,13 @@ export type HeightReferenceJSON = z.infer<ReturnType<typeof HeightReferenceZodSc
  * Convert `Cesium.HeightReference` instance to JSON
  */
 export function HeightReferenceToJSON(instance?: HeightReference): HeightReferenceJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(HeightReference).parse(instance);
   return {
     parser: 'HeightReference',
-    value: Object.keys(HeightReference).find((key: any) => Reflect.get(HeightReference, key) === instance) as any,
+    value: Object.keys(HeightReference).find(key => Reflect.get(HeightReference, key) === instance) as (typeof strings)[number],
   };
 }
 

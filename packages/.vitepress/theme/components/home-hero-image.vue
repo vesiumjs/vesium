@@ -65,10 +65,7 @@ useCesiumEventListener(() => viewer.value?.scene.postUpdate, () => {
   <teleport to="#app">
     <div
       ref="elRef"
-      position="fixed inset-0"
-      b="1px #000"
-      of="hidden"
-      z--1
+      class="border border-black inset-0 fixed overflow-hidden -z-1"
     />
   </teleport>
 </template>

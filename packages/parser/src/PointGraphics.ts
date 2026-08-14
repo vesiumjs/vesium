@@ -35,7 +35,7 @@ export type PointGraphicsJSON = z.infer<ReturnType<typeof PointGraphicsZodSchema
 /**
  * Convert `Cesium.PointGraphics` instance to JSON
  */
-export function PointGraphicsToJSON(instance?: PointGraphics, time?: JulianDate, omit?: keyof PointGraphics): PointGraphicsJSON | undefined {
+export function PointGraphicsToJSON(instance?: PointGraphics, time?: JulianDate, omit?: (keyof PointGraphicsJSON['value'])[]): PointGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -63,7 +63,7 @@ export function PointGraphicsToJSON(instance?: PointGraphics, time?: JulianDate,
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function PointGraphicsFromJSON(json?: PointGraphicsJSON, result?: PointGraphics, omit?: keyof PointGraphics): PointGraphics | undefined {
+export function PointGraphicsFromJSON(json?: PointGraphicsJSON, result?: PointGraphics, omit?: (keyof PointGraphicsJSON['value'])[]): PointGraphics | undefined {
   if (!json) {
     return undefined;
   }

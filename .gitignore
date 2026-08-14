@@ -18,6 +18,9 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 
+# Vitest failure attachments (e.g. snapshot diff images)
+.vitest-attachments/
+
 .idea
 *.suo
 *.ntvs*
@@ -29,5 +32,4 @@ coverage
 .eslintcache
 
 **/.vitepress/cache
-**/.vitepress/.types
 **/.vitepress/dev-dist

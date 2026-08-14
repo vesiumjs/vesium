@@ -1,4 +1,4 @@
-import type { JulianDate } from 'cesium';
+import type { Cartesian3, JulianDate } from 'cesium';
 import { notNullish } from '@vueuse/core';
 import { ConstantPositionProperty } from 'cesium';
 import { z } from 'zod';
@@ -43,7 +43,11 @@ export function ConstantPositionPropertyFromJSON(json?: ConstantPositionProperty
     return undefined;
   }
   json = ConstantPositionPropertyZodSchema().parse(json);
-  const instance = new ConstantPositionProperty(Cartesian3FromJSON({ parser: 'Cartesian3', value: json.value }));
-  result && instance.setValue(result.getValue());
-  return instance;
+  const value = json.value ? Cartesian3FromJSON({ parser: 'Cartesian3', value: json.value }) : undefined;
+  if (result) {
+    // setValue supports undefined at runtime, though its type signature does not
+    result.setValue(value as Cartesian3);
+    return result;
+  }
+  return new ConstantPositionProperty(value);
 }

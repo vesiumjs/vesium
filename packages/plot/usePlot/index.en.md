@@ -4,11 +4,7 @@ sort: 1
 
 # usePlot
 
-Manage a Cesium plotting session with a single composable.
-
-It keeps the session state for the current plotting workflow, including the reactive plot list, the shared timeline, the active plot being defined, and the cleanup/cancellation lifecycle.
-
-In practice, `usePlot()` is the entry point you use when you want to create, restore, or remove plots while letting the underlying `PlotScheme` and `PlotSkeleton` instances drive rendering and interaction.
+A composable for managing a Cesium plotting session — the entry point for creating, restoring, or removing plots. It maintains the reactive plot list, the shared timeline, the active plot, and the cancellation/cleanup lifecycle, while rendering and interaction are driven by `PlotScheme` and `PlotSkeleton`.
 
 ## Usage
 
@@ -17,8 +13,22 @@ In practice, `usePlot()` is the entry point you use when you want to create, res
 
 ## Returns
 
-- `plots` - reactive list of plots in the current session
-- `time` - the shared plotting timeline
-- `operate` - create a new plot or restore an existing one
-- `remove` - remove a plot from the session
-- `cancel` - abort the current `operate()` call when one is active
+### `plots`
+
+A reactive snapshot of all plots in the current session (`ComputedRef<PlotFeature[]>`).
+
+### `time`
+
+The shared timeline for the session (`ShallowRef<JulianDate | undefined>`); pass one via `usePlot({ time })`.
+
+### `operate`
+
+Start or resume a `PlotFeature` (`(plot: PlotFeature | PlotFeatureConstructorOptions) => Promise<PlotFeature>`); resolves when definition completes, rejects on cancel or removal; before starting a new plot it first tries to force-complete the previous defining one (if it cannot complete, that plot is removed and its promise rejects).
+
+### `remove`
+
+Remove a plot from the session, returning whether it succeeded; aborts the pending `operate()` when the plot is being defined.
+
+### `cancel`
+
+Abort the pending `operate()` call; its returned promise rejects.

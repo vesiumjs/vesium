@@ -19,13 +19,13 @@ export type CornerTypeJSON = z.infer<ReturnType<typeof CornerTypeZodSchema>>;
  * Convert `Cesium.CornerType` instance to JSON
  */
 export function CornerTypeToJSON(instance?: CornerType): CornerTypeJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(CornerType).parse(instance);
   return {
     parser: 'CornerType',
-    value: Object.keys(CornerType).find((key: any) => Reflect.get(CornerType, key) === instance) as any,
+    value: Object.keys(CornerType).find(key => Reflect.get(CornerType, key) === instance) as (typeof strings)[number],
   };
 }
 

@@ -7,7 +7,7 @@ export function curve(coords: CoordArray[]): CoordArray[] {
   const t = 0.3;
   const coordlength = coords.length;
   if (coordlength < 3) {
-    throw new Error('coords.length must >= 2');
+    throw new Error('coords.length must >= 3');
   }
   else {
     return getCurveCoords(t, coords);
