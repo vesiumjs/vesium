@@ -16,3 +16,4 @@ const picks = useSceneDrillPick(windowPosition, { /** options */ });
 ## Type Definitions
 
 :::dts ./index.ts
+:::

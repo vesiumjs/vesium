@@ -102,3 +102,4 @@ const entity = EntityFromJSON(entityJSON);
 ## 类型定义
 
 :::dts ./index.ts
+:::

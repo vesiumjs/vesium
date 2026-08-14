@@ -88,3 +88,4 @@ const positions = arrowCoords.map(c => toCartesian3(c));
 ## 类型定义
 
 :::dts ./index.ts
+:::

@@ -43,3 +43,4 @@ const scheme = new PlotScheme({
 ## Type Definitions
 
 :::dts ./index.ts
+:::

@@ -32,5 +32,4 @@ coverage
 .eslintcache
 
 **/.vitepress/cache
-**/.vitepress/.types
 **/.vitepress/dev-dist

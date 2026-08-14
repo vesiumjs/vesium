@@ -29,8 +29,8 @@ Package manager: `pnpm`
 - `pnpm test:e2e:docs` — docs site smoke tests only
 - `pnpm test:e2e:app` — e2e app behavior tests only
 - `pnpm test:e2e:dev` / `pnpm test:e2e:app:dev` — run Cypress in interactive mode
-- `pnpm docs:dev` — docs dev server (`vitepress`); the `dts` type definitions (`packages/.vitepress/.types`) are generated in watch mode automatically, no manual `build:types` needed
-- `pnpm docs:build` — build docs (regenerates the `dts` type definitions first via `build:types`)
+- `pnpm docs:dev` — docs dev server (`vitepress`); `dts` blocks generate their type definitions in-process from the current sources, so no separate type generation step is needed
+- `pnpm docs:build` — build docs (same in-process type generation)
 
 ## E2E tests (Cypress)
 

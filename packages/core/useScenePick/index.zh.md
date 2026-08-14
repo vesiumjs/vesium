@@ -23,3 +23,4 @@ const pick = useScenePick(windowPosition, { /** options */ });
 ## Type Definitions
 
 :::dts ./index.ts
+:::

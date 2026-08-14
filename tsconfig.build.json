@@ -15,7 +15,7 @@
     "noImplicitAny": false,
     "declaration": true,
     "declarationMap": true,
-    "outDir": "./packages/.vitepress/.types",
+    "noEmit": true,
     "stripInternal": true,
     "esModuleInterop": true,
     "skipDefaultLibCheck": true,
@@ -25,7 +25,6 @@
   "exclude": [
     "**/node_modules/**",
     "**/dist/**",
-    "**/__tests__/**",
-    "packages/.vitepress/.types/**"
+    "**/__tests__/**"
   ]
 }

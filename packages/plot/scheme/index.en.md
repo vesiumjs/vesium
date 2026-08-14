@@ -72,3 +72,4 @@ await operate(PlotSchemePolygonArrowStraight);
 ## Type Definitions
 
 :::dts ./index.ts
+:::

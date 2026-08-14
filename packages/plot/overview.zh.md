@@ -50,3 +50,4 @@ await operate(schemeMeasureDistance);
 ## 类型定义
 
 :::dts ./index.ts
+:::

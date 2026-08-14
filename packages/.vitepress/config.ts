@@ -6,7 +6,6 @@ import llmstxtPlugin from 'vitepress-plugin-llmstxt';
 import { badgeTransform } from './plugins/badge.ts';
 import { markdownDemoContainer } from './plugins/demoContainer.ts';
 import { markdownDtsContainer } from './plugins/dtsContainer.ts';
-import { typesWatchPlugin } from './plugins/typesWatch.ts';
 import { generateSidebar } from './utils/generateSidebar.ts';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
@@ -81,8 +80,6 @@ export default defineConfig({
         hostname: 'https://vesium.js.org',
         ignore: ['**/index.md'],
       }),
-      // Regenerates `.types` in watch mode while the dev server runs
-      typesWatchPlugin(),
     ],
   },
   title: 'Vesium',

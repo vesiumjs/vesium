@@ -62,3 +62,4 @@ const safeFn = tryRun(() => doSomething());
 ## Type Definitions
 
 :::dts ./index.ts
+:::

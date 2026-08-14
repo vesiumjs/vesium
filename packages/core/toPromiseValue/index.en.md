@@ -29,3 +29,4 @@ const data = computedAsync(() => toPromiseValue(normalRef));
 ## Type Definitions
 
 :::dts ./index.ts
+:::

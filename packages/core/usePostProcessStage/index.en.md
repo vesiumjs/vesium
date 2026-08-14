@@ -43,3 +43,4 @@ const stage = usePostProcessStage(() => new PostProcessStage({
 ## Type Definitions
 
 :::dts ./index.ts
+:::

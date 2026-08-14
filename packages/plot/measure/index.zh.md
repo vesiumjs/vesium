@@ -59,3 +59,4 @@ const areaResult = await area(positions, {
 ## 类型定义
 
 :::dts ./index.ts
+:::

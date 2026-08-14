@@ -52,3 +52,4 @@ const viewer = useViewer();
 ## Type Definitions
 
 :::dts ./index.ts
+:::

@@ -13,7 +13,8 @@
     "types": [
       "vite/client"
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "noEmit": true
   },
   "include": [
     "env.d.ts",

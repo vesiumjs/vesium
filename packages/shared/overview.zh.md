@@ -66,3 +66,4 @@ const safeFn = tryRun(() => doSomething());
 ## 类型定义
 
 :::dts ./index.ts
+:::

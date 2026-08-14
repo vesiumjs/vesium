@@ -27,9 +27,8 @@
   },
   "scripts": {
     "docs:dev": "vitepress dev packages --host",
-    "docs:build": "npm run build:types && vitepress build packages",
+    "docs:build": "vitepress build packages",
     "docs:preview": "vitepress preview packages",
-    "build:types": "vue-tsc -p ./tsconfig.build.json --emitDeclarationOnly",
     "test:unit": "vitest",
     "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "pnpm test:e2e:docs && pnpm test:e2e:app",
