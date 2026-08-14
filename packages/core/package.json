@@ -1,7 +1,7 @@
 {
   "name": "vesium",
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Core Vue composition hooks for Cesium",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",
