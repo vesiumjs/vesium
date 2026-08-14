@@ -19,9 +19,9 @@ jobs:
           fetch-depth: 0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/setup@v2
         with:
-          version: 10
+          install: false
 
       - name: Use Node.js v24
         uses: actions/setup-node@v6

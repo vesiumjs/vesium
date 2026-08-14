@@ -29,9 +29,9 @@ jobs:
           fetch-depth: 0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/setup@v2
         with:
-          version: 10
+          install: false
 
       - name: Use Node.js v24
         uses: actions/setup-node@v6
@@ -51,7 +51,7 @@ jobs:
           destination: ./_site
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
 
   deploy:
     environment:
@@ -62,4 +62,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
