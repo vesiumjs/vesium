@@ -50,7 +50,7 @@ export type BillboardGraphicsJSON = z.infer<ReturnType<typeof BillboardGraphicsZ
 /**
  * Convert `Cesium.BillboardGraphics` instance to JSON
  */
-export function BillboardGraphicsToJSON(instance?: BillboardGraphics, time?: JulianDate, omit?: keyof BillboardGraphics): BillboardGraphicsJSON | undefined {
+export function BillboardGraphicsToJSON(instance?: BillboardGraphics, time?: JulianDate, omit?: (keyof BillboardGraphicsJSON['value'])[]): BillboardGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -88,7 +88,7 @@ export function BillboardGraphicsToJSON(instance?: BillboardGraphics, time?: Jul
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function BillboardGraphicsFromJSON(json?: BillboardGraphicsJSON, result?: BillboardGraphics, omit?: keyof BillboardGraphics): BillboardGraphics | undefined {
+export function BillboardGraphicsFromJSON(json?: BillboardGraphicsJSON, result?: BillboardGraphics, omit?: (keyof BillboardGraphicsJSON['value'])[]): BillboardGraphics | undefined {
   if (!json) {
     return undefined;
   }

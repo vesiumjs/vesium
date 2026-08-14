@@ -18,4 +18,10 @@ describe('arcType', () => {
     expect(ArcTypeFromJSON(json)).toBe(ArcType.RHUMB);
     expect(ArcTypeFromJSON({ parser: 'ArcType', value: 'NONE' })).toBe(ArcType.NONE);
   });
+
+  it('round-trips the zero-valued ArcType.NONE', () => {
+    const json = ArcTypeToJSON(ArcType.NONE);
+    expect(json).toEqual({ parser: 'ArcType', value: 'NONE' });
+    expect(ArcTypeFromJSON(json)).toBe(ArcType.NONE);
+  });
 });

@@ -77,7 +77,7 @@ describe('pointGraphics', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new PointGraphics({ show: true, pixelSize: 10 });
-      const result = PointGraphicsToJSON(instance, undefined, 'pixelSize');
+      const result = PointGraphicsToJSON(instance, undefined, ['pixelSize']);
       expect(result?.value.pixelSize).toBeUndefined();
       expect(result?.value.show).toBe(true);
     });
@@ -132,7 +132,7 @@ describe('pointGraphics', () => {
         parser: 'PointGraphics' as const,
         value: { show: true, pixelSize: 10 },
       };
-      const result = PointGraphicsFromJSON(json, undefined, 'pixelSize');
+      const result = PointGraphicsFromJSON(json, undefined, ['pixelSize']);
       expect(toPropertyValue(result?.pixelSize)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });

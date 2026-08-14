@@ -45,7 +45,7 @@ export type CorridorGraphicsJSON = z.infer<ReturnType<typeof CorridorGraphicsZod
 /**
  * Convert `Cesium.CorridorGraphics` instance to JSON
  */
-export function CorridorGraphicsToJSON(instance?: CorridorGraphics, time?: JulianDate, omit?: keyof CorridorGraphics): CorridorGraphicsJSON | undefined {
+export function CorridorGraphicsToJSON(instance?: CorridorGraphics, time?: JulianDate, omit?: (keyof CorridorGraphicsJSON['value'])[]): CorridorGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -63,7 +63,7 @@ export function CorridorGraphicsToJSON(instance?: CorridorGraphics, time?: Julia
       cornerType: omit?.includes('cornerType') ? undefined : CornerTypeToJSON(toPropertyValue(instance.cornerType, time)),
       granularity: omit?.includes('granularity') ? undefined : toPropertyValue(instance.granularity, time),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -80,7 +80,7 @@ export function CorridorGraphicsToJSON(instance?: CorridorGraphics, time?: Julia
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function CorridorGraphicsFromJSON(json?: CorridorGraphicsJSON, result?: CorridorGraphics, omit?: keyof CorridorGraphics): CorridorGraphics | undefined {
+export function CorridorGraphicsFromJSON(json?: CorridorGraphicsJSON, result?: CorridorGraphics, omit?: (keyof CorridorGraphicsJSON['value'])[]): CorridorGraphics | undefined {
   if (!json) {
     return undefined;
   }

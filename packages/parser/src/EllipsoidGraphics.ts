@@ -43,7 +43,7 @@ export type EllipsoidGraphicsJSON = z.infer<ReturnType<typeof EllipsoidGraphicsZ
 /**
  * Convert `Cesium.EllipsoidGraphics` instance to JSON
  */
-export function EllipsoidGraphicsToJSON(instance?: EllipsoidGraphics, time?: JulianDate, omit?: keyof EllipsoidGraphics): EllipsoidGraphicsJSON | undefined {
+export function EllipsoidGraphicsToJSON(instance?: EllipsoidGraphics, time?: JulianDate, omit?: (keyof EllipsoidGraphicsJSON['value'])[]): EllipsoidGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -60,7 +60,7 @@ export function EllipsoidGraphicsToJSON(instance?: EllipsoidGraphics, time?: Jul
       maximumCone: omit?.includes('maximumCone') ? undefined : toPropertyValue(instance.maximumCone, time),
       heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -78,7 +78,7 @@ export function EllipsoidGraphicsToJSON(instance?: EllipsoidGraphics, time?: Jul
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function EllipsoidGraphicsFromJSON(json?: EllipsoidGraphicsJSON, result?: EllipsoidGraphics, omit?: keyof EllipsoidGraphics): EllipsoidGraphics | undefined {
+export function EllipsoidGraphicsFromJSON(json?: EllipsoidGraphicsJSON, result?: EllipsoidGraphics, omit?: (keyof EllipsoidGraphicsJSON['value'])[]): EllipsoidGraphics | undefined {
   if (!json) {
     return undefined;
   }

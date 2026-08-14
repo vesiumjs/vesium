@@ -168,7 +168,7 @@ describe('entity', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new Entity({ id: 'test', name: 'Test', billboard: { image: 'icon.png' } });
-      const result = EntityToJSON(instance, undefined, 'billboard' as any);
+      const result = EntityToJSON(instance, undefined, ['billboard']);
       expect(result?.value.billboard).toBeUndefined();
       expect(result?.value.id).toBe('test');
     });
@@ -247,7 +247,7 @@ describe('entity', () => {
           billboard: { parser: 'BillboardGraphics' as const, value: { image: 'icon.png' } },
         },
       };
-      const result = EntityFromJSON(json, 'billboard' as any);
+      const result = EntityFromJSON(json, ['billboard']);
       expect(result?.billboard).toBeUndefined();
       expect(result?.id).toBe('test');
     });

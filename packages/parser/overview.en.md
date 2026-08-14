@@ -87,6 +87,40 @@ Each Cesium type provides three functions:
 | `SplitDirection`     | Split direction     |
 | `VerticalOrigin`     | Vertical origin     |
 
+#### Secondary Types
+
+| Export                                    | Description                            |
+| ----------------------------------------- | -------------------------------------- |
+| `Ellipsoid`                               | Ellipsoid                              |
+| `TilingScheme`                            | Tiling scheme (Geographic/WebMercator) |
+| `Clock`                                   | Clock (for time-dynamic layers)        |
+| `ClippingPlane`/`ClippingPlaneCollection` | Clipping planes                        |
+
+#### ImageryProviders
+
+| Export                             | Description                        |
+| ---------------------------------- | ---------------------------------- |
+| `UrlTemplateImageryProvider`       | URL template imagery               |
+| `WebMapServiceImageryProvider`     | WMS imagery                        |
+| `WebMapTileServiceImageryProvider` | WMTS imagery                       |
+| `ArcGisMapServerImageryProvider`   | ArcGIS imagery                     |
+| `TileMapServiceImageryProvider`    | TMS imagery                        |
+| `SingleTileImageryProvider`        | Single tile imagery                |
+| `GridImageryProvider`              | Grid (debug) imagery               |
+| `IonImageryProvider`               | Cesium ion imagery (assetId level) |
+
+> Note: `IonImageryProvider` instances are created asynchronously via `IonImageryProvider.fromAssetId` and do not retain their `assetId`, so serialization works on the constructor source (`assetId` + `accessToken` + `server`) with `IonImageryProviderToJSON`, and `IonImageryProviderFromJSON` is async.
+
+#### TerrainProviders
+
+| Export                                | Description       |
+| ------------------------------------- | ----------------- |
+| `CesiumTerrainProvider`               | Cesium terrain    |
+| `EllipsoidTerrainProvider`            | Ellipsoid terrain |
+| `ArcGISTiledElevationTerrainProvider` | ArcGIS elevation  |
+
+> Note: `CesiumTerrainProvider`, `ArcGISTiledElevationTerrainProvider`, `TileMapServiceImageryProvider` and `ArcGisMapServerImageryProvider` are created asynchronously via `fromUrl` and do not retain their `url` (or their constructor options do not accept one), so serialization works on the constructor source and their `FromJSON` functions are async. Prefer the unified `ImageryProviderFromJSON` / `TerrainProviderFromJSON` entry points, which dispatch automatically and always return a Promise, hiding the sync/async difference.
+
 ## Usage
 
 ```ts

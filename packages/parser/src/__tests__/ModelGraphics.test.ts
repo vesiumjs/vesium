@@ -82,7 +82,7 @@ describe('modelGraphics', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new ModelGraphics({ show: true, uri: URI });
-      const result = ModelGraphicsToJSON(instance, undefined, 'uri');
+      const result = ModelGraphicsToJSON(instance, undefined, ['uri']);
       expect(result?.value.uri).toBeUndefined();
       expect(result?.value.show).toBe(true);
     });
@@ -137,7 +137,7 @@ describe('modelGraphics', () => {
         parser: 'ModelGraphics' as const,
         value: { show: true, uri: URI },
       };
-      const result = ModelGraphicsFromJSON(json, undefined, 'uri');
+      const result = ModelGraphicsFromJSON(json, undefined, ['uri']);
       expect(toPropertyValue(result?.uri)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });

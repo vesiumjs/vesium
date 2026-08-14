@@ -35,7 +35,7 @@ export type PlaneGraphicsJSON = z.infer<ReturnType<typeof PlaneGraphicsZodSchema
 /**
  * Convert `Cesium.PlaneGraphics` instance to JSON
  */
-export function PlaneGraphicsToJSON(instance?: PlaneGraphics, time?: JulianDate, omit?: keyof PlaneGraphics): PlaneGraphicsJSON | undefined {
+export function PlaneGraphicsToJSON(instance?: PlaneGraphics, time?: JulianDate, omit?: (keyof PlaneGraphicsJSON['value'])[]): PlaneGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -47,7 +47,7 @@ export function PlaneGraphicsToJSON(instance?: PlaneGraphics, time?: JulianDate,
       plane: omit?.includes('plane') ? undefined : PlaneToJSON(toPropertyValue(instance.plane, time)),
       dimensions: omit?.includes('dimensions') ? undefined : Cartesian2ToJSON(toPropertyValue(instance.dimensions, time)),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -62,7 +62,7 @@ export function PlaneGraphicsToJSON(instance?: PlaneGraphics, time?: JulianDate,
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function PlaneGraphicsFromJSON(json?: PlaneGraphicsJSON, result?: PlaneGraphics, omit?: keyof PlaneGraphics): PlaneGraphics | undefined {
+export function PlaneGraphicsFromJSON(json?: PlaneGraphicsJSON, result?: PlaneGraphics, omit?: (keyof PlaneGraphicsJSON['value'])[]): PlaneGraphics | undefined {
   if (!json) {
     return undefined;
   }

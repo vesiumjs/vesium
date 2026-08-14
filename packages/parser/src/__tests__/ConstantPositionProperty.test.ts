@@ -94,5 +94,13 @@ describe('constantPositionProperty', () => {
       const result = ConstantPositionPropertyFromJSON(undefined);
       expect(result).toBeUndefined();
     });
+
+    it('should round-trip an empty property without crashing', () => {
+      const instance = new ConstantPositionProperty(undefined);
+      const json = ConstantPositionPropertyToJSON(instance);
+      const result = ConstantPositionPropertyFromJSON(json);
+      expect(result).toBeInstanceOf(ConstantPositionProperty);
+      expect(result!.getValue()).toBeUndefined();
+    });
   });
 });

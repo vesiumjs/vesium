@@ -1,4 +1,4 @@
-import { ClippingPlane } from 'cesium';
+import { Cartesian3, ClippingPlane } from 'cesium';
 import { z } from 'zod';
 import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
 
@@ -25,10 +25,13 @@ export function ClippingPlaneToJSON(instance?: ClippingPlane): ClippingPlaneJSON
     return undefined;
   }
   instance = z.instanceof(ClippingPlane).parse(instance);
+  // Cesium 1.144+ wraps `normal` in an internal `UpdateChangedCartesian3` duck-typed
+  // object that is not a `Cartesian3` instance, so clone it into a real one first.
+  const normal = Cartesian3.clone(instance.normal);
   return {
     parser: 'ClippingPlane',
     value: {
-      normal: Cartesian3ToJSON(instance.normal)!,
+      normal: Cartesian3ToJSON(normal)!,
       distance: instance.distance,
     },
   };

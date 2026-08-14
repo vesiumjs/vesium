@@ -94,7 +94,7 @@ describe('labelGraphics', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new LabelGraphics({ show: true, text: TEXT });
-      const result = LabelGraphicsToJSON(instance, undefined, 'text');
+      const result = LabelGraphicsToJSON(instance, undefined, ['text']);
       expect(result?.value.text).toBeUndefined();
       expect(result?.value.show).toBe(true);
     });
@@ -149,7 +149,7 @@ describe('labelGraphics', () => {
         parser: 'LabelGraphics' as const,
         value: { show: true, text: TEXT },
       };
-      const result = LabelGraphicsFromJSON(json, undefined, 'text');
+      const result = LabelGraphicsFromJSON(json, undefined, ['text']);
       expect(toPropertyValue(result?.text)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });

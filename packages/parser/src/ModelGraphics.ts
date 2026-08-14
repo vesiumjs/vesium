@@ -50,7 +50,7 @@ export type ModelGraphicsJSON = z.infer<ReturnType<typeof ModelGraphicsZodSchema
 /**
  * Convert `Cesium.ModelGraphics` instance to JSON
  */
-export function ModelGraphicsToJSON(instance?: ModelGraphics, time?: JulianDate, omit?: keyof ModelGraphics): ModelGraphicsJSON | undefined {
+export function ModelGraphicsToJSON(instance?: ModelGraphics, time?: JulianDate, omit?: (keyof ModelGraphicsJSON['value'])[]): ModelGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -90,7 +90,7 @@ export function ModelGraphicsToJSON(instance?: ModelGraphics, time?: JulianDate,
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function ModelGraphicsFromJSON(json?: ModelGraphicsJSON, result?: ModelGraphics, omit?: keyof ModelGraphics): ModelGraphics | undefined {
+export function ModelGraphicsFromJSON(json?: ModelGraphicsJSON, result?: ModelGraphics, omit?: (keyof ModelGraphicsJSON['value'])[]): ModelGraphics | undefined {
   if (!json) {
     return undefined;
   }

@@ -87,7 +87,7 @@ describe('polylineGraphics', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new PolylineGraphics({ show: true, width: WIDTH });
-      const result = PolylineGraphicsToJSON(instance, undefined, 'width');
+      const result = PolylineGraphicsToJSON(instance, undefined, ['width']);
       expect(result?.value.width).toBeUndefined();
       expect(result?.value.show).toBe(true);
     });
@@ -159,7 +159,7 @@ describe('polylineGraphics', () => {
         parser: 'PolylineGraphics' as const,
         value: { show: true, width: WIDTH },
       };
-      const result = PolylineGraphicsFromJSON(json, undefined, 'width');
+      const result = PolylineGraphicsFromJSON(json, undefined, ['width']);
       expect(toPropertyValue(result?.width)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });

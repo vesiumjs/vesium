@@ -4,6 +4,7 @@ import { SampledPositionProperty } from 'cesium';
 import { z } from 'zod';
 import { Cartesian3FromJSON, Cartesian3ZodSchema } from './Cartesian3';
 import { JulianDateFromJSON, JulianDateToJSON, JulianDateZodSchema } from './JulianDate';
+import { readPrivate } from './private';
 import { ReferenceFrameFromJSON, ReferenceFrameToJSON, ReferenceFrameZodSchema } from './ReferenceFrame';
 
 /**
@@ -31,14 +32,15 @@ export function SampledPositionPropertyToJSON(instance?: CesiumSampledPositionPr
     return undefined;
   }
   instance = z.instanceof(SampledPositionProperty).parse(instance);
-  // SampledProperty
-  const property = (instance as any)._property;
-  const times: JulianDate[] = property._times;
-  // _values is a flat array [x1, y1, z1, x2, y2, z2, ...]
-  const rawValues: number[] = property._values;
+  // SampledProperty internals hold the packed times and values
+  const property = readPrivate<{ _times: JulianDate[]; _values: number[] }>(instance, '_property');
+  const times: JulianDate[] = property!._times;
+  // _values is a flat array; each sample occupies 3 * (numberOfDerivatives + 1) numbers
+  const rawValues: number[] = property!._values;
+  const stride = 3 * (instance.numberOfDerivatives + 1);
 
   const cartesianValues: Cartesian3JSON[] = [];
-  for (let i = 0; i < rawValues.length; i += 3) {
+  for (let i = 0; i < rawValues.length; i += stride) {
     cartesianValues.push({
       parser: 'Cartesian3',
       value: {

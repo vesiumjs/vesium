@@ -104,7 +104,7 @@ describe('ellipseGraphics', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new EllipseGraphics({ show: true, semiMajorAxis: MAJOR });
-      const result = EllipseGraphicsToJSON(instance, undefined, 'semiMajorAxis');
+      const result = EllipseGraphicsToJSON(instance, undefined, ['semiMajorAxis']);
       expect(result?.value.semiMajorAxis).toBeUndefined();
       expect(result?.value.show).toBe(true);
     });
@@ -162,7 +162,7 @@ describe('ellipseGraphics', () => {
         parser: 'EllipseGraphics' as const,
         value: { show: true, semiMajorAxis: MAJOR },
       };
-      const result = EllipseGraphicsFromJSON(json, undefined, 'semiMajorAxis');
+      const result = EllipseGraphicsFromJSON(json, undefined, ['semiMajorAxis']);
       expect(toPropertyValue(result?.semiMajorAxis)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });

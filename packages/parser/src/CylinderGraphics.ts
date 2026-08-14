@@ -38,7 +38,7 @@ export type CylinderGraphicsJSON = z.infer<ReturnType<typeof CylinderGraphicsZod
 /**
  * Convert `Cesium.CylinderGraphics` instance to JSON
  */
-export function CylinderGraphicsToJSON(instance?: CylinderGraphics, time?: JulianDate, omit?: keyof CylinderGraphics): CylinderGraphicsJSON | undefined {
+export function CylinderGraphicsToJSON(instance?: CylinderGraphics, time?: JulianDate, omit?: (keyof CylinderGraphicsJSON['value'])[]): CylinderGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -52,7 +52,7 @@ export function CylinderGraphicsToJSON(instance?: CylinderGraphics, time?: Julia
       bottomRadius: omit?.includes('bottomRadius') ? undefined : toPropertyValue(instance.bottomRadius, time),
       heightReference: omit?.includes('heightReference') ? undefined : HeightReferenceToJSON(toPropertyValue(instance.heightReference, time)),
       fill: omit?.includes('fill') ? undefined : toPropertyValue(instance.fill, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       outline: omit?.includes('outline') ? undefined : toPropertyValue(instance.outline, time),
       outlineColor: omit?.includes('outlineColor') ? undefined : ColorToJSON(toPropertyValue(instance.outlineColor, time)),
       outlineWidth: omit?.includes('outlineWidth') ? undefined : toPropertyValue(instance.outlineWidth, time),
@@ -69,7 +69,7 @@ export function CylinderGraphicsToJSON(instance?: CylinderGraphics, time?: Julia
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function CylinderGraphicsFromJSON(json?: CylinderGraphicsJSON, result?: CylinderGraphics, omit?: keyof CylinderGraphics): CylinderGraphics | undefined {
+export function CylinderGraphicsFromJSON(json?: CylinderGraphicsJSON, result?: CylinderGraphics, omit?: (keyof CylinderGraphicsJSON['value'])[]): CylinderGraphics | undefined {
   if (!json) {
     return undefined;
   }

@@ -28,7 +28,7 @@ export type PathGraphicsJSON = z.infer<ReturnType<typeof PathGraphicsZodSchema>>
 /**
  * Convert `Cesium.PathGraphics` instance to JSON
  */
-export function PathGraphicsToJSON(instance?: PathGraphics, time?: JulianDate, omit?: keyof PathGraphics): PathGraphicsJSON | undefined {
+export function PathGraphicsToJSON(instance?: PathGraphics, time?: JulianDate, omit?: (keyof PathGraphicsJSON['value'])[]): PathGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -41,7 +41,7 @@ export function PathGraphicsToJSON(instance?: PathGraphics, time?: JulianDate, o
       trailTime: omit?.includes('trailTime') ? undefined : toPropertyValue(instance.trailTime, time),
       width: omit?.includes('width') ? undefined : toPropertyValue(instance.width, time),
       resolution: omit?.includes('resolution') ? undefined : toPropertyValue(instance.resolution, time),
-      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time)),
+      material: omit?.includes('material') ? undefined : MaterialPropertyToJSON(toPropertyValue(instance.material, time), time),
       distanceDisplayCondition: omit?.includes('distanceDisplayCondition') ? undefined : DistanceDisplayConditionToJSON(toPropertyValue(instance.distanceDisplayCondition, time)),
     },
   };
@@ -52,7 +52,7 @@ export function PathGraphicsToJSON(instance?: PathGraphics, time?: JulianDate, o
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function PathGraphicsFromJSON(json?: PathGraphicsJSON, result?: PathGraphics, omit?: keyof PathGraphics): PathGraphics | undefined {
+export function PathGraphicsFromJSON(json?: PathGraphicsJSON, result?: PathGraphics, omit?: (keyof PathGraphicsJSON['value'])[]): PathGraphics | undefined {
   if (!json) {
     return undefined;
   }

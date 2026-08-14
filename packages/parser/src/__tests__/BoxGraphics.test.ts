@@ -82,7 +82,7 @@ describe('boxGraphics', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new BoxGraphics({ show: true, fill: true });
-      const result = BoxGraphicsToJSON(instance, undefined, 'fill');
+      const result = BoxGraphicsToJSON(instance, undefined, ['fill']);
       expect(result?.value.fill).toBeUndefined();
       expect(result?.value.show).toBe(true);
     });
@@ -138,7 +138,7 @@ describe('boxGraphics', () => {
         parser: 'BoxGraphics' as const,
         value: { show: true, fill: true },
       };
-      const result = BoxGraphicsFromJSON(json, undefined, 'fill');
+      const result = BoxGraphicsFromJSON(json, undefined, ['fill']);
       expect(toPropertyValue(result?.fill)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });

@@ -52,5 +52,5 @@ export function PropertyBagFromJSON(json?: PropertyBagJSON, result?: PropertyBag
   }
   const instance = result ?? new PropertyBag();
   json.value.propertyNames.forEach(key => instance.addProperty(key, json.value.content[key]));
-  return instance ? instance.clone(result) : instance;
+  return instance;
 }

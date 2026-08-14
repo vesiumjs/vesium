@@ -87,6 +87,40 @@ subText: Cesium JSON 序列化
 | `SplitDirection`     | 分割方向     |
 | `VerticalOrigin`     | 垂直原点     |
 
+#### 二级辅助类型
+
+| 导出                                      | 作用                     |
+| ----------------------------------------- | ------------------------ |
+| `Ellipsoid`                               | 椭球体                   |
+| `TilingScheme`                            | 瓦片方案（地理/墨卡托）  |
+| `Clock`                                   | 时钟（用于时间动态图层） |
+| `ClippingPlane`/`ClippingPlaneCollection` | 裁剪平面                 |
+
+#### ImageryProvider（影像图层）
+
+| 导出                               | 作用                          |
+| ---------------------------------- | ----------------------------- |
+| `UrlTemplateImageryProvider`       | URL 模板影像                  |
+| `WebMapServiceImageryProvider`     | WMS 影像                      |
+| `WebMapTileServiceImageryProvider` | WMTS 影像                     |
+| `ArcGisMapServerImageryProvider`   | ArcGIS 影像                   |
+| `TileMapServiceImageryProvider`    | TMS 影像                      |
+| `SingleTileImageryProvider`        | 单张影像                      |
+| `GridImageryProvider`              | 网格（调试）影像              |
+| `IonImageryProvider`               | Cesium ion 影像（assetId 级） |
+
+> 注意：`IonImageryProvider` 的实例由异步的 `IonImageryProvider.fromAssetId` 创建且不保留 `assetId`，因此其序列化基于「assetId + accessToken + server」构造参数（`IonImageryProviderToJSON`），`IonImageryProviderFromJSON` 为异步函数。
+
+#### TerrainProvider（地形）
+
+| 导出                                  | 作用            |
+| ------------------------------------- | --------------- |
+| `CesiumTerrainProvider`               | Cesium 地形     |
+| `EllipsoidTerrainProvider`            | 椭球面地形      |
+| `ArcGISTiledElevationTerrainProvider` | ArcGIS 高程地形 |
+
+> 注意：`CesiumTerrainProvider`、`ArcGISTiledElevationTerrainProvider`、`TileMapServiceImageryProvider`、`ArcGisMapServerImageryProvider` 的实例由异步的 `fromUrl` 创建且不保留 `url`（或构造选项不接收 `url`），因此它们的序列化基于构造参数，`FromJSON` 为异步函数。推荐统一使用 `ImageryProviderFromJSON` / `TerrainProviderFromJSON` 入口，内部自动分发且统一返回 Promise，无需关心单个 Provider 的同步/异步差异。
+
 ## 用法
 
 ```ts

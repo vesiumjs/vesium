@@ -19,13 +19,13 @@ export type HorizontalOriginJSON = z.infer<ReturnType<typeof HorizontalOriginZod
  * Convert `Cesium.HorizontalOrigin` instance to JSON
  */
 export function HorizontalOriginToJSON(instance?: HorizontalOrigin): HorizontalOriginJSON | undefined {
-  if (!instance) {
+  if (instance === undefined || instance === null) {
     return undefined;
   }
   instance = z.enum(HorizontalOrigin).parse(instance);
   return {
     parser: 'HorizontalOrigin',
-    value: Object.keys(HorizontalOrigin).find((key: any) => Reflect.get(HorizontalOrigin, key) === instance) as any,
+    value: Object.keys(HorizontalOrigin).find(key => Reflect.get(HorizontalOrigin, key) === instance) as (typeof strings)[number],
   };
 }
 

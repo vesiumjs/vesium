@@ -93,7 +93,7 @@ describe('polygonGraphics', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new PolygonGraphics({ show: true, height: HEIGHT });
-      const result = PolygonGraphicsToJSON(instance, undefined, 'height');
+      const result = PolygonGraphicsToJSON(instance, undefined, ['height']);
       expect(result?.value.height).toBeUndefined();
       expect(result?.value.show).toBe(true);
     });
@@ -149,7 +149,7 @@ describe('polygonGraphics', () => {
         parser: 'PolygonGraphics' as const,
         value: { show: true, height: HEIGHT },
       };
-      const result = PolygonGraphicsFromJSON(json, undefined, 'height');
+      const result = PolygonGraphicsFromJSON(json, undefined, ['height']);
       expect(toPropertyValue(result?.height)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });

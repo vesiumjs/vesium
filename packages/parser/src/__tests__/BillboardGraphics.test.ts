@@ -89,7 +89,7 @@ describe('billboardGraphics', () => {
 
     it('should omit a field when omit is provided', () => {
       const instance = new BillboardGraphics({ show: true, image: TEST_IMAGE });
-      const result = BillboardGraphicsToJSON(instance, undefined, 'image');
+      const result = BillboardGraphicsToJSON(instance, undefined, ['image']);
       expect(result?.value.image).toBeUndefined();
       expect(result?.value.show).toBe(true);
     });
@@ -131,7 +131,7 @@ describe('billboardGraphics', () => {
         parser: 'BillboardGraphics' as const,
         value: { show: true, image: TEST_IMAGE },
       };
-      const result = BillboardGraphicsFromJSON(json, undefined, 'image');
+      const result = BillboardGraphicsFromJSON(json, undefined, ['image']);
       expect(toPropertyValue(result?.image)).toBeUndefined();
       expect(toPropertyValue(result?.show)).toBe(true);
     });

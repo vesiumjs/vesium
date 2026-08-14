@@ -49,7 +49,7 @@ export type LabelGraphicsJSON = z.infer<ReturnType<typeof LabelGraphicsZodSchema
 /**
  * Convert `Cesium.LabelGraphics` instance to JSON
  */
-export function LabelGraphicsToJSON(instance?: LabelGraphics, time?: JulianDate, omit?: keyof LabelGraphics): LabelGraphicsJSON | undefined {
+export function LabelGraphicsToJSON(instance?: LabelGraphics, time?: JulianDate, omit?: (keyof LabelGraphicsJSON['value'])[]): LabelGraphicsJSON | undefined {
   if (!instance) {
     return undefined;
   }
@@ -87,7 +87,7 @@ export function LabelGraphicsToJSON(instance?: LabelGraphics, time?: JulianDate,
  * @param json - A JSON containing instance data
  * @param result - Used to store the resulting instance. If not provided, a new instance will be created
  */
-export function LabelGraphicsFromJSON(json?: LabelGraphicsJSON, result?: LabelGraphics, omit?: keyof LabelGraphics): LabelGraphics | undefined {
+export function LabelGraphicsFromJSON(json?: LabelGraphicsJSON, result?: LabelGraphics, omit?: (keyof LabelGraphicsJSON['value'])[]): LabelGraphics | undefined {
   if (!json) {
     return undefined;
   }
