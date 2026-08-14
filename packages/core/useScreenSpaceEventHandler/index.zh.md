@@ -5,9 +5,7 @@ subText: 屏幕空间事件
 
 # useScreenSpaceEventHandler
 
-轻松使用`ScreenSpaceEventHandler`，当依赖数据发生变化或组件被卸载时，监听函数会自动重新重载或销毁。
-
-它会在 canvas 或依赖输入发生变化时自动重建处理器，并在组件作用域销毁时主动释放。
+以响应式方式使用 Cesium 的 `ScreenSpaceEventHandler` 处理鼠标/触摸屏幕事件：canvas 变化时自动重建处理器，事件类型或修饰键变化时自动重新注册监听，组件卸载时自动销毁。适合监听点击、移动、滚轮、双指手势等事件，事件类型可动态变化。
 
 ## Usage
 
@@ -15,22 +13,36 @@ subText: 屏幕空间事件
 :::
 
 ```ts
-const { isActive, pause, resume } = useScreenSpaceEventHandler({
-  type: Cesium.ScreenSpaceEventType.LEFT_CLICK,
-  // modifier: Cesium.KeyboardEventModifier.SHIFT,
-  // pause: false,
-  inputAction: (ctx) => {
-    console.log(ctx);
-  }
-});
+import * as Cesium from 'cesium';
+import { useScreenSpaceEventHandler } from 'vesium';
+
+const stop = useScreenSpaceEventHandler(
+  Cesium.ScreenSpaceEventType.LEFT_CLICK,
+  (event) => {
+    console.log(event.position); // 定位事件的回调含屏幕坐标 position
+  },
+  { modifier: Cesium.KeyboardEventModifier.SHIFT }, // 按住 Shift 才触发
+);
+
+stop(); // 组件卸载时自动清理，也可手动停止
 ```
 
-## 说明
+## 配置项
 
-- 返回值是一个停止函数，调用它会立即停止当前监听并销毁处理器。
-- `isActive` 只会暂停监听注册，不会强制重建整个 composable。
-- `modifier` 会透传给 Cesium 的键盘修饰键参数。
+- `type` - 事件类型（`Cesium.ScreenSpaceEventType`），支持 ref/getter 动态变化；回调参数类型随 `type` 推导（点击等定位事件为 `PositionedEvent`、`MOUSE_MOVE` 为 `MotionEvent`、`WHEEL` 为 `number`、双指手势为 `TwoPointEvent` / `TwoPointMotionEvent`）。不传则不注册监听。
+- `inputAction` - 监听回调函数；不传则不注册监听。
+- `modifier` - 键盘修饰键（`Cesium.KeyboardEventModifier`），透传给 Cesium。
+- `isActive` - 是否激活监听，默认 `true`；只暂停/恢复监听注册，不会重建整个 composable。
+
+## 返回值
+
+- 返回停止函数（`WatchStopHandle`）：调用即停止当前监听并销毁处理器；组件卸载时自动调用。
+
+## 注意事项
+
+- 处理器基于 canvas 创建：canvas 变化（如 viewer 重建）时旧实例自动销毁并创建新实例，无需手动处理。
 
 ## Type Definitions
 
 :::dts ./index.ts
+:::

@@ -5,36 +5,41 @@ subText: 创建实例
 
 # createViewer
 
-初始化一个Viewer或重用现有实例，在当前组件及其后代组件中可以通过`useViewer`访问。
+初始化一个 `Viewer` 实例，或复用传入的已有实例，并通过依赖注入暴露给当前组件及其后代组件。封装了手动 `destroy()` 和层层传参的样板代码：由元素创建的实例会在组件作用域结束时自动销毁。
 
-## 用法
+## Usage
 
 :::demo src="./demo.vue" :cesium="false"
 :::
 
 :::warning 注意
-如果在同一个组件中使用`useViewer`和`createViewer`：
-
-- `useViewer`应在`createViewer`之后调用
-
-- `useViewer`将优先使用`createViewer`在当前组件中创建的实例
-  :::
-
-## 行为
-
-- 传入已有的 `Viewer` 实例时，只会复用它，不会在卸载时销毁。
-- 传入 DOM 元素和配置时，会创建新的 `Viewer`，并在组件作用域结束时自动销毁。
-- 当 canvas 被从 DOM 移除时，注入的 `viewer` 引用会被清空，避免继续使用失效实例。
+如果在同一个组件中使用 `createViewer` 和 `useViewer`，`useViewer` 应在 `createViewer` 之后调用，并优先使用当前组件创建的实例。
+:::
 
 ```ts
-// 重载1：创建一个新实例，该实例在组件卸载时会自动销毁
-const viewer = createViewer(elRef, {
-  // ...options
-});
+import { createViewer, useViewer } from 'vesium';
+import { shallowRef } from 'vue';
 
-// 重载2：注入一个现有实例，该实例在组件卸载时不会自动销毁
-const viewer = createViewer(window.viewer);
+const elRef = shallowRef<HTMLElement>();
 
-// 创建实例后，当前组件及其后代组件可以使用useViewer访问该实例
-const viewer = useViewer();
+// 传入 DOM 元素（或 ref）创建新实例，组件卸载时自动销毁
+const viewer = createViewer(elRef, { /* ...options */ });
+
+// 传入已有实例只复用，不接管生命周期
+const sharedViewer = createViewer(window.viewer);
+const injectedViewer = useViewer();
 ```
+
+## 返回值
+
+- `Readonly<ShallowRef<Viewer | undefined>>` - 只读的 `Viewer` 引用；实例销毁后为 `undefined`，与 `useViewer()` 指向同一个 `Viewer` 实例。
+
+## 注意事项
+
+- 通过 `MutationObserver` 监听 `body`：`canvas` 被移出 DOM（如被 `v-if` 移除）时清空引用，避免继续使用失效实例。
+- 元素 ref 尚未绑定时不会创建实例，元素出现后自动补建。
+
+## Type Definitions
+
+:::dts ./index.ts
+:::

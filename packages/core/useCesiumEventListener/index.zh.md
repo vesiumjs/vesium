@@ -4,36 +4,44 @@ subText: 事件订阅
 
 # useCesiumEventListener
 
-轻松使用`Cesium.Event`实例中的`addEventListener`，
-当依赖数据发生变化或组件被卸载时，监听函数会自动重新重载或销毁。
+以响应式方式订阅 `Cesium.Event` 实例上的事件：依赖数据变化（如 viewer 重建）时自动重新订阅，组件卸载时自动销毁监听。适合订阅 `camera.moveStart`、`scene.postRender` 等任意事件，也支持一次订阅多个。
 
 ## Usage
 
 :::demo src="./demo.vue"
 :::
 
-:::tip 建议
-在Cesium中，事件的触发往往是实时帧渲染引发的，可能会照成vue响应式无效刷新，所以监听函数最好进行节流处理。
+```ts
+import { useCesiumEventListener, useViewer } from 'vesium';
 
-`Vesium`提供的`throttle`函数、`VueUse`提供 [refThrottled](https://vueuse.org/shared/refThrottled/)，都的可以很方便的进行节流处理。
+const viewer = useViewer();
+
+// 事件实例可能未就绪或会变化时，传 getter 自动跟随
+useCesiumEventListener(() => viewer.value?.camera.moveEnd, () => {
+  console.log('Camera move end');
+});
+
+// 支持数组：一次订阅多个事件
+useCesiumEventListener(() => [viewer.value?.scene.preRender, viewer.value?.scene.postRender], () => {});
+```
+
+:::tip 建议
+事件常由实时帧渲染触发，可能造成 Vue 响应式无效刷新，监听函数建议节流。可使用 `@vesium/shared` 的 `throttle` 函数或 VueUse 的 [refThrottled](https://vueuse.org/shared/refThrottled/)。
 :::
 
-```ts
-import { throttle } from '@vesium/shared';
-import { refThrottled } from '@vueuse/core';
-import { useCesiumEventListener } from 'vesium';
+## 配置项
 
-const listener = throttle(() => {
-  console.log('Camera moved');
-}, 100);
-useCesiumEventListener(() => viewer.value?.scene.postRender, listener);
+- `isActive` - 是否激活监听，默认 `true`；为 `false` 时不注册监听，恢复后自动重新订阅，支持 ref/getter 动态控制。
 
-const current = refThrottled(ref(Date.now()), 100);
-useCesiumEventListener(() => viewer.value?.scene.postRender, () => {
-  current.value = Date.now();
-});
-```
+## 返回值
+
+- 返回停止函数（`WatchStopHandle`）：调用即移除当前所有已注册监听；组件卸载时自动调用，无需手动清理。
+
+## 注意事项
+
+- `event` 支持单个或多个（数组）`Cesium.Event`，每项可为 `undefined`、ref 或 getter，依赖变化后自动重新订阅。
 
 ## Type Definitions
 
 :::dts ./index.ts
+:::

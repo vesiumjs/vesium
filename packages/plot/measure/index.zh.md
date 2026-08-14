@@ -55,8 +55,3 @@ const areaResult = await area(positions, {
   clampToGround: true,
 });
 ```
-
-## 类型定义
-
-:::dts ./index.ts
-:::

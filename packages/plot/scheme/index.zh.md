@@ -69,8 +69,3 @@ const { operate } = usePlot();
 await operate(PlotSchemePolygon);
 await operate(PlotSchemePolygonArrowStraight);
 ```
-
-## 类型定义
-
-:::dts ./index.ts
-:::

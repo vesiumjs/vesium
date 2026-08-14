@@ -68,8 +68,3 @@ const { operate } = usePlot();
 await operate(PlotSchemePolygon);
 await operate(PlotSchemePolygonArrowStraight);
 ```
-
-## Type Definitions
-
-:::dts ./index.ts
-:::
