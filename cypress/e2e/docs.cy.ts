@@ -27,6 +27,11 @@ describe('Vesium Documentation Site', () => {
     cy.get('canvas').should('exist');
   });
 
+  it('should show the version link to GitHub releases in the nav', () => {
+    cy.visit('/');
+    cy.contains('.VPNavBarMenuLink', /^v\d+\.\d+\.\d+$/).should('have.attr', 'href').and('include', 'github.com/vesiumjs/vesium/releases');
+  });
+
   it('should serve the Chinese locale and navigate to its start page', () => {
     cy.visit('/zh/');
     cy.contains('a', '开始使用').click();

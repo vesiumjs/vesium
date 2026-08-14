@@ -9,6 +9,7 @@ import { markdownDtsContainer } from './plugins/dtsContainer.ts';
 import { generateSidebar } from './utils/generateSidebar.ts';
 
 const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
+const VESIUM_VERSION = (getPackageInfoSync('vesium'))!.version;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const SIDEBAR_ROOT_ORDER = ['start', 'best', 'core', 'shared', 'plot'] as const;
 const SIDEBAR_TRAILING_SLASH_RE = /\/$/;
@@ -110,6 +111,7 @@ export default defineConfig({
         nav: [
           { text: 'Home', link: '/' },
           { text: 'Start', link: '/start' },
+          { text: `v${VESIUM_VERSION}`, link: 'https://github.com/vesiumjs/vesium/releases' },
         ],
         sidebar: sortSidebar(generateSidebar({
           base: '/',
@@ -141,6 +143,7 @@ export default defineConfig({
         nav: [
           { text: '首页', link: '/zh' },
           { text: '开始使用', link: '/zh/start' },
+          { text: `v${VESIUM_VERSION}`, link: 'https://github.com/vesiumjs/vesium/releases' },
         ],
         sidebar: sortSidebar(generateSidebar({
           base: '/zh',
