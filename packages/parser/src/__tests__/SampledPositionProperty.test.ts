@@ -80,6 +80,43 @@ describe('sampledPositionProperty', () => {
       expect(result?.value.times).toHaveLength(2);
       expect(result?.value.values).toHaveLength(2);
     });
+
+    it('should serialize derivatives alongside the positions', () => {
+      const instance = new SampledPositionProperty(undefined, 1);
+      instance.addSample(
+        JulianDate.fromIso8601('2024-01-01T00:00:00Z'),
+        new Cartesian3(1, 2, 3),
+        [new Cartesian3(10, 20, 30)],
+      );
+      instance.addSample(
+        JulianDate.fromIso8601('2024-06-01T00:00:00Z'),
+        new Cartesian3(4, 5, 6),
+        [new Cartesian3(40, 50, 60)],
+      );
+      const result = SampledPositionPropertyToJSON(instance);
+      expect(result?.value.numberOfDerivatives).toBe(1);
+      expect(result?.value.derivatives).toEqual([
+        [{ parser: 'Cartesian3', value: { x: 10, y: 20, z: 30 } }],
+        [{ parser: 'Cartesian3', value: { x: 40, y: 50, z: 60 } }],
+      ]);
+    });
+
+    it('should serialize multiple derivatives per sample', () => {
+      const instance = new SampledPositionProperty(undefined, 2);
+      instance.addSample(
+        JulianDate.fromIso8601('2024-01-01T00:00:00Z'),
+        new Cartesian3(1, 2, 3),
+        [new Cartesian3(10, 20, 30), new Cartesian3(100, 200, 300)],
+      );
+      const result = SampledPositionPropertyToJSON(instance);
+      expect(result?.value.numberOfDerivatives).toBe(2);
+      expect(result?.value.derivatives).toEqual([
+        [
+          { parser: 'Cartesian3', value: { x: 10, y: 20, z: 30 } },
+          { parser: 'Cartesian3', value: { x: 100, y: 200, z: 300 } },
+        ],
+      ]);
+    });
   });
 
   describe('sampledPositionPropertyFromJSON', () => {
@@ -149,6 +186,49 @@ describe('sampledPositionProperty', () => {
       expect(second?.x).toBe(4);
       expect(second?.y).toBe(5);
       expect(second?.z).toBe(6);
+    });
+
+    it('should round-trip derivatives with the samples', () => {
+      const instance = new SampledPositionProperty(undefined, 1);
+      instance.addSample(
+        JulianDate.fromIso8601('2024-01-01T00:00:00Z'),
+        new Cartesian3(1, 2, 3),
+        [new Cartesian3(10, 20, 30)],
+      );
+      instance.addSample(
+        JulianDate.fromIso8601('2024-06-01T00:00:00Z'),
+        new Cartesian3(4, 5, 6),
+        [new Cartesian3(40, 50, 60)],
+      );
+
+      const back = SampledPositionPropertyFromJSON(SampledPositionPropertyToJSON(instance))!;
+      expect(back.numberOfDerivatives).toBe(1);
+      const first = back.getValue(JulianDate.fromIso8601('2024-01-01T00:00:00Z'));
+      expect([first!.x, first!.y, first!.z]).toEqual([1, 2, 3]);
+      const second = back.getValue(JulianDate.fromIso8601('2024-06-01T00:00:00Z'));
+      expect([second!.x, second!.y, second!.z]).toEqual([4, 5, 6]);
+      expect(back.numberOfDerivatives).toBe(1);
+    });
+
+    it('should degrade JSON with derivatives declared but not present instead of throwing', () => {
+      // JSON produced before the derivatives field existed
+      const json = {
+        parser: 'SampledPositionProperty' as const,
+        value: {
+          numberOfDerivatives: 1,
+          times: [
+            { parser: 'JulianDate' as const, value: '2024-01-01T00:00:00Z' },
+          ],
+          values: [
+            { parser: 'Cartesian3' as const, value: { x: 1, y: 2, z: 3 } },
+          ],
+        },
+      };
+      const result = SampledPositionPropertyFromJSON(json);
+      expect(result).toBeInstanceOf(SampledPositionProperty);
+      expect(result!.numberOfDerivatives).toBe(0);
+      const value = result!.getValue(JulianDate.fromIso8601('2024-01-01T00:00:00Z'));
+      expect([value!.x, value!.y, value!.z]).toEqual([1, 2, 3]);
     });
   });
 });

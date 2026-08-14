@@ -39,6 +39,9 @@ export function ImageryProviderToJSON(instance?: ImageryProvider): ImageryProvid
   if (instance instanceof TileMapServiceImageryProvider) {
     return TileMapServiceImageryProviderToJSON(instance);
   }
+  // OpenStreetMapImageryProvider also extends UrlTemplateImageryProvider and falls through
+  // here: it round-trips as a UrlTemplateImageryProvider with the same url, which is
+  // functionally equivalent for tile fetching.
   if (instance instanceof UrlTemplateImageryProvider) {
     return UrlTemplateImageryProviderToJSON(instance);
   }
@@ -64,6 +67,10 @@ export function ImageryProviderToJSON(instance?: ImageryProvider): ImageryProvid
  * Convert JSON to a `Cesium.ImageryProvider` instance, dispatching by the
  * `parser` field. Always returns a Promise, so callers can `await` uniformly
  * regardless of whether the concrete provider is created synchronously or not.
+ *
+ * Note: deserializing `TileMapServiceImageryProvider`, `ArcGisMapServerImageryProvider` or
+ * `IonImageryProvider` fetches service metadata over the network (via their `fromUrl` /
+ * `fromAssetId` constructors), so it rejects when offline or the service is unreachable.
  * @param json - A JSON containing instance data
  */
 export async function ImageryProviderFromJSON(json?: ImageryProviderJSON): Promise<ImageryProvider | undefined> {
