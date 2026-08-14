@@ -1,7 +1,7 @@
 {
   "name": "@vesium/geometry",
   "type": "module",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Geometry calculation algorithms for Cesium.",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",
