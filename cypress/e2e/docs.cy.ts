@@ -33,7 +33,15 @@ describe('Vesium Documentation Site', () => {
   });
 
   it('should serve the Chinese locale and navigate to its start page', () => {
-    cy.visit('/zh/');
+    cy.visit('/zh/', {
+      onBeforeLoad(win) {
+        // The custom theme auto-redirects to the browser-language locale when
+        // no language was chosen manually, so pin `zh` before the page scripts
+        // run to keep the zh locale deterministic regardless of the browser
+        // language (Cypress Electron reports en-US even in zh environments).
+        win.localStorage.setItem('lang', 'zh');
+      },
+    });
     cy.contains('a', '开始使用').click();
     cy.url().should('include', '/zh/start');
     cy.get('h1').contains('开始使用');
