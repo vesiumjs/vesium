@@ -1,4 +1,4 @@
-import { Rectangle } from 'cesium';
+import { Math as CesiumMath, Rectangle } from 'cesium';
 import { z } from 'zod';
 
 /**
@@ -17,6 +17,23 @@ export function RectangleZodSchema() {
 }
 
 export type RectangleJSON = z.infer<ReturnType<typeof RectangleZodSchema>>;
+
+/**
+ * `Cesium.Rectangle` JSON ZodSchema with bounds in degrees.
+ */
+export function RectangleDegreesZodSchema() {
+  return z.object({
+    parser: z.literal('RectangleDegrees'),
+    value: z.object({
+      east: z.number(),
+      north: z.number(),
+      south: z.number(),
+      west: z.number(),
+    }),
+  });
+}
+
+export type RectangleDegreesJSON = z.infer<ReturnType<typeof RectangleDegreesZodSchema>>;
 
 /**
  * Convert `Cesium.Rectangle` instance to JSON
@@ -54,4 +71,34 @@ export function RectangleFromJSON(json?: RectangleJSON, result?: Rectangle): Rec
     json.value.north,
   );
   return result ? instance.clone(result) : instance;
+}
+
+/**
+ * Converts a Rectangle to bounds in degrees.
+ */
+export function RectangleToDegreesJSON(instance?: Rectangle): RectangleDegreesJSON | undefined {
+  if (!instance) {
+    return undefined;
+  }
+  instance = z.instanceof(Rectangle).parse(instance);
+  return RectangleDegreesZodSchema().parse({
+    parser: 'RectangleDegrees',
+    value: {
+      east: CesiumMath.toDegrees(instance.east),
+      north: CesiumMath.toDegrees(instance.north),
+      south: CesiumMath.toDegrees(instance.south),
+      west: CesiumMath.toDegrees(instance.west),
+    },
+  });
+}
+
+/**
+ * Converts degree bounds JSON to a Rectangle.
+ */
+export function RectangleFromDegreesJSON(json?: RectangleDegreesJSON, result?: Rectangle): Rectangle | undefined {
+  if (!json) {
+    return undefined;
+  }
+  const value = RectangleDegreesZodSchema().parse(json).value;
+  return Rectangle.fromDegrees(value.west, value.south, value.east, value.north, result);
 }

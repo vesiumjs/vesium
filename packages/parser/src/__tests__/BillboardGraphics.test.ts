@@ -1,4 +1,4 @@
-import { BillboardGraphics, CallbackProperty, JulianDate } from 'cesium';
+import { BillboardGraphics, CallbackProperty, JulianDate, Resource } from 'cesium';
 import { toPropertyValue } from 'vesium';
 import { describe, expect, it } from 'vitest';
 import { BillboardGraphicsFromJSON, BillboardGraphicsToJSON, BillboardGraphicsZodSchema } from '../BillboardGraphics';
@@ -92,6 +92,13 @@ describe('billboardGraphics', () => {
       const result = BillboardGraphicsToJSON(instance, undefined, ['image']);
       expect(result?.value.image).toBeUndefined();
       expect(result?.value.show).toBe(true);
+    });
+
+    it('should normalize a Resource image to its URL', () => {
+      const instance = new BillboardGraphics({
+        image: new Resource('https://example.test/icon.png?version=1') as any,
+      });
+      expect(BillboardGraphicsToJSON(instance)?.value.image).toBe('https://example.test/icon.png?version=1');
     });
   });
 

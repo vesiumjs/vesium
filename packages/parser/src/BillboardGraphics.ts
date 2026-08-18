@@ -9,6 +9,7 @@ import { ColorFromJSON, ColorToJSON, ColorZodSchema } from './Color';
 import { DistanceDisplayConditionFromJSON, DistanceDisplayConditionToJSON, DistanceDisplayConditionZodSchema } from './DistanceDisplayCondition';
 import { HeightReferenceFromJSON, HeightReferenceToJSON, HeightReferenceZodSchema } from './HeightReference';
 import { HorizontalOriginFromJSON, HorizontalOriginToJSON, HorizontalOriginZodSchema } from './HorizontalOrigin';
+import { imageToURL } from './image';
 import { NearFarScalarFromJSON, NearFarScalarToJSON, NearFarScalarZodSchema } from './NearFarScalar';
 import { SplitDirectionFromJSON, SplitDirectionToJSON, SplitDirectionZodSchema } from './SplitDirection';
 import { VerticalOriginFromJSON, VerticalOriginToJSON, VerticalOriginZodSchema } from './VerticalOrigin';
@@ -59,7 +60,7 @@ export function BillboardGraphicsToJSON(instance?: BillboardGraphics, time?: Jul
     parser: 'BillboardGraphics',
     value: {
       show: omit?.includes('show') ? undefined : toPropertyValue(instance.show, time),
-      image: omit?.includes('image') ? undefined : toPropertyValue(instance.image, time),
+      image: omit?.includes('image') ? undefined : imageToURL(toPropertyValue(instance.image, time)),
       scale: omit?.includes('scale') ? undefined : toPropertyValue(instance.scale, time),
       pixelOffset: omit?.includes('pixelOffset') ? undefined : Cartesian2ToJSON(toPropertyValue(instance.pixelOffset, time)),
       eyeOffset: omit?.includes('eyeOffset') ? undefined : Cartesian3ToJSON(toPropertyValue(instance.eyeOffset, time)),

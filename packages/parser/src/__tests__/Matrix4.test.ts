@@ -39,6 +39,13 @@ describe('matrix4', () => {
       expect(() => Matrix4ZodSchema().parse(json)).toThrow();
     });
 
+    it('should reject arrays shorter than Cesium requires', () => {
+      expect(() => Matrix4ZodSchema().parse({
+        parser: 'Matrix4',
+        value: Array.from({ length: 15 }).fill(0),
+      })).toThrow();
+    });
+
     it('should reject JSON with non-number array elements', () => {
       const json = {
         parser: 'Matrix4' as const,

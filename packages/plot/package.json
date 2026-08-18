@@ -48,6 +48,7 @@
     "@vueuse/core": "catalog:",
     "cesium": "catalog:",
     "vesium": "workspace:*",
-    "vue": "catalog:"
+    "vue": "catalog:",
+    "zod": "catalog:"
   }
 }

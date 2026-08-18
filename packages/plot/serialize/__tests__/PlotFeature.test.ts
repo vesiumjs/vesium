@@ -1,7 +1,7 @@
 import { Cartesian3 } from 'cesium';
 import { describe, expect, it } from 'vitest';
 import { PlotFeature } from '../../usePlot';
-import { PlotFeatureFromJSON, PlotFeatureToJSON } from '../PlotFeature';
+import { PlotFeatureFromJSON, PlotFeatureToJSON, PlotFeatureZodSchema } from '../PlotFeature';
 // 导入内置方案模块，触发定义处自注册（scheme/Point.ts 内 PlotScheme.setCache）
 import '../../scheme/Point';
 
@@ -45,5 +45,13 @@ describe('plotFeature serialization', () => {
       parser: 'PlotFeature',
       value: { scheme: 'NotRegistered', sampled: { parser: 'SampledPlotProperty', value: { strategy: 0, packables: [] } } },
     })).toThrow('scheme NotRegistered not found');
+  });
+
+  it('validates the JSON shape before resolving a scheme', () => {
+    expect(() => PlotFeatureZodSchema().parse({
+      parser: 'PlotFeature',
+      value: { scheme: 'Point' },
+    })).toThrow();
+    expect(() => PlotFeatureFromJSON({ parser: 'Invalid' } as any)).toThrow();
   });
 });

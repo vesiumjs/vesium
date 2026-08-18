@@ -7,7 +7,7 @@ import { z } from 'zod';
 export function Matrix4ZodSchema() {
   return z.object({
     parser: z.literal('Matrix4'),
-    value: z.array(z.number()),
+    value: z.array(z.number()).min(16),
   });
 }
 
@@ -21,10 +21,10 @@ export function Matrix4ToJSON(instance?: Matrix4): Matrix4JSON | undefined {
     return undefined;
   }
   instance = z.instanceof(Matrix4).parse(instance);
-  return {
+  return Matrix4ZodSchema().parse({
     parser: 'Matrix4',
     value: Array.from(instance),
-  };
+  });
 }
 
 /**

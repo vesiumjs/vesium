@@ -1,6 +1,6 @@
 import { Ellipsoid } from 'cesium';
 import { z } from 'zod';
-import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
+import { Cartesian3FromJSON, Cartesian3ToJSON } from './Cartesian3';
 
 /**
  * `Cesium.Ellipsoid` JSON ZodSchema
@@ -9,7 +9,14 @@ export function EllipsoidZodSchema() {
   return z.object({
     parser: z.literal('Ellipsoid'),
     value: z.object({
-      radii: Cartesian3ZodSchema(),
+      radii: z.object({
+        parser: z.literal('Cartesian3'),
+        value: z.object({
+          x: z.number().nonnegative().optional(),
+          y: z.number().nonnegative().optional(),
+          z: z.number().nonnegative().optional(),
+        }),
+      }),
     }),
   });
 }
@@ -24,12 +31,12 @@ export function EllipsoidToJSON(instance?: Ellipsoid): EllipsoidJSON | undefined
     return undefined;
   }
   instance = z.instanceof(Ellipsoid).parse(instance);
-  return {
+  return EllipsoidZodSchema().parse({
     parser: 'Ellipsoid',
     value: {
       radii: Cartesian3ToJSON(instance.radii)!,
     },
-  };
+  });
 }
 
 /**
