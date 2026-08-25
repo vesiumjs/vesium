@@ -24,7 +24,6 @@ Use these when you need to respond to mouse / screen-space interaction or pick s
 - `useScreenSpaceEventHandler` — listen to canvas screen-space events; auto rebuilds or destroys the handler on dependency change or unmount
 - `useGraphicEvent` — unified click / hover / drag events over scene graphics
 - `useScenePick` — reactive `scene.pick` results at a screen position
-- `usePickAsync` — reactive non-blocking `scene.pickAsync` results at a screen position
 - `useSceneDrillPick` — reactive `scene.drillPick` results through overlapping objects
 
 ### Scoped collections

@@ -24,7 +24,6 @@ subText: 核心组合式函数
 - `useScreenSpaceEventHandler` — 监听画布屏幕空间事件，依赖变化或组件卸载时自动重建 / 销毁
 - `useGraphicEvent` — 统一的图形点击 / 悬停 / 拖拽事件
 - `useScenePick` — 在屏幕位置响应式获取 `scene.pick` 结果
-- `usePickAsync` — 在屏幕位置响应式获取非阻塞的 `scene.pickAsync` 结果
 - `useSceneDrillPick` — 穿透重叠对象响应式获取 `scene.drillPick` 结果
 
 ### 作用域集合
