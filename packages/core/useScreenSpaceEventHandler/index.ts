@@ -26,9 +26,10 @@ export type ScreenSpaceEvent<T extends ScreenSpaceEventType> = {
 
 export interface UseScreenSpaceEventHandlerOptions {
   /**
-   * Modifier key forwarded to Cesium.
+   * Modifier key(s) forwarded to Cesium. An array requires all listed keys to
+   * be held.
    */
-  modifier?: MaybeRefOrGetter<KeyboardEventModifier | undefined>;
+  modifier?: MaybeRefOrGetter<KeyboardEventModifier | KeyboardEventModifier[] | undefined>;
 
   /**
    * Whether to activate the event listener without tearing down the composable.

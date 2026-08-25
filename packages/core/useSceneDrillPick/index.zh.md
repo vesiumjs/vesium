@@ -4,7 +4,7 @@ subText: 深度拾取元素
 
 # useSceneDrillPick
 
-响应式封装 [Cesium.Scene.drillPick](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#drillPick)：拾取同一屏幕坐标下的全部对象，返回结果数组的计算属性。场景中存在重叠图形、需要"点选后从列表选择目标"时使用；与 `useScenePick` 不同，这里没有结果缓存。
+响应式封装 [Cesium.Scene.drillPick](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#drillPick)：根据屏幕坐标穿透拾取重叠的全部对象，返回结果数组的响应式引用。适用于重叠图形需要“先拾取、再从列表选择目标”的场景；与仅取最上层的 `useScenePick` 互补。
 
 ## Usage
 
@@ -39,7 +39,7 @@ picks.value?.forEach((item, index) => {
 
 ## 注意事项
 
-- `drillPick` 开销大于 `pick` 且无结果缓存，请配合 `throttled` 节流与 `limit` 限制使用。
+- `drillPick` 单次开销大于 `pick`，请配合 `throttled` 节流和 `limit` 限制数量。
 - viewer 不存在、位置为空或 `isActive` 为 `false` 时，结果重置为 `undefined`。
 
 ## Type Definitions

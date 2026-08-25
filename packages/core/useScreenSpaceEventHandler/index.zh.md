@@ -31,7 +31,7 @@ stop(); // 组件卸载时自动清理，也可手动停止
 
 - `type` - 事件类型（`Cesium.ScreenSpaceEventType`），支持 ref/getter 动态变化；回调参数类型随 `type` 推导（点击等定位事件为 `PositionedEvent`、`MOUSE_MOVE` 为 `MotionEvent`、`WHEEL` 为 `number`、双指手势为 `TwoPointEvent` / `TwoPointMotionEvent`）。不传则不注册监听。
 - `inputAction` - 监听回调函数；不传则不注册监听。
-- `modifier` - 键盘修饰键（`Cesium.KeyboardEventModifier`），透传给 Cesium。
+- `modifier` - 透传给 Cesium 的修饰键；传数组表示需要同时按住多个键。支持 ref/getter 动态变更。
 - `isActive` - 是否激活监听，默认 `true`；只暂停/恢复监听注册，不会重建整个 composable。
 
 ## 返回值

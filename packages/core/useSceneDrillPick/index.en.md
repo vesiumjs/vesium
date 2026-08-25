@@ -1,6 +1,6 @@
 # useSceneDrillPick
 
-A reactive wrapper for [Cesium.Scene.drillPick](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#drillPick): it picks every object at the same screen coordinates and returns a computed property with the array of results. Use it when the scene contains overlapping graphics or you need a "pick a point, then choose from the list" interaction; unlike `useScenePick`, there is no result cache here.
+A reactive wrapper for [Cesium.Scene.drillPick](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#drillPick) that picks all objects under a screen position and returns the result array as a reactive ref. Use it when graphics overlap and you need a "pick then choose from list" interaction; it complements `useScenePick`, which returns only the topmost hit.
 
 ## Usage
 
@@ -35,7 +35,7 @@ picks.value?.forEach((item, index) => {
 
 ## Notes
 
-- `drillPick` is more expensive than `pick` and has no result cache, so combine it with the `throttled` sampling and a `limit` cap.
+- `drillPick` traverses all overlapping objects and is more expensive than `pick`; use `throttled` and `limit` to control frequency and count.
 - When the viewer is missing, the position is empty, or `isActive` is `false`, the result is reset to `undefined`.
 
 ## Type Definitions

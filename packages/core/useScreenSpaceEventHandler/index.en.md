@@ -30,7 +30,7 @@ stop(); // cleanup is automatic on unmount; you can also stop manually
 
 - `type` - The screen-space event type (`Cesium.ScreenSpaceEventType`); supports a ref/getter for dynamic changes. The callback argument type is derived from `type` (positioned events such as clicks receive a `PositionedEvent`, `MOUSE_MOVE` a `MotionEvent`, `WHEEL` a `number`, pinch gestures a `TwoPointEvent` / `TwoPointMotionEvent`). Nothing is registered when omitted.
 - `inputAction` - The listener callback; nothing is registered when omitted.
-- `modifier` - The keyboard modifier (`Cesium.KeyboardEventModifier`), forwarded to Cesium.
+- `modifier` - The modifier key(s) forwarded to Cesium; an array requires all listed keys to be held. Supports ref/getter for dynamic changes.
 - `isActive` - Whether the listener is active, defaults to `true`; it only pauses/resumes listener registration without recreating the whole composable.
 
 ## Return Value

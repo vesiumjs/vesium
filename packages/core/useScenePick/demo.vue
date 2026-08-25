@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as Cesium from 'cesium';
-import { useEntity, useScenePick, useScreenSpaceEventHandler } from 'vesium';
-import { computed, shallowRef } from 'vue';
+import { useEntity, useScenePick, useScreenSpaceEventHandler, useViewer } from 'vesium';
+import { computed, shallowRef, watchEffect } from 'vue';
 
 const cursorPosition = shallowRef<Cesium.Cartesian2>();
 
@@ -29,28 +29,35 @@ const pickInfo = computed(() => {
   return `Picked: ${JSON.stringify(pick.value)}`;
 });
 
-// add some entities for picking
-const _entity1 = useEntity(new Cesium.Entity({
-  name: 'Red Box',
-  position: Cesium.Cartesian3.fromDegrees(120, 30, 100),
-  box: {
-    dimensions: new Cesium.Cartesian3(1000, 1000, 1000),
-    material: Cesium.Color.RED,
-  },
-}));
+const entities = useEntity([
+  new Cesium.Entity({
+    name: 'Red Box',
+    position: Cesium.Cartesian3.fromDegrees(120, 30, 500),
+    box: {
+      dimensions: new Cesium.Cartesian3(2000, 2000, 800),
+      material: Cesium.Color.RED,
+    },
+  }),
+  new Cesium.Entity({
+    name: 'Blue Box',
+    position: Cesium.Cartesian3.fromDegrees(120.02, 30, 500),
+    box: {
+      dimensions: new Cesium.Cartesian3(2000, 2000, 800),
+      material: Cesium.Color.BLUE,
+    },
+  }),
+]);
 
-const _entity2 = useEntity(new Cesium.Entity({
-  name: 'Blue Box',
-  position: Cesium.Cartesian3.fromDegrees(120.01, 30, 100),
-  box: {
-    dimensions: new Cesium.Cartesian3(1000, 1000, 1000),
-    material: Cesium.Color.BLUE,
-  },
-}));
+const viewer = useViewer();
+watchEffect(() => {
+  if (viewer.value && entities.value) {
+    viewer.value.flyTo(entities.value, { duration: 1 });
+  }
+});
 </script>
 
 <template>
-  <div style="position: fixed; top: 10px; left: 10px; padding: 8px; color: white; background: rgb(0 0 0 / 70%); border-radius: 4px;">
+  <div class="p-10px">
     {{ pickInfo }}
   </div>
 </template>
