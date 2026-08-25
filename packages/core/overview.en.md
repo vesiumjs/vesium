@@ -1,4 +1,5 @@
 ---
+sort: 0
 subText: Core Hooks
 ---
 
@@ -23,6 +24,7 @@ Use these when you need to respond to mouse / screen-space interaction or pick s
 - `useScreenSpaceEventHandler` — listen to canvas screen-space events; auto rebuilds or destroys the handler on dependency change or unmount
 - `useGraphicEvent` — unified click / hover / drag events over scene graphics
 - `useScenePick` — reactive `scene.pick` results at a screen position
+- `usePickAsync` — reactive non-blocking `scene.pickAsync` results at a screen position
 - `useSceneDrillPick` — reactive `scene.drillPick` results through overlapping objects
 
 ### Scoped collections
@@ -43,7 +45,7 @@ Use these when you need to load data sources or create graphic objects that sync
 - `useDataSource` — load and manage data sources; activation controlled by `isActive`
 - `useEntity` — create and synchronize `Entity` instances; activation controlled by `isActive`
 - `useImageryLayer` — manage imagery layers; activation controlled by `isActive`
-- `usePrimitive` — manage primitives; activation controlled by `isActive`
+- `usePrimitive` — manage primitives; activation controlled by `isActive` (recipes for `GeoJsonPrimitive` / `MVTDataProvider` / `Cesium3DTileset` / panoramas — see `usePrimitive` docs)
 - `usePostProcessStage` — manage post-process stages; activation controlled by `isActive`
 
 ### Camera & UI
