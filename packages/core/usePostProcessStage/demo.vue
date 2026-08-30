@@ -3,24 +3,20 @@ import * as Cesium from 'cesium';
 import { usePostProcessStage } from 'vesium';
 import { ref } from 'vue';
 
-// create two bloom post process stages, one for each hook instance
+// Cesium dropped WebGL1: post-process shaders must be GLSL3
+// (`in`/`out_FragColor`/`texture`), or shader compilation stops the render loop.
 const bloomShader = `
   uniform sampler2D colorTexture;
-  varying vec2 v_textureCoordinates;
+  in vec2 v_textureCoordinates;
   void main() {
-    vec4 color = texture2D(colorTexture, v_textureCoordinates);
+    vec4 color = texture(colorTexture, v_textureCoordinates);
     float brightness = (color.r + color.g + color.b) / 3.0;
-    gl_FragColor = vec4(color.rgb * (1.0 + brightness * 0.5), 1.0);
+    out_FragColor = vec4(color.rgb * (1.0 + brightness * 0.5), 1.0);
   }
 `;
 
 const bloomStage = new Cesium.PostProcessStage({
   name: 'bloom',
-  fragmentShader: bloomShader,
-});
-
-const bloomStageControlled = new Cesium.PostProcessStage({
-  name: 'bloomControlled',
   fragmentShader: bloomShader,
 });
 
@@ -30,8 +26,12 @@ const _stage = usePostProcessStage(bloomStage);
 // control active state
 const isActive = ref(true);
 
-const _stageControlled = usePostProcessStage(bloomStageControlled, {
-  isActive,
+// `postProcessStages.remove()` destroys the removed stage, so re-activation
+// needs a fresh instance: the getter re-evaluates on `isActive` changes.
+const _stageControlled = usePostProcessStage(() => {
+  if (!isActive.value)
+    return undefined;
+  return new Cesium.PostProcessStage({ name: 'bloomControlled', fragmentShader: bloomShader });
 });
 </script>
 

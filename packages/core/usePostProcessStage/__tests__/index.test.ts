@@ -101,6 +101,26 @@ describe('usePostProcessStage', () => {
     expect(mocks.add).toHaveBeenCalledWith(mockStage);
   });
 
+  it('should skip a destroyed stage when isActive becomes true again', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const mockStage = { id: 'test', isDestroyed: () => true } as any;
+    const active = ref(false);
+    mount({
+      setup() {
+        createViewer(document.createElement('div'));
+        usePostProcessStage(mockStage, { isActive: active });
+        return {};
+      },
+      template: '<div></div>',
+    });
+
+    active.value = true;
+    await nextTick();
+    expect(mocks.add).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledOnce();
+    warnSpy.mockRestore();
+  });
+
   it('should handle async getter stage source', async () => {
     const mockStage = { id: 'async-stage' } as any;
     const asyncGetter = async () => {

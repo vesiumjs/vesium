@@ -16,13 +16,22 @@ export interface UsePostProcessStageOptions {
 
   /**
    * Whether to destroy the stage when removed from the collection.
-   * When true, the stage's GPU resources will be released.
+   *
+   * Note: the default collection (`viewer.scene.postProcessStages`) destroys
+   * a stage inside its `remove()` regardless of this option — a removed
+   * stage can never be re-added. `false` only matters for custom
+   * collections whose `remove` keeps removed stages alive.
    * @default true
    */
   destroyOnRemove?: boolean;
 
   /**
    * default value of `isActive`
+   *
+   * Removing a stage destroys it (see `destroyOnRemove`), so when toggled
+   * back to `true` a previously removed stage is skipped with a console
+   * warning instead of breaking the render loop. To toggle a stage on and
+   * off, provide a getter that creates a fresh stage for each activation.
    * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
@@ -83,7 +92,18 @@ export function usePostProcessStage<T extends PostProcessStage>(
       const list = Array.isArray(result.value) ? [...result.value] : [result.value];
       const _collection = collection ?? viewer.value.scene.postProcessStages;
 
-      list.forEach(item => (item && _collection.add(item)));
+      list.forEach((item) => {
+        if (!item)
+          return;
+        // Cesium's `add` accepts destroyed stages but the render loop throws
+        // `DeveloperError: This object was destroyed` on the next frame and
+        // stops; skip the stage with a warning instead.
+        if (typeof item.isDestroyed === 'function' && item.isDestroyed()) {
+          console.warn('[vesium] usePostProcessStage: skip adding a destroyed stage. `postProcessStages.remove()` destroys the stage, so toggling `isActive` needs a getter that creates a fresh stage for each activation.');
+          return;
+        }
+        _collection.add(item);
+      });
       onCleanup(() => {
         list.forEach((item) => {
           if (item) {
