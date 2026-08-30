@@ -6,7 +6,7 @@ const { fps, interval } = useCesiumFps({ delay: 100 });
 
 <template>
   <div class="p-10px flex flex-col w-200px">
-    <span>FPS:{{ fps?.toFixed(2) }}</span>
-    <span>Interval:{{ interval?.toFixed(2) }}ms</span>
+    <span data-testid="fps">FPS:{{ fps?.toFixed(2) }}</span>
+    <span data-testid="interval">Interval:{{ interval?.toFixed(2) }}ms</span>
   </div>
 </template>

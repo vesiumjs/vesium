@@ -20,4 +20,7 @@ watchPostEffect(() => {
 </script>
 
 <template>
+  <div class="text-12px p-10px bg-[var(--vp-c-bg)]">
+    {{ dataSource ? 'dataSource loaded' : 'loading…' }}
+  </div>
 </template>

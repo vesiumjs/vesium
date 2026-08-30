@@ -68,4 +68,7 @@ watchPostEffect(() => {
 </script>
 
 <template>
+  <div class="text-12px p-10px bg-[var(--vp-c-bg)]">
+    entities: {{ (entity1 ? 1 : 0) + (entity2 ? 1 : 0) + (entity3 ? 1 : 0) + (entities?.length ?? 0) }}
+  </div>
 </template>

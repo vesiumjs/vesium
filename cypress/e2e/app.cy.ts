@@ -1,51 +1,12 @@
-import * as Cesium from 'cesium';
-
 /**
- * Behavior tests against the docs demo components (the demo.vue files under
- * the packages directory), mounted in the e2e host app through demo-host.vue.
+ * E2E smoke suite for the docs-mirrored host app (e2e/app).
  *
- * The host reuses packages/.vitepress/theme/components/cesium-container.vue
- * in e2e mode: no Ion network access, no default base layer, default input
- * actions kept. Scene state is asserted through window.__app.viewer.
+ * Detailed business behavior is covered by colocated specs under
+ * packages/**\/__tests__/index.cy.ts — each demo is verified there with
+ * real viewer assertions. This file only smoke-tests host mounting and
+ * routing, plus the integration scenes whose e2e coverage intentionally
+ * lives here (geometry/plot, which have no core hook spec).
  */
-
-function clickEntity(entityIndex: number, options: { waitForFlight?: number } = {}) {
-  cy.wait(options.waitForFlight ?? 0);
-  cy.window().then((win) => {
-    const viewer = win.__app.viewer!;
-    const entity = viewer.entities.values[entityIndex]!;
-    const position = entity.position!.getValue(viewer.clock.currentTime)!;
-    const canvasPos = viewer.scene.cartesianToCanvasCoordinates(position)!;
-    cy.get('canvas').click(canvasPos.x, canvasPos.y);
-  });
-}
-
-function hoverEntity(entityIndex: number) {
-  cy.window().then((win) => {
-    const viewer = win.__app.viewer!;
-    const entity = viewer.entities.values[entityIndex]!;
-    const position = entity.position!.getValue(viewer.clock.currentTime)!;
-    const canvasPos = viewer.scene.cartesianToCanvasCoordinates(position)!;
-    // Cesium uses pointer events on browsers that support them.
-    // Trigger twice with a slight offset: useScenePick caches picks by
-    // position, so the first event (before the scene rendered the new
-    // camera) would otherwise pin a cached `undefined` forever.
-    cy.get('canvas').trigger('pointermove', canvasPos.x, canvasPos.y);
-    cy.wait(100);
-    cy.get('canvas').trigger('pointermove', canvasPos.x + 2, canvasPos.y);
-  });
-}
-
-function waitUntilPickable(entityIndex: number) {
-  cy.window().should((win) => {
-    const viewer = win.__app.viewer!;
-    const entity = viewer.entities.values[entityIndex]!;
-    const position = entity.position!.getValue(viewer.clock.currentTime)!;
-    const canvasPos = viewer.scene.cartesianToCanvasCoordinates(position)!;
-    const picked = viewer.scene.pick(canvasPos, 3, 3);
-    expect(picked === undefined).to.eq(false);
-  });
-}
 
 function assertEntityCountInDataSources(expected: number, minimum = false) {
   cy.window().should((win) => {
@@ -63,14 +24,6 @@ function assertEntityCountInDataSources(expected: number, minimum = false) {
   });
 }
 
-function flyTo(lon: number, lat: number, altitude: number) {
-  cy.window().then((win) => {
-    win.__app.viewer!.camera.setView({
-      destination: Cesium.Cartesian3.fromDegrees(lon, lat, altitude),
-    });
-  });
-}
-
 function completePlot(clicks: number) {
   cy.get('canvas').click(300, 200);
   cy.get('canvas').click(500, 200);
@@ -80,118 +33,13 @@ function completePlot(clicks: number) {
   cy.get('canvas').dblclick(400, 350);
 }
 
-describe('Vesium E2E (docs demos)', () => {
-  it('createViewer: creates a standalone viewer with a WebGL canvas', () => {
-    cy.visit('/#/core/createViewer');
-    cy.get('canvas').should('exist');
-  });
-
-  it('useCameraState: exposes camera state to the template', () => {
-    cy.visit('/#/core/useCameraState');
-    cy.contains('pre', '"heading"').should('exist');
-    cy.contains('pre', '"position"').should('exist');
-  });
-
-  it('useCesiumEventListener: reacts to camera moveStart/moveEnd', () => {
-    cy.visit('/#/core/useCesiumEventListener');
-    cy.contains('div', 'no change').should('exist');
-    cy.window().then((win) => {
-      win.__app.viewer!.camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(0, 0, 2000000),
-        duration: 1,
-      });
-    });
-    cy.contains('div', 'moveEnd', { timeout: 10000 }).should('exist');
-  });
-
-  it('useCesiumFps: renders FPS and interval values', () => {
-    cy.visit('/#/core/useCesiumFps');
-    cy.contains('span', /FPS:/).should('exist');
-    cy.contains('span', /Interval:/).should('exist');
-  });
-
-  it('useDataSource: loads the GeoJSON into a viewer data source', () => {
-    cy.visit('/#/core/useDataSource');
-    cy.window().its('__app.viewer.dataSources.length').should('eq', 1);
-    assertEntityCountInDataSources(1, true);
-  });
-
-  it('useEntity: adds all created entities to the viewer collection', () => {
+describe('Vesium E2E smoke (host)', () => {
+  it('host mounts a demo route with canvas and viewer', () => {
+    // createViewer mounts its own Viewer without the host wrapper, so
+    // window.__app.viewer is not set there — use a hosted demo as baseline.
     cy.visit('/#/core/useEntity');
-    cy.window().its('__app.viewer.entities.values.length').should('eq', 5);
-  });
-
-  it('useGraphicEvent: entity click triggers the graphic event handler', () => {
-    cy.visit('/#/core/useGraphicEvent');
-    cy.window().its('__app.viewer.entities.values.length').should('eq', 3);
-    clickEntity(0, { waitForFlight: 4000 });
-    cy.window().should((win) => {
-      const viewer = win.__app.viewer!;
-      const label = viewer.entities.values[0]!.label!;
-      expect(label.text!.getValue(viewer.clock.currentTime)).to.eq('CLICKED');
-    });
-  });
-
-  it('useImageryLayer: toggling isActive adds/removes the imagery layer', () => {
-    cy.visit('/#/core/useImageryLayer');
-    cy.window().its('__app.viewer.imageryLayers.length').should('eq', 1);
-    cy.contains('button', 'visible:').click();
-    cy.window().its('__app.viewer.imageryLayers.length').should('eq', 0);
-    cy.contains('button', 'visible:').click();
-    cy.window().its('__app.viewer.imageryLayers.length').should('eq', 1);
-  });
-
-  it('usePostProcessStage: adds a post process stage to the scene', () => {
-    cy.visit('/#/core/usePostProcessStage');
-    cy.contains('button', 'PostProcessStage').should('exist');
-    cy.window().its('__app.viewer.postProcessStages.length').should('be.gte', 1);
-  });
-
-  it('usePrimitive: renders billboards through a primitive collection', () => {
-    cy.visit('/#/core/usePrimitive');
-    cy.window().should((win) => {
-      const primitives = win.__app.viewer!.scene.primitives;
-      let billboards = 0;
-      for (let i = 0; i < primitives.length; i++) {
-        const primitive = primitives.get(i) as { length?: number };
-        if (typeof primitive.length === 'number')
-          billboards += primitive.length;
-      }
-      expect(billboards).to.be.gte(1);
-    });
-  });
-
-  it('useScaleBar: renders a scale with a distance text', () => {
-    cy.visit('/#/core/useScaleBar');
-    cy.contains('main', /distance:\s*\d+(\.\d+)?\s?m/, { timeout: 10000 }).should('exist');
-  });
-
-  it('useScenePick: hovers an entity and picks it', () => {
-    cy.visit('/#/core/useScenePick');
-    cy.contains('No object picked').should('exist');
-    cy.window().its('__app.viewer.entities.values.length').should('eq', 2);
-    flyTo(120, 30, 40000);
-    waitUntilPickable(0);
-    hoverEntity(0);
-    cy.contains('Picked Entity: Red Box', { timeout: 10000 }).should('exist');
-  });
-
-  it('useSceneDrillPick: hovers overlapping entities and drills all layers', () => {
-    cy.visit('/#/core/useSceneDrillPick');
-    cy.window().its('__app.viewer.entities.values.length').should('eq', 3);
-    flyTo(120, 30, 60000);
-    waitUntilPickable(0);
-    hoverEntity(0);
-    cy.contains('Layer 1 - Red', { timeout: 10000 }).should('exist');
-    cy.contains('Layer 2 - Green').should('exist');
-    cy.contains('Layer 3 - Blue').should('exist');
-  });
-
-  it('useScreenSpaceEventHandler: dispatches clicks with canvas coordinates', () => {
-    cy.visit('/#/core/useScreenSpaceEventHandler');
-    cy.get('canvas').click(400, 300);
-    cy.contains('span', '"x":400').should('exist');
-    cy.contains('span', '"y":300').should('exist');
+    cy.get('canvas').should('exist');
+    cy.window().its('__app.viewer').should('exist');
   });
 
   it('geometry: renders circle, ellipse and arrow geometries', () => {

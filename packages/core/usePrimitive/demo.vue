@@ -30,4 +30,7 @@ watchEffect((onCleanup) => {
 </script>
 
 <template>
+  <div class="text-12px p-10px bg-[var(--vp-c-bg)]">
+    billboards: {{ billboardCollection?.length ?? 0 }}
+  </div>
 </template>

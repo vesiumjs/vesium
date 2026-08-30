@@ -4,7 +4,7 @@ import { configDefaults, defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     environment: 'jsdom',
-    exclude: [...configDefaults.exclude, 'e2e/**', '**/packages/.vitepress/**'],
+    exclude: [...configDefaults.exclude, 'e2e/**', '**/packages/.vitepress/**', '**/*.cy.ts'],
     root: fileURLToPath(new URL('./', import.meta.url)),
     coverage: {
       provider: 'v8',

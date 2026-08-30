@@ -97,5 +97,7 @@ useEntity(() => {
 </script>
 
 <template>
-  <div />
+  <div class="text-12px p-10px bg-[var(--vp-c-bg)]">
+    Click / hover / drag the labeled points
+  </div>
 </template>
