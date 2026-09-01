@@ -1,7 +1,7 @@
 {
   "name": "@vesium/plot",
   "type": "module",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Plotting and measurement tools for Cesium.",
   "license": "MIT",
   "homepage": "https://github.com/vesiumjs/vesium",

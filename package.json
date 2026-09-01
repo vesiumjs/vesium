@@ -1,7 +1,7 @@
 {
   "name": "vesium-lib",
   "type": "module",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
   "packageManager": "pnpm@11.21.0",
   "description": "Vue component and composition-api library for Cesium.",
