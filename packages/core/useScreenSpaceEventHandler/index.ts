@@ -81,7 +81,9 @@ export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
     if (isDef(typeValue)) {
       handlerValue.setInputAction(inputAction as any, typeValue, modifierValue);
       onCleanup(() => {
-        !handlerValue.isDestroyed() && handlerValue!.removeInputAction(typeValue, modifierValue);
+        if (handlerValue.isDestroyed?.() !== true) {
+          handlerValue.removeInputAction(typeValue, modifierValue);
+        }
       });
     }
   });
