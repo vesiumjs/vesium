@@ -25,6 +25,40 @@ const controlled = usePrimitive(tileset, {
 });
 ```
 
+## Recipes (Cesium 1.142+ / 1.145+ vectors)
+
+`GeoJsonPrimitive` / `MVTDataProvider` / `BufferPolygonCollection` / `BufferPolylineCollection` are high-throughput vector entry points (added straight to `scene.primitives`, no Entity layer). Prefer an async getter so the hook adds them once loaded:
+
+```ts
+import * as Cesium from 'cesium';
+import { usePrimitive, useViewer } from 'vesium';
+
+const viewer = useViewer();
+
+// GeoJSON loaded directly as buffer primitives; 1.145+ drapes onto terrain / 3D Tiles / both, `scene` is required when clamping
+const geojson = usePrimitive(() => Cesium.GeoJsonPrimitive.fromUrl('/data/city.geojson', {
+  heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+  scene: viewer.value!.scene,
+}));
+
+// MVT vector tiles; 1.145+ supports the same `heightReference` + `scene` pair
+const mvt = usePrimitive(() => Cesium.MVTDataProvider.fromUrl('https://tiles/{z}/{x}/{y}.mvt', {
+  heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+  scene: viewer.value!.scene,
+}));
+
+// Lines/polygons draped onto 3D Tiles (new in 1.145): only polyline/polygon collections support draping,
+// and only once added to `scene.primitives`; a draped collection is not drawn as geometry of its own
+const drapedLines = usePrimitive(() => new Cesium.BufferPolylineCollection({
+  heightReference: Cesium.HeightReference.CLAMP_TO_3D_TILE,
+  widthUnits: 'meters', // new in 1.145: width in ground meters instead of screen pixels
+}));
+```
+
+- Draped polyline antialiasing is on by default; turn it off for performance with `viewer.scene.vectorProvider.antialias = false` (1.145+).
+- `ClippingPolygon` (1.145): `positions` / `holes` are immutable (`Object.freeze`), remove and re-add to update; `holes` are supported (including inverse clipping), read bounds from `polygon.rectangle` (`computeRectangle` is deprecated), and `ClippingPolygonCollection.quality` / `debugShowDistanceTexture` / `destroy` are deprecated too.
+- Experimental `scene.snap` (1.144+, `surfacePosition` added in 1.145) and `IonSnapService` (server-side snap for BIM/CAD database models) have no wrapper yet; use `viewer.value.scene.snap(position)` directly when needed.
+
 ## Options
 
 - `collection` - The target `PrimitiveCollection`; defaults to `useViewer().value.scene.primitives`. Passing `'ground'` uses `viewer.scene.groundPrimitives` (ground-attached primitives like `GroundPrimitive` must live there).
