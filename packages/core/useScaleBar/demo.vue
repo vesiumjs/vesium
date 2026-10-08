@@ -22,7 +22,7 @@ const { pixelDistance, width, distance, distanceText } = useScaleBar();
     <div data-testid="distance">
       distance: {{ distance }}m
     </div>
-    <div data-testid="scalebar" class="border-b-2px border-b-#666" :style="{ width: `${width}px` }">
+    <div data-testid="scalebar" class="border-b-#666 border-b-2px" :style="{ width: `${width}px` }">
       {{ distanceText }}
     </div>
   </div>

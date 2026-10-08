@@ -60,7 +60,7 @@ function openGithub() {
           <component :is="demo" v-else />
           <template #fallback>
             <div class="flex items-center inset-0 justify-center absolute">
-              <span class="i-svg-spinners:3-dots-scale text-50px text-[var(--vp-c-brand-1)] block" />
+              <span class="i-svg-spinners:3-dots-scale text-[var(--vp-c-brand-1)] text-50px block" />
             </div>
           </template>
         </Suspense>

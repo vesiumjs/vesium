@@ -3,6 +3,7 @@ import type { SceneRestoreOptions } from './primitive';
 import { Cesium3DTileset as Cesium3DTilesetClass } from 'cesium';
 import { z } from 'zod';
 import { AxisFromJSON, AxisToJSON, AxisZodSchema } from './Axis';
+import { BlendOptionFromJSON, BlendOptionToJSON, BlendOptionZodSchema } from './BlendOption';
 import { Cartesian3FromJSON, Cartesian3ToJSON, Cartesian3ZodSchema } from './Cartesian3';
 import { ClassificationTypeFromJSON, ClassificationTypeToJSON, ClassificationTypeZodSchema } from './ClassificationType';
 import { ClippingPlaneCollectionFromJSON, ClippingPlaneCollectionToJSON, ClippingPlaneCollectionZodSchema } from './ClippingPlaneCollection';
@@ -78,6 +79,7 @@ export function Cesium3DTilesetZodSchema() {
       skipScreenSpaceErrorFactor: z.number().optional(),
       splitDirection: SplitDirectionZodSchema().optional(),
       url: z.string(),
+      vectorBlendOption: BlendOptionZodSchema().optional(),
       vectorClassificationOnly: z.boolean().optional(),
       vectorKeepDecodedPositions: z.boolean().optional(),
     }),
@@ -157,6 +159,7 @@ export function Cesium3DTilesetToJSON(instance?: Cesium3DTileset): Cesium3DTiles
       skipScreenSpaceErrorFactor: instance.skipScreenSpaceErrorFactor,
       splitDirection: SplitDirectionToJSON(instance.splitDirection),
       url,
+      vectorBlendOption: BlendOptionToJSON(instance.vectorBlendOption),
       vectorClassificationOnly: instance.vectorClassificationOnly,
       vectorKeepDecodedPositions: instance.vectorKeepDecodedPositions,
     },
@@ -230,6 +233,7 @@ export async function Cesium3DTilesetFromJSON(
     skipScreenSpaceErrorFactor: value.skipScreenSpaceErrorFactor,
     splitDirection: SplitDirectionFromJSON(value.splitDirection),
     scene: options?.scene,
+    vectorBlendOption: BlendOptionFromJSON(value.vectorBlendOption),
     vectorClassificationOnly: value.vectorClassificationOnly,
     vectorKeepDecodedPositions: value.vectorKeepDecodedPositions,
   });

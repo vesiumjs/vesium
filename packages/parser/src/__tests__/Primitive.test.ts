@@ -166,5 +166,10 @@ describe('scene primitive serializers', () => {
       parser: 'Cesium3DTileset',
       value: { cacheBytes: -1, url: 'https://example.test/tileset.json' },
     })).toThrow();
+    // `vectorBlendOption` is a CesiumJS 1.146 addition
+    expect(Cesium3DTilesetZodSchema().parse({
+      parser: 'Cesium3DTileset',
+      value: { url: 'https://example.test/tileset.json', vectorBlendOption: { parser: 'BlendOption', value: 'OPAQUE' } },
+    }).value.vectorBlendOption?.value).toBe('OPAQUE');
   });
 });

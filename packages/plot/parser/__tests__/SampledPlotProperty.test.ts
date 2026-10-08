@@ -74,6 +74,15 @@ describe('sampledPlotProperty serialization', () => {
     expect(() => SampledPlotPropertyToJSON(instance)).toThrow();
   });
 
+  it('accepts repeated but acyclic references', () => {
+    const shared = { label: 'shared' };
+    const instance = new SampledPlotProperty({
+      packables: [{ time: TIME_1, positions: [new Cartesian3(1, 2, 3)], derivative: { left: shared, right: shared } }],
+    });
+    const json = SampledPlotPropertyToJSON(instance);
+    expect(json?.value.packables[0]!.derivative).toEqual({ left: { label: 'shared' }, right: { label: 'shared' } });
+  });
+
   it('supports a derivative codec for extended values', () => {
     const options: SampledPlotPropertySerializationOptions<Cartesian3, { x: number; y: number; z: number }> = {
       derivative: {

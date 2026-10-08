@@ -7,6 +7,30 @@ import { SampledPlotProperty as SampledPlotPropertyClass, SampledPlotStrategy } 
 
 const jsonValueSchema = z.json();
 
+/**
+ * Reject values that cannot be represented as JSON.
+ *
+ * `z.json()` stopped rejecting circular references in zod 4.6, so the cycle check runs here:
+ * such a value would otherwise survive serialization and break every later `JSON.stringify`.
+ */
+function assertAcyclicJson(value: unknown): void {
+  const inPath = new WeakSet<object>();
+  const walk = (node: unknown): void => {
+    if (node === null || typeof node !== 'object') {
+      return;
+    }
+    if (inPath.has(node)) {
+      throw new TypeError('The derivative must be JSON-serializable: circular reference detected.');
+    }
+    inPath.add(node);
+    for (const child of Object.values(node)) {
+      walk(child);
+    }
+    inPath.delete(node);
+  };
+  walk(value);
+}
+
 export type JSONValue = z.infer<typeof jsonValueSchema>;
 
 export interface SampledPlotDerivativeCodec<D, TJSON extends JSONValue = JSONValue> {
@@ -110,6 +134,7 @@ function serializeDerivative<D, TJSON extends JSONValue>(
     return undefined;
   }
   const serialized = codec ? codec.toJSON(value) : value;
+  assertAcyclicJson(serialized);
   const parsed = jsonValueSchema.parse(serialized);
   if (codec) {
     codec.schema.parse(parsed);

@@ -1,8 +1,4 @@
 minimumReleaseAgeExcludePrune: true
-minimumReleaseAgeExclude:
-  - '@vitejs/plugin-vue@6.0.8'
-  - pinia@4.0.1
-
 trustPolicy: no-downgrade
 shellEmulator: true
 
@@ -21,57 +17,57 @@ allowBuilds:
 catalog:
   '@antfu/eslint-config': ^9.5.1
   '@iconify-json/svg-spinners': ^1.2.4
-  '@iconify-json/tabler': ^1.2.38
-  '@iconify/utils': ^3.1.4
+  '@iconify-json/tabler': ^1.2.41
+  '@iconify/utils': ^3.1.7
   '@tsconfig/node22': ^22.0.6
   '@turf/turf': ^7.4.0
   '@types/geojson': ^7946.0.16
   '@types/jsdom': ^30.0.0
   '@types/markdown-it': ^14.2.0
-  '@types/markdown-it-container': ^4.0.0
-  '@types/node': ^26.4.1
-  '@unocss/eslint-plugin': ^66.9.2
-  '@vitejs/plugin-vue': ^6.0.8
-  '@vitest/coverage-v8': ^4.1.11
-  '@vue/test-utils': ^2.5.0
+  '@types/markdown-it-container': ^4.0.1
+  '@types/node': ^26.6.4
+  '@unocss/eslint-plugin': ^66.10.5
+  '@vitejs/plugin-vue': ^6.0.9
+  '@vitest/coverage-v8': ^5.0.3
+  '@vue/test-utils': ^2.5.1
   '@vue/tsconfig': ^0.9.1
-  '@vueuse/core': ^14.4.0
-  '@vueuse/shared': ^14.4.0
-  bumpp: ^12.2.2
-  cesium: ^1.145.0
-  cypress: ^16.0.0
-  eslint: ^10.9.1
+  '@vueuse/core': ^15.0.0
+  '@vueuse/shared': ^15.0.0
+  bumpp: ^12.3.0
+  cesium: ^1.144.0
+  cypress: ^16.1.1
+  eslint: ^10.12.0
   eslint-plugin-format: ^2.0.1
   fast-glob: ^3.3.3
   gray-matter: ^4.0.3
   husky: ^9.1.7
-  jsdom: ^30.0.1
+  jsdom: ^30.1.2
   lightningcss: ^1.33.0
-  lint-staged: ^17.4.1
+  lint-staged: ^17.6.0
   local-pkg: ^1.2.1
-  magic-string: ^1.2.3
-  markdown-it: ^15.0.1
+  magic-string: ^1.4.3
+  markdown-it: ^15.0.2
   markdown-it-container: ^4.0.0
   pinia: ^4.0.3
-  sass: ^1.103.1
+  sass: ^1.105.1
   start-server-and-test: ^3.0.12
   svgo: ^4.1.0
-  taze: ^21.1.0
-  tsdown: ^0.22.14
-  tsx: ^4.23.13
+  taze: ^21.3.0
+  tsdown: ^0.23.0
+  tsx: ^4.23.15
   typescript: ^6.0.3
-  unocss: ^66.9.2
+  unocss: ^66.10.5
   unplugin-auto-import: ^21.1.0
   unplugin-cesium: ^3.1.0
-  unplugin-icons: ^23.0.1
-  unplugin-vue: ^7.2.0
+  unplugin-icons: ^24.0.0
+  unplugin-vue: ^8.0.0
   unplugin-vue-components: ^32.1.0
-  vite: ^8.2.2
+  vite: ^8.3.3
   vite-plugin-vue-devtools: ^8.2.1
-  vitepress: ^2.0.0-alpha.19
+  vitepress: ^2.0.0-alpha.20
   vitepress-plugin-llmstxt: ^0.5.2
-  vitest: ^4.1.11
-  vue: ^3.5.42
-  vue-router: ^5.3.0
-  vue-tsc: ^3.3.11
-  zod: ^4.4.3
+  vitest: ^5.0.3
+  vue: ^3.5.43
+  vue-router: ^5.3.1
+  vue-tsc: ^3.3.12
+  zod: ^4.6.5

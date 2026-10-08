@@ -177,11 +177,15 @@ describe('entity', () => {
       const timeBefore = JulianDate.fromIso8601('2020-01-01T00:00:00Z');
       const timeAfter = JulianDate.fromIso8601('2030-01-01T00:00:00Z');
       const threshold = JulianDate.fromIso8601('2025-01-01T00:00:00Z');
-      const instance = new Entity({ id: 'test' });
-      instance.description = new CallbackProperty(
-        ((time: JulianDate) => JulianDate.greaterThan(time, threshold) ? 'after' : 'before') as any,
-        false,
-      );
+      // `Entity.ConstructorOptions.description` keeps accepting a `Property`, while the instance
+      // accessor is narrowed to `string | undefined` since CesiumJS 1.146.
+      const instance = new Entity({
+        id: 'test',
+        description: new CallbackProperty(
+          ((time: JulianDate) => JulianDate.greaterThan(time, threshold) ? 'after' : 'before') as any,
+          false,
+        ),
+      });
       const before = EntityToJSON(instance, timeBefore);
       const after = EntityToJSON(instance, timeAfter);
       expect(before?.value.description).toBe('before');
