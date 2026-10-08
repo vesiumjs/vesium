@@ -13,20 +13,26 @@ function hoverEntity(entityIndex: number) {
   });
 }
 
-function waitUntilPickable(entityIndex: number) {
+function waitUntilStackPickable() {
   cy.window().should((win) => {
     const viewer = (win as any).__app.viewer!;
-    const entity = viewer.entities.values[entityIndex]!;
+    const entity = viewer.entities.values[0]!;
     const position = entity.position!.getValue(viewer.clock.currentTime)!;
     const canvasPos = viewer.scene.cartesianToCanvasCoordinates(position)!;
-    const picked = viewer.scene.pick(canvasPos, 3, 3);
-    expect(picked === undefined).to.eq(false);
+    // Wait until all three stacked boxes are drilled at the hover point,
+    // so the assertions below do not race async box geometry creation.
+    const picked = viewer.scene.drillPick(canvasPos, 10, 5, 5);
+    expect(picked.length).to.eq(3);
   });
 }
 
 function flyTo(lon: number, lat: number, altitude: number) {
   cy.window().then((win) => {
-    (win as any).__app.viewer!.camera.setView({
+    const viewer = (win as any).__app.viewer!;
+    // The demo starts an intro camera flight on mount; cancel it so the view
+    // stays straight above the stack and the boxes remain on the pick ray.
+    viewer.camera.cancelFlight();
+    viewer.camera.setView({
       destination: Cesium.Cartesian3.fromDegrees(lon, lat, altitude),
     });
   });
@@ -37,7 +43,7 @@ describe('useSceneDrillPick — stacked picking', () => {
     cy.visit('/#/core/useSceneDrillPick');
     cy.window().its('__app.viewer.entities.values.length').should('eq', 3);
     flyTo(120, 30, 60000);
-    waitUntilPickable(0);
+    waitUntilStackPickable();
     hoverEntity(0);
     cy.contains('Layer 1 - Red', { timeout: 10000 }).should('exist');
     cy.contains('Layer 2 - Green').should('exist');
@@ -47,7 +53,7 @@ describe('useSceneDrillPick — stacked picking', () => {
   it('verifies drillPick returns multiple entities (array, not a single object)', () => {
     cy.visit('/#/core/useSceneDrillPick');
     flyTo(120, 30, 60000);
-    waitUntilPickable(0);
+    waitUntilStackPickable();
     hoverEntity(0);
     // The demo numbers the drill results "1. Entity: ...", "2. Entity: ...";
     // a single-object result would only ever render entry 1.
